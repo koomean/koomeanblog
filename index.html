@@ -9,690 +9,105 @@
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
         :root {
-            --bg-body: #000000;
-            --bg-container: #000000;
-            --bg-card: #0f1117;
-            --bg-card-hover: #141820;
-            --border: #1e2330;
-            --border-subtle: #161b26;
-            --text-primary: #e8eaf0;
-            --text-secondary: #5a6478;
-            --text-muted: #3a4155;
-            --accent: #4f8ef7;
-            --accent-hover: #3a7be8;
-            --accent-glow: rgba(79, 142, 247, 0.15);
-            --success: #22c97a;
-            --danger: #ff4757;
-            --glass-bg: rgba(0, 0, 0, 0.75);
-            --glass-blur: blur(16px);
-            --skeleton: #0f1420;
-            --skeleton-shine: #1a2035;
-            --radius-sm: 8px;
-            --radius-md: 14px;
+            --bg-body: #000000; --bg-container: #000000;
+            --bg-card: #0f1117; --bg-card-hover: #141820;
+            --border: #1e2330; --border-subtle: #161b26;
+            --text-primary: #e8eaf0; --text-secondary: #5a6478; --text-muted: #3a4155;
+            --accent: #4f8ef7; --accent-hover: #3a7be8; --accent-glow: rgba(79, 142, 247, 0.15);
+            --like-color: #f91880; /* สีชมพูสำหรับปุ่มหัวใจ */
+            --glass-bg: rgba(0, 0, 0, 0.75); --glass-blur: blur(16px);
             --radius-full: 9999px;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'DM Sans', -apple-system, sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'DM Sans', -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background-color: var(--bg-body); color: var(--text-primary); display: flex; justify-content: center; min-height: 100vh; overflow-y: scroll; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+        ::-webkit-scrollbar { width: 4px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
 
-        body {
-            background-color: var(--bg-body);
-            color: var(--text-primary);
-            display: flex;
-            justify-content: center;
-            min-height: 100vh;
-            overflow-y: scroll;
-            scrollbar-width: thin;
-            scrollbar-color: var(--border) transparent;
-        }
+        .app-container { width: 100%; max-width: 600px; min-height: 100vh; background-color: var(--bg-container); border-left: 1px solid var(--border); border-right: 1px solid var(--border); display: flex; flex-direction: column; }
+        @media (max-width: 600px) { .app-container { border: none; } }
 
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+        /* Header */
+        .header { position: sticky; top: 0; z-index: 50; background-color: var(--glass-bg); backdrop-filter: var(--glass-blur); padding: 13px 18px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
+        .header-left { display: flex; align-items: center; gap: 10px; }
+        .header-logo { width: 28px; height: 28px; background: linear-gradient(135deg, var(--accent) 0%, #a78bfa 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 800; color: #fff; font-family: 'Sora', sans-serif; }
+        .header-title { font-size: 1.05rem; font-weight: 700; font-family: 'Sora', sans-serif; }
+        .auth-btn { background: transparent; color: var(--text-primary); border: 1px solid var(--border); padding: 7px 18px; border-radius: var(--radius-full); font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease; }
+        .auth-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-glow); }
+        .auth-btn.signed-in { border-color: var(--text-secondary); color: var(--text-secondary); }
 
-        /* ─── Layout ─── */
-        .app-container {
-            width: 100%;
-            max-width: 600px;
-            min-height: 100vh;
-            background-color: var(--bg-container);
-            border-left: 1px solid var(--border);
-            border-right: 1px solid var(--border);
-            position: relative;
-            display: flex;
-            flex-direction: column;
-        }
-        @media (max-width: 600px) {
-            .app-container { border: none; }
-        }
+        /* Profile */
+        .profile-header { position: relative; border-bottom: 1px solid var(--border); }
+        .profile-cover { height: 155px; background-color: #0d1a3a; background-size: cover; background-position: center; position: relative; }
+        @media (max-width: 600px) { .profile-cover { height: 120px; } }
+        .profile-info-wrap { padding: 12px 18px 18px; position: relative; }
+        
+        .profile-avatar-wrap { position: absolute; top: -66px; left: 18px; border-radius: 50%; padding: 4px; background: var(--bg-container); }
+        @media (max-width: 600px) { .profile-avatar-wrap { top: -50px; left: 14px; } }
+        
+        .profile-avatar { width: 116px; height: 116px; border-radius: 50%; object-fit: cover; display: block; border: 2px solid var(--border); background-color: #1a2040; }
+        @media (max-width: 600px) { .profile-avatar { width: 88px; height: 88px; } }
 
-        /* ─── Header ─── */
-        .header {
-            position: sticky;
-            top: 0;
-            z-index: 50;
-            background-color: var(--glass-bg);
-            backdrop-filter: var(--glass-blur);
-            -webkit-backdrop-filter: var(--glass-blur);
-            padding: 13px 18px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--border);
-        }
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .header-logo {
-            width: 28px;
-            height: 28px;
-            background: linear-gradient(135deg, var(--accent) 0%, #a78bfa 100%);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.75rem;
-            font-weight: 800;
-            color: #fff;
-            letter-spacing: -0.5px;
-            font-family: 'Sora', sans-serif;
-            flex-shrink: 0;
-        }
-        .header-title {
-            font-size: 1.05rem;
-            font-weight: 700;
-            letter-spacing: -0.3px;
-            font-family: 'Sora', sans-serif;
-        }
-        .auth-btn {
-            background: transparent;
-            color: var(--text-primary);
-            border: 1px solid var(--border);
-            padding: 7px 18px;
-            border-radius: var(--radius-full);
-            font-size: 0.85rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            letter-spacing: 0.1px;
-        }
-        .auth-btn:hover {
-            border-color: var(--accent);
-            color: var(--accent);
-            background: var(--accent-glow);
-        }
-        .auth-btn.signed-in {
-            border-color: var(--danger);
-            color: var(--danger);
-        }
-        .auth-btn.signed-in:hover {
-            background: rgba(255, 71, 87, 0.1);
-        }
+        .profile-text-content { margin-top: 58px; }
+        @media (max-width: 600px) { .profile-text-content { margin-top: 42px; } }
+        .profile-name { font-size: 1.3rem; font-weight: 800; font-family: 'Sora', sans-serif; }
+        .verified-badge { color: var(--accent); font-size: 1rem; margin-left: 4px; }
+        .profile-handle { color: var(--text-secondary); font-size: 0.875rem; margin-top: 2px; }
+        .profile-bio { margin-top: 10px; font-size: 0.95rem; line-height: 1.5; color: var(--text-primary); }
 
-        /* ─── Profile ─── */
-        .profile-header {
-            position: relative;
-            border-bottom: 1px solid var(--border);
-        }
-        .profile-cover {
-            height: 155px;
-            background: linear-gradient(160deg, #0d1a3a 0%, #060c1a 50%, #000 100%);
-            position: relative;
-            overflow: hidden;
-        }
-        .profile-cover::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background:
-                radial-gradient(ellipse 60% 80% at 20% 50%, rgba(79, 142, 247, 0.12) 0%, transparent 70%),
-                radial-gradient(ellipse 40% 60% at 80% 30%, rgba(167, 139, 250, 0.08) 0%, transparent 70%);
-        }
-        .profile-cover::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 40px;
-            background: linear-gradient(to top, var(--bg-container), transparent);
-        }
-        @media (max-width: 600px) {
-            .profile-cover { height: 120px; }
-        }
-        .profile-info-wrap {
-            padding: 12px 18px 18px;
-            position: relative;
-        }
-        .profile-avatar-wrap {
-            position: absolute;
-            top: -66px;
-            left: 18px;
-            border-radius: 50%;
-            padding: 3px;
-            background: linear-gradient(135deg, var(--accent), #a78bfa);
-            box-shadow: 0 0 0 3px var(--bg-container);
-        }
-        @media (max-width: 600px) {
-            .profile-avatar-wrap { top: -50px; left: 14px; }
-        }
+        /* Post Creator */
+        .post-creator { padding: 14px 18px; border-bottom: 1px solid var(--border); display: none; background: linear-gradient(180deg, #060b18 0%, transparent 100%); }
+        .creator-flex { display: flex; gap: 12px; }
+        .creator-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; background: var(--bg-card); }
+        .creator-input-area { flex: 1; }
+        .creator-textarea { width: 100%; background: transparent; border: none; color: var(--text-primary); font-size: 1.05rem; line-height: 1.5; resize: none; outline: none; min-height: 50px; padding-top: 10px; }
+        .creator-footer { display: flex; justify-content: flex-end; align-items: center; margin-top: 10px; border-top: 1px solid var(--border-subtle); padding-top: 10px;}
+        .btn-post { background: var(--accent); color: #fff; border: none; border-radius: var(--radius-full); padding: 8px 20px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+        .btn-post:hover { background: var(--accent-hover); }
+        .btn-post:disabled { opacity: 0.5; cursor: not-allowed; }
 
-        /* ─── Image with skeleton ─── */
-        .img-wrapper {
-            position: relative;
-            border-radius: 50%;
-            overflow: hidden;
-            display: block;
-        }
-        .img-wrapper.rect { border-radius: 0; }
-
-        .img-skeleton {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(90deg, var(--skeleton) 25%, var(--skeleton-shine) 50%, var(--skeleton) 75%);
-            background-size: 200% 100%;
-            animation: shimmer 1.5s infinite;
-            border-radius: inherit;
-            z-index: 1;
-            transition: opacity 0.3s ease;
-        }
-        .img-skeleton.hidden { opacity: 0; pointer-events: none; }
-        @keyframes shimmer {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
-        }
-
-        .img-fallback {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, var(--bg-card) 0%, #1a2040 100%);
-            font-weight: 700;
-            color: var(--text-secondary);
-            font-family: 'Sora', sans-serif;
-            z-index: 0;
-            letter-spacing: -0.5px;
-        }
-
-        .profile-avatar {
-            width: 116px;
-            height: 116px;
-            border-radius: 50%;
-            object-fit: cover;
-            display: block;
-            position: relative;
-            z-index: 2;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        .profile-avatar.loaded { opacity: 1; }
-        @media (max-width: 600px) {
-            .profile-avatar { width: 88px; height: 88px; }
-        }
-
-        .profile-text-content {
-            margin-top: 58px;
-        }
-        @media (max-width: 600px) {
-            .profile-text-content { margin-top: 42px; }
-        }
-
-        .profile-name-row {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .profile-name {
-            font-size: 1.2rem;
-            font-weight: 800;
-            font-family: 'Sora', sans-serif;
-            letter-spacing: -0.5px;
-            line-height: 1.2;
-        }
-        .verified-badge {
-            background: var(--accent);
-            color: #fff;
-            border-radius: 50%;
-            width: 18px;
-            height: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.6rem;
-            flex-shrink: 0;
-        }
-        .profile-handle {
-            color: var(--text-secondary);
-            font-size: 0.875rem;
-            margin-top: 3px;
-            letter-spacing: 0.2px;
-        }
-        .profile-bio {
-            margin-top: 10px;
-            font-size: 0.925rem;
-            line-height: 1.55;
-            color: var(--text-primary);
-            opacity: 0.9;
-        }
-        .profile-stats {
-            display: flex;
-            gap: 18px;
-            margin-top: 14px;
-        }
-        .stat-item {
-            display: flex;
-            gap: 4px;
-            font-size: 0.875rem;
-        }
-        .stat-count {
-            font-weight: 700;
-            color: var(--text-primary);
-        }
-        .stat-label {
-            color: var(--text-secondary);
-        }
-
-        /* ─── Skeleton for profile text ─── */
-        .skel-line {
-            background: linear-gradient(90deg, var(--skeleton) 25%, var(--skeleton-shine) 50%, var(--skeleton) 75%);
-            background-size: 200% 100%;
-            animation: shimmer 1.5s infinite;
-            border-radius: 6px;
-            display: block;
-        }
-
-        /* ─── Post Creator ─── */
-        .post-creator {
-            padding: 14px 18px;
-            border-bottom: 1px solid var(--border);
-            display: none;
-            background: linear-gradient(180deg, #060b18 0%, transparent 100%);
-            position: relative;
-        }
-        .post-creator::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 18px;
-            right: 18px;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--accent), transparent);
-            opacity: 0.3;
-        }
-        .creator-flex {
-            display: flex;
-            gap: 12px;
-        }
-        .creator-avatar-wrap {
-            flex-shrink: 0;
-            border-radius: 50%;
-            padding: 2px;
-            background: linear-gradient(135deg, var(--accent), #a78bfa);
-            width: 42px;
-            height: 42px;
-        }
-        .creator-avatar {
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            object-fit: cover;
-            display: block;
-            background: var(--bg-card);
-        }
-        .creator-input-area {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-        .creator-textarea {
-            width: 100%;
-            background: transparent;
-            border: none;
-            color: var(--text-primary);
-            font-size: 1rem;
-            font-family: 'DM Sans', sans-serif;
-            line-height: 1.5;
-            resize: none;
-            outline: none;
-            min-height: 48px;
-            padding-top: 10px;
-        }
-        .creator-textarea::placeholder {
-            color: var(--text-muted);
-        }
-        .creator-footer {
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            margin-top: 10px;
-            padding-top: 10px;
-            border-top: 1px solid var(--border-subtle);
-        }
-        .char-count {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            margin-right: auto;
-        }
-        .char-count.warn { color: #f59e0b; }
-        .char-count.danger { color: var(--danger); }
-        .btn-post {
-            background: linear-gradient(135deg, var(--accent), #6366f1);
-            color: #fff;
-            border: none;
-            border-radius: var(--radius-full);
-            padding: 8px 20px;
-            font-weight: 700;
-            font-size: 0.9rem;
-            font-family: 'DM Sans', sans-serif;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            letter-spacing: 0.2px;
-            box-shadow: 0 2px 12px rgba(79, 142, 247, 0.25);
-        }
-        .btn-post:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 18px rgba(79, 142, 247, 0.4);
-        }
-        .btn-post:active { transform: translateY(0); }
-        .btn-post:disabled {
-            opacity: 0.45;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-
-        /* ─── Feed ─── */
-        .feed-container {
-            flex: 1;
-            padding-bottom: 60px;
-        }
-
-        .feed-divider {
-            padding: 10px 18px 6px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--text-muted);
-            letter-spacing: 0.8px;
-            text-transform: uppercase;
-            border-bottom: 1px solid var(--border-subtle);
-        }
-
-        /* ─── Post Card ─── */
-        .post-card {
-            padding: 14px 18px;
-            border-bottom: 1px solid var(--border-subtle);
-            display: flex;
-            gap: 12px;
-            cursor: default;
-            transition: background-color 0.18s ease;
-            animation: fadeUp 0.35s ease both;
-        }
-        .post-card:hover {
-            background-color: var(--bg-card-hover);
-        }
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .post-avatar-wrap {
-            flex-shrink: 0;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            overflow: hidden;
-            position: relative;
-            background: var(--bg-card);
-        }
-        .post-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            object-fit: cover;
-            display: block;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            position: relative;
-            z-index: 2;
-        }
-        .post-avatar.loaded { opacity: 1; }
-
-        .post-card-content {
-            flex: 1;
-            min-width: 0;
-        }
-        .post-card-header {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            margin-bottom: 5px;
-            flex-wrap: wrap;
-        }
-        .post-card-name {
-            font-weight: 700;
-            color: var(--text-primary);
-            font-size: 0.925rem;
-            letter-spacing: -0.2px;
-        }
-        .post-card-time {
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-            font-weight: 400;
-        }
-        .post-card-text {
-            color: var(--text-primary);
-            font-size: 0.95rem;
-            line-height: 1.6;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-            opacity: 0.9;
-        }
-        .post-card-actions {
-            display: flex;
-            gap: 18px;
-            margin-top: 10px;
-        }
-        .action-btn {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            color: var(--text-secondary);
-            font-size: 0.82rem;
-            cursor: default;
-            transition: color 0.18s;
-        }
-        .action-btn i { font-size: 0.85rem; }
+        /* Feed & Post Card */
+        .feed-container { flex: 1; padding-bottom: 60px; }
+        .post-card { padding: 16px 18px; border-bottom: 1px solid var(--border-subtle); cursor: default; }
+        .post-card-inner { display: flex; gap: 12px; }
+        .post-avatar { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; flex-shrink: 0; background: var(--bg-card); }
+        .post-card-content { flex: 1; min-width: 0; }
+        .post-card-header { display: flex; align-items: center; gap: 5px; margin-bottom: 4px; }
+        .post-card-name { font-weight: 700; font-size: 0.95rem; }
+        .post-card-time { color: var(--text-secondary); font-size: 0.85rem; }
+        .post-card-text { font-size: 0.95rem; line-height: 1.6; white-space: pre-wrap; word-wrap: break-word; }
+        
+        /* Action Buttons (Like / Comment) */
+        .post-card-actions { display: flex; gap: 25px; margin-top: 12px; }
+        .action-btn { display: flex; align-items: center; gap: 6px; color: var(--text-secondary); font-size: 0.85rem; cursor: pointer; transition: 0.2s; background: transparent; border: none; outline: none; font-family: inherit;}
         .action-btn:hover { color: var(--accent); }
+        .action-btn.liked { color: var(--like-color); }
+        .action-btn.liked:hover { color: #f91880cc; }
+        .action-btn i { font-size: 1rem; }
 
-        /* ─── Skeleton Posts ─── */
-        .skeleton-post {
-            padding: 14px 18px;
-            border-bottom: 1px solid var(--border-subtle);
-            display: flex;
-            gap: 12px;
-            animation: fadeUp 0.3s ease both;
-        }
-        .skeleton-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(90deg, var(--skeleton) 25%, var(--skeleton-shine) 50%, var(--skeleton) 75%);
-            background-size: 200% 100%;
-            animation: shimmer 1.5s infinite;
-            flex-shrink: 0;
-        }
-        .skeleton-content { flex: 1; display: flex; flex-direction: column; gap: 8px; padding-top: 4px; }
-
-        /* ─── Status Message ─── */
-        .status-message {
-            text-align: center;
-            padding: 52px 20px;
-            color: var(--text-secondary);
-            font-size: 0.925rem;
-        }
-        .status-icon {
-            font-size: 2rem;
-            margin-bottom: 12px;
-            opacity: 0.4;
-        }
-        .spinner-ring {
-            width: 32px;
-            height: 32px;
-            border: 2px solid var(--border);
-            border-top-color: var(--accent);
-            border-radius: 50%;
-            animation: spin 0.75s linear infinite;
-            margin: 0 auto 14px;
-        }
+        /* Comments Section */
+        .comments-section { margin-top: 15px; border-top: 1px dashed var(--border-subtle); padding-top: 15px; display: none; }
+        .comment-item { display: flex; gap: 10px; margin-bottom: 15px; }
+        .comment-avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
+        .comment-box { background: var(--bg-card); padding: 10px 12px; border-radius: 12px; flex: 1; }
+        .comment-name { font-weight: 700; font-size: 0.85rem; margin-bottom: 3px; color: var(--text-secondary);}
+        .comment-text { font-size: 0.9rem; line-height: 1.4; }
+        
+        .comment-input-area { display: flex; gap: 10px; align-items: center; margin-top: 10px; }
+        .comment-input { flex: 1; background: transparent; border: 1px solid var(--border); color: var(--text-primary); padding: 10px 15px; border-radius: var(--radius-full); font-size: 0.9rem; outline: none; }
+        .comment-input:focus { border-color: var(--accent); }
+        .btn-comment { background: var(--accent); color: white; border: none; padding: 8px 16px; border-radius: var(--radius-full); font-weight: 600; cursor: pointer; }
+        
+        /* Modal & Loader */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1000; display: none; justify-content: center; align-items: center; padding: 20px; }
+        .modal-overlay.show { display: flex; }
+        .modal-box { background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; width: 100%; max-width: 340px; padding: 32px 24px; text-align: center; }
+        .modal-title { font-size: 1.15rem; font-weight: 700; margin-bottom: 20px; }
+        .loader { border: 3px solid var(--border); border-top: 3px solid var(--accent); border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 20px auto; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
-
-        /* ─── Toast ─── */
-        .toast {
-            position: fixed;
-            bottom: 24px;
-            left: 50%;
-            transform: translateX(-50%) translateY(80px);
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            color: var(--text-primary);
-            padding: 12px 22px;
-            border-radius: var(--radius-full);
-            font-size: 0.875rem;
-            font-weight: 500;
-            z-index: 9999;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.6);
-            transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s;
-            opacity: 0;
-            pointer-events: none;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            white-space: nowrap;
-        }
-        .toast.show {
-            transform: translateX(-50%) translateY(0);
-            opacity: 1;
-        }
-        .toast.success { border-color: var(--success); }
-        .toast.error { border-color: var(--danger); }
-
-        /* ─── Modal ─── */
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background-color: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            z-index: 1000;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            opacity: 0;
-            transition: opacity 0.25s ease;
-        }
-        .modal-overlay.show {
-            display: flex;
-            opacity: 1;
-        }
-        .modal-box {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            width: 100%;
-            max-width: 340px;
-            padding: 32px 24px;
-            text-align: center;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.7);
-            transform: translateY(24px) scale(0.97);
-            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-        .modal-overlay.show .modal-box {
-            transform: translateY(0) scale(1);
-        }
-        .modal-logo {
-            width: 52px;
-            height: 52px;
-            background: linear-gradient(135deg, var(--accent) 0%, #a78bfa 100%);
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.1rem;
-            font-weight: 800;
-            color: #fff;
-            font-family: 'Sora', sans-serif;
-            margin: 0 auto 18px;
-            box-shadow: 0 4px 20px rgba(79, 142, 247, 0.3);
-        }
-        .modal-title {
-            font-size: 1.15rem;
-            font-weight: 700;
-            font-family: 'Sora', sans-serif;
-            margin-bottom: 6px;
-            letter-spacing: -0.3px;
-        }
-        .modal-subtitle {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            margin-bottom: 24px;
-        }
-        .g_id_signin { display: flex; justify-content: center; width: 100%; }
-        .btn-close-modal {
-            margin-top: 20px;
-            background: transparent;
-            border: none;
-            color: var(--text-secondary);
-            font-weight: 600;
-            font-size: 0.875rem;
-            cursor: pointer;
-            padding: 8px 18px;
-            border-radius: var(--radius-full);
-            transition: all 0.2s;
-            font-family: 'DM Sans', sans-serif;
-        }
-        .btn-close-modal:hover {
-            background: rgba(255,255,255,0.06);
-            color: var(--text-primary);
-        }
-
-        /* ─── Network error banner ─── */
-        .error-banner {
-            margin: 12px 18px;
-            padding: 12px 16px;
-            background: rgba(255, 71, 87, 0.08);
-            border: 1px solid rgba(255, 71, 87, 0.25);
-            border-radius: var(--radius-sm);
-            color: var(--danger);
-            font-size: 0.875rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .btn-retry {
-            margin-left: auto;
-            background: transparent;
-            border: 1px solid rgba(255, 71, 87, 0.4);
-            color: var(--danger);
-            padding: 4px 12px;
-            border-radius: var(--radius-full);
-            font-size: 0.8rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            flex-shrink: 0;
-            font-family: 'DM Sans', sans-serif;
-        }
-        .btn-retry:hover { background: rgba(255, 71, 87, 0.12); }
+        
+        /* Toast */
+        .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: var(--bg-card); border: 1px solid var(--border); color: var(--text-primary); padding: 10px 20px; border-radius: var(--radius-full); font-size: 0.85rem; z-index: 9999; opacity: 0; pointer-events: none; transition: 0.3s; }
+        .toast.show { opacity: 1; transform: translateX(-50%) translateY(-10px); }
     </style>
 </head>
 <body>
@@ -707,47 +122,28 @@
         </header>
 
         <section class="profile-header">
-            <div class="profile-cover"></div>
+            <div class="profile-cover" id="profile-cover"></div>
             <div class="profile-info-wrap">
                 <div class="profile-avatar-wrap">
-                    <div class="img-wrapper" style="width:116px;height:116px;" id="main-avatar-wrapper">
-                        <div class="img-skeleton" id="main-avatar-skeleton"></div>
-                        <div class="img-fallback" id="main-avatar-fallback" style="font-size:1.8rem;">KM</div>
-                        <img id="main-profile-img" class="profile-avatar" alt="Profile">
-                    </div>
+                    <img src="https://ui-avatars.com/api/?name=KM" id="main-profile-img" class="profile-avatar" alt="Profile" onerror="this.src='https://ui-avatars.com/api/?name=KM&background=1e2330&color=fff'">
                 </div>
                 <div class="profile-text-content">
-                    <div class="profile-name-row">
-                        <h1 class="profile-name" id="profile-name-text">
-                            <span class="skel-line" style="width:120px;height:20px;display:inline-block;"></span>
-                        </h1>
-                        <div class="verified-badge"><i class="fas fa-check" style="font-size:0.5rem;"></i></div>
+                    <div style="display: flex; align-items: center;">
+                        <h1 class="profile-name" id="profile-name-text">Loading...</h1>
+                        <i class="fas fa-certificate verified-badge"></i>
                     </div>
-                    <div class="profile-handle" id="profile-handle">@admin</div>
-                    <div class="profile-bio" id="profile-bio">
-                        <span class="skel-line" style="width:100%;height:13px;display:block;margin-top:6px;"></span>
-                        <span class="skel-line" style="width:70%;height:13px;display:block;margin-top:6px;"></span>
-                    </div>
-                    <div class="profile-stats" id="profile-stats" style="display:none;">
-                        <div class="stat-item">
-                            <span class="stat-count" id="stat-posts">0</span>
-                            <span class="stat-label">โพสต์</span>
-                        </div>
-                    </div>
+                    <div class="profile-handle" id="profile-handle">@koomean</div>
+                    <div class="profile-bio" id="profile-bio">...</div>
                 </div>
             </div>
         </section>
 
         <section class="post-creator" id="post-creator">
             <div class="creator-flex">
-                <div class="creator-avatar-wrap">
-                    <img src="" alt="Admin" class="creator-avatar" id="creator-avatar"
-                         onerror="this.src='https://ui-avatars.com/api/?name=A&background=1a2040&color=4f8ef7&size=80'">
-                </div>
+                <img src="" class="creator-avatar" id="creator-avatar" onerror="this.src='https://ui-avatars.com/api/?name=Admin'">
                 <div class="creator-input-area">
-                    <textarea id="new-post-content" class="creator-textarea" placeholder="คุณกำลังคิดอะไรอยู่..." maxlength="500"></textarea>
+                    <textarea id="new-post-content" class="creator-textarea" placeholder="คุณมีน มีอะไรอัปเดตไหมครับ..." maxlength="500"></textarea>
                     <div class="creator-footer">
-                        <span class="char-count" id="char-count">0 / 500</span>
                         <button class="btn-post" id="submit-post-btn" onclick="submitPost()">Post</button>
                     </div>
                 </div>
@@ -755,425 +151,332 @@
         </section>
 
         <main class="feed-container" id="feed-container">
-            <div class="feed-divider">Timeline</div>
-            <div id="skeleton-posts">
-                ${[...Array(5)].map((_, i) => `
-                <div class="skeleton-post" style="animation-delay:${i * 0.06}s">
-                    <div class="skeleton-avatar"></div>
-                    <div class="skeleton-content">
-                        <span class="skel-line" style="width:${40 + Math.random() * 30}%;height:13px;"></span>
-                        <span class="skel-line" style="width:100%;height:13px;"></span>
-                        <span class="skel-line" style="width:${60 + Math.random() * 30}%;height:13px;"></span>
-                    </div>
-                </div>`).join('')}
-            </div>
+            <div class="loader"></div>
         </main>
     </div>
 
     <div class="modal-overlay" id="login-modal">
         <div class="modal-box">
-            <div class="modal-logo">KM</div>
-            <h2 class="modal-title">Admin Sign In</h2>
-            <p class="modal-subtitle">เฉพาะผู้ดูแลระบบเท่านั้น</p>
-            <div id="g_id_onload"
-                data-client_id="906677442222-kmjgsmta70n24aoaq7osm9c1l7g1fb89.apps.googleusercontent.com"
-                data-callback="handleCredentialResponse"
-                data-auto_prompt="false">
+            <h2 class="modal-title" id="modal-title">Sign In เพื่อใช้งานเต็มรูปแบบ</h2>
+            <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 20px;">
+                (Admin สำหรับโพสต์ / คนทั่วไปสำหรับกดไลก์และคอมเมนต์)
+            </p>
+            <div style="display: flex; justify-content: center; width: 100%;">
+                <div id="g_id_onload"
+                    data-client_id="906677442222-kmjgsmta70n24aoaq7osm9c1l7g1fb89.apps.googleusercontent.com"
+                    data-callback="handleCredentialResponse"
+                    data-auto_prompt="false">
+                </div>
+                <div class="g_id_signin" data-type="standard" data-theme="outline" data-size="large"></div>
             </div>
-            <div class="g_id_signin" data-type="standard" data-theme="outline" data-size="large"></div>
-            <button class="btn-close-modal" id="close-modal-btn">ยกเลิก</button>
+            <button onclick="document.getElementById('login-modal').classList.remove('show')" style="margin-top: 20px; background: transparent; border: none; color: var(--text-secondary); cursor: pointer;">ปิดหน้าต่าง</button>
         </div>
     </div>
 
     <div class="toast" id="toast"></div>
 
     <script>
-    // ─── Config ───────────────────────────────────────────────────────────────
+    // --- Config ---
     const API_URL = "https://script.google.com/macros/s/AKfycbwBYhFTW68AfN4cYUJYS1DG7vw-Ocykx5kslSUQIeJJlfu0oeBIdi9xAhVmorVWQ4q7rg/exec";
     const SESSION_KEY = 'koomean_space_session';
-    const FETCH_TIMEOUT = 12000; // 12s
 
-    // ─── State ────────────────────────────────────────────────────────────────
-    let state = {
-        isLoggedIn: false,
-        currentUser: null,
-        spaceProfile: { webTitle: 'Space', name: 'Loading', imageUrl: '', bio: '' },
-        posts: []
-    };
+    let state = { isLoggedIn: false, currentUser: null, spaceProfile: { name: 'Koo Mean', imageUrl: '', coverUrl: '' }, posts: [] };
 
-    // ─── DOM refs ─────────────────────────────────────────────────────────────
-    const $ = id => document.getElementById(id);
+    // --- DOM Refs ---
     const els = {
-        webTitleTag: $('web-title'),
-        headerTitle: $('header-title-text'),
-        loginBtn: $('loginToggleBtn'),
-        modal: $('login-modal'),
-        closeModal: $('close-modal-btn'),
-        creatorBox: $('post-creator'),
-        creatorAvatar: $('creator-avatar'),
-        postInput: $('new-post-content'),
-        postSubmit: $('submit-post-btn'),
-        feed: $('feed-container'),
-        profImg: $('main-profile-img'),
-        profName: $('profile-name-text'),
-        profBio: $('profile-bio'),
-        profHandle: $('profile-handle'),
-        profStats: $('profile-stats'),
-        statPosts: $('stat-posts'),
-        charCount: $('char-count'),
-        skeletonPosts: $('skeleton-posts'),
-        toast: $('toast'),
-        avatarSkeleton: $('main-avatar-skeleton'),
-        avatarFallback: $('main-avatar-fallback'),
+        webTitleTag: document.getElementById('web-title'),
+        headerTitle: document.getElementById('header-title-text'),
+        loginBtn: document.getElementById('loginToggleBtn'),
+        modal: document.getElementById('login-modal'),
+        creatorBox: document.getElementById('post-creator'),
+        creatorAvatar: document.getElementById('creator-avatar'),
+        postInput: document.getElementById('new-post-content'),
+        postSubmit: document.getElementById('submit-post-btn'),
+        feed: document.getElementById('feed-container'),
+        profImg: document.getElementById('main-profile-img'),
+        profCover: document.getElementById('profile-cover'),
+        profName: document.getElementById('profile-name-text'),
+        profBio: document.getElementById('profile-bio'),
+        toast: document.getElementById('toast'),
     };
 
-    // ─── Toast ────────────────────────────────────────────────────────────────
-    let toastTimer;
-    function showToast(msg, type = '', icon = '') {
-        clearTimeout(toastTimer);
-        els.toast.className = 'toast' + (type ? ' ' + type : '');
-        els.toast.innerHTML = (icon ? `<i class="${icon}"></i>` : '') + msg;
-        requestAnimationFrame(() => {
-            requestAnimationFrame(() => els.toast.classList.add('show'));
-        });
-        toastTimer = setTimeout(() => els.toast.classList.remove('show'), 3000);
+    function showToast(msg) {
+        els.toast.textContent = msg;
+        els.toast.classList.add('show');
+        setTimeout(() => els.toast.classList.remove('show'), 3000);
     }
 
-    // ─── Image loader with skeleton ──────────────────────────────────────────
-    function loadImage(imgEl, src, skeletonEl, fallbackEl, initials = 'KM') {
-        if (!src || src.trim() === '') {
-            if (skeletonEl) skeletonEl.classList.add('hidden');
-            if (fallbackEl) {
-                fallbackEl.style.display = 'flex';
-                fallbackEl.textContent = initials;
-            }
-            return;
-        }
-        const img = new Image();
-        img.onload = () => {
-            imgEl.src = src;
-            imgEl.classList.add('loaded');
-            if (skeletonEl) skeletonEl.classList.add('hidden');
-            if (fallbackEl) fallbackEl.style.display = 'none';
-        };
-        img.onerror = () => {
-            if (skeletonEl) skeletonEl.classList.add('hidden');
-            if (fallbackEl) {
-                fallbackEl.style.display = 'flex';
-                fallbackEl.textContent = initials;
-            }
-        };
-        img.src = src;
-    }
-
-    function initPostAvatars() {
-        document.querySelectorAll('.post-avatar[data-src]').forEach(img => {
-            const src = img.dataset.src;
-            const skel = img.previousElementSibling;
-            const fallback = skel ? skel.previousElementSibling : null;
-            const tmp = new Image();
-            tmp.onload = () => {
-                img.src = src;
-                img.classList.add('loaded');
-                if (skel && skel.classList.contains('img-skeleton')) skel.classList.add('hidden');
-                if (fallback && fallback.classList.contains('img-fallback')) fallback.style.display = 'none';
-            };
-            tmp.onerror = () => {
-                if (skel && skel.classList.contains('img-skeleton')) skel.classList.add('hidden');
-            };
-            tmp.src = src;
-        });
-    }
-
-    // ─── Utils ────────────────────────────────────────────────────────────────
     function decodeJwt(token) {
         try {
             const base64Url = token.split('.')[1];
             const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-            return JSON.parse(decodeURIComponent(atob(base64).split('').map(c =>
-                '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join('')));
+            return JSON.parse(decodeURIComponent(atob(base64).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join('')));
         } catch { return null; }
     }
 
     function escapeHTML(str) {
         if (!str) return '';
-        const p = document.createElement('p');
-        p.textContent = str;
-        return p.innerHTML;
+        const p = document.createElement('p'); p.textContent = str; return p.innerHTML;
     }
 
     function formatDate(ts) {
         if (!ts) return '';
         const d = new Date(ts);
-        const now = new Date();
-        const diffMs = now - d;
-        const diffMins = Math.floor(diffMs / 60000);
-        if (diffMins < 1) return 'เมื่อกี้';
-        if (diffMins < 60) return `${diffMins} นาทีที่แล้ว`;
-        const diffHrs = Math.floor(diffMins / 60);
-        if (diffHrs < 24) return `${diffHrs} ชั่วโมงที่แล้ว`;
-        return d.toLocaleDateString('th-TH', { day: 'numeric', month: 'short' });
+        return d.toLocaleDateString('th-TH', { day: 'numeric', month: 'short' }) + ' ' + d.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
     }
 
-    async function fetchWithTimeout(url, options = {}, timeout = FETCH_TIMEOUT) {
-        const ctrl = new AbortController();
-        const id = setTimeout(() => ctrl.abort(), timeout);
-        try {
-            const res = await fetch(url, { ...options, signal: ctrl.signal });
-            clearTimeout(id);
-            return res;
-        } catch (e) {
-            clearTimeout(id);
-            throw e;
-        }
-    }
-
-    function saveSession(user) {
-        try { localStorage.setItem(SESSION_KEY, JSON.stringify(user)); } catch {}
-    }
-    function loadSession() {
-        try { return JSON.parse(localStorage.getItem(SESSION_KEY)); } catch { return null; }
-    }
-    function clearSession() {
-        try { localStorage.removeItem(SESSION_KEY); } catch {}
-    }
-
-    // ─── Char counter ─────────────────────────────────────────────────────────
-    els.postInput.addEventListener('input', function() {
-        this.style.height = 'auto';
-        this.style.height = this.scrollHeight + 'px';
-        const len = this.value.length;
-        els.charCount.textContent = `${len} / 500`;
-        els.charCount.className = 'char-count' + (len >= 450 ? ' danger' : len >= 350 ? ' warn' : '');
-    });
-
-    // ─── Auth ─────────────────────────────────────────────────────────────────
+    // --- Auth Logic ---
     els.loginBtn.addEventListener('click', () => {
-        if (!state.isLoggedIn) {
-            els.modal.classList.add('show');
-        } else {
-            if (confirm('ต้องการออกจากระบบหรือไม่?')) {
-                state.isLoggedIn = false;
-                state.currentUser = null;
-                clearSession();
-                els.loginBtn.textContent = 'Sign In';
-                els.loginBtn.className = 'auth-btn';
-                els.creatorBox.style.display = 'none';
-                els.postInput.value = '';
-                showToast('ออกจากระบบแล้ว', '', 'fas fa-sign-out-alt');
-            }
+        if (!state.isLoggedIn) els.modal.classList.add('show');
+        else if (confirm('ออกจากระบบหรือไม่?')) {
+            state.isLoggedIn = false;
+            state.currentUser = null;
+            localStorage.removeItem(SESSION_KEY);
+            els.loginBtn.textContent = 'Sign In';
+            els.loginBtn.classList.remove('signed-in');
+            els.creatorBox.style.display = 'none';
+            showToast('ออกจากระบบแล้ว');
+            renderFeed(); // รีเฟรชปุ่มไลก์
         }
     });
-
-    els.closeModal.addEventListener('click', () => els.modal.classList.remove('show'));
-    els.modal.addEventListener('click', e => { if (e.target === els.modal) els.modal.classList.remove('show'); });
 
     function handleCredentialResponse(res) {
         const payload = decodeJwt(res.credential);
         if (!payload) return;
         els.modal.classList.remove('show');
-        showToast('กำลังตรวจสอบสิทธิ์...', '', 'fas fa-spinner fa-spin');
-        loadData(payload.email, payload.picture);
+        showToast('กำลังเข้าสู่ระบบ...');
+        loadData(payload.email, payload.name, payload.picture);
     }
 
-    // ─── Data Fetching ────────────────────────────────────────────────────────
-    async function loadData(userEmail = '', userPic = '', silent = false) {
-        if (!silent) removeFeedPosts();
-
+    // --- Fetch Logic ---
+    async function loadData(userEmail = '', userName = '', userPic = '') {
         try {
             let url = API_URL;
-            if (userEmail) url += `?email=${encodeURIComponent(userEmail)}`;
+            if (userEmail) url += `?email=${encodeURIComponent(userEmail)}&name=${encodeURIComponent(userName)}`;
 
-            const res = await fetchWithTimeout(url);
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const res = await fetch(url);
             const data = await res.json();
 
-            // 1. ดึง Space Profile (จากคอลัมน์ใหม่ที่เพิ่มเข้าไป)
+            // 1. โหลดข้อมูล Profile + รูป Cover/Avatar แบบตรงๆ
             if (data.spaceProfile) {
                 const sp = data.spaceProfile;
-                state.spaceProfile.webTitle = sp.webTitle || 'Koo Mean Space';
-                state.spaceProfile.name = sp.name || 'Koo Mean';
-                state.spaceProfile.bio = sp.bio || '';
+                state.spaceProfile = sp;
                 
-                // อัปเดต Title เว็บและ Header
-                els.webTitleTag.textContent = state.spaceProfile.webTitle;
-                els.headerTitle.textContent = state.spaceProfile.webTitle;
-
-                // อัปเดต Profile Section
-                els.profName.textContent = state.spaceProfile.name;
-                els.profBio.textContent = state.spaceProfile.bio;
-
-                // อัปเดตรูป
-                const imgUrl = (sp.imageUrl || '').trim();
-                const initials = state.spaceProfile.name.split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
-                loadImage(els.profImg, imgUrl, els.avatarSkeleton, els.avatarFallback, initials);
-            }
-
-            // 2. Auth
-            if (userEmail && data.user) {
-                state.isLoggedIn = true;
-                state.currentUser = { email: data.user.email, role: data.user.role, pic: userPic };
-                saveSession(state.currentUser);
-                els.loginBtn.textContent = 'Sign Out';
-                els.loginBtn.className = 'auth-btn signed-in';
-
-                if (data.user.role === 'admin') {
-                    els.creatorBox.style.display = 'block';
-                    els.creatorAvatar.src = userPic || '';
-                    showToast('เข้าสู่ระบบสำเร็จ ✓', 'success', 'fas fa-check-circle');
-                } else {
-                    showToast('สิทธิ์: อ่านได้อย่างเดียว', '', 'fas fa-info-circle');
+                els.webTitleTag.textContent = sp.webTitle || 'Koo Mean Space';
+                els.headerTitle.textContent = sp.webTitle || 'Space';
+                els.profName.textContent = sp.name || 'Koo Mean';
+                els.profBio.textContent = sp.bio || '';
+                
+                // โหลดรูปโปรไฟล์วงกลม (ใช้ onerror ถ้ารูปเสีย)
+                if(sp.imageUrl) els.profImg.src = sp.imageUrl;
+                
+                // โหลดรูปปกหลัง
+                if(sp.coverUrl) {
+                    els.profCover.style.backgroundImage = `url(${sp.coverUrl})`;
                 }
             }
 
-            // 3. Posts
+            // 2. จัดการสิทธิ์การล็อกอิน (Admin vs คนทั่วไป)
+            if (userEmail && data.user) {
+                state.isLoggedIn = true;
+                state.currentUser = { email: data.user.email, name: data.user.name, role: data.user.role, pic: userPic };
+                localStorage.setItem(SESSION_KEY, JSON.stringify(state.currentUser));
+                
+                els.loginBtn.textContent = 'Sign Out';
+                els.loginBtn.classList.add('signed-in');
+
+                if (data.user.role === 'admin') {
+                    els.creatorBox.style.display = 'block';
+                    els.creatorAvatar.src = userPic;
+                } else {
+                    showToast('เข้าสู่ระบบสำเร็จ! (สิทธิ์ผู้ใช้ทั่วไป กดไลก์/คอมเมนต์ได้)');
+                }
+            }
+
+            // 3. โหลดโพสต์มาแสดง
             state.posts = data.posts || [];
             renderFeed();
-            if (state.posts.length > 0) {
-                els.statPosts.textContent = state.posts.length;
-                els.profStats.style.display = 'flex';
-            }
 
         } catch (err) {
             console.error('Fetch Error:', err);
-            showErrorBanner();
+            els.feed.innerHTML = `<div style="text-align:center; padding: 20px; color:var(--danger);">เชื่อมต่อข้อมูลไม่สำเร็จ</div>`;
         }
     }
 
-    function removeFeedPosts() {
-        const existing = els.feed.querySelectorAll('.post-card, .error-banner');
-        existing.forEach(el => el.remove());
-        if (els.skeletonPosts) els.skeletonPosts.style.display = 'block';
-    }
-
-    function showErrorBanner() {
-        if (els.skeletonPosts) els.skeletonPosts.style.display = 'none';
-        const old = els.feed.querySelector('.error-banner');
-        if (old) old.remove();
-        const banner = document.createElement('div');
-        banner.className = 'error-banner';
-        banner.innerHTML = `
-            <i class="fas fa-exclamation-circle"></i>
-            <span>โหลดข้อมูลไม่สำเร็จ</span>
-            <button class="btn-retry" onclick="retryLoad()">ลองใหม่</button>
-        `;
-        els.feed.appendChild(banner);
-    }
-
-    function retryLoad() {
-        const email = state.currentUser?.email || '';
-        const pic = state.currentUser?.pic || '';
-        loadData(email, pic);
-    }
-
-    // ─── Render Feed ──────────────────────────────────────────────────────────
+    // --- Render Feed ---
     function renderFeed() {
-        if (els.skeletonPosts) els.skeletonPosts.style.display = 'none';
-        const existing = els.feed.querySelectorAll('.post-card, .status-message, .error-banner');
-        existing.forEach(el => el.remove());
-
         if (!state.posts.length) {
-            const msg = document.createElement('div');
-            msg.className = 'status-message';
-            msg.innerHTML = `<div class="status-icon">💬</div>ยังไม่มีโพสต์ในไทม์ไลน์`;
-            els.feed.appendChild(msg);
+            els.feed.innerHTML = `<div style="text-align:center; padding:40px; color:var(--text-secondary);">ยังไม่มีโพสต์ใหม่</div>`;
             return;
         }
 
-        const avatarSrc = state.spaceProfile.imageUrl || '';
-        const authorName = escapeHTML(state.spaceProfile.name || 'Koo Mean');
-        const initials = authorName.split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
+        let html = '';
+        state.posts.forEach((post) => {
+            const authorName = escapeHTML(state.spaceProfile.name || 'Koo Mean');
+            const avatarSrc = escapeHTML(state.spaceProfile.imageUrl || 'https://ui-avatars.com/api/?name=KM');
+            
+            // เช็คว่า User ที่ล็อกอินอยู่ กดไลก์โพสต์นี้ไปหรือยัง
+            const hasLiked = state.isLoggedIn && post.likes.includes(state.currentUser.email);
+            const likeIcon = hasLiked ? 'fas fa-heart' : 'far fa-heart';
+            const likeClass = hasLiked ? 'action-btn liked' : 'action-btn';
 
-        state.posts.forEach((post, i) => {
-            const article = document.createElement('article');
-            article.className = 'post-card';
-            article.style.animationDelay = `${i * 0.05}s`;
-
-            article.innerHTML = `
-                <div class="post-avatar-wrap">
-                    <div class="img-fallback" style="font-size:0.85rem;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;">${initials}</div>
-                    <div class="img-skeleton" style="position:absolute;inset:0;border-radius:50%;"></div>
-                    <img class="post-avatar" data-src="${escapeHTML(avatarSrc)}" alt="Avatar"
-                         style="position:absolute;inset:0;width:40px;height:40px;">
-                </div>
-                <div class="post-card-content">
-                    <div class="post-card-header">
-                        <span class="post-card-name">${authorName}</span>
-                        <div class="verified-badge" style="width:14px;height:14px;font-size:0.45rem;">
-                            <i class="fas fa-check"></i>
+            // เรนเดอร์คอมเมนต์ที่มีอยู่
+            let commentsHtml = '';
+            if(post.comments && post.comments.length > 0) {
+                post.comments.forEach(c => {
+                    const cPic = escapeHTML(c.pic || 'https://ui-avatars.com/api/?name=' + c.name);
+                    commentsHtml += `
+                        <div class="comment-item">
+                            <img src="${cPic}" class="comment-avatar" onerror="this.src='https://ui-avatars.com/api/?name=U'">
+                            <div class="comment-box">
+                                <div class="comment-name">${escapeHTML(c.name)}</div>
+                                <div class="comment-text">${escapeHTML(c.text)}</div>
+                            </div>
                         </div>
-                        <span class="post-card-time">· ${formatDate(post.timestamp)}</span>
-                    </div>
-                    <div class="post-card-text">${escapeHTML(post.content)}</div>
-                    <div class="post-card-actions">
-                        <span class="action-btn"><i class="far fa-heart"></i></span>
-                        <span class="action-btn"><i class="far fa-comment"></i></span>
-                        <span class="action-btn"><i class="fas fa-arrow-up-from-bracket"></i></span>
+                    `;
+                });
+            }
+
+            html += `
+                <div class="post-card">
+                    <div class="post-card-inner">
+                        <img src="${avatarSrc}" class="post-avatar" onerror="this.src='https://ui-avatars.com/api/?name=KM'">
+                        <div class="post-card-content">
+                            <div class="post-card-header">
+                                <span class="post-card-name">${authorName} <i class="fas fa-certificate" style="color:var(--accent); font-size:0.8rem;"></i></span>
+                                <span class="post-card-time">· ${formatDate(post.timestamp)}</span>
+                            </div>
+                            <div class="post-card-text">${escapeHTML(post.content)}</div>
+                            
+                            <div class="post-card-actions">
+                                <button class="${likeClass}" onclick="toggleLike(${post.rowIdx})"><i class="${likeIcon}"></i> ${post.likes.length}</button>
+                                <button class="action-btn" onclick="toggleCommentBox(${post.rowIdx})"><i class="far fa-comment"></i> ${post.comments.length}</button>
+                            </div>
+
+                            <div class="comments-section" id="comments-section-${post.rowIdx}">
+                                ${commentsHtml}
+                                <div class="comment-input-area">
+                                    <input type="text" class="comment-input" id="comment-input-${post.rowIdx}" placeholder="แสดงความคิดเห็น..." ${!state.isLoggedIn ? 'disabled title="กรุณาล็อกอินก่อน"' : ''}>
+                                    <button class="btn-comment" onclick="submitComment(${post.rowIdx})">ส่ง</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             `;
-            els.feed.appendChild(article);
         });
-
-        initPostAvatars();
+        
+        els.feed.innerHTML = html;
     }
 
-    // ─── Submit Post ──────────────────────────────────────────────────────────
+    // --- Interactive Actions ---
+    
+    // เปิด/ปิดกล่องคอมเมนต์
+    function toggleCommentBox(rowIdx) {
+        const box = document.getElementById(`comments-section-${rowIdx}`);
+        if(box.style.display === 'block') box.style.display = 'none';
+        else box.style.display = 'block';
+    }
+
+    // กดไลก์
+    async function toggleLike(rowIdx) {
+        if (!state.isLoggedIn) {
+            els.modal.classList.add('show');
+            return showToast('กรุณา Sign in ก่อนเพื่อกดไลก์ครับ');
+        }
+        
+        // อัปเดต UI ล่วงหน้า (Optimistic Update) ให้ทันใจวัยรุ่น
+        const post = state.posts.find(p => p.rowIdx === rowIdx);
+        const emailIdx = post.likes.indexOf(state.currentUser.email);
+        if (emailIdx > -1) post.likes.splice(emailIdx, 1); // เอาออก
+        else post.likes.push(state.currentUser.email); // เพิ่ม
+        renderFeed(); // รีเฟรชปุ่ม
+
+        // ยิงข้อมูลไปเซฟหลังบ้าน
+        const formData = new URLSearchParams({ action: 'toggleLike', email: state.currentUser.email, rowIdx: rowIdx });
+        try {
+            await fetch(API_URL, { method: 'POST', body: formData, headers: { 'Content-Type': 'application/x-www-form-urlencoded' }});
+        } catch(e) { console.error('Like error'); }
+    }
+
+    // ส่งคอมเมนต์
+    async function submitComment(rowIdx) {
+        if (!state.isLoggedIn) {
+            els.modal.classList.add('show');
+            return showToast('กรุณา Sign in ก่อนคอมเมนต์ครับ');
+        }
+
+        const inputEl = document.getElementById(`comment-input-${rowIdx}`);
+        const text = inputEl.value.trim();
+        if(!text) return;
+
+        inputEl.disabled = true;
+        showToast('กำลังส่งคอมเมนต์...');
+
+        const formData = new URLSearchParams({ 
+            action: 'addComment', 
+            email: state.currentUser.email,
+            name: state.currentUser.name || 'User',
+            pic: state.currentUser.pic || '',
+            text: text,
+            rowIdx: rowIdx 
+        });
+
+        try {
+            const res = await fetch(API_URL, { method: 'POST', body: formData, headers: { 'Content-Type': 'application/x-www-form-urlencoded' }});
+            const result = await res.json();
+            if(result.success) {
+                inputEl.value = '';
+                await loadData(state.currentUser.email, state.currentUser.name, state.currentUser.pic); // รีโหลดฟีดใหม่
+                document.getElementById(`comments-section-${rowIdx}`).style.display = 'block'; // เปิดกล่องไว้เหมือนเดิม
+                showToast('ส่งคอมเมนต์สำเร็จ');
+            }
+        } catch(e) { 
+            showToast('เกิดข้อผิดพลาดในการคอมเมนต์'); 
+        } finally {
+            inputEl.disabled = false;
+        }
+    }
+
+    // ส่งโพสต์หลัก (Admin เท่านั้น)
     async function submitPost() {
         const content = els.postInput.value.trim();
         if (!content) return;
-        if (!state.isLoggedIn || state.currentUser?.role !== 'admin') {
-            showToast('สิทธิ์ไม่เพียงพอ', 'error', 'fas fa-ban');
-            return;
-        }
+        if (!state.isLoggedIn || state.currentUser?.role !== 'admin') return;
 
-        els.postSubmit.textContent = 'กำลังโพสต์...';
+        els.postSubmit.textContent = 'Posting...';
         els.postSubmit.disabled = true;
         els.postInput.disabled = true;
 
         try {
-            const formData = new URLSearchParams();
-            formData.append('action', 'addPost');
-            formData.append('email', state.currentUser.email);
-            formData.append('content', content);
-
-            const res = await fetchWithTimeout(API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: formData
-            });
+            const formData = new URLSearchParams({ action: 'addPost', email: state.currentUser.email, content: content });
+            const res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: formData });
             const result = await res.json();
 
             if (result.success) {
                 els.postInput.value = '';
-                els.postInput.style.height = 'auto';
-                els.charCount.textContent = '0 / 500';
-                els.charCount.className = 'char-count';
-                showToast('โพสต์สำเร็จ!', 'success', 'fas fa-check-circle');
-                await loadData(state.currentUser.email, state.currentUser.pic, true);
-            } else {
-                showToast('โพสต์ล้มเหลว: ' + (result.message || 'Unknown'), 'error', 'fas fa-times-circle');
+                showToast('โพสต์สำเร็จ!');
+                await loadData(state.currentUser.email, state.currentUser.name, state.currentUser.pic);
             }
         } catch (err) {
-            console.error(err);
-            showToast('ข้อผิดพลาดการเชื่อมต่อ', 'error', 'fas fa-wifi');
+            showToast('ข้อผิดพลาดการเชื่อมต่อ');
         } finally {
             els.postSubmit.textContent = 'Post';
             els.postSubmit.disabled = false;
             els.postInput.disabled = false;
-            els.postInput.focus();
         }
     }
 
-    // ─── Init ─────────────────────────────────────────────────────────────────
+    // --- Init ---
     (function init() {
-        const saved = loadSession();
-        if (saved?.email) {
+        els.postInput.addEventListener('input', function() { this.style.height = 'auto'; this.style.height = this.scrollHeight + 'px'; });
+        
+        const saved = localStorage.getItem(SESSION_KEY);
+        if (saved) {
+            const user = JSON.parse(saved);
             state.isLoggedIn = true;
-            state.currentUser = saved;
-            els.loginBtn.textContent = 'Sign Out';
-            els.loginBtn.className = 'auth-btn signed-in';
-            loadData(saved.email, saved.pic || '');
+            state.currentUser = user;
+            loadData(user.email, user.name, user.pic);
         } else {
             loadData();
         }
