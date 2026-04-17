@@ -2,18 +2,112 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <title>My Personal Space</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
     <style>
-        body { font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f5f8fa; }
-        .post { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; padding: 20px; background: #f5f5f7;}
+        .container { background: white; padding: 30px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); max-width: 500px; margin: auto; }
+        .hidden { display: none; }
+        input, textarea { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #d1d1d6; border-radius: 10px; box-sizing: border-box; font-family: inherit;}
+        button { background: #007aff; color: white; border: none; padding: 12px 20px; border-radius: 10px; cursor: pointer; font-weight: bold; width: 100%;}
+        button:hover { background: #0066cc; }
     </style>
 </head>
 <body>
-    <h2>พื้นที่ของมีน 🚀</h2>
 
-    <div class="post">
-        <p>สวัสดีชาวโลก! นี่คือโพสต์แรกของผม ลองทำเว็บเองบน GitHub ครับ</p>
+<div class="container">
+    <h2 id="status">เข้าสู่ระบบเพื่อจัดการเว็บ</h2>
+    
+    <div id="g_id_onload"
+         data-client_id="ใส่_GOOGLE_CLIENT_ID_ตรงนี้.apps.googleusercontent.com"
+         data-callback="handleCredentialResponse">
     </div>
+    <div class="g_id_signin" data-type="standard" id="loginBtn"></div>
 
+    <div id="adminPanel" class="hidden">
+        <h3>เพิ่มโพสต์ใหม่</h3>
+        <input type="text" id="postTitle" placeholder="หัวข้อโพสต์">
+        <textarea id="postContent" rows="6" placeholder="เนื้อหา"></textarea>
+        <button onclick="addPost()">เผยแพร่โพสต์</button>
+        <p id="message" style="text-align: center; margin-top: 15px; font-size: 14px;"></p>
+    </div>
+</div>
+
+<script>
+    // เอา URL ของ Web App จากขั้นตอนที่ 2 มาใส่ตรงนี้
+    const SCRIPT_URL = 'ใส่_URL_WEB_APP_ตรงนี้';
+    let currentUserEmail = '';
+
+    function handleCredentialResponse(response) {
+        // ถอดรหัสข้อมูลเพื่อให้ได้ Email 
+        const data = jwt_decode(response.credential);
+        currentUserEmail = data.email;
+        
+        document.getElementById('status').innerText = 'กำลังตรวจสอบสิทธิ์ผู้ดูแลระบบ...';
+        document.getElementById('loginBtn').classList.add('hidden');
+
+        fetch(SCRIPT_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({
+                action: 'login',
+                email: currentUserEmail
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if(data.role === 'admin') {
+                document.getElementById('status').innerText = `ระบบผู้ดูแล: ${currentUserEmail}`;
+                document.getElementById('adminPanel').classList.remove('hidden');
+            } else {
+                document.getElementById('status').innerText = `อีเมล ${currentUserEmail} ไม่มีสิทธิ์เขียนโพสต์`;
+            }
+        });
+    }
+
+    function addPost() {
+        const title = document.getElementById('postTitle').value;
+        const content = document.getElementById('postContent').value;
+        const msgEl = document.getElementById('message');
+
+        if(!title || !content) {
+            msgEl.innerText = "กรุณากรอกข้อมูลให้ครบถ้วน";
+            msgEl.style.color = "red";
+            return;
+        }
+
+        msgEl.innerText = "กำลังบันทึกข้อมูลลง Database...";
+        msgEl.style.color = "#666";
+
+        fetch(SCRIPT_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({
+                action: 'addPost',
+                email: currentUserEmail,
+                title: title,
+                content: content
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if(data.success) {
+                msgEl.innerText = "โพสต์สำเร็จเรียบร้อย!";
+                msgEl.style.color = "green";
+                document.getElementById('postTitle').value = '';
+                document.getElementById('postContent').value = '';
+            } else {
+                msgEl.innerText = "เกิดข้อผิดพลาด: " + data.message;
+                msgEl.style.color = "red";
+            }
+        })
+        .catch(error => {
+            msgEl.innerText = "เชื่อมต่อล้มเหลว ลองใหม่อีกครั้ง";
+            msgEl.style.color = "red";
+        });
+    }
+</script>
 </body>
 </html>
