@@ -24,7 +24,7 @@
         body { background-color: var(--bg-body); color: var(--text-primary); display: flex; justify-content: center; min-height: 100vh; overflow-y: scroll; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
         ::-webkit-scrollbar { width: 4px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
 
-        .app-container { width: 100%; max-width: 600px; min-height: 100vh; background-color: var(--bg-container); border-left: 1px solid var(--border); border-right: 1px solid var(--border); position: relative; display: flex; flex-direction: column; }
+        .app-container { width: 100%; max-width: 600px; min-height: 100vh; background-color: var(--bg-container); border-left: 1px solid var(--border); border-right: 1px solid var(--border); position: relative; display: flex; flex-direction: column; text-align: left; }
         @media (max-width: 600px) { .app-container { border: none; } }
 
         /* ─── Header ─── */
@@ -38,7 +38,7 @@
         .auth-btn.signed-in:hover { background: rgba(255, 71, 87, 0.1); border-color: var(--danger); color: var(--danger);}
 
         /* ─── Profile ─── */
-        .profile-header { position: relative; border-bottom: 1px solid var(--border); }
+        .profile-header { position: relative; border-bottom: 1px solid var(--border); text-align: left; }
         .profile-cover { height: 155px; background: linear-gradient(160deg, #0d1a3a 0%, #060c1a 50%, #000 100%); background-size: cover; background-position: center; position: relative; overflow: hidden; }
         .profile-cover::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 80% at 20% 50%, rgba(79, 142, 247, 0.12) 0%, transparent 70%), radial-gradient(ellipse 40% 60% at 80% 30%, rgba(167, 139, 250, 0.08) 0%, transparent 70%); }
         .profile-cover::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 40px; background: linear-gradient(to top, var(--bg-container), transparent); }
@@ -57,7 +57,7 @@
         .profile-avatar.loaded { opacity: 1; }
         @media (max-width: 600px) { .profile-avatar { width: 88px; height: 88px; } }
 
-        .profile-text-content { margin-top: 58px; }
+        .profile-text-content { margin-top: 58px; text-align: left; }
         @media (max-width: 600px) { .profile-text-content { margin-top: 42px; } }
         .profile-name-row { display: flex; align-items: center; gap: 6px; }
         .profile-name { font-size: 1.2rem; font-weight: 800; font-family: 'Sora', sans-serif; letter-spacing: -0.5px; line-height: 1.2; }
@@ -72,7 +72,7 @@
         .skel-line { background: linear-gradient(90deg, var(--skeleton) 25%, var(--skeleton-shine) 50%, var(--skeleton) 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 6px; display: block; }
 
         /* ─── Post Creator (Admin Only) ─── */
-        .post-creator { padding: 14px 18px; border-bottom: 1px solid var(--border); display: none; background: linear-gradient(180deg, #060b18 0%, transparent 100%); position: relative; }
+        .post-creator { padding: 14px 18px; border-bottom: 1px solid var(--border); display: none; background: linear-gradient(180deg, #060b18 0%, transparent 100%); position: relative; text-align: left; }
         .post-creator::before { content: ''; position: absolute; top: 0; left: 18px; right: 18px; height: 1px; background: linear-gradient(90deg, transparent, var(--accent), transparent); opacity: 0.3; }
         .creator-flex { display: flex; gap: 12px; }
         .creator-avatar-wrap { flex-shrink: 0; border-radius: 50%; padding: 2px; background: linear-gradient(135deg, var(--accent), #a78bfa); width: 42px; height: 42px; }
@@ -97,29 +97,43 @@
         .btn-post:disabled { opacity: 0.45; cursor: not-allowed; transform: none; box-shadow: none; }
 
         /* ─── Feed ─── */
-        .feed-container { flex: 1; padding-bottom: 60px; }
-        .feed-divider { padding: 10px 18px 6px; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); letter-spacing: 0.8px; text-transform: uppercase; border-bottom: 1px solid var(--border-subtle); }
+        .feed-container { flex: 1; padding-bottom: 60px; text-align: left;}
+        .feed-divider { padding: 10px 18px 6px; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); letter-spacing: 0.8px; text-transform: uppercase; border-bottom: 1px solid var(--border-subtle); text-align: left; }
 
-        .post-card { padding: 14px 18px; border-bottom: 1px solid var(--border-subtle); display: flex; gap: 12px; cursor: default; transition: background-color 0.18s ease; animation: fadeUp 0.35s ease both; }
-        .post-card:hover { background-color: var(--bg-card-hover); }
+        .post-card { padding: 14px 18px; border-bottom: 1px solid var(--border-subtle); display: flex; gap: 12px; cursor: default; transition: background-color 0.18s ease; animation: fadeUp 0.35s ease both; text-align: left; }
+        .post-card:hover { background: var(--bg-card-hover); }
         @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
         .post-avatar-wrap { flex-shrink: 0; width: 40px; height: 40px; border-radius: 50%; overflow: hidden; position: relative; background: var(--bg-card); }
         .post-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; display: block; opacity: 0; transition: opacity 0.3s ease; position: relative; z-index: 2; }
         .post-avatar.loaded { opacity: 1; }
 
-        .post-card-content { flex: 1; min-width: 0; }
-        .post-card-header { display: flex; align-items: center; gap: 5px; margin-bottom: 5px; flex-wrap: wrap; }
+        .post-card-content { flex: 1; min-width: 0; display: flex; flex-direction: column;}
+        .post-card-header { display: flex; align-items: center; gap: 5px; margin-bottom: 4px; flex-wrap: wrap; }
         .post-card-name { font-weight: 700; color: var(--text-primary); font-size: 0.925rem; letter-spacing: -0.2px; }
         .post-card-time { color: var(--text-secondary); font-size: 0.85rem; font-weight: 400; }
-        .post-card-text { color: var(--text-primary); font-size: 0.95rem; line-height: 1.6; white-space: pre-wrap; word-wrap: break-word; opacity: 0.9; }
+        
+        /* แก้ปัญหาข้อความห่างและลอยตรงกลาง */
+        .post-card-text { color: var(--text-primary); font-size: 0.95rem; line-height: 1.5; white-space: pre-wrap; word-wrap: break-word; opacity: 0.9; text-align: left; margin-bottom: 8px;}
+        .post-card-text:empty { display: none; }
+        
         .post-link { color: var(--accent); text-decoration: none; }
         .post-link:hover { text-decoration: underline; }
         
-        .post-attached-media { width: 100%; border-radius: 16px; margin-top: 10px; border: 1px solid var(--border-subtle); object-fit: cover; max-height: 500px;}
-        .post-yt-embed { width: 100%; aspect-ratio: 16/9; border-radius: 16px; margin-top: 10px; border: 1px solid var(--border-subtle); }
+        .post-attached-media { width: 100%; border-radius: 16px; margin-top: 8px; margin-bottom: 8px; border: 1px solid var(--border-subtle); object-fit: cover; max-height: 500px;}
+        .post-yt-embed { width: 100%; aspect-ratio: 16/9; border-radius: 16px; margin-top: 8px; margin-bottom: 8px; border: 1px solid var(--border-subtle); }
 
-        .post-card-actions { display: flex; gap: 20px; margin-top: 12px; }
+        /* ระบบตัวอย่างลิงก์ (Link Preview) */
+        .link-preview-container { display: none; margin-top: 8px; margin-bottom: 8px; width: 100%; }
+        .link-preview-card { display: flex; flex-direction: column; border: 1px solid var(--border-subtle); border-radius: 16px; overflow: hidden; text-decoration: none; color: var(--text-primary); transition: 0.2s; background: var(--bg-card); }
+        .link-preview-card:hover { background: var(--border-subtle); border-color: var(--border); }
+        .link-preview-img { width: 100%; height: 160px; object-fit: cover; border-bottom: 1px solid var(--border-subtle); }
+        .link-preview-info { padding: 12px 14px; display: flex; flex-direction: column; gap: 4px;}
+        .link-preview-title { font-weight: 700; font-size: 0.95rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .link-preview-desc { font-size: 0.85rem; color: var(--text-secondary); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .link-preview-domain { font-size: 0.75rem; color: var(--text-muted); display: flex; align-items: center; gap: 6px; margin-top: 4px; text-transform: uppercase; font-weight: 600;}
+
+        .post-card-actions { display: flex; gap: 20px; margin-top: 8px; }
         .action-btn { display: flex; align-items: center; gap: 6px; color: var(--text-secondary); font-size: 0.82rem; cursor: pointer; transition: color 0.18s; background: transparent; border: none; outline: none; font-family: inherit;}
         .action-btn i { font-size: 0.95rem; }
         .action-btn:hover { color: var(--accent); }
@@ -141,7 +155,7 @@
         .comment-input:focus + .btn-comment { background: var(--accent); }
 
         /* Skeleton Posts */
-        .skeleton-post { padding: 14px 18px; border-bottom: 1px solid var(--border-subtle); display: flex; gap: 12px; animation: fadeUp 0.3s ease both; }
+        .skeleton-post { padding: 14px 18px; border-bottom: 1px solid var(--border-subtle); display: flex; gap: 12px; animation: fadeUp 0.3s ease both; text-align: left;}
         .skeleton-avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(90deg, var(--skeleton) 25%, var(--skeleton-shine) 50%, var(--skeleton) 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; flex-shrink: 0; }
         .skeleton-content { flex: 1; display: flex; flex-direction: column; gap: 8px; padding-top: 4px; }
 
@@ -238,7 +252,16 @@
         <main class="feed-container" id="feed-container">
             <div class="feed-divider">Timeline</div>
             <div id="skeleton-posts">
-                </div>
+                ${[...Array(3)].map((_, i) => `
+                <div class="skeleton-post" style="animation-delay:${i * 0.06}s">
+                    <div class="skeleton-avatar"></div>
+                    <div class="skeleton-content">
+                        <span class="skel-line" style="width:${40 + Math.random() * 30}%;height:13px;"></span>
+                        <span class="skel-line" style="width:100%;height:13px;"></span>
+                        <span class="skel-line" style="width:${60 + Math.random() * 30}%;height:13px;"></span>
+                    </div>
+                </div>`).join('')}
+            </div>
         </main>
     </div>
 
@@ -315,31 +338,95 @@
         try { return JSON.parse(decodeURIComponent(atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''))); } catch { return null; }
     }
     
-    // ตัวแปลงข้อความ (ป้องกันโค้ดเสีย 100%)
-    function processContent(text) {
+    function escapeHTML(str) { if (!str) return ''; const p = document.createElement('p'); p.textContent = str; return p.innerHTML; }
+
+    // ระบบประมวลผลลิงก์และ YouTube (แก้ปัญหาการจัดหน้าให้ข้อความชิดซ้ายปกติ)
+    function processContent(text, rowIdx) {
         if (!text) return { safeText: '', mediaHtml: '' };
         
-        let safeText = document.createElement('div');
-        safeText.textContent = text;
-        safeText = safeText.innerHTML;
-
+        let safeText = escapeHTML(text.trim());
         let extraHtml = '';
-        const ytRegex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
-        const ytMatch = safeText.match(ytRegex);
+        let standardLink = null;
         
-        if (ytMatch) {
-            extraHtml = `<iframe class="post-yt-embed" src="https://www.youtube.com/embed/${ytMatch[1]}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
-        }
-
+        // แยก URL ออกจากข้อความ
         const urlRegex = /(https?:\/\/[^\s<]+)/g;
+        const urls = safeText.match(urlRegex) || [];
+        
         safeText = safeText.replace(urlRegex, function(url) {
             return `<a href="${url}" target="_blank" class="post-link">${url}</a>`;
         });
 
-        return { safeText: safeText, mediaHtml: extraHtml };
+        // ตรวจสอบว่ามี YouTube หรือลิงก์ทั่วไปไหม
+        let ytMatch = null;
+        for (let url of urls) {
+            const ytRegex = /(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+            const match = url.match(ytRegex);
+            if (match) {
+                ytMatch = match[1];
+                break;
+            } else if (!standardLink) {
+                standardLink = url;
+            }
+        }
+
+        if (ytMatch) {
+            extraHtml = `<iframe class="post-yt-embed" src="https://www.youtube.com/embed/${ytMatch}" frameborder="0" allowfullscreen></iframe>`;
+        } else if (standardLink) {
+            // เตรียมกล่องไว้โชว์ตัวอย่างลิงก์
+            const containerId = `preview-${rowIdx}`;
+            extraHtml = `<div class="link-preview-container" id="${containerId}"></div>`;
+        }
+
+        return { safeText: safeText, mediaHtml: extraHtml, targetLink: standardLink };
     }
 
-    function escapeHTML(str) { if (!str) return ''; const p = document.createElement('p'); p.textContent = str; return p.innerHTML; }
+    // ฟังก์ชันดึงข้อมูลตัวอย่างลิงก์แบบ Client-side (ผ่าน AllOrigins bypass CORS)
+    async function fetchLinkPreview(url, containerId) {
+        try {
+            const res = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`);
+            const data = await res.json();
+            if (!data.contents) return;
+
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(data.contents, "text/html");
+            
+            const getMeta = (prop, name) => {
+                let el = prop ? doc.querySelector(`meta[property="${prop}"]`) : null;
+                if (!el && name) el = doc.querySelector(`meta[name="${name}"]`);
+                return el ? el.content : '';
+            };
+
+            const title = getMeta('og:title', 'title') || doc.title || url;
+            const desc = getMeta('og:description', 'description') || '';
+            let image = getMeta('og:image', '');
+
+            if (image && image.startsWith('/')) {
+                const urlObj = new URL(url);
+                image = `${urlObj.protocol}//${urlObj.host}${image}`;
+            }
+
+            if (title || image) {
+                const hostname = new URL(url).hostname;
+                const container = document.getElementById(containerId);
+                if (container) {
+                    container.innerHTML = `
+                        <a href="${url}" target="_blank" class="link-preview-card">
+                            ${image ? `<img src="${image}" class="link-preview-img" onerror="this.style.display='none'">` : ''}
+                            <div class="link-preview-info">
+                                <div class="link-preview-title">${escapeHTML(title)}</div>
+                                ${desc ? `<div class="link-preview-desc">${escapeHTML(desc)}</div>` : ''}
+                                <div class="link-preview-domain"><i class="fas fa-link"></i> ${hostname}</div>
+                            </div>
+                        </a>
+                    `;
+                    container.style.display = 'block';
+                }
+            }
+        } catch (e) {
+            console.log('Preview skip for:', url);
+        }
+    }
+
     function formatDate(ts) { if (!ts) return ''; const d = new Date(ts); return d.toLocaleDateString('th-TH', { day: 'numeric', month: 'short' }) + ' ' + d.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }); }
 
     async function fetchWithTimeout(url, options = {}) {
@@ -452,7 +539,6 @@
     function renderFeed() {
         if (els.skeletonPosts) els.skeletonPosts.style.display = 'none';
         
-        // เราจะไม่ใช้ innerHTML += เพื่อป้องกันปุ่มต่างๆ ค้าง เราจะสร้างใหม่ทั้งหมด
         let feedHtml = `<div class="feed-divider">Timeline</div>`;
         
         if (!state.posts.length) {
@@ -464,9 +550,10 @@
         const authorName = escapeHTML(state.spaceProfile.name || 'Koo Mean');
         const avatarSrc = escapeHTML(state.spaceProfile.imageUrl || '');
         const initials = authorName.split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
+        
+        let linkPreviewsToFetch = []; // คิวสำหรับดึงข้อมูลพรีวิวเว็บ
 
         state.posts.forEach((post, i) => {
-            // ดึงค่าอย่างปลอดภัยกัน Error
             const likesList = Array.isArray(post.likes) ? post.likes : [];
             const commentsList = Array.isArray(post.comments) ? post.comments : [];
             const mediaUrl = post.mediaUrl || '';
@@ -483,7 +570,13 @@
                 });
             }
 
-            const processedContent = processContent(post.content);
+            const processed = processContent(post.content, post.rowIdx);
+            
+            // เก็บเข้าคิวถ้ามีลิงก์ที่ต้องดึงพรีวิว
+            if (processed.targetLink) {
+                linkPreviewsToFetch.push({ url: processed.targetLink, id: `preview-${post.rowIdx}` });
+            }
+
             let attachedMediaHtml = '';
             if (mediaUrl.trim() !== '') {
                 attachedMediaHtml = `<img src="${escapeHTML(mediaUrl)}" class="post-attached-media" onerror="this.style.display='none'">`;
@@ -501,10 +594,10 @@
                             <div class="verified-badge" style="width:14px;height:14px;font-size:0.45rem;"><i class="fas fa-check"></i></div>
                             <span class="post-card-time">· ${formatDate(post.timestamp)}</span>
                         </div>
-                        <div class="post-card-text">
-                            ${processedContent.safeText}
-                        </div>
-                        ${processedContent.mediaHtml}
+                        
+                        <div class="post-card-text">${processed.safeText}</div>
+                        
+                        ${processed.mediaHtml}
                         ${attachedMediaHtml}
                         
                         <div class="post-card-actions">
@@ -525,6 +618,11 @@
         });
 
         els.feed.innerHTML = feedHtml;
+        
+        // ยิง request ดึง Link Preview หลังสร้างหน้าเว็บเสร็จ
+        linkPreviewsToFetch.forEach(item => {
+            fetchLinkPreview(item.url, item.id);
+        });
     }
 
     function toggleCommentBox(rowIdx) {
@@ -536,7 +634,7 @@
         if (!state.isLoggedIn) return els.modal.classList.add('show');
         
         const post = state.posts.find(p => p.rowIdx === rowIdx);
-        if (!post.likes) post.likes = []; // กันเหนียว
+        if (!post.likes) post.likes = []; 
         const emailIdx = post.likes.indexOf(state.currentUser.email);
         if (emailIdx > -1) post.likes.splice(emailIdx, 1); else post.likes.push(state.currentUser.email);
         renderFeed();
