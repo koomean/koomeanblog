@@ -3,109 +3,216 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
+    <title>My Web Dashboard</title>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; padding: 20px; background: #f5f5f7;}
-        .container { background: white; padding: 30px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); max-width: 500px; margin: auto; }
-        .hidden { display: none; }
-        input, textarea { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #d1d1d6; border-radius: 10px; box-sizing: border-box; font-family: inherit;}
-        button { background: #007aff; color: white; border: none; padding: 12px 20px; border-radius: 10px; cursor: pointer; font-weight: bold; width: 100%;}
+        body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: #f5f5f7; margin: 0; padding: 20px; color: #333;}
+        .container { background: white; padding: 30px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); max-width: 800px; margin: auto; }
+        .hidden { display: none !important; }
+        input, select { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #d1d1d6; border-radius: 8px; box-sizing: border-box; font-family: inherit;}
+        button { background: #007aff; color: white; border: none; padding: 10px 15px; border-radius: 8px; cursor: pointer; font-weight: bold; }
         button:hover { background: #0066cc; }
+        .card { border: 1px solid #eee; padding: 15px; border-radius: 10px; margin-bottom: 15px; }
+        .admin-section { background: #fff5e6; border: 1px solid #ffd599; padding: 20px; border-radius: 12px; margin-top: 30px;}
+        .flex-between { display: flex; justify-content: space-between; align-items: center; }
+        hr { border: 0; height: 1px; background: #eee; margin: 20px 0; }
+        .profile-header { text-align: center; margin-bottom: 20px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2 id="status">เข้าสู่ระบบเพื่อจัดการเว็บ</h2>
+    <h2 id="statusText" style="text-align: center;">เข้าสู่ระบบ</h2>
     
-    <div id="g_id_onload"
-         data-client_id="ใส่_GOOGLE_CLIENT_ID_ตรงนี้.apps.googleusercontent.com"
-         data-callback="handleCredentialResponse">
+    <div id="loginSection" style="text-align: center; margin-bottom: 20px;">
+        <div id="g_id_onload"
+             data-client_id="ใส่_GOOGLE_CLIENT_ID_ของคุณที่นี่.apps.googleusercontent.com"
+             data-callback="handleCredentialResponse">
+        </div>
+        <div class="g_id_signin" data-type="standard" style="display: inline-block;"></div>
     </div>
-    <div class="g_id_signin" data-type="standard" id="loginBtn"></div>
 
-    <div id="adminPanel" class="hidden">
-        <h3>เพิ่มโพสต์ใหม่</h3>
-        <input type="text" id="postTitle" placeholder="หัวข้อโพสต์">
-        <textarea id="postContent" rows="6" placeholder="เนื้อหา"></textarea>
-        <button onclick="addPost()">เผยแพร่โพสต์</button>
-        <p id="message" style="text-align: center; margin-top: 15px; font-size: 14px;"></p>
+    <div id="registerSection" class="hidden card">
+        <h3>ดูเหมือนคุณจะเป็นผู้ใช้ใหม่!</h3>
+        <p>กรุณากรอกข้อความแนะนำตัวสั้นๆ เพื่อให้แอดมินอนุมัติสิทธิ์</p>
+        <input type="text" id="regNote" placeholder="พิมพ์ข้อความถึง Admin (Note)">
+        <button onclick="registerUser()">ลงทะเบียนเข้าใช้งาน</button>
+    </div>
+
+    <div id="mainDashboard" class="hidden">
+        <div class="profile-header">
+            <h1 id="profileName">Loading...</h1>
+            <p id="profileBio"></p>
+            <p id="profileAbout" style="font-size: 0.9em; color: #666;"></p>
+        </div>
+        
+        <h3>🔗 ลิงก์ทั้งหมด (Links)</h3>
+        <div id="linksContainer"></div>
+    </div>
+
+    <div id="adminPanel" class="hidden admin-section">
+        <h2 style="color: #d97706;">🛠 Admin Dashboard</h2>
+        
+        <div class="card">
+            <h3>จัดการลิงก์ (ตั้งค่ากลุ่ม / ปักหมุด)</h3>
+            <select id="linkSelect"><option value="">-- เลือกลิงก์ที่ต้องการแก้ไข --</option></select>
+            <input type="text" id="newLinkGroup" placeholder="กลุ่มใหม่ (เช่น public, admin)">
+            <select id="newLinkStarred">
+                <option value="false">ไม่ปักหมุด (ดาว = false)</option>
+                <option value="true">ปักหมุด (ดาว = true)</option>
+            </select>
+            <button onclick="updateLink()">อัปเดตข้อมูลลิงก์</button>
+        </div>
+
+        <div class="card">
+            <h3>จัดการผู้ใช้งาน (เปลี่ยน Role)</h3>
+            <select id="userSelect"><option value="">-- เลือกผู้ใช้งาน --</option></select>
+            <input type="text" id="newUserRole" placeholder="Role ใหม่ (เช่น admin, public)">
+            <button onclick="updateRole()">อัปเดตสิทธิ์ผู้ใช้</button>
+        </div>
     </div>
 </div>
 
 <script>
-    // เอา URL ของ Web App จากขั้นตอนที่ 2 มาใส่ตรงนี้
+    // ** ใส่ URL ของ Apps Script (doGet) ที่ Deploy แล้วตรงนี้ **
     const SCRIPT_URL = 'ใส่_URL_WEB_APP_ตรงนี้';
-    let currentUserEmail = '';
+    
+    let currentUser = {};
+    let globalData = {};
 
+    // 1. จัดการเมื่อล็อกอินผ่าน Google สำเร็จ
     function handleCredentialResponse(response) {
-        // ถอดรหัสข้อมูลเพื่อให้ได้ Email 
         const data = jwt_decode(response.credential);
-        currentUserEmail = data.email;
+        currentUser.email = data.email;
+        currentUser.name = data.name;
         
-        document.getElementById('status').innerText = 'กำลังตรวจสอบสิทธิ์ผู้ดูแลระบบ...';
-        document.getElementById('loginBtn').classList.add('hidden');
+        document.getElementById('statusText').innerText = 'กำลังโหลดข้อมูล...';
+        document.getElementById('loginSection').classList.add('hidden');
 
-        fetch(SCRIPT_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: new URLSearchParams({
-                action: 'login',
-                email: currentUserEmail
-            })
-        })
+        fetchData({ email: currentUser.email, name: currentUser.name });
+    }
+
+    // 2. ฟังก์ชันส่ง GET Request ไปยัง Apps Script
+    function fetchData(params) {
+        const url = new URL(SCRIPT_URL);
+        Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
+
+        fetch(url)
         .then(res => res.json())
         .then(data => {
-            if(data.role === 'admin') {
-                document.getElementById('status').innerText = `ระบบผู้ดูแล: ${currentUserEmail}`;
-                document.getElementById('adminPanel').classList.remove('hidden');
-            } else {
-                document.getElementById('status').innerText = `อีเมล ${currentUserEmail} ไม่มีสิทธิ์เขียนโพสต์`;
+            // กรณีเป็นผู้ใช้ใหม่ ระบบหลังบ้านส่ง requireRegistration กลับมา
+            if (data.requireRegistration) {
+                document.getElementById('statusText').innerText = 'ลงทะเบียนเข้าใช้งาน';
+                document.getElementById('registerSection').classList.remove('hidden');
+                return;
             }
+
+            // โหลดสำเร็จ
+            globalData = data;
+            document.getElementById('registerSection').classList.add('hidden');
+            renderDashboard(data);
+        })
+        .catch(err => {
+            alert('เกิดข้อผิดพลาดในการเชื่อมต่อ');
+            console.error(err);
         });
     }
 
-    function addPost() {
-        const title = document.getElementById('postTitle').value;
-        const content = document.getElementById('postContent').value;
-        const msgEl = document.getElementById('message');
+    // 3. ฟังก์ชันลงทะเบียนผู้ใช้ใหม่
+    function registerUser() {
+        const note = document.getElementById('regNote').value;
+        document.getElementById('statusText').innerText = 'กำลังลงทะเบียน...';
+        fetchData({
+            action: 'register',
+            email: currentUser.email,
+            name: currentUser.name,
+            note: note
+        });
+    }
 
-        if(!title || !content) {
-            msgEl.innerText = "กรุณากรอกข้อมูลให้ครบถ้วน";
-            msgEl.style.color = "red";
-            return;
+    // 4. เรนเดอร์หน้าเว็บ
+    function renderDashboard(data) {
+        document.getElementById('statusText').innerText = `ยินดีต้อนรับ, ${data.user.email} (${data.user.role})`;
+        document.getElementById('mainDashboard').classList.remove('hidden');
+
+        // เรนเดอร์โปรไฟล์
+        if(data.profile) {
+            document.getElementById('profileName').innerText = data.profile.name || 'ไม่มีชื่อโปรไฟล์';
+            document.getElementById('profileBio').innerText = data.profile.bio || '';
+            document.getElementById('profileAbout').innerText = data.profile.aboutText || '';
         }
 
-        msgEl.innerText = "กำลังบันทึกข้อมูลลง Database...";
-        msgEl.style.color = "#666";
+        // เรนเดอร์ลิงก์
+        const linksHtml = data.links ? data.links.map(link => `
+            <div class="card flex-between">
+                <div>
+                    <strong>${link.starred ? '⭐ ' : ''}${link.title}</strong>
+                    <br><small><a href="${link.url}" target="_blank">${link.url}</a> (Group: ${link.group})</small>
+                </div>
+            </div>
+        `).join('') : '<p>ไม่มีลิงก์</p>';
+        document.getElementById('linksContainer').innerHTML = linksHtml;
 
-        fetch(SCRIPT_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: new URLSearchParams({
-                action: 'addPost',
-                email: currentUserEmail,
-                title: title,
-                content: content
-            })
-        })
-        .then(res => res.json())
-        .then(data => {
-            if(data.success) {
-                msgEl.innerText = "โพสต์สำเร็จเรียบร้อย!";
-                msgEl.style.color = "green";
-                document.getElementById('postTitle').value = '';
-                document.getElementById('postContent').value = '';
-            } else {
-                msgEl.innerText = "เกิดข้อผิดพลาด: " + data.message;
-                msgEl.style.color = "red";
+        // ถ้าเป็น Admin ให้โชว์แผงควบคุมและใส่ข้อมูลลงใน Dropdown
+        if (data.user.role === 'admin') {
+            document.getElementById('adminPanel').classList.remove('hidden');
+            
+            // ใส่ข้อมูลลิงก์ลง Dropdown
+            const linkSelect = document.getElementById('linkSelect');
+            linkSelect.innerHTML = '<option value="">-- เลือกลิงก์ที่ต้องการแก้ไข --</option>';
+            data.links.forEach(l => {
+                linkSelect.innerHTML += `<option value="${l.title}">${l.title}</option>`;
+            });
+
+            // ใส่ข้อมูลผู้ใช้ลง Dropdown
+            if(data.allUsers) {
+                const userSelect = document.getElementById('userSelect');
+                userSelect.innerHTML = '<option value="">-- เลือกผู้ใช้งาน --</option>';
+                data.allUsers.forEach(u => {
+                    userSelect.innerHTML += `<option value="${u.email}">${u.email} (${u.role})</option>`;
+                });
             }
-        })
-        .catch(error => {
-            msgEl.innerText = "เชื่อมต่อล้มเหลว ลองใหม่อีกครั้ง";
-            msgEl.style.color = "red";
+        }
+    }
+
+    // 5. Admin: อัปเดตข้อมูลลิงก์
+    function updateLink() {
+        const title = document.getElementById('linkSelect').value;
+        const newGroup = document.getElementById('newLinkGroup').value;
+        const isStarred = document.getElementById('newLinkStarred').value;
+
+        if(!title) return alert("กรุณาเลือกลิงก์");
+        
+        const url = new URL(SCRIPT_URL);
+        url.searchParams.append('action', 'updateLink');
+        url.searchParams.append('email', currentUser.email);
+        url.searchParams.append('p1', title);
+        url.searchParams.append('p2', newGroup);
+        url.searchParams.append('p3', isStarred);
+
+        fetch(url).then(res => res.json()).then(res => {
+            if(res.success) { alert('อัปเดตลิงก์สำเร็จ!'); fetchData({email: currentUser.email}); }
+            else { alert('ล้มเหลว หรือคุณไม่มีสิทธิ์'); }
+        });
+    }
+
+    // 6. Admin: อัปเดตสิทธิ์ผู้ใช้
+    function updateRole() {
+        const targetEmail = document.getElementById('userSelect').value;
+        const newRole = document.getElementById('newUserRole').value;
+
+        if(!targetEmail || !newRole) return alert("กรุณากรอกข้อมูลให้ครบ");
+
+        const url = new URL(SCRIPT_URL);
+        url.searchParams.append('action', 'updateRole');
+        url.searchParams.append('email', currentUser.email);
+        url.searchParams.append('p1', targetEmail);
+        url.searchParams.append('p2', newRole);
+
+        fetch(url).then(res => res.json()).then(res => {
+            if(res.success) { alert('อัปเดตสิทธิ์สำเร็จ!'); fetchData({email: currentUser.email}); }
+            else { alert('ล้มเหลว หรือคุณไม่มีสิทธิ์'); }
         });
     }
 </script>
