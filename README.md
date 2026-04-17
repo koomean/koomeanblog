@@ -1,65 +1,84 @@
-#🚀 Koo Mean Space (KooMeanBlog)
-A Modern Personal Micro-Blogging Platform แพลตฟอร์มพื้นที่ส่วนตัวสำหรับบันทึกเรื่องราว (Space) ที่รวมความทันสมัยของ UI และความเรียบง่ายของการใช้ Google Sheets เป็นระบบหลังบ้าน
+<div align="center">
 
-##✨ Features (คุณสมบัติ)
-OLED Black Design: UI สวยงาม ทันสมัย รองรับ Dark Mode เต็มรูปแบบ ประหยัดพลังงานสำหรับหน้าจอ OLED
+# 🚀 KOO MEAN SPACE
+### **A Premium Personal Micro-Blogging Platform**
+ 
+[![Status](https://img.shields.io/badge/Status-Active-success?style=for-the-badge)]()
+[![Platform](https://img.shields.io/badge/Platform-GitHub_Pages-blue?style=for-the-badge)]()
+[![Backend](https://img.shields.io/badge/Backend-Google_Apps_Script-orange?style=for-the-badge)]()
 
-Responsive UI: ใช้งานได้สมบูรณ์แบบทั้งบนคอมพิวเตอร์และมือถือ (Mobile-First Experience)
+</div>
 
-Admin Control: ระบบหลังบ้านที่จัดการโดยคุณมีนเพียงคนเดียว (Admin) สามารถ โพสต์, แก้ไข, และลบเนื้อหาได้จากหน้าเว็บ
+---
 
-Social Engagement: ผู้ใช้ทั่วไปสามารถ Login ผ่าน Google เพื่อกด Like และแสดงความคิดเห็น (Comment) ได้
+# 🌟 OVERVIEW (ภาพรวมโปรเจกต์)
+**Koo Mean Space** คือแพลตฟอร์มโซเชียลมีเดียส่วนตัว (Micro-blogging) ที่ออกแบบมาให้มีความทันสมัย เรียบหรูในสไตล์ **OLED Black** โดยเน้นความเร็วในการใช้งานและความง่ายในการจัดการข้อมูลผ่าน **Google Sheets** ในรูปแบบของ Database 100%
 
-Media Support: * รองรับการอัปโหลดรูปภาพผ่าน ImgBB API โดยอัตโนมัติ
+---
 
-รองรับการแสดงผลวิดีโอจาก YouTube อัตโนมัติเมื่อแปะลิงก์
+# ✨ KEY FEATURES (คุณสมบัติหลัก)
 
-Smart Link Preview: ระบบตรวจจับลิงก์และดึงข้อมูล Preview (รูปปก/หัวข้อ) จากเว็บไซต์ต่างๆ มาแสดงผลแบบการ์ดสวยๆ
+### 🌑 OLED Black & Modern UI
+- ดีไซน์มินิมอล เน้นสีดำสนิทเพื่อประหยัดพลังงานบนหน้าจอ OLED
+- ระบบ **Skeleton Loading** โหลดเนื้อหาแบบนุ่มนวล สบายตา
+- **Fully Responsive** รองรับการใช้งานเต็มหน้าจอทั้งบน PC, iPad และ iPhone
 
-Skeleton Loading: ระบบโหลดข้อมูลแบบนุ่มนวล มอบประสบการณ์ใช้งานที่ลื่นไหล
+### 🛠️ Advanced Admin Control
+- ระบบจัดการโพสต์ระดับ Admin (คุณมีน) สามารถ **เขียน, แก้ไข และลบ** โพสต์ได้โดยตรงจากหน้าเว็บ
+- ประทับเวลาการแก้ไขอัตโนมัติ *"แก้ไขแล้วเมื่อ..."* เพื่อความชัดเจน
 
-Editable Content: ระบบแก้ไขข้อความพร้อมประทับเวลา "แก้ไขแล้วเมื่อ..." สำหรับโพสต์และคอมเมนต์
+### 💬 Social Interaction
+- บุคคลทั่วไปสามารถล็อกอินผ่าน **Google Account** เพื่อมีส่วนร่วมกับเว็บ
+- ระบบ **Like (กดใจ)** และ **Comment** ที่ใช้งานง่ายและรวดเร็ว
+- ผู้ใช้ทั่วไปสามารถแก้ไขหรือลบคอมเมนต์ของตัวเองได้
 
-##🛠 Tech Stack (เทคโนโลยีที่ใช้)
-Frontend: Vanilla JavaScript, HTML5, CSS3 (Modern Flexbox/Grid)
+### 🖼️ Smart Media & Link Support
+- **Auto Image Upload:** ระบบอัปโหลดรูปภาพผ่าน ImgBB API โดยอัตโนมัติ ไม่ต้องฝากรูปเอง
+- **YouTube Embed:** วางลิงก์วิดีโอแล้วแสดงผลเป็นเครื่องเล่นวิดีโอทันที
+- **Link Previewer:** ระบบดึงข้อมูลตัวอย่างเว็บไซต์ (รูปปก/หัวข้อ/คำอธิบาย) มาแสดงผลเป็น Card สวยๆ ทุกลิงก์
 
-Backend: Google Apps Script (GAS)
+---
 
-Database: Google Sheets
+# 🛠️ TECH STACK (เทคโนโลยีที่ใช้)
 
-Authentication: Google Sign-In API
+| ส่วนงาน | เทคโนโลยีที่ใช้ |
+| :--- | :--- |
+| **Frontend** | HTML5, CSS3 (Modern Flexbox/Grid), Vanilla JavaScript |
+| **Backend** | Google Apps Script (Web App Service) |
+| **Database** | Google Sheets API |
+| **Auth** | Google Identity Service (GSI) |
+| **Storage** | ImgBB API (Image Hosting) |
+| **CORS** | AllOrigins (Link Preview Fetcher) |
 
-Image Hosting: ImgBB API
+---
 
-CORS Bypass: AllOrigins (สำหรับระบบ Link Preview)
+# 📂 DATABASE STRUCTURE (โครงสร้างข้อมูล)
+ระบบบริหารจัดการข้อมูลผ่าน Google Sheet โดยแยกเป็นแผ่นงานดังนี้:
+- **Profile:** จัดเก็บชื่อเว็บ, Bio, และลิงก์รูปภาพ Profile/Cover (คอลัมน์ A-J)
+- **Posts:** จัดเก็บเนื้อหา, ลิงก์รูปภาพ, JSON ของการกดใจ และคอมเมนต์
+- **Users:** จัดเก็บรายชื่อผู้ใช้งานและสิทธิ์การเข้าถึง (Admin/Public)
+- **Links & Apps:** เชื่อมโยงข้อมูลสำหรับเว็บไซต์เวอร์ชันเก่า
 
-##📂 Database Structure (โครงสร้าง Google Sheets)
-โปรเจกต์นี้ใช้ไฟล์ Google Sheet เดียวกันในการบริหารจัดการ โดยแบ่งเป็นแผ่นงานดังนี้:
+---
 
-Users: เก็บข้อมูลผู้ใช้งาน, บทบาท (Admin/Public), และประวัติการเข้าใช้งาน
+# 🚀 GETTING STARTED (การเริ่มต้นใช้งาน)
+1. **Setup Sheets:** สร้างแผ่นงานตามโครงสร้างที่กำหนด
+2. **Deploy script:** นำโค้ด Google Apps Script ไปวางและสั่ง Deploy เป็น Web App
+3. **Config API:** นำ URL Web App และ ImgBB API Key มาใส่ในไฟล์ `index.html`
+4. **Launch:** อัปโหลดไฟล์ขึ้น GitHub และเปิดใช้งาน GitHub Pages
 
-Profile: เก็บข้อมูลส่วนตัว เช่น ชื่อเว็บ, Bio, รูป Profile (Circle), และรูป Cover (Rect)
+---
 
-Posts: เก็บข้อมูลโพสต์ทั้งหมด, ลิงก์รูปภาพ, ข้อมูลการกด Like และ Comment (JSON Format)
+# 👨‍💻 AUTHOR
+**Mean (วัชรวิชญ์)**
+> "Built with passion, driven by M4 Power."
 
-Links & Apps: สำหรับเชื่อมต่อข้อมูลกับเว็บไซต์เวอร์ชันเก่า
+**Personal Gears:**
+- 💻 **Macbook Air M4** (Development Machine)
+- 📱 **iPhone 14 Pro** (Testing Device)
+- 🗄️ **Synology DS423+** (Home Data Storage)
 
-##🚀 Getting Started (การติดตั้ง)
-Google Sheets: สร้างไฟล์และตั้งชื่อแผ่นงานให้ตรงตามโครงสร้าง
-
-Apps Script: คัดลอกโค้ดหลังบ้านไปวางและสั่ง Deploy เป็น Web App
-
-Configuration: นำ URL ที่ได้จาก Apps Script มาใส่ในไฟล์ index.html
-
-ImgBB Key: ใส่ API Key ของ ImgBB เพื่อใช้งานระบบอัปโหลดรูปภาพ
-
-GitHub Pages: อัปโหลดไฟล์ขึ้น Repository และเปิดใช้งาน Pages
-
-##👨‍💻 Author
-Name: koomean
-
-Device: Macbook Air M4, Gemini 3 Pro, Claude
-
-Storage: Github, ImgBB, Google Sheet
-
-This project is built with passion and optimized for a seamless personal blogging experience.
+---
+<div align="center">
+  <sub>Copyright © 2026 Koo Mean Space. All rights reserved.</sub>
+</div>
