@@ -68,6 +68,7 @@
         .stat-item { display: flex; gap: 4px; font-size: 0.875rem; }
         .stat-count { font-weight: 700; color: var(--text-primary); }
         .stat-label { color: var(--text-secondary); }
+
         .skel-line { background: linear-gradient(90deg, var(--skeleton) 25%, var(--skeleton-shine) 50%, var(--skeleton) 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 6px; display: block; }
 
         /* ─── Post Creator (Admin Only) ─── */
@@ -79,17 +80,17 @@
         .creator-input-area { flex: 1; display: flex; flex-direction: column; }
         .creator-textarea { width: 100%; background: transparent; border: none; color: var(--text-primary); font-size: 1rem; font-family: 'DM Sans', sans-serif; line-height: 1.5; resize: none; outline: none; min-height: 48px; padding-top: 10px; }
         .creator-textarea::placeholder { color: var(--text-muted); }
+        
         .creator-tools { display: flex; align-items: center; gap: 15px; margin-top: 5px; color: var(--accent); font-size: 1.1rem; }
         .tool-btn { cursor: pointer; transition: 0.2s; width: 32px; height: 32px; display: flex; justify-content: center; align-items: center; border-radius: 50%; }
         .tool-btn:hover { background: var(--accent-glow); }
-        .media-input-box { display: none; margin-top: 10px; width: 100%; }
-        .media-input { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--text-primary); padding: 10px 14px; border-radius: var(--radius-md); font-size: 0.85rem; outline: none;}
-        .media-input:focus { border-color: var(--accent); }
+        
         .creator-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border-subtle); }
         .char-count { font-size: 0.8rem; color: var(--text-muted); margin-right: auto; }
         .char-count.warn { color: #f59e0b; } .char-count.danger { color: var(--danger); }
         .btn-post { background: linear-gradient(135deg, var(--accent), #6366f1); color: #fff; border: none; border-radius: var(--radius-full); padding: 8px 20px; font-weight: 700; font-size: 0.9rem; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.2s ease; letter-spacing: 0.2px; box-shadow: 0 2px 12px rgba(79, 142, 247, 0.25); }
         .btn-post:hover { transform: translateY(-1px); box-shadow: 0 4px 18px rgba(79, 142, 247, 0.4); }
+        .btn-post:active { transform: translateY(0); }
         .btn-post:disabled { opacity: 0.45; cursor: not-allowed; transform: none; box-shadow: none; }
 
         /* ─── Dropdown Menu ─── */
@@ -164,7 +165,7 @@
         .btn-retry { margin-left: auto; background: transparent; border: 1px solid rgba(255, 71, 87, 0.4); color: var(--danger); padding: 4px 12px; border-radius: var(--radius-full); font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.2s; flex-shrink: 0; font-family: 'DM Sans', sans-serif; }
         .btn-retry:hover { background: rgba(255, 71, 87, 0.12); }
 
-        /* Modal (Login, Edit, Note) */
+        /* Modal */
         .modal-overlay { position: fixed; inset: 0; background-color: rgba(0, 0, 0, 0.8); backdrop-filter: blur(8px); z-index: 1000; display: none; justify-content: center; align-items: center; padding: 20px; opacity: 0; transition: opacity 0.25s ease; }
         .modal-overlay.show { display: flex; opacity: 1; }
         .modal-box { background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; width: 100%; max-width: 340px; padding: 32px 24px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.7); transform: translateY(24px) scale(0.97); transition: transform 0.3s ease; }
@@ -175,6 +176,7 @@
         .g_id_signin { display: flex; justify-content: center; width: 100%; }
         .btn-close-modal { margin-top: 20px; background: transparent; border: none; color: var(--text-secondary); font-weight: 600; font-size: 0.875rem; cursor: pointer; padding: 8px 18px; border-radius: var(--radius-full); transition: all 0.2s; font-family: 'DM Sans', sans-serif; }
         .btn-close-modal:hover { background: rgba(255,255,255,0.06); color: var(--text-primary); }
+        
         .ask-note-input { width: 100%; background: transparent; border: 1px solid var(--border); color: var(--text-primary); padding: 12px 15px; border-radius: var(--radius-sm); font-size: 0.9rem; outline: none; margin-bottom: 15px; text-align: center;}
         .ask-note-input:focus { border-color: var(--accent); }
         .btn-submit-note { background: linear-gradient(135deg, var(--accent), #6366f1); color: #fff; border: none; border-radius: var(--radius-full); padding: 10px 20px; font-weight: 700; font-size: 0.9rem; font-family: 'DM Sans', sans-serif; cursor: pointer; width: 100%;}
@@ -233,10 +235,15 @@
                     <textarea id="new-post-content" class="creator-textarea" placeholder="คุณกำลังคิดอะไรอยู่..." maxlength="500"></textarea>
                     
                     <div class="creator-tools">
-                        <div class="tool-btn" id="btn-toggle-media" title="แนบรูปภาพ"><i class="far fa-image"></i></div>
+                        <input type="file" id="file-upload" accept="image/png, image/jpeg, image/gif, image/webp" style="display: none;">
+                        <label for="file-upload" class="tool-btn" title="อัปโหลดรูปภาพ">
+                            <i class="far fa-image"></i>
+                        </label>
                     </div>
-                    <div class="media-input-box" id="media-input-box">
-                        <input type="text" class="media-input" id="post-media-url" placeholder="วางลิงก์รูปภาพ (ลงท้ายด้วย .jpg, .png)">
+                    
+                    <div id="media-preview-box" style="display: none; position: relative; margin-top: 10px;">
+                        <img id="image-preview" src="" style="width: 100%; border-radius: 12px; max-height: 300px; object-fit: cover; border: 1px solid var(--border-subtle);">
+                        <button id="btn-remove-image" style="position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.6); color: white; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; transition: 0.2s;"><i class="fas fa-times"></i></button>
                     </div>
 
                     <div class="creator-footer">
@@ -267,7 +274,6 @@
         <div class="modal-box" style="max-width: 500px; text-align: left;">
             <h2 class="modal-title" style="margin-bottom: 15px;">แก้ไขโพสต์</h2>
             <textarea id="edit-post-content" class="creator-textarea" style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; border: 1px solid var(--border); min-height: 100px;"></textarea>
-            <input type="text" id="edit-post-media" class="media-input" style="margin-top: 10px;" placeholder="ลิงก์รูปภาพ (เว้นว่างถ้าไม่ใส่)">
             <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
                 <button class="btn-close-modal" onclick="document.getElementById('edit-post-modal').classList.remove('show')" style="margin: 0; padding: 8px 16px;">ยกเลิก</button>
                 <button class="btn-post" id="btn-save-post" onclick="saveEditPost()">บันทึก</button>
@@ -310,58 +316,42 @@
     <div class="toast" id="toast"></div>
 
     <script>
+    // ─── การตั้งค่า API ──────────────────────────────────────
     const API_URL = "https://script.google.com/macros/s/AKfycbwBYhFTW68AfN4cYUJYS1DG7vw-Ocykx5kslSUQIeJJlfu0oeBIdi9xAhVmorVWQ4q7rg/exec";
+    
+    // สำคัญ: ใส่ API KEY ของ IMGBB ที่ได้มาตรงนี้
+    const IMGBB_API_KEY = '5286836e6b61aa52660a8d8602503e0b'; 
+    
     const SESSION_KEY = 'koomean_space_session';
     const FETCH_TIMEOUT = 12000;
 
-    let state = {
-        isLoggedIn: false, currentUser: null, pendingPayload: null,
-        spaceProfile: { webTitle: 'Space', name: 'Loading...', imageUrl: '', bio: '', coverUrl: '' },
-        posts: []
-    };
+    let state = { isLoggedIn: false, currentUser: null, pendingPayload: null, spaceProfile: { webTitle: 'Space', name: 'Loading...', imageUrl: '', bio: '', coverUrl: '' }, posts: [] };
     let editTarget = { type: null, rowIdx: null, commentTime: null };
+    let selectedImageFile = null; // เก็บไฟล์รูปที่ผู้ใช้เลือก
 
     const $ = id => document.getElementById(id);
     const els = {
-        webTitleTag: $('web-title'), headerTitle: $('header-title-text'),
-        loginBtn: $('loginToggleBtn'), modal: $('login-modal'), closeModal: $('close-modal-btn'),
-        askNoteModal: $('ask-note-modal'), noteInput: $('new-user-note'), submitNoteBtn: $('submit-note-btn'),
-        creatorBox: $('post-creator'), creatorAvatar: $('creator-avatar'), 
-        postInput: $('new-post-content'), postMediaUrl: $('post-media-url'), 
-        btnToggleMedia: $('btn-toggle-media'), mediaInputBox: $('media-input-box'),
-        postSubmit: $('submit-post-btn'), feed: $('feed-container'),
-        profImg: $('main-profile-img'), profCover: $('profile-cover'), profName: $('profile-name-text'), profBio: $('profile-bio'), statPosts: $('stat-posts'),
-        charCount: $('char-count'), skeletonPosts: $('skeleton-posts'), toast: $('toast'),
+        webTitleTag: $('web-title'), headerTitle: $('header-title-text'), loginBtn: $('loginToggleBtn'), modal: $('login-modal'), closeModal: $('close-modal-btn'), askNoteModal: $('ask-note-modal'), noteInput: $('new-user-note'), submitNoteBtn: $('submit-note-btn'),
+        creatorBox: $('post-creator'), creatorAvatar: $('creator-avatar'), postInput: $('new-post-content'), postSubmit: $('submit-post-btn'), feed: $('feed-container'),
+        fileUpload: $('file-upload'), mediaPreviewBox: $('media-preview-box'), imagePreview: $('image-preview'), btnRemoveImage: $('btn-remove-image'),
+        profImg: $('main-profile-img'), profCover: $('profile-cover'), profName: $('profile-name-text'), profBio: $('profile-bio'), statPosts: $('stat-posts'), charCount: $('char-count'), skeletonPosts: $('skeleton-posts'), toast: $('toast'),
         avatarSkeleton: $('main-avatar-skeleton'), avatarFallback: $('main-avatar-fallback'),
-        editPostModal: $('edit-post-modal'), editPostContent: $('edit-post-content'), editPostMedia: $('edit-post-media'), btnSavePost: $('btn-save-post'),
-        editCommentModal: $('edit-comment-modal'), editCommentContent: $('edit-comment-content'), btnSaveComment: $('btn-save-comment')
+        editPostModal: $('edit-post-modal'), editPostContent: $('edit-post-content'), btnSavePost: $('btn-save-post'), editCommentModal: $('edit-comment-modal'), editCommentContent: $('edit-comment-content'), btnSaveComment: $('btn-save-comment')
     };
 
     let toastTimer;
     function showToast(msg, type = '', icon = '') {
-        clearTimeout(toastTimer);
-        els.toast.className = 'toast' + (type ? ' ' + type : '');
-        els.toast.innerHTML = (icon ? `<i class="${icon}"></i> ` : '') + msg;
+        clearTimeout(toastTimer); els.toast.className = 'toast' + (type ? ' ' + type : ''); els.toast.innerHTML = (icon ? `<i class="${icon}"></i> ` : '') + msg;
         requestAnimationFrame(() => { requestAnimationFrame(() => els.toast.classList.add('show')); });
         toastTimer = setTimeout(() => els.toast.classList.remove('show'), 3000);
     }
 
     function loadImage(imgEl, src, skeletonEl, fallbackEl, initials = 'KM') {
-        if (!src || src.trim() === '') {
-            if (skeletonEl) skeletonEl.classList.add('hidden');
-            if (fallbackEl) { fallbackEl.style.display = 'flex'; fallbackEl.textContent = initials; }
-            return;
-        }
-        const img = new Image();
-        img.onload = () => { imgEl.src = src; imgEl.classList.add('loaded'); if (skeletonEl) skeletonEl.classList.add('hidden'); if (fallbackEl) fallbackEl.style.display = 'none'; };
-        img.onerror = () => { if (skeletonEl) skeletonEl.classList.add('hidden'); if (fallbackEl) { fallbackEl.style.display = 'flex'; fallbackEl.textContent = initials; } };
-        img.src = src;
+        if (!src || src.trim() === '') { if (skeletonEl) skeletonEl.classList.add('hidden'); if (fallbackEl) { fallbackEl.style.display = 'flex'; fallbackEl.textContent = initials; } return; }
+        const img = new Image(); img.onload = () => { imgEl.src = src; imgEl.classList.add('loaded'); if (skeletonEl) skeletonEl.classList.add('hidden'); if (fallbackEl) fallbackEl.style.display = 'none'; }; img.onerror = () => { if (skeletonEl) skeletonEl.classList.add('hidden'); if (fallbackEl) { fallbackEl.style.display = 'flex'; fallbackEl.textContent = initials; } }; img.src = src;
     }
 
-    function decodeJwt(token) {
-        try { return JSON.parse(decodeURIComponent(atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''))); } catch { return null; }
-    }
-    
+    function decodeJwt(token) { try { return JSON.parse(decodeURIComponent(atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''))); } catch { return null; } }
     function escapeHTML(str) { if (!str) return ''; const p = document.createElement('p'); p.textContent = str; return p.innerHTML; }
 
     function processContent(text, rowIdx) {
@@ -389,219 +379,125 @@
     async function fetchLinkPreview(url, containerId) {
         try {
             const res = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`);
-            const data = await res.json();
-            if (!data.contents) return;
+            const data = await res.json(); if (!data.contents) return;
             const doc = new DOMParser().parseFromString(data.contents, "text/html");
             const getMeta = (prop, name) => { let el = prop ? doc.querySelector(`meta[property="${prop}"]`) : null; if (!el && name) el = doc.querySelector(`meta[name="${name}"]`); return el ? el.content : ''; };
-            const title = getMeta('og:title', 'title') || doc.title || url;
-            const desc = getMeta('og:description', 'description') || '';
-            let image = getMeta('og:image', '');
+            const title = getMeta('og:title', 'title') || doc.title || url; const desc = getMeta('og:description', 'description') || ''; let image = getMeta('og:image', '');
             if (image && image.startsWith('/')) { const urlObj = new URL(url); image = `${urlObj.protocol}//${urlObj.host}${image}`; }
             if (title || image) {
-                const hostname = new URL(url).hostname;
-                const container = document.getElementById(containerId);
-                if (container) {
-                    container.innerHTML = `<a href="${url}" target="_blank" class="link-preview-card">${image ? `<img src="${image}" class="link-preview-img" onerror="this.style.display='none'">` : ''}<div class="link-preview-info"><div class="link-preview-title">${escapeHTML(title)}</div>${desc ? `<div class="link-preview-desc">${escapeHTML(desc)}</div>` : ''}<div class="link-preview-domain"><i class="fas fa-link"></i> ${hostname}</div></div></a>`;
-                    container.style.display = 'block';
-                }
+                const hostname = new URL(url).hostname; const container = document.getElementById(containerId);
+                if (container) { container.innerHTML = `<a href="${url}" target="_blank" class="link-preview-card">${image ? `<img src="${image}" class="link-preview-img" onerror="this.style.display='none'">` : ''}<div class="link-preview-info"><div class="link-preview-title">${escapeHTML(title)}</div>${desc ? `<div class="link-preview-desc">${escapeHTML(desc)}</div>` : ''}<div class="link-preview-domain"><i class="fas fa-link"></i> ${hostname}</div></div></a>`; container.style.display = 'block'; }
             }
         } catch (e) {}
     }
 
-    function formatDate(ts) { 
-        if (!ts) return ''; 
-        const d = new Date(ts); 
-        return d.toLocaleDateString('th-TH', { day: 'numeric', month: 'short' }) + ' ' + d.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }); 
-    }
+    function formatDate(ts) { if (!ts) return ''; const d = new Date(ts); return d.toLocaleDateString('th-TH', { day: 'numeric', month: 'short' }) + ' ' + d.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }); }
 
-    async function fetchWithTimeout(url, options = {}) {
-        const ctrl = new AbortController(); const id = setTimeout(() => ctrl.abort(), FETCH_TIMEOUT);
-        try { const res = await fetch(url, { ...options, signal: ctrl.signal }); clearTimeout(id); return res; } catch (e) { clearTimeout(id); throw e; }
-    }
+    async function fetchWithTimeout(url, options = {}) { const ctrl = new AbortController(); const id = setTimeout(() => ctrl.abort(), FETCH_TIMEOUT); try { const res = await fetch(url, { ...options, signal: ctrl.signal }); clearTimeout(id); return res; } catch (e) { clearTimeout(id); throw e; } }
 
-    window.onclick = function(event) {
-        if (!event.target.matches('.dropdown-btn') && !event.target.matches('.dropdown-btn *')) {
-            document.querySelectorAll('.dropdown-menu').forEach(menu => menu.classList.remove('show'));
+    window.onclick = function(event) { if (!event.target.matches('.dropdown-btn') && !event.target.matches('.dropdown-btn *')) { document.querySelectorAll('.dropdown-menu').forEach(menu => menu.classList.remove('show')); } }
+    function toggleDropdown(id) { document.querySelectorAll('.dropdown-menu').forEach(menu => { if(menu.id !== id) menu.classList.remove('show'); }); const menu = document.getElementById(id); if(menu) menu.classList.toggle('show'); }
+
+    // จัดการอัปโหลดรูปภาพตัวอย่าง
+    els.fileUpload.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            selectedImageFile = file;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                els.imagePreview.src = e.target.result;
+                els.mediaPreviewBox.style.display = 'block';
+            }
+            reader.readAsDataURL(file);
         }
-    }
+    });
 
-    function toggleDropdown(id) {
-        document.querySelectorAll('.dropdown-menu').forEach(menu => { if(menu.id !== id) menu.classList.remove('show'); });
-        const menu = document.getElementById(id);
-        if(menu) menu.classList.toggle('show');
-    }
+    els.btnRemoveImage.addEventListener('click', () => {
+        selectedImageFile = null;
+        els.fileUpload.value = '';
+        els.mediaPreviewBox.style.display = 'none';
+    });
 
-    els.btnToggleMedia.addEventListener('click', () => { els.mediaInputBox.style.display = els.mediaInputBox.style.display === 'block' ? 'none' : 'block'; els.postMediaUrl.focus(); });
     els.postInput.addEventListener('input', function() { this.style.height = 'auto'; this.style.height = this.scrollHeight + 'px'; const len = this.value.length; els.charCount.textContent = `${len} / 500`; els.charCount.className = 'char-count' + (len >= 450 ? ' danger' : len >= 350 ? ' warn' : ''); });
     els.loginBtn.addEventListener('click', () => {
         if (!state.isLoggedIn) els.modal.classList.add('show');
-        else if (confirm('ออกจากระบบหรือไม่?')) {
-            state.isLoggedIn = false; state.currentUser = null; localStorage.removeItem(SESSION_KEY);
-            els.loginBtn.textContent = 'Sign In'; els.loginBtn.className = 'auth-btn';
-            els.creatorBox.style.display = 'none'; els.postInput.value = ''; els.postMediaUrl.value = ''; els.mediaInputBox.style.display = 'none';
-            showToast('ออกจากระบบแล้ว', '', 'fas fa-sign-out-alt'); renderFeed(); 
-        }
+        else if (confirm('ออกจากระบบหรือไม่?')) { state.isLoggedIn = false; state.currentUser = null; localStorage.removeItem(SESSION_KEY); els.loginBtn.textContent = 'Sign In'; els.loginBtn.className = 'auth-btn'; els.creatorBox.style.display = 'none'; els.postInput.value = ''; selectedImageFile = null; els.mediaPreviewBox.style.display = 'none'; showToast('ออกจากระบบแล้ว', '', 'fas fa-sign-out-alt'); renderFeed(); }
     });
     els.closeModal.addEventListener('click', () => els.modal.classList.remove('show'));
     
     function handleCredentialResponse(res) {
-        const payload = decodeJwt(res.credential); if (!payload) return;
-        els.modal.classList.remove('show'); state.pendingPayload = payload;
-        showToast('กำลังตรวจสอบข้อมูล...', '', 'fas fa-spinner fa-spin');
-        loadData(payload.email, payload.name, payload.picture);
+        const payload = decodeJwt(res.credential); if (!payload) return; els.modal.classList.remove('show'); state.pendingPayload = payload; showToast('กำลังตรวจสอบข้อมูล...', '', 'fas fa-spinner fa-spin'); loadData(payload.email, payload.name, payload.picture);
     }
 
-    els.submitNoteBtn.addEventListener('click', () => {
-        const note = els.noteInput.value.trim(); if(!note) return alert('กรุณากรอกข้อความสักนิดครับ');
-        els.askNoteModal.classList.remove('show'); showToast('กำลังลงทะเบียน...', '', 'fas fa-spinner fa-spin');
-        loadData(state.pendingPayload.email, state.pendingPayload.name, state.pendingPayload.picture, note);
-    });
+    els.submitNoteBtn.addEventListener('click', () => { const note = els.noteInput.value.trim(); if(!note) return alert('กรุณากรอกข้อความสักนิดครับ'); els.askNoteModal.classList.remove('show'); showToast('กำลังลงทะเบียน...', '', 'fas fa-spinner fa-spin'); loadData(state.pendingPayload.email, state.pendingPayload.name, state.pendingPayload.picture, note); });
 
     async function loadData(userEmail = '', userName = '', userPic = '', userNote = null) {
         try {
-            let url = API_URL;
-            if (userEmail) {
-                url += `?email=${encodeURIComponent(userEmail)}&name=${encodeURIComponent(userName)}`;
-                if (userNote !== null) url += `&action=register&note=${encodeURIComponent(userNote)}`;
-            }
-
-            const res = await fetchWithTimeout(url);
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
-            const data = await res.json();
-
+            let url = API_URL; if (userEmail) { url += `?email=${encodeURIComponent(userEmail)}&name=${encodeURIComponent(userName)}`; if (userNote !== null) url += `&action=register&note=${encodeURIComponent(userNote)}`; }
+            const res = await fetchWithTimeout(url); if (!res.ok) throw new Error(`HTTP ${res.status}`); const data = await res.json();
             if (data.requireRegistration) return els.askNoteModal.classList.add('show');
 
             if (data.spaceProfile) {
                 const sp = data.spaceProfile; state.spaceProfile = sp;
-                els.webTitleTag.textContent = sp.webTitle || 'Koo Mean Space'; els.headerTitle.textContent = sp.webTitle || 'Space';
-                els.profName.textContent = sp.name || 'Koo Mean'; els.profBio.textContent = sp.bio || '';
-                if(sp.coverUrl) els.profCover.style.backgroundImage = `url(${sp.coverUrl})`;
-                const initials = (sp.name || 'KM').split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
+                els.webTitleTag.textContent = sp.webTitle || 'Koo Mean Space'; els.headerTitle.textContent = sp.webTitle || 'Space'; els.profName.textContent = sp.name || 'Koo Mean'; els.profBio.textContent = sp.bio || '';
+                if(sp.coverUrl) els.profCover.style.backgroundImage = `url(${sp.coverUrl})`; const initials = (sp.name || 'KM').split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
                 loadImage(els.profImg, sp.imageUrl, els.avatarSkeleton, els.avatarFallback, initials);
             }
 
             if (userEmail && data.user) {
-                state.isLoggedIn = true; state.currentUser = { email: data.user.email, name: userName, role: data.user.role, pic: userPic };
-                localStorage.setItem(SESSION_KEY, JSON.stringify(state.currentUser));
-                els.loginBtn.textContent = 'Sign Out'; els.loginBtn.className = 'auth-btn signed-in';
-
-                if (data.user.role === 'admin') {
-                    els.creatorBox.style.display = 'block'; els.creatorAvatar.src = userPic || '';
-                    showToast('เข้าสู่ระบบ Admin สำเร็จ ✓', 'success');
-                } else { showToast('เข้าสู่ระบบสำเร็จ ✓', 'success'); }
+                state.isLoggedIn = true; state.currentUser = { email: data.user.email, name: userName, role: data.user.role, pic: userPic }; localStorage.setItem(SESSION_KEY, JSON.stringify(state.currentUser)); els.loginBtn.textContent = 'Sign Out'; els.loginBtn.className = 'auth-btn signed-in';
+                if (data.user.role === 'admin') { els.creatorBox.style.display = 'block'; els.creatorAvatar.src = userPic || ''; showToast('เข้าสู่ระบบ Admin สำเร็จ ✓', 'success'); } else { showToast('เข้าสู่ระบบสำเร็จ ✓', 'success'); }
             }
 
             state.posts = data.posts || [];
             if (state.posts.length > 0) { $('stat-posts').textContent = state.posts.length; $('profile-stats').style.display = 'flex'; }
             renderFeed();
 
-        } catch (err) {
-            console.error('Fetch Error:', err); if(els.skeletonPosts) els.skeletonPosts.style.display = 'none';
-            els.feed.innerHTML = `<div class="error-banner"><i class="fas fa-exclamation-circle"></i><span>โหลดข้อมูลไม่สำเร็จ</span><button class="btn-retry" onclick="location.reload()">ลองใหม่</button></div>`;
-        }
+        } catch (err) { console.error('Fetch Error:', err); if(els.skeletonPosts) els.skeletonPosts.style.display = 'none'; els.feed.innerHTML = `<div class="error-banner"><i class="fas fa-exclamation-circle"></i><span>โหลดข้อมูลไม่สำเร็จ</span><button class="btn-retry" onclick="location.reload()">ลองใหม่</button></div>`; }
     }
 
     function renderFeed() {
         if (els.skeletonPosts) els.skeletonPosts.style.display = 'none';
         let feedHtml = `<div class="feed-divider">Timeline</div>`;
-        
-        if (!state.posts.length) {
-            feedHtml += `<div class="status-message"><div style="font-size:2rem; opacity:0.4; margin-bottom:10px;">💬</div>ยังไม่มีโพสต์ในไทม์ไลน์</div>`;
-            els.feed.innerHTML = feedHtml; return;
-        }
+        if (!state.posts.length) { feedHtml += `<div class="status-message"><div style="font-size:2rem; opacity:0.4; margin-bottom:10px;">💬</div>ยังไม่มีโพสต์ในไทม์ไลน์</div>`; els.feed.innerHTML = feedHtml; return; }
 
-        const authorName = escapeHTML(state.spaceProfile.name || 'Koo Mean');
-        const avatarSrc = escapeHTML(state.spaceProfile.imageUrl || '');
-        const initials = authorName.split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
+        const authorName = escapeHTML(state.spaceProfile.name || 'Koo Mean'); const avatarSrc = escapeHTML(state.spaceProfile.imageUrl || ''); const initials = authorName.split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
         let linkPreviewsToFetch = [];
 
         state.posts.forEach((post, i) => {
-            const likesList = Array.isArray(post.likes) ? post.likes : [];
-            const commentsList = Array.isArray(post.comments) ? post.comments : [];
-            const mediaUrl = post.mediaUrl || '';
-            const hasLiked = state.isLoggedIn && likesList.includes(state.currentUser?.email);
+            const likesList = Array.isArray(post.likes) ? post.likes : []; const commentsList = Array.isArray(post.comments) ? post.comments : []; const mediaUrl = post.mediaUrl || '';
+            const hasLiked = state.isLoggedIn && likesList.includes(state.currentUser?.email); const likeIcon = hasLiked ? 'fas fa-heart' : 'far fa-heart'; const likeClass = hasLiked ? 'action-btn liked' : 'action-btn';
             
             let postMenuHtml = '';
             if (state.isLoggedIn && state.currentUser.role === 'admin') {
-                postMenuHtml = `
-                <div class="dropdown-wrapper" style="margin-left: auto;">
-                    <button class="dropdown-btn" onclick="toggleDropdown('menu-post-${post.rowIdx}')"><i class="fas fa-ellipsis-h"></i></button>
-                    <div class="dropdown-menu" id="menu-post-${post.rowIdx}">
-                        <button class="dropdown-item" onclick="openEditPost(${post.rowIdx})"><i class="fas fa-edit"></i> แก้ไขโพสต์</button>
-                        <button class="dropdown-item danger" onclick="deletePost(${post.rowIdx})"><i class="fas fa-trash-alt"></i> ลบโพสต์</button>
-                    </div>
-                </div>`;
+                postMenuHtml = `<div class="dropdown-wrapper" style="margin-left: auto;"><button class="dropdown-btn" onclick="toggleDropdown('menu-post-${post.rowIdx}')"><i class="fas fa-ellipsis-h"></i></button><div class="dropdown-menu" id="menu-post-${post.rowIdx}"><button class="dropdown-item" onclick="openEditPost(${post.rowIdx})"><i class="fas fa-edit"></i> แก้ไขโพสต์</button><button class="dropdown-item danger" onclick="deletePost(${post.rowIdx})"><i class="fas fa-trash-alt"></i> ลบโพสต์</button></div></div>`;
             }
 
             let commentsHtml = '';
             if(commentsList.length > 0) {
                 commentsList.forEach(c => {
-                    const cPic = escapeHTML(c.pic || 'https://ui-avatars.com/api/?name=' + c.name);
-                    const cTimeDisplay = c.editedTime ? `แก้ไขแล้วเมื่อ ${formatDate(c.editedTime)}` : formatDate(c.time);
-                    let commentMenuHtml = '';
-                    
-                    if (state.isLoggedIn && (state.currentUser.role === 'admin' || state.currentUser.email === c.email)) {
-                        commentMenuHtml = `
-                        <div class="dropdown-wrapper" style="margin-left: auto;">
-                            <button class="dropdown-btn" onclick="toggleDropdown('menu-comment-${post.rowIdx}-${c.time}')"><i class="fas fa-ellipsis-h"></i></button>
-                            <div class="dropdown-menu" id="menu-comment-${post.rowIdx}-${c.time}">
-                                <button class="dropdown-item" onclick="openEditComment(${post.rowIdx}, ${c.time})"><i class="fas fa-edit"></i> แก้ไขคอมเมนต์</button>
-                                <button class="dropdown-item danger" onclick="deleteComment(${post.rowIdx}, ${c.time})"><i class="fas fa-trash-alt"></i> ลบคอมเมนต์</button>
-                            </div>
-                        </div>`;
-                    }
-
-                    commentsHtml += `
-                        <div class="comment-item">
-                            <img src="${cPic}" class="comment-avatar" onerror="this.src='https://ui-avatars.com/api/?name=U'">
-                            <div class="comment-box">
-                                <div style="display: flex; align-items: center;">
-                                    <div class="comment-name">${escapeHTML(c.name)} <span style="font-weight: normal; color: var(--text-muted); font-size: 0.75rem;">· ${cTimeDisplay}</span></div>
-                                    ${commentMenuHtml}
-                                </div>
-                                <div class="comment-text">${escapeHTML(c.text)}</div>
-                            </div>
-                        </div>`;
+                    const cPic = escapeHTML(c.pic || 'https://ui-avatars.com/api/?name=' + c.name); const cTimeDisplay = c.editedTime ? `แก้ไขแล้วเมื่อ ${formatDate(c.editedTime)}` : formatDate(c.time); let commentMenuHtml = '';
+                    if (state.isLoggedIn && (state.currentUser.role === 'admin' || state.currentUser.email === c.email)) { commentMenuHtml = `<div class="dropdown-wrapper" style="margin-left: auto;"><button class="dropdown-btn" onclick="toggleDropdown('menu-comment-${post.rowIdx}-${c.time}')"><i class="fas fa-ellipsis-h"></i></button><div class="dropdown-menu" id="menu-comment-${post.rowIdx}-${c.time}"><button class="dropdown-item" onclick="openEditComment(${post.rowIdx}, ${c.time})"><i class="fas fa-edit"></i> แก้ไขคอมเมนต์</button><button class="dropdown-item danger" onclick="deleteComment(${post.rowIdx}, ${c.time})"><i class="fas fa-trash-alt"></i> ลบคอมเมนต์</button></div></div>`; }
+                    commentsHtml += `<div class="comment-item"><img src="${cPic}" class="comment-avatar" onerror="this.src='https://ui-avatars.com/api/?name=U'"><div class="comment-box"><div style="display: flex; align-items: center;"><div class="comment-name">${escapeHTML(c.name)} <span style="font-weight: normal; color: var(--text-muted); font-size: 0.75rem;">· ${cTimeDisplay}</span></div>${commentMenuHtml}</div><div class="comment-text">${escapeHTML(c.text)}</div></div></div>`;
                 });
             }
 
             const processed = processContent(post.content, post.rowIdx);
             if (processed.targetLink) linkPreviewsToFetch.push({ url: processed.targetLink, id: `preview-${post.rowIdx}` });
-
             const timeDisplay = post.editedTime ? `แก้ไขแล้วเมื่อ ${formatDate(post.editedTime)}` : formatDate(post.timestamp);
 
             feedHtml += `
                 <article class="post-card" style="animation-delay:${i * 0.05}s">
-                    <div class="post-avatar-wrap">
-                        <div class="img-fallback" style="font-size:0.85rem;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;">${initials}</div>
-                        <img class="post-avatar loaded" src="${avatarSrc}" onerror="this.style.display='none'">
-                    </div>
+                    <div class="post-avatar-wrap"><div class="img-fallback" style="font-size:0.85rem;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;">${initials}</div><img class="post-avatar loaded" src="${avatarSrc}" onerror="this.style.display='none'"></div>
                     <div class="post-card-content">
-                        <div class="post-card-header">
-                            <span class="post-card-name">${authorName}</span>
-                            <div class="verified-badge" style="width:14px;height:14px;font-size:0.45rem;"><i class="fas fa-check"></i></div>
-                            <span class="post-card-time">· ${timeDisplay}</span>
-                            ${postMenuHtml}
-                        </div>
+                        <div class="post-card-header"><span class="post-card-name">${authorName}</span><div class="verified-badge" style="width:14px;height:14px;font-size:0.45rem;"><i class="fas fa-check"></i></div><span class="post-card-time">· ${timeDisplay}</span>${postMenuHtml}</div>
                         <div class="post-card-text">${processed.safeText}</div>
                         ${processed.mediaHtml}
                         ${mediaUrl ? `<img src="${escapeHTML(mediaUrl)}" class="post-attached-media" onerror="this.style.display='none'">` : ''}
-                        
-                        <div class="post-card-actions">
-                            <button class="${hasLiked ? 'action-btn liked' : 'action-btn'}" onclick="toggleLike(${post.rowIdx})"><i class="${hasLiked ? 'fas' : 'far'} fa-heart"></i> ${likesList.length}</button>
-                            <button class="action-btn" onclick="toggleCommentBox(${post.rowIdx})"><i class="far fa-comment"></i> ${commentsList.length}</button>
-                        </div>
-
-                        <div class="comments-section" id="comments-section-${post.rowIdx}">
-                            ${commentsHtml}
-                            <div class="comment-input-area">
-                                <input type="text" class="comment-input" id="comment-input-${post.rowIdx}" placeholder="แสดงความคิดเห็น..." ${!state.isLoggedIn ? 'disabled title="กรุณา Sign In ก่อน"' : ''}>
-                                <button class="btn-comment" onclick="submitComment(${post.rowIdx})">ส่ง</button>
-                            </div>
-                        </div>
+                        <div class="post-card-actions"><button class="${likeClass}" onclick="toggleLike(${post.rowIdx})"><i class="${likeIcon}"></i> ${likesList.length}</button><button class="action-btn" onclick="toggleCommentBox(${post.rowIdx})"><i class="far fa-comment"></i> ${commentsList.length}</button></div>
+                        <div class="comments-section" id="comments-section-${post.rowIdx}">${commentsHtml}<div class="comment-input-area"><input type="text" class="comment-input" id="comment-input-${post.rowIdx}" placeholder="แสดงความคิดเห็น..." ${!state.isLoggedIn ? 'disabled title="กรุณา Sign In ก่อน"' : ''}><button class="btn-comment" onclick="submitComment(${post.rowIdx})">ส่ง</button></div></div>
                     </div>
-                </article>
-            `;
+                </article>`;
         });
 
         els.feed.innerHTML = feedHtml;
@@ -612,10 +508,7 @@
 
     async function toggleLike(rowIdx) {
         if (!state.isLoggedIn) return els.modal.classList.add('show');
-        const post = state.posts.find(p => p.rowIdx === rowIdx); if (!post.likes) post.likes = []; 
-        const emailIdx = post.likes.indexOf(state.currentUser.email);
-        if (emailIdx > -1) post.likes.splice(emailIdx, 1); else post.likes.push(state.currentUser.email);
-        renderFeed();
+        const post = state.posts.find(p => p.rowIdx === rowIdx); if (!post.likes) post.likes = []; const emailIdx = post.likes.indexOf(state.currentUser.email); if (emailIdx > -1) post.likes.splice(emailIdx, 1); else post.likes.push(state.currentUser.email); renderFeed();
         try { await fetch(API_URL, { method: 'POST', body: new URLSearchParams({ action: 'toggleLike', email: state.currentUser.email, rowIdx: rowIdx }), headers: { 'Content-Type': 'application/x-www-form-urlencoded' }}); } catch(e) {}
     }
 
@@ -625,80 +518,87 @@
         inputEl.disabled = true; showToast('กำลังส่ง...');
         try {
             const res = await fetch(API_URL, { method: 'POST', body: new URLSearchParams({ action: 'addComment', email: state.currentUser.email, name: state.currentUser.name || 'User', pic: state.currentUser.pic || '', text: text, rowIdx: rowIdx }), headers: { 'Content-Type': 'application/x-www-form-urlencoded' }});
-            if((await res.json()).success) {
-                inputEl.value = ''; await loadData(state.currentUser.email, state.currentUser.name, state.currentUser.pic, null);
-                document.getElementById(`comments-section-${rowIdx}`).style.display = 'block'; showToast('ส่งคอมเมนต์สำเร็จ');
-            }
+            if((await res.json()).success) { inputEl.value = ''; await loadData(state.currentUser.email, state.currentUser.name, state.currentUser.pic, null); document.getElementById(`comments-section-${rowIdx}`).style.display = 'block'; }
         } catch(e) { showToast('เกิดข้อผิดพลาด', 'error'); } finally { inputEl.disabled = false; }
     }
 
+    // กระบวนการส่งโพสต์ (อัปโหลดรูปภาพเข้า ImgBB อัตโนมัติถ้ามี)
     async function submitPost() {
-        const content = els.postInput.value.trim(), mediaUrl = els.postMediaUrl.value.trim();
-        if (!content && !mediaUrl) return;
+        const content = els.postInput.value.trim();
+        if (!content && !selectedImageFile) return;
         if (!state.isLoggedIn || state.currentUser?.role !== 'admin') return;
-        els.postSubmit.textContent = '...'; els.postSubmit.disabled = true; els.postInput.disabled = true; els.postMediaUrl.disabled = true;
+
+        els.postSubmit.textContent = 'กำลังอัปโหลด...';
+        els.postSubmit.disabled = true;
+        els.postInput.disabled = true;
+
+        let finalMediaUrl = '';
+
         try {
-            const res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams({ action: 'addPost', email: state.currentUser.email, content: content, mediaUrl: mediaUrl }) });
-            if ((await res.json()).success) {
-                els.postInput.value = ''; els.postMediaUrl.value = ''; els.postInput.style.height = 'auto'; els.charCount.textContent = '0 / 500'; els.mediaInputBox.style.display = 'none';
-                showToast('โพสต์สำเร็จ!', 'success'); await loadData(state.currentUser.email, state.currentUser.name, state.currentUser.pic);
+            // ถัามีการเลือกไฟล์รูป ให้ส่งเข้า ImgBB ก่อน
+            if (selectedImageFile) {
+                const imgData = new FormData();
+                imgData.append('image', selectedImageFile);
+                
+                const imgRes = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
+                    method: 'POST',
+                    body: imgData
+                });
+                
+                const imgResult = await imgRes.json();
+                if (imgResult.success) {
+                    finalMediaUrl = imgResult.data.url; // ได้ Direct Link กลับมา
+                } else {
+                    throw new Error('อัปโหลดรูปภาพไม่สำเร็จ');
+                }
             }
-        } catch (err) { showToast('เชื่อมต่อล้มเหลว', 'error'); } finally { els.postSubmit.textContent = 'Post'; els.postSubmit.disabled = false; els.postInput.disabled = false; els.postMediaUrl.disabled = false;}
+
+            // ส่งข้อมูลทั้งหมดเข้า Google Sheet
+            els.postSubmit.textContent = 'กำลังโพสต์...';
+            const formData = new URLSearchParams({ action: 'addPost', email: state.currentUser.email, content: content, mediaUrl: finalMediaUrl });
+            const res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: formData });
+            
+            if ((await res.json()).success) {
+                // รีเซ็ตหน้าต่างโพสต์
+                els.postInput.value = ''; 
+                els.postInput.style.height = 'auto'; 
+                els.charCount.textContent = '0 / 500'; 
+                selectedImageFile = null;
+                els.mediaPreviewBox.style.display = 'none';
+                els.fileUpload.value = '';
+                
+                showToast('โพสต์สำเร็จ!', 'success'); 
+                await loadData(state.currentUser.email, state.currentUser.name, state.currentUser.pic);
+            }
+        } catch (err) { 
+            showToast('เชื่อมต่อล้มเหลว หรือ อัปโหลดรููปไม่สำเร็จ', 'error'); 
+            console.error(err);
+        } finally { 
+            els.postSubmit.textContent = 'Post'; 
+            els.postSubmit.disabled = false; 
+            els.postInput.disabled = false; 
+        }
     }
 
     // --- Action Functions (Edit/Delete) ---
-    function openEditPost(rowIdx) {
-        const post = state.posts.find(p => p.rowIdx === rowIdx); if(!post) return;
-        editTarget = { type: 'post', rowIdx: rowIdx };
-        els.editPostContent.value = post.content;
-        els.editPostMedia.value = post.mediaUrl || '';
-        els.editPostModal.classList.add('show');
-    }
-
+    function openEditPost(rowIdx) { const post = state.posts.find(p => p.rowIdx === rowIdx); if(!post) return; editTarget = { type: 'post', rowIdx: rowIdx }; els.editPostContent.value = post.content; els.editPostModal.classList.add('show'); }
     async function saveEditPost() {
-        const content = els.editPostContent.value.trim(), media = els.editPostMedia.value.trim();
+        const content = els.editPostContent.value.trim();
         els.btnSavePost.disabled = true; els.btnSavePost.textContent = '...';
-        try {
-            await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams({ action: 'editPost', email: state.currentUser.email, rowIdx: editTarget.rowIdx, content: content, mediaUrl: media }) });
-            els.editPostModal.classList.remove('show'); showToast('แก้ไขโพสต์สำเร็จ', 'success'); await loadData(state.currentUser.email, state.currentUser.name, state.currentUser.pic);
-        } catch(e) { showToast('เกิดข้อผิดพลาด', 'error'); } finally { els.btnSavePost.disabled = false; els.btnSavePost.textContent = 'บันทึก'; }
+        try { await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams({ action: 'editPost', email: state.currentUser.email, rowIdx: editTarget.rowIdx, content: content, mediaUrl: '' }) }); els.editPostModal.classList.remove('show'); showToast('แก้ไขโพสต์สำเร็จ', 'success'); await loadData(state.currentUser.email, state.currentUser.name, state.currentUser.pic); } catch(e) { showToast('เกิดข้อผิดพลาด', 'error'); } finally { els.btnSavePost.disabled = false; els.btnSavePost.textContent = 'บันทึก'; }
     }
-
     async function deletePost(rowIdx) {
         if(!confirm('คุณแน่ใจหรือไม่ว่าต้องการลบโพสต์นี้?')) return;
-        try {
-            await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams({ action: 'deletePost', email: state.currentUser.email, rowIdx: rowIdx }) });
-            showToast('ลบโพสต์สำเร็จ', 'success'); await loadData(state.currentUser.email, state.currentUser.name, state.currentUser.pic);
-        } catch(e) { showToast('เกิดข้อผิดพลาด', 'error'); }
+        try { await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams({ action: 'deletePost', email: state.currentUser.email, rowIdx: rowIdx }) }); showToast('ลบโพสต์สำเร็จ', 'success'); await loadData(state.currentUser.email, state.currentUser.name, state.currentUser.pic); } catch(e) { showToast('เกิดข้อผิดพลาด', 'error'); }
     }
-
-    function openEditComment(rowIdx, cTime) {
-        const post = state.posts.find(p => p.rowIdx === rowIdx); if(!post) return;
-        const comment = post.comments.find(c => c.time === cTime); if(!comment) return;
-        editTarget = { type: 'comment', rowIdx: rowIdx, commentTime: cTime };
-        els.editCommentContent.value = comment.text;
-        els.editCommentModal.classList.add('show');
-    }
-
+    function openEditComment(rowIdx, cTime) { const post = state.posts.find(p => p.rowIdx === rowIdx); if(!post) return; const comment = post.comments.find(c => c.time === cTime); if(!comment) return; editTarget = { type: 'comment', rowIdx: rowIdx, commentTime: cTime }; els.editCommentContent.value = comment.text; els.editCommentModal.classList.add('show'); }
     async function saveEditComment() {
-        const text = els.editCommentContent.value.trim(); if(!text) return;
-        els.btnSaveComment.disabled = true; els.btnSaveComment.textContent = '...';
-        try {
-            await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams({ action: 'editComment', email: state.currentUser.email, rowIdx: editTarget.rowIdx, commentTime: editTarget.commentTime, text: text }) });
-            els.editCommentModal.classList.remove('show'); showToast('แก้ไขคอมเมนต์สำเร็จ', 'success'); 
-            await loadData(state.currentUser.email, state.currentUser.name, state.currentUser.pic);
-            document.getElementById(`comments-section-${editTarget.rowIdx}`).style.display = 'block';
-        } catch(e) { showToast('เกิดข้อผิดพลาด', 'error'); } finally { els.btnSaveComment.disabled = false; els.btnSaveComment.textContent = 'บันทึก'; }
+        const text = els.editCommentContent.value.trim(); if(!text) return; els.btnSaveComment.disabled = true; els.btnSaveComment.textContent = '...';
+        try { await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams({ action: 'editComment', email: state.currentUser.email, rowIdx: editTarget.rowIdx, commentTime: editTarget.commentTime, text: text }) }); els.editCommentModal.classList.remove('show'); showToast('แก้ไขคอมเมนต์สำเร็จ', 'success'); await loadData(state.currentUser.email, state.currentUser.name, state.currentUser.pic); document.getElementById(`comments-section-${editTarget.rowIdx}`).style.display = 'block'; } catch(e) { showToast('เกิดข้อผิดพลาด', 'error'); } finally { els.btnSaveComment.disabled = false; els.btnSaveComment.textContent = 'บันทึก'; }
     }
-
     async function deleteComment(rowIdx, cTime) {
         if(!confirm('ลบคอมเมนต์นี้หรือไม่?')) return;
-        try {
-            await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams({ action: 'deleteComment', email: state.currentUser.email, rowIdx: rowIdx, commentTime: cTime }) });
-            showToast('ลบคอมเมนต์สำเร็จ', 'success'); 
-            await loadData(state.currentUser.email, state.currentUser.name, state.currentUser.pic);
-            document.getElementById(`comments-section-${rowIdx}`).style.display = 'block';
-        } catch(e) { showToast('เกิดข้อผิดพลาด', 'error'); }
+        try { await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams({ action: 'deleteComment', email: state.currentUser.email, rowIdx: rowIdx, commentTime: cTime }) }); showToast('ลบคอมเมนต์สำเร็จ', 'success'); await loadData(state.currentUser.email, state.currentUser.name, state.currentUser.pic); document.getElementById(`comments-section-${rowIdx}`).style.display = 'block'; } catch(e) { showToast('เกิดข้อผิดพลาด', 'error'); }
     }
 
     // --- Init ---
