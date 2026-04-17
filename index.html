@@ -238,16 +238,7 @@
         <main class="feed-container" id="feed-container">
             <div class="feed-divider">Timeline</div>
             <div id="skeleton-posts">
-                ${[...Array(3)].map((_, i) => `
-                <div class="skeleton-post" style="animation-delay:${i * 0.06}s">
-                    <div class="skeleton-avatar"></div>
-                    <div class="skeleton-content">
-                        <span class="skel-line" style="width:${40 + Math.random() * 30}%;height:13px;"></span>
-                        <span class="skel-line" style="width:100%;height:13px;"></span>
-                        <span class="skel-line" style="width:${60 + Math.random() * 30}%;height:13px;"></span>
-                    </div>
-                </div>`).join('')}
-            </div>
+                </div>
         </main>
     </div>
 
@@ -294,7 +285,7 @@
         postInput: $('new-post-content'), postMediaUrl: $('post-media-url'), 
         btnToggleMedia: $('btn-toggle-media'), mediaInputBox: $('media-input-box'),
         postSubmit: $('submit-post-btn'), feed: $('feed-container'),
-        profImg: $('main-profile-img'), profCover: $('profile-cover'), profName: $('profile-name-text'), profBio: $('profile-bio'), profHandle: $('profile-handle'), profStats: $('profile-stats'), statPosts: $('stat-posts'),
+        profImg: $('main-profile-img'), profCover: $('profile-cover'), profName: $('profile-name-text'), profBio: $('profile-bio'), profStats: $('profile-stats'), statPosts: $('stat-posts'),
         charCount: $('char-count'), skeletonPosts: $('skeleton-posts'), toast: $('toast'),
         avatarSkeleton: $('main-avatar-skeleton'), avatarFallback: $('main-avatar-fallback'),
     };
@@ -324,7 +315,7 @@
         try { return JSON.parse(decodeURIComponent(atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''))); } catch { return null; }
     }
     
-    // แปลงข้อความให้ปลอดภัย และทำให้ลิงก์กดได้ / แปลง YouTube เป็นวิดีโอ
+    // ตัวแปลงข้อความ (ป้องกันโค้ดเสีย 100%)
     function processContent(text) {
         if (!text) return { safeText: '', mediaHtml: '' };
         
@@ -333,8 +324,6 @@
         safeText = safeText.innerHTML;
 
         let extraHtml = '';
-
-        // ตรวจจับลิงก์ YouTube
         const ytRegex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
         const ytMatch = safeText.match(ytRegex);
         
@@ -342,8 +331,7 @@
             extraHtml = `<iframe class="post-yt-embed" src="https://www.youtube.com/embed/${ytMatch[1]}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
         }
 
-        // แปลงลิงก์ทั่วไปให้เป็น tag <a> สีฟ้า
-        const urlRegex = /(https?:\/\/[^\s]+)/g;
+        const urlRegex = /(https?:\/\/[^\s<]+)/g;
         safeText = safeText.replace(urlRegex, function(url) {
             return `<a href="${url}" target="_blank" class="post-link">${url}</a>`;
         });
@@ -351,6 +339,7 @@
         return { safeText: safeText, mediaHtml: extraHtml };
     }
 
+    function escapeHTML(str) { if (!str) return ''; const p = document.createElement('p'); p.textContent = str; return p.innerHTML; }
     function formatDate(ts) { if (!ts) return ''; const d = new Date(ts); return d.toLocaleDateString('th-TH', { day: 'numeric', month: 'short' }) + ' ' + d.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }); }
 
     async function fetchWithTimeout(url, options = {}) {
@@ -358,7 +347,6 @@
         try { const res = await fetch(url, { ...options, signal: ctrl.signal }); clearTimeout(id); return res; } catch (e) { clearTimeout(id); throw e; }
     }
 
-    // Toggle ช่องใส่รููปภาพ
     els.btnToggleMedia.addEventListener('click', () => {
         if(els.mediaInputBox.style.display === 'block') {
             els.mediaInputBox.style.display = 'none';
@@ -463,11 +451,13 @@
 
     function renderFeed() {
         if (els.skeletonPosts) els.skeletonPosts.style.display = 'none';
-        const existing = els.feed.querySelectorAll('.post-card, .status-message, .error-banner');
-        existing.forEach(el => el.remove());
-
+        
+        // เราจะไม่ใช้ innerHTML += เพื่อป้องกันปุ่มต่างๆ ค้าง เราจะสร้างใหม่ทั้งหมด
+        let feedHtml = `<div class="feed-divider">Timeline</div>`;
+        
         if (!state.posts.length) {
-            els.feed.innerHTML += `<div class="status-message"><div style="font-size:2rem; opacity:0.4; margin-bottom:10px;">💬</div>ยังไม่มีโพสต์ในไทม์ไลน์</div>`;
+            feedHtml += `<div class="status-message"><div style="font-size:2rem; opacity:0.4; margin-bottom:10px;">💬</div>ยังไม่มีโพสต์ในไทม์ไลน์</div>`;
+            els.feed.innerHTML = feedHtml;
             return;
         }
 
@@ -476,62 +466,65 @@
         const initials = authorName.split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
 
         state.posts.forEach((post, i) => {
-            const article = document.createElement('article');
-            article.className = 'post-card';
-            article.style.animationDelay = `${i * 0.05}s`;
+            // ดึงค่าอย่างปลอดภัยกัน Error
+            const likesList = Array.isArray(post.likes) ? post.likes : [];
+            const commentsList = Array.isArray(post.comments) ? post.comments : [];
+            const mediaUrl = post.mediaUrl || '';
 
-            const hasLiked = state.isLoggedIn && post.likes.includes(state.currentUser.email);
+            const hasLiked = state.isLoggedIn && likesList.includes(state.currentUser?.email);
             const likeIcon = hasLiked ? 'fas fa-heart' : 'far fa-heart';
             const likeClass = hasLiked ? 'action-btn liked' : 'action-btn';
 
             let commentsHtml = '';
-            if(post.comments && post.comments.length > 0) {
-                post.comments.forEach(c => {
+            if(commentsList.length > 0) {
+                commentsList.forEach(c => {
                     const cPic = escapeHTML(c.pic || 'https://ui-avatars.com/api/?name=' + c.name);
                     commentsHtml += `<div class="comment-item"><img src="${cPic}" class="comment-avatar" onerror="this.src='https://ui-avatars.com/api/?name=U'"><div class="comment-box"><div class="comment-name">${escapeHTML(c.name)}</div><div class="comment-text">${escapeHTML(c.text)}</div></div></div>`;
                 });
             }
 
-            // ประมวลผลลิงก์และรูปภาพ
             const processedContent = processContent(post.content);
             let attachedMediaHtml = '';
-            if (post.mediaUrl && post.mediaUrl.trim() !== '') {
-                attachedMediaHtml = `<img src="${escapeHTML(post.mediaUrl)}" class="post-attached-media" onerror="this.style.display='none'">`;
+            if (mediaUrl.trim() !== '') {
+                attachedMediaHtml = `<img src="${escapeHTML(mediaUrl)}" class="post-attached-media" onerror="this.style.display='none'">`;
             }
 
-            article.innerHTML = `
-                <div class="post-avatar-wrap">
-                    <div class="img-fallback" style="font-size:0.85rem;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;">${initials}</div>
-                    <img class="post-avatar loaded" src="${avatarSrc}" onerror="this.style.display='none'">
-                </div>
-                <div class="post-card-content">
-                    <div class="post-card-header">
-                        <span class="post-card-name">${authorName}</span>
-                        <div class="verified-badge"><i class="fas fa-check"></i></div>
-                        <span class="post-card-time">· ${formatDate(post.timestamp)}</span>
+            feedHtml += `
+                <article class="post-card" style="animation-delay:${i * 0.05}s">
+                    <div class="post-avatar-wrap">
+                        <div class="img-fallback" style="font-size:0.85rem;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;">${initials}</div>
+                        <img class="post-avatar loaded" src="${avatarSrc}" onerror="this.style.display='none'">
                     </div>
-                    <div class="post-card-text">
-                        ${processedContent.safeText}
-                    </div>
-                    ${processedContent.mediaHtml}
-                    ${attachedMediaHtml}
-                    
-                    <div class="post-card-actions">
-                        <button class="${likeClass}" onclick="toggleLike(${post.rowIdx})"><i class="${likeIcon}"></i> ${post.likes.length}</button>
-                        <button class="action-btn" onclick="toggleCommentBox(${post.rowIdx})"><i class="far fa-comment"></i> ${post.comments.length}</button>
-                    </div>
+                    <div class="post-card-content">
+                        <div class="post-card-header">
+                            <span class="post-card-name">${authorName}</span>
+                            <div class="verified-badge" style="width:14px;height:14px;font-size:0.45rem;"><i class="fas fa-check"></i></div>
+                            <span class="post-card-time">· ${formatDate(post.timestamp)}</span>
+                        </div>
+                        <div class="post-card-text">
+                            ${processedContent.safeText}
+                        </div>
+                        ${processedContent.mediaHtml}
+                        ${attachedMediaHtml}
+                        
+                        <div class="post-card-actions">
+                            <button class="${likeClass}" onclick="toggleLike(${post.rowIdx})"><i class="${likeIcon}"></i> ${likesList.length}</button>
+                            <button class="action-btn" onclick="toggleCommentBox(${post.rowIdx})"><i class="far fa-comment"></i> ${commentsList.length}</button>
+                        </div>
 
-                    <div class="comments-section" id="comments-section-${post.rowIdx}">
-                        ${commentsHtml}
-                        <div class="comment-input-area">
-                            <input type="text" class="comment-input" id="comment-input-${post.rowIdx}" placeholder="แสดงความคิดเห็น..." ${!state.isLoggedIn ? 'disabled title="กรุณา Sign In ก่อน"' : ''}>
-                            <button class="btn-comment" onclick="submitComment(${post.rowIdx})">ส่ง</button>
+                        <div class="comments-section" id="comments-section-${post.rowIdx}">
+                            ${commentsHtml}
+                            <div class="comment-input-area">
+                                <input type="text" class="comment-input" id="comment-input-${post.rowIdx}" placeholder="แสดงความคิดเห็น..." ${!state.isLoggedIn ? 'disabled title="กรุณา Sign In ก่อน"' : ''}>
+                                <button class="btn-comment" onclick="submitComment(${post.rowIdx})">ส่ง</button>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </article>
             `;
-            els.feed.appendChild(article);
         });
+
+        els.feed.innerHTML = feedHtml;
     }
 
     function toggleCommentBox(rowIdx) {
@@ -543,6 +536,7 @@
         if (!state.isLoggedIn) return els.modal.classList.add('show');
         
         const post = state.posts.find(p => p.rowIdx === rowIdx);
+        if (!post.likes) post.likes = []; // กันเหนียว
         const emailIdx = post.likes.indexOf(state.currentUser.email);
         if (emailIdx > -1) post.likes.splice(emailIdx, 1); else post.likes.push(state.currentUser.email);
         renderFeed();
