@@ -70,8 +70,8 @@
 ---
 
 # 👨‍💻 AUTHOR
-**Mean (วัชรวิชญ์)**
-> "Built with passion, driven by M4 Power."
+**koomean**
+> "Built with Gemini and Claude, driven by M4 Power."
 
 **Personal Gears:**
 - 💻 **Macbook Air M4** (Development Machine)
