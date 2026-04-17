@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Koo Mean Space</title>
+    <title id="web-title">Koo Mean Space</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Sora:wght@700;800&display=swap" rel="stylesheet">
     <script src="https://accounts.google.com/gsi/client" async defer></script>
@@ -698,16 +698,14 @@
 <body>
     <div class="app-container">
 
-        <!-- Header -->
         <header class="header">
             <div class="header-left">
                 <div class="header-logo">KM</div>
-                <div class="header-title">Koo Mean Space</div>
+                <div class="header-title" id="header-title-text">Space</div>
             </div>
             <button class="auth-btn" id="loginToggleBtn">Sign In</button>
         </header>
 
-        <!-- Profile -->
         <section class="profile-header">
             <div class="profile-cover"></div>
             <div class="profile-info-wrap">
@@ -725,7 +723,7 @@
                         </h1>
                         <div class="verified-badge"><i class="fas fa-check" style="font-size:0.5rem;"></i></div>
                     </div>
-                    <div class="profile-handle" id="profile-handle">@koomean</div>
+                    <div class="profile-handle" id="profile-handle">@admin</div>
                     <div class="profile-bio" id="profile-bio">
                         <span class="skel-line" style="width:100%;height:13px;display:block;margin-top:6px;"></span>
                         <span class="skel-line" style="width:70%;height:13px;display:block;margin-top:6px;"></span>
@@ -740,7 +738,6 @@
             </div>
         </section>
 
-        <!-- Post Creator (Admin only) -->
         <section class="post-creator" id="post-creator">
             <div class="creator-flex">
                 <div class="creator-avatar-wrap">
@@ -748,7 +745,7 @@
                          onerror="this.src='https://ui-avatars.com/api/?name=A&background=1a2040&color=4f8ef7&size=80'">
                 </div>
                 <div class="creator-input-area">
-                    <textarea id="new-post-content" class="creator-textarea" placeholder="คุณมีน กำลังคิดอะไรอยู่..." maxlength="500"></textarea>
+                    <textarea id="new-post-content" class="creator-textarea" placeholder="คุณกำลังคิดอะไรอยู่..." maxlength="500"></textarea>
                     <div class="creator-footer">
                         <span class="char-count" id="char-count">0 / 500</span>
                         <button class="btn-post" id="submit-post-btn" onclick="submitPost()">Post</button>
@@ -757,10 +754,8 @@
             </div>
         </section>
 
-        <!-- Feed -->
         <main class="feed-container" id="feed-container">
             <div class="feed-divider">Timeline</div>
-            <!-- Skeleton posts -->
             <div id="skeleton-posts">
                 ${[...Array(5)].map((_, i) => `
                 <div class="skeleton-post" style="animation-delay:${i * 0.06}s">
@@ -775,7 +770,6 @@
         </main>
     </div>
 
-    <!-- Modal -->
     <div class="modal-overlay" id="login-modal">
         <div class="modal-box">
             <div class="modal-logo">KM</div>
@@ -791,26 +785,27 @@
         </div>
     </div>
 
-    <!-- Toast -->
     <div class="toast" id="toast"></div>
 
     <script>
     // ─── Config ───────────────────────────────────────────────────────────────
     const API_URL = "https://script.google.com/macros/s/AKfycbwBYhFTW68AfN4cYUJYS1DG7vw-Ocykx5kslSUQIeJJlfu0oeBIdi9xAhVmorVWQ4q7rg/exec";
-    const SESSION_KEY = 'koomean_session';
+    const SESSION_KEY = 'koomean_space_session';
     const FETCH_TIMEOUT = 12000; // 12s
 
     // ─── State ────────────────────────────────────────────────────────────────
     let state = {
         isLoggedIn: false,
         currentUser: null,
-        profile: { name: 'Koo Mean', imageUrl: '', bio: '' },
+        spaceProfile: { webTitle: 'Space', name: 'Loading', imageUrl: '', bio: '' },
         posts: []
     };
 
     // ─── DOM refs ─────────────────────────────────────────────────────────────
     const $ = id => document.getElementById(id);
     const els = {
+        webTitleTag: $('web-title'),
+        headerTitle: $('header-title-text'),
         loginBtn: $('loginToggleBtn'),
         modal: $('login-modal'),
         closeModal: $('close-modal-btn'),
@@ -848,7 +843,10 @@
     function loadImage(imgEl, src, skeletonEl, fallbackEl, initials = 'KM') {
         if (!src || src.trim() === '') {
             if (skeletonEl) skeletonEl.classList.add('hidden');
-            if (fallbackEl) fallbackEl.textContent = initials;
+            if (fallbackEl) {
+                fallbackEl.style.display = 'flex';
+                fallbackEl.textContent = initials;
+            }
             return;
         }
         const img = new Image();
@@ -868,7 +866,6 @@
         img.src = src;
     }
 
-    // Post avatar helper (inline in feed HTML)
     function initPostAvatars() {
         document.querySelectorAll('.post-avatar[data-src]').forEach(img => {
             const src = img.dataset.src;
@@ -918,7 +915,6 @@
         return d.toLocaleDateString('th-TH', { day: 'numeric', month: 'short' });
     }
 
-    // Fetch with timeout
     async function fetchWithTimeout(url, options = {}, timeout = FETCH_TIMEOUT) {
         const ctrl = new AbortController();
         const id = setTimeout(() => ctrl.abort(), timeout);
@@ -932,7 +928,6 @@
         }
     }
 
-    // ─── Session persistence ──────────────────────────────────────────────────
     function saveSession(user) {
         try { localStorage.setItem(SESSION_KEY, JSON.stringify(user)); } catch {}
     }
@@ -993,17 +988,25 @@
             if (!res.ok) throw new Error(`HTTP ${res.status}`);
             const data = await res.json();
 
-            // 1. Profile
-            if (data.profile) {
-                const p = data.profile;
-                state.profile.name = p.name || 'Koo Mean';
-                state.profile.bio = p.bio || '';
+            // 1. ดึง Space Profile (จากคอลัมน์ใหม่ที่เพิ่มเข้าไป)
+            if (data.spaceProfile) {
+                const sp = data.spaceProfile;
+                state.spaceProfile.webTitle = sp.webTitle || 'Koo Mean Space';
+                state.spaceProfile.name = sp.name || 'Koo Mean';
+                state.spaceProfile.bio = sp.bio || '';
+                
+                // อัปเดต Title เว็บและ Header
+                els.webTitleTag.textContent = state.spaceProfile.webTitle;
+                els.headerTitle.textContent = state.spaceProfile.webTitle;
 
-                els.profName.textContent = state.profile.name;
-                els.profBio.textContent = state.profile.bio;
+                // อัปเดต Profile Section
+                els.profName.textContent = state.spaceProfile.name;
+                els.profBio.textContent = state.spaceProfile.bio;
 
-                const imgUrl = (p.imageUrl || '').trim();
-                loadImage(els.profImg, imgUrl, els.avatarSkeleton, els.avatarFallback, 'KM');
+                // อัปเดตรูป
+                const imgUrl = (sp.imageUrl || '').trim();
+                const initials = state.spaceProfile.name.split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
+                loadImage(els.profImg, imgUrl, els.avatarSkeleton, els.avatarFallback, initials);
             }
 
             // 2. Auth
@@ -1038,7 +1041,6 @@
     }
 
     function removeFeedPosts() {
-        // Keep divider and skeleton, remove old posts only
         const existing = els.feed.querySelectorAll('.post-card, .error-banner');
         existing.forEach(el => el.remove());
         if (els.skeletonPosts) els.skeletonPosts.style.display = 'block';
@@ -1078,9 +1080,9 @@
             return;
         }
 
-        const avatarSrc = state.profile.imageUrl || '';
-        const authorName = escapeHTML(state.profile.name || 'Koo Mean');
-        const initials = (state.profile.name || 'KM').split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
+        const avatarSrc = state.spaceProfile.imageUrl || '';
+        const authorName = escapeHTML(state.spaceProfile.name || 'Koo Mean');
+        const initials = authorName.split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
 
         state.posts.forEach((post, i) => {
             const article = document.createElement('article');
@@ -1165,7 +1167,6 @@
 
     // ─── Init ─────────────────────────────────────────────────────────────────
     (function init() {
-        // Try restoring session
         const saved = loadSession();
         if (saved?.email) {
             state.isLoggedIn = true;
