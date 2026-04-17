@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Web Dashboard</title>
+    <title>Koo Mean Admin Dashboard</title>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
     <style>
@@ -23,11 +23,11 @@
 <body>
 
 <div class="container">
-    <h2 id="statusText" style="text-align: center;">เข้าสู่ระบบ</h2>
+    <h2 id="statusText" style="text-align: center;">เข้าสู่ระบบจัดการเว็บ</h2>
     
     <div id="loginSection" style="text-align: center; margin-bottom: 20px;">
         <div id="g_id_onload"
-             data-client_id="ใส่_GOOGLE_CLIENT_ID_ของคุณที่นี่.apps.googleusercontent.com"
+             data-client_id="906677442222-kmjgsmta70n24aoaq7osm9c1l7g1fb89.apps.googleusercontent.com"
              data-callback="handleCredentialResponse">
         </div>
         <div class="g_id_signin" data-type="standard" style="display: inline-block;"></div>
@@ -75,8 +75,8 @@
 </div>
 
 <script>
-    // ** ใส่ URL ของ Apps Script (doGet) ที่ Deploy แล้วตรงนี้ **
-    const SCRIPT_URL = 'ใส่_URL_WEB_APP_ตรงนี้';
+    // URL ของ Web App จาก Google Apps Script เดิมของคุณ
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyNoUFK4qqqYQ4c11vVyugVKk5qzF6fQcdoL1cQL-PbSVIeE2FpO5-56YVHB9cZxjaS0w/exec';
     
     let currentUser = {};
     let globalData = {};
