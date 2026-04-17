@@ -2,564 +2,626 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Koo Mean Space</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
-        /* ตัวแปรสีสไตล์ Dark Theme พรีเมียม */
         :root {
-            --bg-base: #000000;          /* พื้นหลังดำสนิท */
-            --bg-surface: #111315;       /* สีพื้นผิว (การ์ด, กล่องโพสต์) */
-            --bg-surface-hover: #181a1d; /* สีพื้นผิวตอน Hover */
-            --border-color: #2f3336;     /* สีเส้นขอบ */
-            --text-primary: #e7e9ea;     /* สีตัวอักษรหลัก */
-            --text-secondary: #71767b;   /* สีตัวอักษรรอง */
-            --accent: #1d9bf0;           /* สีเน้น (ปุ่ม, ไฮไลต์) */
-            --accent-hover: #1a8cd8;     /* สีเน้นตอน Hover */
-            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            /* โทนสีหลัก (OLED Black Theme) */
+            --bg-body: #000000;
+            --bg-container: #000000;
+            --bg-card: #16181c;
+            --bg-card-hover: #1c1f23;
+            --border: #2f3336;
+            --text-primary: #e7e9ea;
+            --text-secondary: #71767b;
+            --accent: #1d9bf0;
+            --accent-hover: #1a8cd8;
+            --success: #00ba7c;
+            --danger: #f4212e;
+            
+            /* Glassmorphism */
+            --glass-bg: rgba(0, 0, 0, 0.65);
+            --glass-blur: blur(12px);
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { 
-            background-color: var(--bg-base); 
-            color: var(--text-primary); 
-            font-family: var(--font-family); 
-            display: flex; 
-            justify-content: center; 
-            min-height: 100vh; 
-            -webkit-font-smoothing: antialiased;
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
-        
-        /* Container หลัก (จำลองแอปมือถือ/ฟีด) */
-        .main-container { 
-            width: 100%; 
-            max-width: 600px; 
-            border-left: 1px solid var(--border-color); 
-            border-right: 1px solid var(--border-color); 
-            min-height: 100vh; 
-            padding-bottom: 80px;
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-primary);
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            overflow-y: scroll; /* ป้องกันเนื้อหากระโดดตอน scrollbar ขึ้น */
+        }
+
+        /* --- Layout หลัก (ตรงกลางจอ) --- */
+        .app-container {
+            width: 100%;
+            max-width: 600px; /* ความกว้างมาตรฐานของ Feed */
+            min-height: 100vh;
+            background-color: var(--bg-container);
+            border-left: 1px solid var(--border);
+            border-right: 1px solid var(--border);
             position: relative;
+            display: flex;
+            flex-direction: column;
         }
-        
-        /* Header Sticky */
-        .header { 
-            backdrop-filter: blur(16px); 
-            -webkit-backdrop-filter: blur(16px);
-            background-color: rgba(0,0,0,0.65); 
-            position: sticky; 
-            top: 0; 
-            padding: 15px 20px; 
-            font-size: 1.25rem; 
-            font-weight: 800; 
-            border-bottom: 1px solid var(--border-color); 
-            z-index: 100; 
-            display: flex; 
-            justify-content: space-between; 
+
+        /* เอา border ออกเวลากางบนมือถือ */
+        @media (max-width: 600px) {
+            .app-container {
+                border-left: none;
+                border-right: none;
+            }
+        }
+
+        /* --- Header (Sticky) --- */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background-color: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
             align-items: center;
+            border-bottom: 1px solid var(--border);
         }
-
-        /* ปุ่ม Login / Logout มุมขวาบน */
-        .auth-btn { 
-            background: transparent; 
-            border: 1px solid var(--border-color); 
-            color: var(--text-primary); 
-            padding: 6px 16px; 
-            border-radius: 20px; 
-            cursor: pointer; 
-            font-size: 0.85rem; 
+        .header-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+        .auth-btn {
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            padding: 6px 16px;
+            border-radius: 9999px;
+            font-size: 0.875rem;
             font-weight: 600;
-            transition: all 0.2s ease; 
+            cursor: pointer;
+            transition: all 0.2s;
         }
-        .auth-btn:hover { 
-            background: rgba(255,255,255,0.1); 
-            border-color: var(--text-secondary);
+        .auth-btn:hover {
+            background-color: rgba(255,255,255,0.1);
         }
 
-        /* Profile Header */
-        .profile-section { 
-            padding: 20px; 
-            border-bottom: 1px solid var(--border-color); 
-            text-align: center; 
+        /* --- Profile Section --- */
+        .profile-header {
             position: relative;
+            border-bottom: 1px solid var(--border);
         }
         .profile-cover {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 80px;
-            background: linear-gradient(135deg, #1d9bf033, #000000);
-            z-index: 0;
+            height: 150px;
+            background: linear-gradient(135deg, #1d9bf033 0%, #000000 100%);
+            width: 100%;
         }
-        .profile-content {
+        @media (max-width: 600px) {
+            .profile-cover { height: 120px; }
+        }
+        .profile-info-wrap {
+            padding: 12px 16px 16px;
             position: relative;
-            z-index: 1;
-            margin-top: 20px;
         }
-        .profile-img { 
-            width: 110px; 
-            height: 110px; 
-            border-radius: 50%; 
-            border: 4px solid var(--bg-base); 
-            object-fit: cover; 
-            background-color: var(--bg-surface);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        .profile-avatar-wrap {
+            position: absolute;
+            top: -65px;
+            left: 16px;
+            border-radius: 50%;
+            padding: 4px;
+            background-color: var(--bg-container);
         }
-        .profile-name { 
-            font-size: 1.5rem; 
-            font-weight: 800; 
-            margin-top: 10px;
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            background-color: var(--border); /* สีรอโหลด */
+        }
+        @media (max-width: 600px) {
+            .profile-avatar-wrap { top: -50px; }
+            .profile-avatar { width: 90px; height: 90px; }
+        }
+        /* ดันเนื้อหาโปรไฟล์ลงมาไม่ให้ทับรูป */
+        .profile-text-content {
+            margin-top: 60px; 
+        }
+        @media (max-width: 600px) {
+            .profile-text-content { margin-top: 40px; }
+        }
+        .profile-name-row {
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 6px;
+            gap: 4px;
+        }
+        .profile-name {
+            font-size: 1.25rem;
+            font-weight: 800;
+            line-height: 1.2;
         }
         .verified-badge {
             color: var(--accent);
-            font-size: 1.1rem;
+            font-size: 1rem;
+            margin-top: 2px;
         }
-        .profile-bio { 
-            color: var(--text-secondary); 
-            margin-top: 6px; 
-            font-size: 0.95rem; 
-            line-height: 1.5;
+        .profile-handle {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 2px;
+        }
+        .profile-bio {
+            margin-top: 12px;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            color: var(--text-primary);
         }
 
-        /* Post Creator (เฉพาะ Admin) */
-        .post-creator { 
-            padding: 20px; 
-            border-bottom: 1px solid var(--border-color); 
-            display: none; /* ซ่อนไว้ก่อน จะโชว์เมื่อ Login */
-            background-color: var(--bg-surface);
+        /* --- Post Creator (Admin Only) --- */
+        .post-creator {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            display: none; /* ซ่อนตอนแรก */
+            background-color: var(--bg-container);
         }
-        .creator-layout { 
-            display: flex; 
-            gap: 15px; 
+        .creator-flex {
+            display: flex;
+            gap: 12px;
         }
-        .creator-avatar { 
-            width: 48px; 
-            height: 48px; 
-            border-radius: 50%; 
-            object-fit: cover; 
-            background-color: var(--bg-base);
+        .creator-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
         }
-        .creator-input-container { 
-            flex: 1; 
+        .creator-input-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
         }
-        .creator-textarea { 
-            width: 100%; 
-            background: transparent; 
-            border: none; 
-            color: var(--text-primary); 
-            font-size: 1.25rem; 
-            line-height: 1.5;
-            resize: none; 
-            outline: none; 
-            font-family: var(--font-family); 
-            margin-top: 8px; 
-            min-height: 60px;
+        .creator-textarea {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            line-height: 1.4;
+            resize: none;
+            outline: none;
+            min-height: 50px;
+            padding-top: 8px;
         }
         .creator-textarea::placeholder {
             color: var(--text-secondary);
         }
-        .post-controls { 
-            display: flex; 
-            justify-content: flex-end; 
-            margin-top: 12px; 
-            border-top: 1px solid var(--border-color); 
-            padding-top: 12px; 
+        .creator-actions {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            margin-top: 12px;
+            border-top: 1px solid var(--border);
+            padding-top: 12px;
         }
-        .post-btn { 
-            background: var(--accent); 
-            color: white; 
-            border: none; 
-            padding: 10px 24px; 
-            border-radius: 25px; 
-            font-weight: 700; 
-            font-size: 1rem; 
-            cursor: pointer; 
-            transition: background-color 0.2s; 
+        .btn-post {
+            background-color: var(--accent);
+            color: #fff;
+            border: none;
+            border-radius: 9999px;
+            padding: 8px 16px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
         }
-        .post-btn:hover { background: var(--accent-hover); }
-        .post-btn:disabled { 
-            opacity: 0.5; 
-            cursor: not-allowed; 
+        .btn-post:hover { background-color: var(--accent-hover); }
+        .btn-post:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        /* --- Feed Section --- */
+        .feed-container {
+            flex: 1;
+            padding-bottom: 50px;
+        }
+        .post-card {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            gap: 12px;
+            transition: background-color 0.2s;
+            cursor: pointer;
+        }
+        .post-card:hover {
+            background-color: var(--bg-card-hover);
+        }
+        .post-card-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+        .post-card-content {
+            flex: 1;
+            min-width: 0; /* ป้องกัน text overflow ดัน layout */
+        }
+        .post-card-header {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin-bottom: 4px;
+        }
+        .post-card-name {
+            font-weight: 700;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            white-space: nowrap;
+        }
+        .post-card-time {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        .post-card-text {
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            word-wrap: break-word;
         }
 
-        /* Feed Area */
-        .feed-container { 
-            display: flex; 
-            flex-direction: column; 
-        }
-        
-        /* Post Card (แต่ละโพสต์ในฟีด) */
-        .post-card { 
-            padding: 20px; 
-            border-bottom: 1px solid var(--border-color); 
-            transition: background-color 0.2s ease; 
-            cursor: default;
-        }
-        .post-card:hover { 
-            background-color: var(--bg-surface-hover); 
-        }
-        .post-header { 
-            display: flex; 
-            align-items: flex-start; 
-            gap: 12px; 
-            margin-bottom: 8px; 
-        }
-        .post-avatar { 
-            width: 48px; 
-            height: 48px; 
-            border-radius: 50%; 
-            object-fit: cover; 
-            background-color: var(--bg-surface);
-        }
-        .post-meta {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        .post-author { 
-            font-weight: 700; 
-            color: var(--text-primary); 
-            font-size: 1.05rem; 
-            display: flex; 
-            align-items: center; 
-            gap: 4px;
-        }
-        .post-author-handle {
+        /* --- Loading & States --- */
+        .status-message {
+            text-align: center;
+            padding: 32px 16px;
             color: var(--text-secondary);
             font-size: 0.95rem;
-            font-weight: 400;
         }
-        .post-time { 
-            color: var(--text-secondary); 
-            font-size: 0.85rem; 
-            margin-top: 2px;
+        .spinner {
+            width: 28px;
+            height: 28px;
+            border: 3px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 12px;
         }
-        .post-content { 
-            font-size: 1.1rem; 
-            line-height: 1.5; 
-            color: var(--text-primary); 
-            white-space: pre-wrap; 
-            word-wrap: break-word;
-            margin-left: 60px; /* ย่อหน้าให้ตรงกับชื่อ */
-        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
 
-        /* Loading Spinner */
-        .loader-container {
-            padding: 40px 0;
-            display: flex;
+        /* --- Modal (Login) --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            display: none;
             justify-content: center;
             align-items: center;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.2s ease;
         }
-        .loader { 
-            border: 3px solid rgba(255,255,255,0.1); 
-            border-radius: 50%; 
-            border-top: 3px solid var(--accent); 
-            width: 36px; 
-            height: 36px; 
-            animation: spin 1s linear infinite; 
+        .modal-overlay.show {
+            display: flex;
+            opacity: 1;
         }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-        /* Login Modal */
-        .modal { 
-            display: none; 
-            position: fixed; 
-            z-index: 2000; 
-            left: 0; 
-            top: 0; 
-            width: 100%; 
-            height: 100%; 
-            background-color: rgba(0, 0, 0, 0.7); 
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
-            justify-content: center; 
-            align-items: center; 
+        .modal-box {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            width: 100%;
+            max-width: 360px;
+            padding: 32px 24px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transform: translateY(20px);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        .modal-content { 
-            background: var(--bg-surface); 
-            border: 1px solid var(--border-color); 
-            border-radius: 16px; 
-            padding: 35px 25px; 
-            width: 90%; 
-            max-width: 360px; 
-            text-align: center; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-            animation: modalFadeIn 0.3s ease;
-        }
-        @keyframes modalFadeIn {
-            from { opacity: 0; transform: translateY(20px) scale(0.95); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
+        .modal-overlay.show .modal-box {
+            transform: translateY(0);
         }
         .modal-title {
-            margin-bottom: 25px;
-            font-size: 1.3rem;
+            font-size: 1.25rem;
             font-weight: 700;
+            margin-bottom: 24px;
         }
-        .close-modal-btn {
-            margin-top: 25px; 
-            background: transparent; 
-            border: none; 
-            color: var(--text-secondary); 
+        .btn-close-modal {
+            margin-top: 24px;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-weight: 600;
             cursor: pointer;
-            font-size: 0.95rem;
-            transition: color 0.2s;
+            padding: 8px 16px;
+            border-radius: 20px;
         }
-        .close-modal-btn:hover {
-            color: var(--text-primary);
+        .btn-close-modal:hover {
+            background-color: rgba(255,255,255,0.05);
         }
-
-        /* Utilities */
-        .hidden { display: none !important; }
-        .text-center { text-align: center; }
-        .mt-3 { margin-top: 15px; }
-        .color-muted { color: var(--text-secondary); }
+        
+        /* แก้ปัญหากล่อง Google Login ล้น */
+        #g_id_onload, .g_id_signin {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
     </style>
 </head>
 <body>
 
-    <div class="main-container">
-        <div class="header">
-            <div>Koo Mean Space</div>
+    <div class="app-container">
+        <header class="header">
+            <div class="header-title">Koo Mean Space</div>
             <button class="auth-btn" id="loginToggleBtn">Sign In</button>
-        </div>
+        </header>
 
-        <div class="profile-section">
+        <section class="profile-header">
             <div class="profile-cover"></div>
-            <div class="profile-content">
-                <img src="https://ui-avatars.com/api/?name=M&background=1d9bf0&color=fff&size=200" class="profile-img" id="main-profile-img">
-                <div class="profile-name">
-                    <span id="profile-name-text">Loading...</span> 
-                    <i class="fas fa-certificate verified-badge"></i>
+            <div class="profile-info-wrap">
+                <div class="profile-avatar-wrap">
+                    <img src="https://ui-avatars.com/api/?name=KM&background=16181c&color=e7e9ea&size=200" alt="Profile" class="profile-avatar" id="main-profile-img">
                 </div>
-                <div class="profile-bio" id="profile-bio">...</div>
+                
+                <div class="profile-text-content">
+                    <div class="profile-name-row">
+                        <h1 class="profile-name" id="profile-name-text">Loading...</h1>
+                        <i class="fas fa-certificate verified-badge"></i>
+                    </div>
+                    <div class="profile-handle" id="profile-handle">@koomean</div>
+                    <div class="profile-bio" id="profile-bio">...</div>
+                </div>
             </div>
-        </div>
+        </section>
 
-        <div class="post-creator" id="post-creator">
-            <div class="creator-layout">
-                <img src="https://ui-avatars.com/api/?name=Admin" class="creator-avatar" id="creator-avatar">
-                <div class="creator-input-container">
+        <section class="post-creator" id="post-creator">
+            <div class="creator-flex">
+                <img src="https://ui-avatars.com/api/?name=A" alt="Admin" class="creator-avatar" id="creator-avatar">
+                <div class="creator-input-area">
                     <textarea id="new-post-content" class="creator-textarea" placeholder="คุณมีน กำลังคิดอะไรอยู่..."></textarea>
-                    <div class="post-controls">
-                        <button class="post-btn" id="submit-post-btn" onclick="submitPost()">Post</button>
+                    <div class="creator-actions">
+                        <button class="btn-post" id="submit-post-btn" onclick="submitPost()">Post</button>
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <div class="feed-container" id="feed-container">
-            <div class="loader-container" id="feed-loader-wrapper">
-                <div class="loader"></div>
+        <main class="feed-container" id="feed-container">
+            <div class="status-message">
+                <div class="spinner"></div>
+                กำลังโหลดไทม์ไลน์...
             </div>
-        </div>
+        </main>
     </div>
 
-    <div id="login-modal" class="modal">
-        <div class="modal-content">
+    <div class="modal-overlay" id="login-modal">
+        <div class="modal-box">
             <h2 class="modal-title">Admin Sign In</h2>
-            <div style="display: flex; justify-content: center;">
-                <div id="g_id_onload"
-                    data-client_id="906677442222-kmjgsmta70n24aoaq7osm9c1l7g1fb89.apps.googleusercontent.com"
-                    data-callback="handleCredentialResponse"
-                    data-auto_prompt="false">
-                </div>
-                <div class="g_id_signin" data-type="standard" data-theme="outline" data-size="large"></div>
+            <div id="g_id_onload"
+                data-client_id="906677442222-kmjgsmta70n24aoaq7osm9c1l7g1fb89.apps.googleusercontent.com"
+                data-callback="handleCredentialResponse"
+                data-auto_prompt="false">
             </div>
-            <button class="close-modal-btn" onclick="document.getElementById('login-modal').style.display='none'">ยกเลิก</button>
+            <div class="g_id_signin" data-type="standard" data-theme="outline" data-size="large"></div>
+            <button class="btn-close-modal" id="close-modal-btn">ยกเลิก</button>
         </div>
     </div>
 
     <script>
-    // URL ของ Web App Google Apps Script
+    // --- Configuration ---
     const API_URL = "https://script.google.com/macros/s/AKfycbwBYhFTW68AfN4cYUJYS1DG7vw-Ocykx5kslSUQIeJJlfu0oeBIdi9xAhVmorVWQ4q7rg/exec";
     
-    // State จัดการข้อมูล
+    // --- State Management ---
     let state = { 
         isLoggedIn: false, 
         currentUser: null, 
         profile: {
             name: "Koo Mean",
-            imageUrl: "https://ui-avatars.com/api/?name=M&background=1d9bf0&color=fff&size=200"
+            imageUrl: "https://ui-avatars.com/api/?name=KM&background=1d9bf0&color=fff&size=200"
         }, 
         posts: [] 
     };
 
-    // ฟังก์ชันถอดรหัส Token ของ Google
+    // --- DOM Elements ---
+    const els = {
+        loginBtn: document.getElementById('loginToggleBtn'),
+        modal: document.getElementById('login-modal'),
+        closeModal: document.getElementById('close-modal-btn'),
+        creatorBox: document.getElementById('post-creator'),
+        creatorAvatar: document.getElementById('creator-avatar'),
+        postInput: document.getElementById('new-post-content'),
+        postSubmit: document.getElementById('submit-post-btn'),
+        feed: document.getElementById('feed-container'),
+        profImg: document.getElementById('main-profile-img'),
+        profName: document.getElementById('profile-name-text'),
+        profBio: document.getElementById('profile-bio')
+    };
+
+    // --- Utils ---
     function decodeJwt(token) {
         try {
             const base64Url = token.split('.')[1];
             const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-            const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-            }).join(''));
-            return JSON.parse(jsonPayload);
+            return JSON.parse(decodeURIComponent(atob(base64).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join('')));
         } catch { return null; }
     }
 
-    // จัดการการเปิด/ปิด Login Modal หรือ Logout
-    document.getElementById('loginToggleBtn').addEventListener('click', () => {
+    function escapeHTML(str) {
+        if (!str) return '';
+        const p = document.createElement('p');
+        p.textContent = str;
+        return p.innerHTML;
+    }
+
+    function showSpinner(text) {
+        els.feed.innerHTML = `
+            <div class="status-message">
+                <div class="spinner"></div>
+                ${text}
+            </div>
+        `;
+    }
+
+    // --- Auto Resize Textarea ---
+    els.postInput.addEventListener('input', function() {
+        this.style.height = 'auto';
+        this.style.height = (this.scrollHeight) + 'px';
+    });
+
+    // --- Auth Handlers ---
+    els.loginBtn.addEventListener('click', () => {
         if (!state.isLoggedIn) {
-            document.getElementById('login-modal').style.display = 'flex';
+            els.modal.classList.add('show');
         } else {
-            if(confirm("คุณต้องการออกจากระบบ (Logout) หรือไม่?")) {
+            if(confirm("ต้องการออกจากระบบหรือไม่?")) {
                 state.isLoggedIn = false;
                 state.currentUser = null;
-                document.getElementById('loginToggleBtn').innerText = 'Sign In';
-                document.getElementById('post-creator').style.display = 'none';
-                alert('ออกจากระบบเรียบร้อย');
+                els.loginBtn.innerText = 'Sign In';
+                els.creatorBox.style.display = 'none';
+                els.postInput.value = '';
             }
         }
     });
 
-    // Callback เมื่อ Google Login สำเร็จ
+    els.closeModal.addEventListener('click', () => {
+        els.modal.classList.remove('show');
+    });
+
+    // เรียกเมื่อ Login สำเร็จ
     function handleCredentialResponse(res) {
         const payload = decodeJwt(res.credential);
-        document.getElementById('login-modal').style.display = 'none';
+        els.modal.classList.remove('show');
+        showSpinner('กำลังตรวจสอบสิทธิ์...');
         
-        // แสดงโหลดิ้งตอนตรวจสอบสิทธิ์
-        const feedContainer = document.getElementById('feed-container');
-        feedContainer.innerHTML = `
-            <div class="loader-container">
-                <div class="loader"></div>
-            </div>
-            <p class="text-center color-muted mt-3">กำลังตรวจสอบสิทธิ์...</p>
-        `;
-        
-        // ส่ง Email ไปเช็คสิทธิ์ (รูปภาพเก็บไว้ใช้หน้าเว็บ ไม่ต้องส่งไปหลังบ้าน)
+        // โหลดข้อมูลใหม่พร้อมส่ง Email ไปเช็คสิทธิ์
         loadData(payload.email, payload.picture);
     }
 
-    // ดึงข้อมูลหลักจาก Apps Script
+    // --- Data Fetching ---
     async function loadData(userEmail = '', userPic = '') {
         try {
             let url = API_URL;
             if (userEmail) url += `?email=${encodeURIComponent(userEmail)}`;
 
             const res = await fetch(url);
+            if (!res.ok) throw new Error('Network response was not ok');
             const data = await res.json();
 
-            // 1. จัดการข้อมูล Profile ส่วนตัว
+            // 1. อัปเดต Profile
             if (data.profile && data.profile.name) {
                 state.profile.name = data.profile.name;
-                // ถ้ารูปจาก Google Sheet มีให้ใช้อันนั้น ถ้าไม่มีใช้รูป Default
-                if (data.profile.imageUrl) {
+                // อัปเดตรูปภาพ: ถ้ามี URL จาก Sheet ให้ใช้, ถ้าไม่มีใช้ค่าเริ่มต้น
+                if (data.profile.imageUrl && data.profile.imageUrl.trim() !== '') {
                     state.profile.imageUrl = data.profile.imageUrl;
                 }
                 
-                document.getElementById('profile-name-text').textContent = state.profile.name;
-                document.getElementById('profile-bio').textContent = data.profile.bio || '';
-                document.getElementById('main-profile-img').src = state.profile.imageUrl;
+                els.profName.textContent = state.profile.name;
+                els.profBio.textContent = data.profile.bio || '';
+                
+                // แก้ปัญหารูปไม่โหลดด้วยการเช็ค Error แล้วสลับไปใช้รูปสำรอง
+                const imgObj = new Image();
+                imgObj.onload = () => { els.profImg.src = state.profile.imageUrl; };
+                imgObj.onerror = () => { els.profImg.src = "https://ui-avatars.com/api/?name=KM&background=1d9bf0&color=fff"; };
+                imgObj.src = state.profile.imageUrl;
             }
 
-            // 2. จัดการสิทธิ์การ Login
+            // 2. จัดการสิทธิ์ Admin
             if (userEmail && data.user) {
                 state.isLoggedIn = true;
-                state.currentUser = { 
-                    email: data.user.email, 
-                    role: data.user.role, 
-                    pic: userPic // ใช้รูปจาก Google Account ที่ Login
-                };
+                state.currentUser = { email: data.user.email, role: data.user.role, pic: userPic };
+                els.loginBtn.innerText = 'Sign Out';
                 
-                document.getElementById('loginToggleBtn').innerText = 'Sign Out';
-                
-                // เปิดกล่องโพสต์ถ้าเป็น Admin
                 if (data.user.role === 'admin') {
-                    document.getElementById('post-creator').style.display = 'block';
-                    // เอารูป Google Account มาใส่ช่องโพสต์
-                    document.getElementById('creator-avatar').src = userPic; 
+                    els.creatorBox.style.display = 'block';
+                    els.creatorAvatar.src = userPic || state.profile.imageUrl;
                 } else {
-                    document.getElementById('post-creator').style.display = 'none';
-                    alert('อีเมลนี้เข้าสู่ระบบสำเร็จ แต่ไม่ใช่สิทธิ์ Admin (อ่านได้อย่างเดียวครับ)');
+                    els.creatorBox.style.display = 'none';
+                    alert('คุณไม่มีสิทธิ์โพสต์ (สิทธิ์: อ่านได้อย่างเดียว)');
                 }
             }
 
-            // 3. จัดการ Feed
+            // 3. เรนเดอร์ Feed
             if (data.posts) {
                 state.posts = data.posts;
                 renderFeed();
+            } else {
+                renderFeed(); // กรณีไม่มีโพสต์เลย
             }
 
         } catch (err) {
-            console.error('Error fetching data:', err);
-            document.getElementById('feed-container').innerHTML = `
-                <p class="text-center mt-3" style="color:#ff453a;">เกิดข้อผิดพลาดในการโหลดข้อมูล กรุณารีเฟรชหน้าเว็บ</p>
+            console.error('Fetch Error:', err);
+            els.feed.innerHTML = `
+                <div class="status-message" style="color: var(--danger);">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 24px; margin-bottom: 12px;"></i><br>
+                    โหลดข้อมูลไม่สำเร็จ กรุณาลองใหม่อีกครั้ง
+                </div>
             `;
         }
     }
 
-    // เรนเดอร์โพสต์ลงหน้าเว็บ
+    // --- Render Feed ---
     function renderFeed() {
-        const container = document.getElementById('feed-container');
-        
         if (!state.posts || state.posts.length === 0) {
-            container.innerHTML = '<p class="text-center color-muted" style="padding: 40px 20px;">ยังไม่มีการอัปเดตโพสต์</p>';
+            els.feed.innerHTML = `
+                <div class="status-message">
+                    ยังไม่มีโพสต์ในไทม์ไลน์
+                </div>
+            `;
             return;
         }
 
         let html = '';
         state.posts.forEach(post => {
-            // แปลงวันที่
-            const postDate = new Date(post.timestamp);
-            const dateStr = postDate.toLocaleDateString('th-TH', { month: 'short', day: 'numeric' });
-            const timeStr = postDate.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
+            // วันที่แบบสั้นๆ สไตล์ Social Media
+            const dateObj = new Date(post.timestamp);
+            const dateStr = dateObj.toLocaleDateString('th-TH', { day: 'numeric', month: 'short' });
             
-            // เอารูปและชื่อจาก Profile หลักมาแสดงในทุกโพสต์
-            const avatarUrl = state.profile.imageUrl;
+            // เอารูป Profile หลักมาโชว์ในโพสต์เลย (เพราะเว็บนี้เป็น Personal space)
+            const avatarSrc = state.profile.imageUrl;
             const authorName = state.profile.name;
 
             html += `
-                <div class="post-card">
-                    <div class="post-header">
-                        <img src="${avatarUrl}" class="post-avatar" alt="Avatar">
-                        <div class="post-meta">
-                            <div class="post-author">
-                                ${authorName} 
-                                <i class="fas fa-certificate verified-badge" style="font-size: 0.9rem;"></i>
-                            </div>
-                            <div class="post-time">${dateStr} · ${timeStr}</div>
+                <article class="post-card">
+                    <img src="${avatarSrc}" class="post-card-avatar" alt="Avatar" onerror="this.src='https://ui-avatars.com/api/?name=KM&background=16181c&color=e7e9ea'">
+                    <div class="post-card-content">
+                        <div class="post-card-header">
+                            <span class="post-card-name">${authorName}</span>
+                            <i class="fas fa-certificate verified-badge" style="font-size: 0.85rem;"></i>
+                            <span class="post-card-time">· ${dateStr}</span>
                         </div>
+                        <div class="post-card-text">${escapeHTML(post.content)}</div>
                     </div>
-                    <div class="post-content">${escapeHTML(post.content)}</div>
-                </div>
+                </article>
             `;
         });
         
-        container.innerHTML = html;
+        els.feed.innerHTML = html;
     }
 
-    // ป้องกัน HTML Injection ตอนแสดงโพสต์
-    function escapeHTML(str) {
-        if (!str) return '';
-        return str.replace(/[&<>'"]/g, 
-            tag => ({
-                '&': '&amp;',
-                '<': '&lt;',
-                '>': '&gt;',
-                "'": '&#39;',
-                '"': '&quot;'
-            }[tag] || tag)
-        );
-    }
-
-    // ฟังก์ชันส่งโพสต์ใหม่
+    // --- Submit Post ---
     async function submitPost() {
-        const contentBox = document.getElementById('new-post-content');
-        const content = contentBox.value.trim();
-        const btn = document.getElementById('submit-post-btn');
-
-        if (!content) return;
+        const content = els.postInput.value.trim();
         
-        // เช็คสิทธิ์ก่อนส่ง
+        if (!content) return;
         if (!state.isLoggedIn || state.currentUser.role !== 'admin') {
-            alert('คุณไม่มีสิทธิ์โพสต์ข้อความ');
+            alert('สิทธิ์ไม่เพียงพอ');
             return;
         }
 
-        btn.innerText = "กำลังโพสต์...";
-        btn.disabled = true;
-        contentBox.disabled = true;
+        // โหมดกำลังโหลด
+        els.postSubmit.innerText = "กำลังโพสต์...";
+        els.postSubmit.disabled = true;
+        els.postInput.disabled = true;
 
         try {
             const formData = new URLSearchParams();
@@ -575,32 +637,26 @@
             const result = await res.json();
 
             if (result.success) {
-                // ล้างกล่องข้อความ
-                contentBox.value = '';
-                // ดึงฟีดใหม่มาแสดง (แนบข้อมูล user เดิมไปเพื่อรักษา session หน้าเว็บ)
-                loadData(state.currentUser.email, state.currentUser.pic);
+                els.postInput.value = '';
+                els.postInput.style.height = 'auto'; // รีเซ็ตความสูง
+                // รีโหลดฟีดใหม่เงียบๆ (ไม่โชว์ Spinner เต็มจอ)
+                await loadData(state.currentUser.email, state.currentUser.pic);
             } else {
-                alert('โพสต์ไม่สำเร็จ: ' + (result.message || 'Unknown Error'));
+                alert('โพสต์ล้มเหลว: ' + (result.message || 'Unknown'));
             }
         } catch (err) {
             console.error(err);
-            alert('เกิดข้อผิดพลาดในการเชื่อมต่อ 서버');
+            alert('ข้อผิดพลาดการเชื่อมต่อ');
         } finally {
-            btn.innerText = "Post";
-            btn.disabled = false;
-            contentBox.disabled = false;
+            els.postSubmit.innerText = "Post";
+            els.postSubmit.disabled = false;
+            els.postInput.disabled = false;
+            els.postInput.focus();
         }
     }
 
-    // ให้ช่องกรอกข้อความปรับขนาดตัวเองเวลายาวขึ้น (Auto-resize textarea)
-    const tx = document.getElementById("new-post-content");
-    tx.addEventListener("input", OnInput, false);
-    function OnInput() {
-        this.style.height = 0;
-        this.style.height = (this.scrollHeight) + "px";
-    }
-
-    // โหลดหน้าเว็บครั้งแรก (อ่านข้อมูลอย่างเดียว)
+    // --- Init ---
+    // โหลดข้อมูลเริ่มต้น (แบบยังไม่ Login)
     loadData();
     </script>
 </body>
