@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🚀 KOO MEAN SPACE
+# 🚀 KOO MEAN BLOG
 ### **A Premium Personal Micro-Blogging Platform**
  
 [![Status](https://img.shields.io/badge/Status-Active-success?style=for-the-badge)]()
