@@ -3,218 +3,270 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Koo Mean Admin Dashboard</title>
+    <title>Koo Mean SITE V.2</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <script src="https://accounts.google.com/gsi/client" async defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: #f5f5f7; margin: 0; padding: 20px; color: #333;}
-        .container { background: white; padding: 30px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); max-width: 800px; margin: auto; }
-        .hidden { display: none !important; }
-        input, select { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #d1d1d6; border-radius: 8px; box-sizing: border-box; font-family: inherit;}
-        button { background: #007aff; color: white; border: none; padding: 10px 15px; border-radius: 8px; cursor: pointer; font-weight: bold; }
-        button:hover { background: #0066cc; }
-        .card { border: 1px solid #eee; padding: 15px; border-radius: 10px; margin-bottom: 15px; }
-        .admin-section { background: #fff5e6; border: 1px solid #ffd599; padding: 20px; border-radius: 12px; margin-top: 30px;}
-        .flex-between { display: flex; justify-content: space-between; align-items: center; }
-        hr { border: 0; height: 1px; background: #eee; margin: 20px 0; }
-        .profile-header { text-align: center; margin-bottom: 20px; }
+        :root {
+            --bg-color: #050505; --card-bg: rgba(255, 255, 255, 0.03); --card-hover: rgba(255, 255, 255, 0.08);
+            --text-main: #f5f5f7; --text-muted: #86868b; --accent: #2997ff; --accent-glow: rgba(41, 151, 255, 0.4);
+            --accent-special: #ff9f0a; --navbar-height: 70px;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background-color: var(--bg-color); color: var(--text-main); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding-top: calc(var(--navbar-height) + 40px); padding-bottom: 80px; overflow-x: hidden; position: relative; }
+        body::before, body::after { content: ''; position: fixed; border-radius: 50%; filter: blur(100px); z-index: -1; opacity: 0.5; animation: floatOrb 20s infinite alternate ease-in-out; }
+        body::before { width: 400px; height: 400px; background: var(--accent-glow); top: -100px; left: -100px; }
+        body::after { width: 500px; height: 500px; background: rgba(255, 159, 10, 0.15); bottom: -150px; right: -150px; animation-delay: -10s; }
+        @keyframes floatOrb { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(100px, 50px) scale(1.2); } }
+        
+        .global-loader-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--bg-color); z-index: 99999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.8s ease, visibility 0.8s ease; overflow: hidden; }
+        .global-loader-container.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+        .g-spinner { width: 65px; height: 65px; border: 4px solid rgba(255, 255, 255, 0.05); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s infinite; z-index: 1; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .navbar { position: fixed; top: 0; left: 0; width: 100%; height: var(--navbar-height); background: rgba(10, 10, 12, 0.6); backdrop-filter: saturate(180%) blur(25px); display: flex; justify-content: space-between; align-items: center; padding: 0 25px; z-index: 1000; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+        .nav-logo { font-size: 1.15rem; font-weight: 700; color: var(--text-main); text-decoration: none; display: flex; align-items: center; gap: 10px; }
+        .nav-right { display: flex; align-items: center; gap: 18px; }
+        .nav-user-container { cursor: pointer; display: flex; align-items: center; }
+        .nav-profile-img { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,255,255,0.1); }
+
+        .profile-section { text-align: center; margin-bottom: 40px; width: 100%; max-width: 600px; padding: 0 20px; }
+        .profile-img { width: 110px; height: 110px; border-radius: 50%; object-fit: cover; margin-bottom: 18px; border: 2px solid rgba(255,255,255,0.1); box-shadow: 0 0 20px var(--accent-glow); }
+        h1 { font-size: clamp(28px, 6vw, 36px); font-weight: 700; margin-bottom: 10px; }
+        p.bio { font-size: 1.05rem; color: var(--text-muted); line-height: 1.5; }
+
+        /* =========================================
+            FEED & POST COMPONENT STYLES
+        ========================================= */
+        .post-creator-container { width: 100%; max-width: 600px; padding: 0 20px; margin-bottom: 20px; display: none; }
+        .post-creator-box { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 20px; backdrop-filter: blur(10px); }
+        .post-input-area { width: 100%; background: transparent; border: none; color: var(--text-main); font-size: 1.1rem; resize: none; outline: none; font-family: inherit; margin-top: 10px; }
+        .post-submit-btn { background: var(--accent); color: white; border: none; padding: 8px 25px; border-radius: 20px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .post-submit-btn:hover { background: #1a75ff; transform: scale(1.05); }
+
+        .feed-container { width: 100%; max-width: 600px; padding: 0 20px; display: flex; flex-direction: column; gap: 20px; margin-bottom: 40px; }
+        .post-card { background: var(--card-bg); padding: 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.06); backdrop-filter: blur(15px); transition: 0.3s; text-align: left;}
+        .post-card:hover { border-color: rgba(255,255,255,0.15); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .post-header { display: flex; align-items: center; gap: 12px; margin-bottom: 15px; }
+        .post-avatar { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; }
+        .post-author { font-weight: 700; color: var(--text-main); font-size: 1.05rem; }
+        .post-time { color: var(--text-muted); font-size: 0.85rem; }
+        .post-content { font-size: 1.05rem; line-height: 1.6; color: var(--text-main); white-space: pre-wrap; }
+
+        .unlock-btn { position: fixed; bottom: 35px; right: 35px; background: rgba(20, 20, 22, 0.85); backdrop-filter: saturate(180%) blur(20px); color: var(--text-muted); border: 1px solid rgba(255,255,255,0.1); border-radius: 50%; width: 55px; height: 55px; display: flex; justify-content: center; align-items: center; z-index: 100; cursor: pointer; box-shadow: 0 10px 30px rgba(0,0,0,0.4); font-size: 1.3rem; }
+        .unlock-btn.admin-mode { color: #34c759; border-color: rgba(52, 199, 89, 0.4); }
+
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.7); backdrop-filter: blur(15px); justify-content: center; align-items: center; padding: 20px; }
+        .modal-content { background: rgba(20, 20, 22, 0.95); border: 1px solid rgba(255,255,255,0.1); border-radius: 28px; padding: 35px; width: 100%; max-width: 420px; text-align: center; position: relative; }
+        .close-modal { position: absolute; top: 20px; right: 25px; color: var(--text-muted); cursor: pointer; font-size: 1.8rem; }
+        .loader { border: 3px solid rgba(255,255,255,0.05); border-radius: 50%; border-top: 3px solid var(--accent); width: 40px; height: 40px; animation: spin 1s infinite; margin: 30px auto; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h2 id="statusText" style="text-align: center;">เข้าสู่ระบบจัดการเว็บ</h2>
-    
-    <div id="loginSection" style="text-align: center; margin-bottom: 20px;">
-        <div id="g_id_onload"
-             data-client_id="906677442222-kmjgsmta70n24aoaq7osm9c1l7g1fb89.apps.googleusercontent.com"
-             data-callback="handleCredentialResponse">
-        </div>
-        <div class="g_id_signin" data-type="standard" style="display: inline-block;"></div>
+    <div id="global-loader" class="global-loader-container">
+        <div class="g-spinner"></div>
     </div>
 
-    <div id="registerSection" class="hidden card">
-        <h3>ดูเหมือนคุณจะเป็นผู้ใช้ใหม่!</h3>
-        <p>กรุณากรอกข้อความแนะนำตัวสั้นๆ เพื่อให้แอดมินอนุมัติสิทธิ์</p>
-        <input type="text" id="regNote" placeholder="พิมพ์ข้อความถึง Admin (Note)">
-        <button onclick="registerUser()">ลงทะเบียนเข้าใช้งาน</button>
+    <nav class="navbar">
+        <a href="#" class="nav-logo"><span>💻 Koo Mean SITE V.2</span></a>
+        <div class="nav-right">
+            <div class="nav-user-container" id="profile-btn">
+                <img id="nav-profile-img" src="https://ui-avatars.com/api/?name=User" class="nav-profile-img">
+            </div>
+        </div>
+    </nav>
+
+    <div class="profile-section" id="profile-section">
+        <img src="https://ui-avatars.com/api/?name=User" class="profile-img" id="main-profile-img">
+        <h1 id="profile-name">Koo Mean</h1>
+        <p class="bio" id="profile-bio">Welcome to my personal space.</p>
     </div>
 
-    <div id="mainDashboard" class="hidden">
-        <div class="profile-header">
-            <h1 id="profileName">Loading...</h1>
-            <p id="profileBio"></p>
-            <p id="profileAbout" style="font-size: 0.9em; color: #666;"></p>
-        </div>
-        
-        <h3>🔗 ลิงก์ทั้งหมด (Links)</h3>
-        <div id="linksContainer"></div>
-    </div>
-
-    <div id="adminPanel" class="hidden admin-section">
-        <h2 style="color: #d97706;">🛠 Admin Dashboard</h2>
-        
-        <div class="card">
-            <h3>จัดการลิงก์ (ตั้งค่ากลุ่ม / ปักหมุด)</h3>
-            <select id="linkSelect"><option value="">-- เลือกลิงก์ที่ต้องการแก้ไข --</option></select>
-            <input type="text" id="newLinkGroup" placeholder="กลุ่มใหม่ (เช่น public, admin)">
-            <select id="newLinkStarred">
-                <option value="false">ไม่ปักหมุด (ดาว = false)</option>
-                <option value="true">ปักหมุด (ดาว = true)</option>
-            </select>
-            <button onclick="updateLink()">อัปเดตข้อมูลลิงก์</button>
-        </div>
-
-        <div class="card">
-            <h3>จัดการผู้ใช้งาน (เปลี่ยน Role)</h3>
-            <select id="userSelect"><option value="">-- เลือกผู้ใช้งาน --</option></select>
-            <input type="text" id="newUserRole" placeholder="Role ใหม่ (เช่น admin, public)">
-            <button onclick="updateRole()">อัปเดตสิทธิ์ผู้ใช้</button>
-        </div>
-    </div>
-</div>
-
-<script>
-    // URL ของ Web App จาก Google Apps Script เดิมของคุณ
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyNoUFK4qqqYQ4c11vVyugVKk5qzF6fQcdoL1cQL-PbSVIeE2FpO5-56YVHB9cZxjaS0w/exec';
-    
-    let currentUser = {};
-    let globalData = {};
-
-    // 1. จัดการเมื่อล็อกอินผ่าน Google สำเร็จ
-    function handleCredentialResponse(response) {
-        const data = jwt_decode(response.credential);
-        currentUser.email = data.email;
-        currentUser.name = data.name;
-        
-        document.getElementById('statusText').innerText = 'กำลังโหลดข้อมูล...';
-        document.getElementById('loginSection').classList.add('hidden');
-
-        fetchData({ email: currentUser.email, name: currentUser.name });
-    }
-
-    // 2. ฟังก์ชันส่ง GET Request ไปยัง Apps Script
-    function fetchData(params) {
-        const url = new URL(SCRIPT_URL);
-        Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
-
-        fetch(url)
-        .then(res => res.json())
-        .then(data => {
-            // กรณีเป็นผู้ใช้ใหม่ ระบบหลังบ้านส่ง requireRegistration กลับมา
-            if (data.requireRegistration) {
-                document.getElementById('statusText').innerText = 'ลงทะเบียนเข้าใช้งาน';
-                document.getElementById('registerSection').classList.remove('hidden');
-                return;
-            }
-
-            // โหลดสำเร็จ
-            globalData = data;
-            document.getElementById('registerSection').classList.add('hidden');
-            renderDashboard(data);
-        })
-        .catch(err => {
-            alert('เกิดข้อผิดพลาดในการเชื่อมต่อ');
-            console.error(err);
-        });
-    }
-
-    // 3. ฟังก์ชันลงทะเบียนผู้ใช้ใหม่
-    function registerUser() {
-        const note = document.getElementById('regNote').value;
-        document.getElementById('statusText').innerText = 'กำลังลงทะเบียน...';
-        fetchData({
-            action: 'register',
-            email: currentUser.email,
-            name: currentUser.name,
-            note: note
-        });
-    }
-
-    // 4. เรนเดอร์หน้าเว็บ
-    function renderDashboard(data) {
-        document.getElementById('statusText').innerText = `ยินดีต้อนรับ, ${data.user.email} (${data.user.role})`;
-        document.getElementById('mainDashboard').classList.remove('hidden');
-
-        // เรนเดอร์โปรไฟล์
-        if(data.profile) {
-            document.getElementById('profileName').innerText = data.profile.name || 'ไม่มีชื่อโปรไฟล์';
-            document.getElementById('profileBio').innerText = data.profile.bio || '';
-            document.getElementById('profileAbout').innerText = data.profile.aboutText || '';
-        }
-
-        // เรนเดอร์ลิงก์
-        const linksHtml = data.links ? data.links.map(link => `
-            <div class="card flex-between">
-                <div>
-                    <strong>${link.starred ? '⭐ ' : ''}${link.title}</strong>
-                    <br><small><a href="${link.url}" target="_blank">${link.url}</a> (Group: ${link.group})</small>
+    <div id="post-creator" class="post-creator-container">
+        <div class="post-creator-box">
+            <div style="display: flex; gap: 15px; align-items: flex-start;">
+                <img id="creator-pic" src="https://ui-avatars.com/api/?name=M" style="width: 45px; height: 45px; border-radius: 50%; object-fit: cover;">
+                <div style="flex: 1;">
+                    <textarea id="new-post-content" class="post-input-area" placeholder="คุณมีน คิดอะไรอยู่ครับตอนนี้..." rows="3"></textarea>
+                    <div style="display: flex; justify-content: flex-end; margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px;">
+                        <button id="submit-post-btn" class="post-submit-btn" onclick="submitPost()">โพสต์</button>
+                    </div>
                 </div>
             </div>
-        `).join('') : '<p>ไม่มีลิงก์</p>';
-        document.getElementById('linksContainer').innerHTML = linksHtml;
+        </div>
+    </div>
 
-        // ถ้าเป็น Admin ให้โชว์แผงควบคุมและใส่ข้อมูลลงใน Dropdown
-        if (data.user.role === 'admin') {
-            document.getElementById('adminPanel').classList.remove('hidden');
-            
-            // ใส่ข้อมูลลิงก์ลง Dropdown
-            const linkSelect = document.getElementById('linkSelect');
-            linkSelect.innerHTML = '<option value="">-- เลือกลิงก์ที่ต้องการแก้ไข --</option>';
-            data.links.forEach(l => {
-                linkSelect.innerHTML += `<option value="${l.title}">${l.title}</option>`;
-            });
+    <div id="feed-container" class="feed-container">
+        <div class="loader"></div>
+        <div style="text-align: center; color: var(--text-muted); font-size: 0.9rem;">กำลังโหลดฟีดข้อมูล...</div>
+    </div>
 
-            // ใส่ข้อมูลผู้ใช้ลง Dropdown
-            if(data.allUsers) {
-                const userSelect = document.getElementById('userSelect');
-                userSelect.innerHTML = '<option value="">-- เลือกผู้ใช้งาน --</option>';
-                data.allUsers.forEach(u => {
-                    userSelect.innerHTML += `<option value="${u.email}">${u.email} (${u.role})</option>`;
-                });
+    <div id="login-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" id="close-login-btn">&times;</span>
+            <h2 style="margin-bottom: 25px;"><i class="fas fa-user-circle"></i> Sign In</h2>
+            <div style="display: flex; justify-content: center; margin-bottom: 10px;">
+                <div id="g_id_onload"
+                    data-client_id="906677442222-kmjgsmta70n24aoaq7osm9c1l7g1fb89.apps.googleusercontent.com"
+                    data-callback="handleCredentialResponse"
+                    data-auto_prompt="false">
+                </div>
+                <div class="g_id_signin" data-type="standard"></div>
+            </div>
+        </div>
+    </div>
+
+    <button class="unlock-btn" id="unlockBtn"><i class="fas fa-lock"></i></button>
+
+    <script>
+    // URL ของ Web App คุณ
+    const API_URL = "https://script.google.com/macros/s/AKfycbyNoUFK4qqqYQ4c11vVyugVKk5qzF6fQcdoL1cQL-PbSVIeE2FpO5-56YVHB9cZxjaS0w/exec";
+    
+    let state = { isLoggedIn: false, currentUser: null, profile: {}, posts: [] };
+
+    function decodeJwt(token) {
+        try {
+            const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+            return JSON.parse(decodeURIComponent(atob(base64).split('').map(c => '%' + c.charCodeAt(0).toString(16).padStart(2, '0')).join('')));
+        } catch { return null; }
+    }
+
+    function handleCredentialResponse(res) {
+        const payload = decodeJwt(res.credential);
+        document.getElementById('login-modal').style.display = 'none';
+        document.getElementById('global-loader').classList.remove('hidden');
+        loadData(payload.email, payload.name, payload.picture);
+    }
+
+    document.getElementById('unlockBtn').addEventListener('click', () => {
+        if (!state.isLoggedIn) document.getElementById('login-modal').style.display = 'flex';
+        else {
+            // ระบบ Logout ชั่วคราว
+            if(confirm("ต้องการออกจากระบบใช่หรือไม่?")) {
+                state.isLoggedIn = false; state.currentUser = null;
+                document.getElementById('unlockBtn').innerHTML = '<i class="fas fa-lock"></i>';
+                document.getElementById('unlockBtn').classList.remove('admin-mode');
+                document.getElementById('post-creator').style.display = 'none';
             }
+        }
+    });
+
+    document.getElementById('close-login-btn').addEventListener('click', () => {
+        document.getElementById('login-modal').style.display = 'none';
+    });
+
+    async function loadData(userEmail = '', userName = '', userPic = '') {
+        try {
+            let url = API_URL;
+            if (userEmail) url += `?email=${encodeURIComponent(userEmail)}&name=${encodeURIComponent(userName)}`;
+
+            const res = await fetch(url);
+            const data = await res.json();
+
+            if (userEmail && data.user) {
+                state.isLoggedIn = true;
+                state.currentUser = { email: data.user.email, role: data.user.role, pic: userPic };
+                document.getElementById('unlockBtn').innerHTML = '<i class="fas fa-unlock"></i>';
+                
+                // หากเป็น Admin ให้โชว์กล่องเขียนโพสต์
+                if (data.user.role === 'admin') {
+                    document.getElementById('unlockBtn').classList.add('admin-mode');
+                    document.getElementById('post-creator').style.display = 'block';
+                    document.getElementById('creator-pic').src = userPic;
+                }
+            }
+
+            if (data.profile) {
+                state.profile = data.profile;
+                document.getElementById('profile-name').textContent = data.profile.name || 'Koo Mean';
+                document.getElementById('profile-bio').textContent = data.profile.bio || '';
+                const pImg = data.profile.imageUrl || 'https://ui-avatars.com/api/?name=M';
+                document.getElementById('main-profile-img').src = pImg;
+                document.getElementById('nav-profile-img').src = state.isLoggedIn ? userPic : pImg;
+            }
+
+            if (data.posts) {
+                state.posts = data.posts;
+                renderFeed();
+            }
+
+            document.getElementById('global-loader').classList.add('hidden');
+
+        } catch (err) {
+            console.error('loadData error:', err);
+            document.getElementById('feed-container').innerHTML = '<p style="color:#ff3b30; text-align:center;">เกิดข้อผิดพลาดในการดึงข้อมูล</p>';
+            document.getElementById('global-loader').classList.add('hidden');
         }
     }
 
-    // 5. Admin: อัปเดตข้อมูลลิงก์
-    function updateLink() {
-        const title = document.getElementById('linkSelect').value;
-        const newGroup = document.getElementById('newLinkGroup').value;
-        const isStarred = document.getElementById('newLinkStarred').value;
+    function renderFeed() {
+        const container = document.getElementById('feed-container');
+        if (!state.posts || state.posts.length === 0) {
+            container.innerHTML = '<p style="text-align:center;color:var(--text-muted);margin-top:20px;">ยังไม่มีโพสต์ใหม่ในขณะนี้</p>';
+            return;
+        }
 
-        if(!title) return alert("กรุณาเลือกลิงก์");
-        
-        const url = new URL(SCRIPT_URL);
-        url.searchParams.append('action', 'updateLink');
-        url.searchParams.append('email', currentUser.email);
-        url.searchParams.append('p1', title);
-        url.searchParams.append('p2', newGroup);
-        url.searchParams.append('p3', isStarred);
-
-        fetch(url).then(res => res.json()).then(res => {
-            if(res.success) { alert('อัปเดตลิงก์สำเร็จ!'); fetchData({email: currentUser.email}); }
-            else { alert('ล้มเหลว หรือคุณไม่มีสิทธิ์'); }
+        let html = '';
+        state.posts.forEach(post => {
+            const date = new Date(post.timestamp).toLocaleString('th-TH', { dateStyle: 'medium', timeStyle: 'short' });
+            html += `
+                <div class="post-card">
+                    <div class="post-header">
+                        <img src="${state.profile.imageUrl || 'https://ui-avatars.com/api/?name=M'}" class="post-avatar">
+                        <div>
+                            <div class="post-author">${state.profile.name || 'Koo Mean'} <i class="fas fa-check-circle" style="color: var(--accent); font-size: 0.85rem; margin-left: 3px;"></i></div>
+                            <div class="post-time">${date}</div>
+                        </div>
+                    </div>
+                    <div class="post-content">${post.content}</div>
+                </div>
+            `;
         });
+        container.innerHTML = html;
     }
 
-    // 6. Admin: อัปเดตสิทธิ์ผู้ใช้
-    function updateRole() {
-        const targetEmail = document.getElementById('userSelect').value;
-        const newRole = document.getElementById('newUserRole').value;
+    async function submitPost() {
+        const contentBox = document.getElementById('new-post-content');
+        const content = contentBox.value.trim();
+        const btn = document.getElementById('submit-post-btn');
 
-        if(!targetEmail || !newRole) return alert("กรุณากรอกข้อมูลให้ครบ");
+        if (!content) return alert('กรุณาพิมพ์ข้อความก่อนโพสต์ครับ');
+        if (!state.isLoggedIn || state.currentUser.role !== 'admin') return alert('คุณไม่มีสิทธิ์ในการโพสต์');
 
-        const url = new URL(SCRIPT_URL);
-        url.searchParams.append('action', 'updateRole');
-        url.searchParams.append('email', currentUser.email);
-        url.searchParams.append('p1', targetEmail);
-        url.searchParams.append('p2', newRole);
+        btn.innerText = "กำลังโพสต์...";
+        btn.disabled = true;
 
-        fetch(url).then(res => res.json()).then(res => {
-            if(res.success) { alert('อัปเดตสิทธิ์สำเร็จ!'); fetchData({email: currentUser.email}); }
-            else { alert('ล้มเหลว หรือคุณไม่มีสิทธิ์'); }
-        });
+        try {
+            const formData = new URLSearchParams();
+            formData.append('action', 'addPost');
+            formData.append('email', state.currentUser.email);
+            formData.append('content', content);
+
+            const res = await fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: formData
+            });
+            const result = await res.json();
+
+            if (result.success) {
+                contentBox.value = '';
+                // ดึงข้อมูลฟีดใหม่เพื่ออัปเดตหน้าจอทันที
+                loadData(state.currentUser.email, '', state.currentUser.pic);
+            } else {
+                alert('โพสต์ไม่สำเร็จ หรือคุณไม่มีสิทธิ์');
+            }
+        } catch (err) {
+            alert('เกิดข้อผิดพลาดในการส่งข้อมูล');
+        } finally {
+            btn.innerText = "โพสต์";
+            btn.disabled = false;
+        }
     }
-</script>
+
+    // โหลดข้อมูลครั้งแรก
+    loadData();
+    </script>
 </body>
 </html>
