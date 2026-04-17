@@ -3,110 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Koo Mean SITE V.2</title>
+    <title>Koo Mean Space</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
         :root {
-            --bg-color: #050505; --card-bg: rgba(255, 255, 255, 0.03); --card-hover: rgba(255, 255, 255, 0.08);
-            --text-main: #f5f5f7; --text-muted: #86868b; --accent: #2997ff; --accent-glow: rgba(41, 151, 255, 0.4);
-            --accent-special: #ff9f0a; --navbar-height: 70px;
+            --bg-color: #000000; --card-bg: #16181c; --border-color: #2f3336;
+            --text-main: #e7e9ea; --text-muted: #71767b; --accent: #1d9bf0;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background-color: var(--bg-color); color: var(--text-main); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding-top: calc(var(--navbar-height) + 40px); padding-bottom: 80px; overflow-x: hidden; position: relative; }
-        body::before, body::after { content: ''; position: fixed; border-radius: 50%; filter: blur(100px); z-index: -1; opacity: 0.5; animation: floatOrb 20s infinite alternate ease-in-out; }
-        body::before { width: 400px; height: 400px; background: var(--accent-glow); top: -100px; left: -100px; }
-        body::after { width: 500px; height: 500px; background: rgba(255, 159, 10, 0.15); bottom: -150px; right: -150px; animation-delay: -10s; }
-        @keyframes floatOrb { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(100px, 50px) scale(1.2); } }
+        body { background-color: var(--bg-color); color: var(--text-main); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; display: flex; justify-content: center; min-height: 100vh; }
         
-        .global-loader-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--bg-color); z-index: 99999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.8s ease, visibility 0.8s ease; overflow: hidden; }
-        .global-loader-container.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-        .g-spinner { width: 65px; height: 65px; border: 4px solid rgba(255, 255, 255, 0.05); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s infinite; z-index: 1; }
+        .main-container { width: 100%; max-width: 600px; border-left: 1px solid var(--border-color); border-right: 1px solid var(--border-color); min-height: 100vh; padding-bottom: 80px;}
+        
+        /* Header & Profile */
+        .header { backdrop-filter: blur(12px); background-color: rgba(0,0,0,0.65); position: sticky; top: 0; padding: 15px 20px; font-size: 1.2rem; font-weight: bold; border-bottom: 1px solid var(--border-color); z-index: 10; display: flex; justify-content: space-between; align-items: center;}
+        .profile-section { padding: 20px; border-bottom: 1px solid var(--border-color); text-align: center; }
+        .profile-img { width: 100px; height: 100px; border-radius: 50%; border: 4px solid var(--bg-color); object-fit: cover; margin-top: -10px; margin-bottom: 10px;}
+        .profile-name { font-size: 1.5rem; font-weight: 800; }
+        .profile-bio { color: var(--text-muted); margin-top: 5px; font-size: 0.95rem; }
+
+        /* Post Creator (เฉพาะ Admin) */
+        .post-creator { padding: 20px; border-bottom: 1px solid var(--border-color); display: none; }
+        .creator-layout { display: flex; gap: 15px; }
+        .creator-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+        .creator-input { flex: 1; }
+        textarea { width: 100%; background: transparent; border: none; color: var(--text-main); font-size: 1.2rem; resize: none; outline: none; font-family: inherit; margin-top: 10px; }
+        .post-btn-container { display: flex; justify-content: flex-end; margin-top: 10px; border-top: 1px solid var(--border-color); padding-top: 15px; }
+        .post-btn { background: var(--accent); color: white; border: none; padding: 10px 20px; border-radius: 25px; font-weight: bold; font-size: 1rem; cursor: pointer; transition: 0.2s; }
+        .post-btn:hover { background: #1a8cd8; }
+        .post-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        /* Feed */
+        .feed-container { display: flex; flex-direction: column; }
+        .post-card { padding: 20px; border-bottom: 1px solid var(--border-color); transition: background-color 0.2s; }
+        .post-card:hover { background-color: rgba(255,255,255,0.03); }
+        .post-header { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 10px; }
+        .post-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+        .post-author { font-weight: 700; color: var(--text-main); font-size: 1rem; display: flex; align-items: center; gap: 5px;}
+        .post-time { color: var(--text-muted); font-size: 0.85rem; font-weight: normal;}
+        .post-content { font-size: 1rem; line-height: 1.5; color: var(--text-main); white-space: pre-wrap; margin-left: 52px; }
+
+        /* Login Modal & Buttons */
+        .admin-login-btn { background: transparent; border: 1px solid var(--border-color); color: var(--text-main); padding: 5px 15px; border-radius: 20px; cursor: pointer; font-size: 0.85rem; }
+        .admin-login-btn:hover { background: rgba(255,255,255,0.1); }
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(91, 112, 131, 0.4); justify-content: center; align-items: center; }
+        .modal-content { background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 16px; padding: 30px; width: 90%; max-width: 400px; text-align: center; }
+        .loader { border: 3px solid rgba(255,255,255,0.1); border-radius: 50%; border-top: 3px solid var(--accent); width: 30px; height: 30px; animation: spin 1s infinite; margin: 20px auto; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-        .navbar { position: fixed; top: 0; left: 0; width: 100%; height: var(--navbar-height); background: rgba(10, 10, 12, 0.6); backdrop-filter: saturate(180%) blur(25px); display: flex; justify-content: space-between; align-items: center; padding: 0 25px; z-index: 1000; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
-        .nav-logo { font-size: 1.15rem; font-weight: 700; color: var(--text-main); text-decoration: none; display: flex; align-items: center; gap: 10px; }
-        .nav-right { display: flex; align-items: center; gap: 18px; }
-        .nav-user-container { cursor: pointer; display: flex; align-items: center; }
-        .nav-profile-img { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,255,255,0.1); }
-
-        .profile-section { text-align: center; margin-bottom: 40px; width: 100%; max-width: 600px; padding: 0 20px; }
-        .profile-img { width: 110px; height: 110px; border-radius: 50%; object-fit: cover; margin-bottom: 18px; border: 2px solid rgba(255,255,255,0.1); box-shadow: 0 0 20px var(--accent-glow); }
-        h1 { font-size: clamp(28px, 6vw, 36px); font-weight: 700; margin-bottom: 10px; }
-        p.bio { font-size: 1.05rem; color: var(--text-muted); line-height: 1.5; }
-
-        /* =========================================
-            FEED & POST COMPONENT STYLES
-        ========================================= */
-        .post-creator-container { width: 100%; max-width: 600px; padding: 0 20px; margin-bottom: 20px; display: none; }
-        .post-creator-box { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 20px; backdrop-filter: blur(10px); }
-        .post-input-area { width: 100%; background: transparent; border: none; color: var(--text-main); font-size: 1.1rem; resize: none; outline: none; font-family: inherit; margin-top: 10px; }
-        .post-submit-btn { background: var(--accent); color: white; border: none; padding: 8px 25px; border-radius: 20px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .post-submit-btn:hover { background: #1a75ff; transform: scale(1.05); }
-
-        .feed-container { width: 100%; max-width: 600px; padding: 0 20px; display: flex; flex-direction: column; gap: 20px; margin-bottom: 40px; }
-        .post-card { background: var(--card-bg); padding: 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.06); backdrop-filter: blur(15px); transition: 0.3s; text-align: left;}
-        .post-card:hover { border-color: rgba(255,255,255,0.15); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
-        .post-header { display: flex; align-items: center; gap: 12px; margin-bottom: 15px; }
-        .post-avatar { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; }
-        .post-author { font-weight: 700; color: var(--text-main); font-size: 1.05rem; }
-        .post-time { color: var(--text-muted); font-size: 0.85rem; }
-        .post-content { font-size: 1.05rem; line-height: 1.6; color: var(--text-main); white-space: pre-wrap; }
-
-        .unlock-btn { position: fixed; bottom: 35px; right: 35px; background: rgba(20, 20, 22, 0.85); backdrop-filter: saturate(180%) blur(20px); color: var(--text-muted); border: 1px solid rgba(255,255,255,0.1); border-radius: 50%; width: 55px; height: 55px; display: flex; justify-content: center; align-items: center; z-index: 100; cursor: pointer; box-shadow: 0 10px 30px rgba(0,0,0,0.4); font-size: 1.3rem; }
-        .unlock-btn.admin-mode { color: #34c759; border-color: rgba(52, 199, 89, 0.4); }
-
-        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.7); backdrop-filter: blur(15px); justify-content: center; align-items: center; padding: 20px; }
-        .modal-content { background: rgba(20, 20, 22, 0.95); border: 1px solid rgba(255,255,255,0.1); border-radius: 28px; padding: 35px; width: 100%; max-width: 420px; text-align: center; position: relative; }
-        .close-modal { position: absolute; top: 20px; right: 25px; color: var(--text-muted); cursor: pointer; font-size: 1.8rem; }
-        .loader { border: 3px solid rgba(255,255,255,0.05); border-radius: 50%; border-top: 3px solid var(--accent); width: 40px; height: 40px; animation: spin 1s infinite; margin: 30px auto; }
     </style>
 </head>
 <body>
 
-    <div id="global-loader" class="global-loader-container">
-        <div class="g-spinner"></div>
-    </div>
-
-    <nav class="navbar">
-        <a href="#" class="nav-logo"><span>💻 Koo Mean SITE V.2</span></a>
-        <div class="nav-right">
-            <div class="nav-user-container" id="profile-btn">
-                <img id="nav-profile-img" src="https://ui-avatars.com/api/?name=User" class="nav-profile-img">
-            </div>
+    <div class="main-container">
+        <div class="header">
+            <div>Koo Mean Space</div>
+            <button class="admin-login-btn" id="loginToggleBtn">Login</button>
         </div>
-    </nav>
 
-    <div class="profile-section" id="profile-section">
-        <img src="https://ui-avatars.com/api/?name=User" class="profile-img" id="main-profile-img">
-        <h1 id="profile-name">Koo Mean</h1>
-        <p class="bio" id="profile-bio">Welcome to my personal space.</p>
-    </div>
+        <div class="profile-section">
+            <img src="https://ui-avatars.com/api/?name=M&background=random" class="profile-img" id="main-profile-img">
+            <div class="profile-name" id="profile-name">Koo Mean</div>
+            <div class="profile-bio" id="profile-bio">Welcome to my space</div>
+        </div>
 
-    <div id="post-creator" class="post-creator-container">
-        <div class="post-creator-box">
-            <div style="display: flex; gap: 15px; align-items: flex-start;">
-                <img id="creator-pic" src="https://ui-avatars.com/api/?name=M" style="width: 45px; height: 45px; border-radius: 50%; object-fit: cover;">
-                <div style="flex: 1;">
-                    <textarea id="new-post-content" class="post-input-area" placeholder="คุณมีน คิดอะไรอยู่ครับตอนนี้..." rows="3"></textarea>
-                    <div style="display: flex; justify-content: flex-end; margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px;">
-                        <button id="submit-post-btn" class="post-submit-btn" onclick="submitPost()">โพสต์</button>
+        <div class="post-creator" id="post-creator">
+            <div class="creator-layout">
+                <img src="" class="creator-avatar" id="creator-avatar">
+                <div class="creator-input">
+                    <textarea id="new-post-content" rows="3" placeholder="What is happening?!"></textarea>
+                    <div class="post-btn-container">
+                        <button class="post-btn" id="submit-post-btn" onclick="submitPost()">Post</button>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div id="feed-container" class="feed-container">
-        <div class="loader"></div>
-        <div style="text-align: center; color: var(--text-muted); font-size: 0.9rem;">กำลังโหลดฟีดข้อมูล...</div>
+        <div class="feed-container" id="feed-container">
+            <div class="loader" id="feed-loader"></div>
+            <p id="feed-status" style="text-align: center; color: var(--text-muted); font-size: 0.9rem;">กำลังโหลด...</p>
+        </div>
     </div>
 
     <div id="login-modal" class="modal">
         <div class="modal-content">
-            <span class="close-modal" id="close-login-btn">&times;</span>
-            <h2 style="margin-bottom: 25px;"><i class="fas fa-user-circle"></i> Sign In</h2>
-            <div style="display: flex; justify-content: center; margin-bottom: 10px;">
+            <h2 style="margin-bottom: 20px;">Admin Sign In</h2>
+            <div style="display: flex; justify-content: center;">
                 <div id="g_id_onload"
                     data-client_id="906677442222-kmjgsmta70n24aoaq7osm9c1l7g1fb89.apps.googleusercontent.com"
                     data-callback="handleCredentialResponse"
@@ -114,13 +96,11 @@
                 </div>
                 <div class="g_id_signin" data-type="standard"></div>
             </div>
+            <button onclick="document.getElementById('login-modal').style.display='none'" style="margin-top: 20px; background: transparent; border: none; color: var(--text-muted); cursor: pointer;">ปิด</button>
         </div>
     </div>
 
-    <button class="unlock-btn" id="unlockBtn"><i class="fas fa-lock"></i></button>
-
     <script>
-    // URL ของ Web App คุณ
     const API_URL = "https://script.google.com/macros/s/AKfycbyNoUFK4qqqYQ4c11vVyugVKk5qzF6fQcdoL1cQL-PbSVIeE2FpO5-56YVHB9cZxjaS0w/exec";
     
     let state = { isLoggedIn: false, currentUser: null, profile: {}, posts: [] };
@@ -132,78 +112,74 @@
         } catch { return null; }
     }
 
-    function handleCredentialResponse(res) {
-        const payload = decodeJwt(res.credential);
-        document.getElementById('login-modal').style.display = 'none';
-        document.getElementById('global-loader').classList.remove('hidden');
-        loadData(payload.email, payload.name, payload.picture);
-    }
-
-    document.getElementById('unlockBtn').addEventListener('click', () => {
-        if (!state.isLoggedIn) document.getElementById('login-modal').style.display = 'flex';
-        else {
-            // ระบบ Logout ชั่วคราว
-            if(confirm("ต้องการออกจากระบบใช่หรือไม่?")) {
-                state.isLoggedIn = false; state.currentUser = null;
-                document.getElementById('unlockBtn').innerHTML = '<i class="fas fa-lock"></i>';
-                document.getElementById('unlockBtn').classList.remove('admin-mode');
+    document.getElementById('loginToggleBtn').addEventListener('click', () => {
+        if (!state.isLoggedIn) {
+            document.getElementById('login-modal').style.display = 'flex';
+        } else {
+            if(confirm("Logout?")) {
+                state.isLoggedIn = false;
+                state.currentUser = null;
+                document.getElementById('loginToggleBtn').innerText = 'Login';
                 document.getElementById('post-creator').style.display = 'none';
             }
         }
     });
 
-    document.getElementById('close-login-btn').addEventListener('click', () => {
+    function handleCredentialResponse(res) {
+        const payload = decodeJwt(res.credential);
         document.getElementById('login-modal').style.display = 'none';
-    });
+        document.getElementById('feed-loader').style.display = 'block';
+        document.getElementById('feed-container').innerHTML = '<div class="loader" id="feed-loader"></div><p style="text-align: center; color: var(--text-muted);">กำลังตรวจสอบสิทธิ์...</p>';
+        loadData(payload.email, payload.picture);
+    }
 
-    async function loadData(userEmail = '', userName = '', userPic = '') {
+    async function loadData(userEmail = '', userPic = '') {
         try {
             let url = API_URL;
-            if (userEmail) url += `?email=${encodeURIComponent(userEmail)}&name=${encodeURIComponent(userName)}`;
+            if (userEmail) url += `?email=${encodeURIComponent(userEmail)}`;
 
             const res = await fetch(url);
             const data = await res.json();
 
-            if (userEmail && data.user) {
-                state.isLoggedIn = true;
-                state.currentUser = { email: data.user.email, role: data.user.role, pic: userPic };
-                document.getElementById('unlockBtn').innerHTML = '<i class="fas fa-unlock"></i>';
-                
-                // หากเป็น Admin ให้โชว์กล่องเขียนโพสต์
-                if (data.user.role === 'admin') {
-                    document.getElementById('unlockBtn').classList.add('admin-mode');
-                    document.getElementById('post-creator').style.display = 'block';
-                    document.getElementById('creator-pic').src = userPic;
-                }
-            }
-
+            // เช็คและแสดงผล Profile
             if (data.profile) {
                 state.profile = data.profile;
                 document.getElementById('profile-name').textContent = data.profile.name || 'Koo Mean';
                 document.getElementById('profile-bio').textContent = data.profile.bio || '';
-                const pImg = data.profile.imageUrl || 'https://ui-avatars.com/api/?name=M';
-                document.getElementById('main-profile-img').src = pImg;
-                document.getElementById('nav-profile-img').src = state.isLoggedIn ? userPic : pImg;
+                if(data.profile.imageUrl) document.getElementById('main-profile-img').src = data.profile.imageUrl;
             }
 
+            // จัดการสิทธิ์เมื่อ Login
+            if (userEmail && data.user) {
+                state.isLoggedIn = true;
+                state.currentUser = { email: data.user.email, role: data.user.role, pic: userPic };
+                document.getElementById('loginToggleBtn').innerText = 'Logout';
+                
+                // เปิดกล่องโพสต์ถ้าเป็น Admin
+                if (data.user.role === 'admin') {
+                    document.getElementById('post-creator').style.display = 'block';
+                    document.getElementById('creator-avatar').src = userPic;
+                } else {
+                    alert('อีเมลนี้ไม่ใช่ Admin ไม่สามารถโพสต์ได้ครับ');
+                }
+            }
+
+            // แสดง Feed
             if (data.posts) {
                 state.posts = data.posts;
                 renderFeed();
             }
 
-            document.getElementById('global-loader').classList.add('hidden');
-
         } catch (err) {
-            console.error('loadData error:', err);
-            document.getElementById('feed-container').innerHTML = '<p style="color:#ff3b30; text-align:center;">เกิดข้อผิดพลาดในการดึงข้อมูล</p>';
-            document.getElementById('global-loader').classList.add('hidden');
+            console.error('Error:', err);
+            document.getElementById('feed-container').innerHTML = '<p style="color:var(--accent); text-align:center;">โหลดข้อมูลไม่สำเร็จ กรุณารีเฟรช</p>';
         }
     }
 
     function renderFeed() {
         const container = document.getElementById('feed-container');
-        if (!state.posts || state.posts.length === 0) {
-            container.innerHTML = '<p style="text-align:center;color:var(--text-muted);margin-top:20px;">ยังไม่มีโพสต์ใหม่ในขณะนี้</p>';
+        if (state.posts.length === 0) {
+            container.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:20px;">ยังไม่มีการอัปเดต</p>';
             return;
         }
 
@@ -213,9 +189,9 @@
             html += `
                 <div class="post-card">
                     <div class="post-header">
-                        <img src="${state.profile.imageUrl || 'https://ui-avatars.com/api/?name=M'}" class="post-avatar">
+                        <img src="${state.profile.imageUrl || 'https://ui-avatars.com/api/?name=M&background=random'}" class="post-avatar">
                         <div>
-                            <div class="post-author">${state.profile.name || 'Koo Mean'} <i class="fas fa-check-circle" style="color: var(--accent); font-size: 0.85rem; margin-left: 3px;"></i></div>
+                            <div class="post-author">${state.profile.name || 'Koo Mean'} <i class="fas fa-certificate" style="color: var(--accent); font-size: 0.9rem;"></i></div>
                             <div class="post-time">${date}</div>
                         </div>
                     </div>
@@ -231,10 +207,10 @@
         const content = contentBox.value.trim();
         const btn = document.getElementById('submit-post-btn');
 
-        if (!content) return alert('กรุณาพิมพ์ข้อความก่อนโพสต์ครับ');
-        if (!state.isLoggedIn || state.currentUser.role !== 'admin') return alert('คุณไม่มีสิทธิ์ในการโพสต์');
+        if (!content) return;
+        if (!state.isLoggedIn || state.currentUser.role !== 'admin') return alert('Unauthorized');
 
-        btn.innerText = "กำลังโพสต์...";
+        btn.innerText = "Posting...";
         btn.disabled = true;
 
         try {
@@ -252,20 +228,20 @@
 
             if (result.success) {
                 contentBox.value = '';
-                // ดึงข้อมูลฟีดใหม่เพื่ออัปเดตหน้าจอทันที
-                loadData(state.currentUser.email, '', state.currentUser.pic);
+                // ดึงฟีดใหม่มาแสดงทันที
+                loadData(state.currentUser.email, state.currentUser.pic);
             } else {
-                alert('โพสต์ไม่สำเร็จ หรือคุณไม่มีสิทธิ์');
+                alert('Posting failed.');
             }
         } catch (err) {
-            alert('เกิดข้อผิดพลาดในการส่งข้อมูล');
+            alert('Connection error.');
         } finally {
-            btn.innerText = "โพสต์";
+            btn.innerText = "Post";
             btn.disabled = false;
         }
     }
 
-    // โหลดข้อมูลครั้งแรก
+    // โหลดหน้าเว็บครั้งแรก
     loadData();
     </script>
 </body>
