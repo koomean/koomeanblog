@@ -576,7 +576,7 @@ textarea.si{min-height:85px;resize:none;line-height:1.5}
 <div class="toast" id="toast"></div>
 
 <script>
-// ใส่ Web App URL ของคุณที่ Deploy ใหม่ล่าสุดลงไปตรงนี้ครับ
+// !!! อย่าลืมเอา Web App URL ล่าสุดมาใส่ตรงนี้นะครับ !!!
 const API_URL='https://script.google.com/macros/s/AKfycbwBYhFTW68AfN4cYUJYS1DG7vw-Ocykx5kslSUQIeJJlfu0oeBIdi9xAhVmorVWQ4q7rg/exec';
 const IMGBB_KEY='5286836e6b61aa52660a8d8602503e0b';
 const SESS_KEY='kms_v3';
@@ -662,7 +662,8 @@ function openSub(n){D('sub-'+n).classList.add('open');if(n==='profile-edit')pref
 function closeSub(){document.querySelectorAll('.set-sub.open').forEach(s=>s.classList.remove('open'));}
 function prefillEdit(){D('si-title').value=S.profile.webTitle||'';D('si-name').value=S.profile.name||'';D('si-handle').value=S.profile.handle||'@koomean';D('si-bio').value=S.profile.bio||'';D('si-img').value=S.profile.imageUrl||'';D('si-cover').value=S.profile.coverUrl||'';}
 async function saveProfile(){
-  if(!S.user||S.user.role!=='admin')return;
+  const uRole = (S.user?.role || '').toLowerCase();
+  if(!S.user || !uRole.includes('admin')) return;
   const btn=D('si-save');btn.disabled=true;btn.textContent='กำลังบันทึก...';
   try{const r=await apiFetch(API_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({action:'updateProfile',email:S.user.email,webTitle:D('si-title').value.trim(),name:D('si-name').value.trim(),handle:D('si-handle').value.trim(),bio:D('si-bio').value.trim(),imageUrl:D('si-img').value.trim(),coverUrl:D('si-cover').value.trim()})});const d=await r.json();if(d.success){toast('บันทึกสำเร็จ','s','fas fa-check');closeSub();await loadData(S.user.email,S.user.name,S.user.pic);}else toast('เกิดข้อผิดพลาด','e');}
   catch{toast('บันทึกไม่สำเร็จ','e');}finally{btn.disabled=false;btn.textContent='บันทึกการเปลี่ยนแปลง';}
@@ -694,18 +695,23 @@ async function loadData(email='',name='',pic='',note=null){
         const init=(S.profile.name||'KM').substring(0,2).toUpperCase();D('av-fb').textContent=init;loadImg(D('av-img'),S.profile.imageUrl,D('av-fb'),init);
     }
     if(email&&data.user){
-        S.user={email:data.user.email,name,role:data.user.role,pic};localStorage.setItem(SESS_KEY,JSON.stringify(S.user));
+        const uRole = (data.user.role || '').toLowerCase(); // ปรับ Role ให้เป็นตัวเล็กเสมอ
+        S.user={email:data.user.email,name,role:uRole,pic};localStorage.setItem(SESS_KEY,JSON.stringify(S.user));
+        
         D('auth-btn').textContent='Sign Out';D('auth-btn').className='auth-pill out';D('set-ln').textContent=name;D('set-ld').textContent=data.user.email;D('so-email').textContent=data.user.email;D('so-grp').style.display='';D('rw-auth').style.display='none';D('sb-user-card').style.display='';D('sb-uc-av').src=pic||'https://ui-avatars.com/api/?name=U&background=161d2e&color=7988a3';D('sb-uc-name').textContent=name;D('sb-uc-email').textContent=data.user.email;
-        if(data.user.role==='admin'||data.user.role==='blog'){
+        
+        // เช็คให้ Admin หรือ Blog สามารถโพสต์ได้
+        if(uRole.includes('admin') || uRole.includes('blog')){
             D('creator').style.display='';D('cr-av').src=pic||'';
-            if(data.user.role==='admin') D('admin-grp').style.display='';
+            if(uRole.includes('admin')) D('admin-grp').style.display='';
         }
-        toast(data.user.role==='admin'?'เข้าสู่ระบบ Admin ✓':'เข้าสู่ระบบสำเร็จ ✓','s');
+        toast(uRole.includes('admin') ? 'เข้าสู่ระบบ Admin ✓' : 'เข้าสู่ระบบสำเร็จ ✓','s');
     }else if(!email){D('rw-auth').style.display='';}
     
     S.posts=data.posts||[];if(S.posts.length){D('stat-posts').textContent=S.posts.length;D('prof-stats').style.display='flex';}
     renderFeed();
     
+    // ตรวจสอบ Deep Link หลังจากโหลดเสร็จ
     setTimeout(()=>{
       const params=new URLSearchParams(window.location.search);
       const target=params.get('post');
@@ -723,6 +729,7 @@ function processContent(text,rowIdx){
   let h=esc(text.trim());
   const urlRx=/(https?:\/\/[^\s<]+)/g;const urls=(text.match(urlRx)||[]);
   h=h.replace(urlRx,u=>`<a href="${u}" target="_blank" class="post-link" rel="noopener">${u}</a>`);
+  // แปลง Hashtag ให้คลิกได้
   h=h.replace(/#([\wก-๙]+)/g, `<span style="color:var(--accent);cursor:pointer" onclick="searchTag('#$1')">#$1</span>`);
   let media='',tLink=null,ytId=null;
   for(const u of urls){
@@ -745,11 +752,14 @@ function renderFeed(){
   const sk=D('sk-posts');if(sk)sk.remove();
   const feed=D('feed');const aName=esc(S.profile.name||'Koo Mean');const avSrc=esc(S.profile.imageUrl||'');const init=(S.profile.name||'KM').substring(0,2).toUpperCase();
   
+  // อัปเดต Hashtag Trends
   const tagsHtml=renderHashtagsUI();
   if(tagsHtml&&D('rw-trends')){D('rw-trends').style.display='block';D('trend-desktop').innerHTML=tagsHtml;}
   else if(D('rw-trends')){D('rw-trends').style.display='none';}
 
   if(!S.posts.length){feed.innerHTML='<div class="sec-label">Timeline</div><div class="status"><div class="status-ico">💬</div>ยังไม่มีโพสต์</div>';return;}
+  
+  const uRole = (S.user?.role || '').toLowerCase(); // ดึง Role ล่าสุดมาเช็ค
   
   let html='<div class="sec-label">Timeline</div>';const lpQ=[];
   S.posts.forEach((p,i)=>{
@@ -758,13 +768,14 @@ function renderFeed(){
     const ts=p.editedTime?`แก้ไข ${fmt(p.editedTime)}`:fmt(p.timestamp);
     
     let menu='';
-    if(S.user?.role==='admin'||(S.user?.role==='blog'&&S.user?.email===p.email)){
+    // ให้สิทธิ์ Admin แก้ได้หมด และ Blog แก้โพสต์ตัวเองได้
+    if(uRole.includes('admin') || (uRole.includes('blog') && S.user?.email===p.email)){
       menu=`<div class="post-menu-w"><button class="menu-btn" onclick="toggleDrop('dp-${p.rowIdx}')"><i class="fas fa-ellipsis"></i></button><div class="drop-menu" id="dp-${p.rowIdx}"><button class="drop-item" onclick="openEditPost(${p.rowIdx})"><i class="fas fa-pen"></i>แก้ไขโพสต์</button><button class="drop-item del" onclick="deletePost(${p.rowIdx})"><i class="fas fa-trash-alt"></i>ลบโพสต์</button></div></div>`;
     }
     
     let chtml='';
     cmts.forEach(c=>{
-      const cM=(S.user?.role==='admin'||S.user?.email===c.email)?`<div class="cmt-mw"><button class="menu-btn" style="width:24px;height:24px;font-size:.72rem" onclick="toggleDrop('dc-${p.rowIdx}-${c.time}')"><i class="fas fa-ellipsis"></i></button><div class="drop-menu" id="dc-${p.rowIdx}-${c.time}"><button class="drop-item" onclick="openEditCmt(${p.rowIdx},${c.time})"><i class="fas fa-pen"></i>แก้ไข</button><button class="drop-item del" onclick="deleteCmt(${p.rowIdx},${c.time})"><i class="fas fa-trash-alt"></i>ลบ</button></div></div>`:'';
+      const cM=(uRole.includes('admin') || S.user?.email===c.email)?`<div class="cmt-mw"><button class="menu-btn" style="width:24px;height:24px;font-size:.72rem" onclick="toggleDrop('dc-${p.rowIdx}-${c.time}')"><i class="fas fa-ellipsis"></i></button><div class="drop-menu" id="dc-${p.rowIdx}-${c.time}"><button class="drop-item" onclick="openEditCmt(${p.rowIdx},${c.time})"><i class="fas fa-pen"></i>แก้ไข</button><button class="drop-item del" onclick="deleteCmt(${p.rowIdx},${c.time})"><i class="fas fa-trash-alt"></i>ลบ</button></div></div>`:'';
       const ct=c.editedTime?`แก้ไข ${fmt(c.editedTime)}`:fmt(c.time);
       chtml+=`<div class="cmt"><img class="cmt-av" src="${esc(c.pic||'')}" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(c.name||'U')}&background=161d2e&color=7988a3'" alt=""><div class="cmt-body"><div class="cmt-meta"><span class="cmt-name">${esc(c.name)}</span><span class="cmt-time">· ${ct}</span>${cM}</div><div class="cmt-txt">${esc(c.text)}</div></div></div>`;
     });
@@ -787,7 +798,13 @@ async function submitCmt(ri){if(!S.user){openModal('login-modal');return;}const 
 D('post-ta').addEventListener('input',function(){this.style.height='auto';this.style.height=this.scrollHeight+'px';const l=this.value.length,cc=D('char-c');cc.textContent=`${l} / 500`;cc.className='char-c'+(l>=450?' danger':l>=350?' warn':'');});
 D('file-in').addEventListener('change',function(){const f=this.files[0];if(!f)return;S.selFile=f;const r=new FileReader();r.onload=e=>{D('img-prev').src=e.target.result;D('img-prev-wrap').style.display='block';};r.readAsDataURL(f);});
 function removeImg(){S.selFile=null;D('file-in').value='';D('img-prev-wrap').style.display='none';}
-async function submitPost(){const content=D('post-ta').value.trim();if(!content&&!S.selFile)return;if(!S.user||(S.user.role!=='admin'&&S.user.role!=='blog'))return;const btn=D('post-btn');btn.textContent='กำลังโพสต์...';btn.disabled=true;D('post-ta').disabled=true;let mediaUrl='';try{if(S.selFile){btn.textContent='อัปโหลดรูป...';const fd=new FormData();fd.append('image',S.selFile);const ir=await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_KEY}`,{method:'POST',body:fd});const id=await ir.json();if(id.success)mediaUrl=id.data.url;else throw new Error('ImgBB fail');}btn.textContent='กำลังบันทึก...';const r=await apiFetch(API_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({action:'addPost',email:S.user.email,content,mediaUrl})});const d=await r.json();if(d.success){D('post-ta').value='';D('post-ta').style.height='auto';D('char-c').textContent='0 / 500';removeImg();toast('โพสต์สำเร็จ!','s','fas fa-check-circle');await loadData(S.user.email,S.user.name,S.user.pic);}else throw new Error('GAS fail');}catch(e){toast('เกิดข้อผิดพลาด: '+e.message,'e');}finally{btn.textContent='โพสต์';btn.disabled=false;D('post-ta').disabled=false;}}
+async function submitPost(){
+  const content=D('post-ta').value.trim();
+  const uRole = (S.user?.role || '').toLowerCase();
+  if(!content&&!S.selFile)return;
+  if(!S.user || (!uRole.includes('admin') && !uRole.includes('blog'))) return;
+  const btn=D('post-btn');btn.textContent='กำลังโพสต์...';btn.disabled=true;D('post-ta').disabled=true;let mediaUrl='';try{if(S.selFile){btn.textContent='อัปโหลดรูป...';const fd=new FormData();fd.append('image',S.selFile);const ir=await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_KEY}`,{method:'POST',body:fd});const id=await ir.json();if(id.success)mediaUrl=id.data.url;else throw new Error('ImgBB fail');}btn.textContent='กำลังบันทึก...';const r=await apiFetch(API_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({action:'addPost',email:S.user.email,content,mediaUrl})});const d=await r.json();if(d.success){D('post-ta').value='';D('post-ta').style.height='auto';D('char-c').textContent='0 / 500';removeImg();toast('โพสต์สำเร็จ!','s','fas fa-check-circle');await loadData(S.user.email,S.user.name,S.user.pic);}else throw new Error('GAS fail');}catch(e){toast('เกิดข้อผิดพลาด: '+e.message,'e');}finally{btn.textContent='โพสต์';btn.disabled=false;D('post-ta').disabled=false;}
+}
 
 function openEditPost(ri){const p=S.posts.find(p=>p.rowIdx===ri);if(!p)return;editTarget={type:'post',rowIdx:ri};D('ep-ta').value=p.content;openModal('ep-modal');}
 async function saveEditPost(){const c=D('ep-ta').value.trim();if(!c)return;const btn=D('ep-save');btn.disabled=true;btn.textContent='...';try{await apiFetch(API_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({action:'editPost',email:S.user.email,rowIdx:editTarget.rowIdx,content:c,mediaUrl:''})});closeModal('ep-modal');toast('แก้ไขสำเร็จ','s');await loadData(S.user.email,S.user.name,S.user.pic);}catch{toast('เกิดข้อผิดพลาด','e');}finally{btn.disabled=false;btn.textContent='บันทึก';}}
@@ -800,7 +817,26 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeMobSearch();cl
 function checkBP(){const mob=isMob();const ml=D('mob-logo');if(ml)ml.style.display=mob?'flex':'none';}
 window.addEventListener('resize',checkBP);checkBP();
 
-(function(){const saved=localStorage.getItem(SESS_KEY);if(saved){try{const u=JSON.parse(saved);S.user=u;D('auth-btn').textContent='Sign Out';D('auth-btn').className='auth-pill out';D('set-ln').textContent=u.name;D('set-ld').textContent=u.email;D('so-email').textContent=u.email;D('so-grp').style.display='';if(u.role==='admin'||u.role==='blog'){D('creator').style.display='';if(u.role==='admin')D('admin-grp').style.display='';}loadData(u.email,u.name,u.pic);}catch{localStorage.removeItem(SESS_KEY);loadData();}}else{loadData();}})();
+(function(){
+  const saved=localStorage.getItem(SESS_KEY);
+  if(saved){
+    try{
+      const u=JSON.parse(saved);S.user=u;
+      D('auth-btn').textContent='Sign Out';D('auth-btn').className='auth-pill out';D('set-ln').textContent=u.name;D('set-ld').textContent=u.email;D('so-email').textContent=u.email;D('so-grp').style.display='';
+      
+      const uRole = (u.role||'').toLowerCase();
+      if(uRole.includes('admin') || uRole.includes('blog')){
+        D('creator').style.display='';
+        if(uRole.includes('admin')) D('admin-grp').style.display='';
+      }
+      loadData(u.email,u.name,u.pic);
+    }catch{
+      localStorage.removeItem(SESS_KEY);loadData();
+    }
+  }else{
+    loadData();
+  }
+})();
 </script>
 </body>
 </html>
