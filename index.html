@@ -1296,17 +1296,146 @@ function toggleField(field,force=null,isMobile=null){
 D('file-in').addEventListener('change',function(){handleFilePick(this.files[0],false);});
 D('file-in-mob').addEventListener('change',function(){handleFilePick(this.files[0],true);});
 
-function handleFilePick(f,isMobile){
+/* ============ Image Compression ============
+   Target: 4MB (imgbb max 5MB เผื่อ overhead)
+   กลยุทธ์: resize max 2048px → iterate quality 0.92→0.55 จนได้ขนาดพอดี
+   รักษาคุณภาพสูงสุดเท่าที่ไฟล์รองรับ */
+const IMG_TARGET_BYTES = 4 * 1024 * 1024;   // 4 MB
+const IMG_HARD_MAX = 10 * 1024 * 1024;      // 10 MB — ใหญ่กว่านี้ถือว่ามากเกินไป
+const IMG_MAX_DIMENSION = 2048;             // ยาวสุด 2048px
+
+function loadImageFromFile(file){
+  return new Promise((resolve,reject)=>{
+    const url=URL.createObjectURL(file);
+    const img=new Image();
+    img.onload=()=>{URL.revokeObjectURL(url);resolve(img);};
+    img.onerror=()=>{URL.revokeObjectURL(url);reject(new Error('โหลดรูปไม่สำเร็จ'));};
+    img.src=url;
+  });
+}
+
+function canvasToBlob(canvas,type,quality){
+  return new Promise((resolve,reject)=>{
+    canvas.toBlob(blob=>{
+      if(blob)resolve(blob);else reject(new Error('แปลงรูปไม่สำเร็จ'));
+    },type,quality);
+  });
+}
+
+async function compressImage(file,targetBytes=IMG_TARGET_BYTES){
+  // GIF: ห้ามบีบ (จะเสีย animation) — แค่คืนเดิม
+  if(file.type==='image/gif')return {blob:file,compressed:false};
+
+  // ถ้าเล็กพออยู่แล้ว — ไม่ต้องทำอะไร
+  if(file.size<=targetBytes)return {blob:file,compressed:false};
+
+  const img=await loadImageFromFile(file);
+  let w=img.naturalWidth,h=img.naturalHeight;
+
+  // Resize ถ้าเกิน IMG_MAX_DIMENSION
+  const maxDim=Math.max(w,h);
+  if(maxDim>IMG_MAX_DIMENSION){
+    const scale=IMG_MAX_DIMENSION/maxDim;
+    w=Math.round(w*scale);h=Math.round(h*scale);
+  }
+
+  const canvas=document.createElement('canvas');
+  canvas.width=w;canvas.height=h;
+  const ctx=canvas.getContext('2d');
+  // คุณภาพการ resize สูงสุด
+  ctx.imageSmoothingEnabled=true;
+  ctx.imageSmoothingQuality='high';
+  ctx.drawImage(img,0,0,w,h);
+
+  // เลือก format: WebP ถ้ารองรับ (เล็กกว่า), ถ้าไม่ก็ JPEG, PNG ใช้เฉพาะเมื่อมี transparency
+  let outType='image/jpeg';
+  // ทดสอบว่า browser export WebP ได้
+  const testBlob=await canvasToBlob(canvas,'image/webp',0.9).catch(()=>null);
+  if(testBlob&&testBlob.type==='image/webp')outType='image/webp';
+
+  // ถ้าต้นทางเป็น PNG ที่อาจมี transparency — ตรวจว่ามี alpha จริงไหม
+  if(file.type==='image/png'){
+    // sample pixel บางตัวหา alpha < 255
+    try{
+      const sample=ctx.getImageData(0,0,Math.min(w,100),Math.min(h,100)).data;
+      let hasAlpha=false;
+      for(let i=3;i<sample.length;i+=4){if(sample[i]<255){hasAlpha=true;break;}}
+      if(hasAlpha&&outType!=='image/webp'){
+        // รักษา transparency ด้วย PNG (ไม่สามารถ set quality ได้ แต่ resize ก็พอช่วย)
+        outType='image/png';
+      }
+    }catch(_){}
+  }
+
+  // Iterative quality search (PNG ไม่มี quality, ใช้แค่ resize)
+  if(outType==='image/png'){
+    const blob=await canvasToBlob(canvas,'image/png');
+    return {blob,compressed:true,from:file.size,to:blob.size,dim:`${w}x${h}`,type:outType};
+  }
+
+  // ลอง quality หลายระดับ เลือกตัวที่ใหญ่สุดที่ยังไม่เกิน target
+  const qualities=[0.92,0.85,0.78,0.7,0.6,0.5,0.4];
+  let best=null;
+  for(const q of qualities){
+    const blob=await canvasToBlob(canvas,outType,q);
+    if(!blob)continue;
+    if(blob.size<=targetBytes){best={blob,quality:q};break;}
+    // เก็บตัวล่าสุดไว้เผื่อไม่มีตัวไหนผ่าน
+    best={blob,quality:q};
+  }
+
+  if(!best)throw new Error('บีบอัดรูปไม่สำเร็จ');
+  return {blob:best.blob,compressed:true,from:file.size,to:best.blob.size,dim:`${w}x${h}`,type:outType,quality:best.quality};
+}
+
+function fmtBytes(n){
+  if(n<1024)return n+' B';
+  if(n<1024*1024)return (n/1024).toFixed(1)+' KB';
+  return (n/1024/1024).toFixed(2)+' MB';
+}
+
+async function handleFilePick(f,isMobile){
   if(!f)return;
-  if(f.size>5*1024*1024){toast('ไฟล์ใหญ่เกิน 5MB','e');return;}
-  if(isMobile){
-    S.selFileMob=f;
-    const r=new FileReader();r.onload=e=>{D('img-prev-mob').src=e.target.result;D('img-prev-wrap-mob').style.display='block';};
-    r.readAsDataURL(f);
-  }else{
-    S.selFile=f;
-    const r=new FileReader();r.onload=e=>{D('img-prev').src=e.target.result;D('img-prev-wrap').style.display='block';};
-    r.readAsDataURL(f);
+  const inputEl=D(isMobile?'file-in-mob':'file-in');
+
+  // เช็คว่าเป็นรูปจริง
+  if(!f.type.startsWith('image/')){
+    toast('ต้องเป็นไฟล์รูปภาพเท่านั้น','e');
+    inputEl.value='';return;
+  }
+  // ใหญ่เกิน hard max — ไม่ให้อัปเลย
+  if(f.size>IMG_HARD_MAX){
+    toast('ไฟล์ใหญ่เกินไป (สูงสุด 10MB)','e');
+    inputEl.value='';return;
+  }
+
+  const previewWrap=D(isMobile?'img-prev-wrap-mob':'img-prev-wrap');
+  const previewImg=D(isMobile?'img-prev-mob':'img-prev');
+
+  try{
+    let finalFile=f;
+    if(f.size>IMG_TARGET_BYTES&&f.type!=='image/gif'){
+      toast('กำลังบีบอัดรูปภาพ...','','fas fa-compress fa-spin');
+      const result=await compressImage(f,IMG_TARGET_BYTES);
+      if(result.compressed){
+        // สร้าง File object ใหม่ เพื่อให้ imgbb รับได้
+        const ext=result.type==='image/webp'?'webp':(result.type==='image/png'?'png':'jpg');
+        finalFile=new File([result.blob],(f.name.replace(/\.[^.]+$/,'')||'image')+'.'+ext,{type:result.type});
+        const pct=Math.round((1-result.to/result.from)*100);
+        toast(`บีบอัดสำเร็จ ${fmtBytes(result.from)} → ${fmtBytes(result.to)} (ลด ${pct}%)`,'s','fas fa-check');
+      }
+    }
+
+    // เก็บไฟล์และแสดง preview
+    if(isMobile)S.selFileMob=finalFile;else S.selFile=finalFile;
+    const r=new FileReader();
+    r.onload=e=>{previewImg.src=e.target.result;previewWrap.style.display='block';};
+    r.readAsDataURL(finalFile);
+
+  }catch(err){
+    console.error(err);
+    toast('เกิดข้อผิดพลาดกับรูปภาพ: '+err.message,'e');
+    inputEl.value='';
   }
 }
 
