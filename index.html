@@ -181,7 +181,8 @@ textarea.si{min-height:85px;resize:none;line-height:1.5}
 .sk-av{width:38px;height:38px;border-radius:50%;flex-shrink:0}
 .sk-lines{flex:1;display:flex;flex-direction:column;gap:7px;padding-top:2px}
 
-.creator{padding:14px 20px;border-bottom:1px solid var(--border);display:none;background:linear-gradient(180deg,rgba(75,143,255,.03),transparent)}
+.creator{padding:14px 20px;border-bottom:1px solid var(--border);display:none;background:linear-gradient(180deg,rgba(75,143,255,.05),transparent)}
+.creator.show{display:block;animation:fadeUp .3s var(--ease) both}
 .cr-row{display:flex;gap:10px}
 .cr-av-ring{flex-shrink:0;width:38px;height:38px;border-radius:50%;padding:2px;background:linear-gradient(135deg,var(--accent),var(--accent2))}
 .cr-av{width:100%;height:100%;border-radius:50%;object-fit:cover;background:var(--s2)}
@@ -319,7 +320,7 @@ textarea.si{min-height:85px;resize:none;line-height:1.5}
   .feed-main{padding-bottom:calc(var(--mob-nav) + 4px)}
   .mob-nav{display:flex !important}
   .toast{bottom:calc(var(--mob-nav) + 10px)}
-  .creator{display:none !important}
+  .creator{padding:12px 14px}
 }
 @media(min-width:1024px){
   .mob-nav{display:none !important}
@@ -906,7 +907,7 @@ function signOut(){
   S.user=null;S.pendingJwt=null;
   try{localStorage.removeItem(SESS_KEY);}catch{}
   D('auth-btn').textContent='Sign In';D('auth-btn').className='auth-pill';
-  D('creator').style.display='none';
+  D('creator').classList.remove('show');
   D('admin-grp').style.display='none';
   D('so-grp').style.display='none';
   D('sb-user-card').style.display='none';
@@ -1000,11 +1001,15 @@ async function loadData(email='',name='',pic='',note=null){
 
 /* Central function to update UI based on current user */
 function applyUserUI(){
+  var creatorEl=D('creator');
+  var fabEl=D('mnav-fab');
+
   if(!S.user){
     D('auth-btn').textContent='Sign In';D('auth-btn').className='auth-pill';
-    D('creator').style.display='none';D('admin-grp').style.display='none';
+    if(creatorEl)creatorEl.classList.remove('show');
+    D('admin-grp').style.display='none';
     D('so-grp').style.display='none';D('sb-user-card').style.display='none';
-    D('mnav-fab').classList.add('hidden');
+    if(fabEl)fabEl.classList.add('hidden');
     D('rw-auth').style.display='';
     return;
   }
@@ -1015,22 +1020,23 @@ function applyUserUI(){
   D('so-grp').style.display='';
   D('rw-auth').style.display='none';
   D('sb-user-card').style.display='';
-  D('sb-uc-av').src=S.user.pic||'https://ui-avatars.com/api/?name='+encodeURIComponent(S.user.name||'U')+'&background=161d2e&color=7988a3';
-  D('sb-uc-av').onerror=function(){this.src='https://ui-avatars.com/api/?name='+encodeURIComponent(S.user.name||'U')+'&background=161d2e&color=7988a3';};
+  var avFallback='https://ui-avatars.com/api/?name='+encodeURIComponent(S.user.name||'U')+'&background=161d2e&color=7988a3';
+  D('sb-uc-av').src=S.user.pic||avFallback;
+  D('sb-uc-av').onerror=function(){this.src=avFallback;};
   D('sb-uc-name').textContent=S.user.name||'';
   D('sb-uc-email').textContent=S.user.email||'';
 
   if(canPost()){
-    D('creator').style.display='';
-    if(D('cr-av'))D('cr-av').src=S.user.pic||'';
-    if(D('cr-av-mob'))D('cr-av-mob').src=S.user.pic||'';
-    D('mnav-fab').classList.remove('hidden');
+    if(creatorEl)creatorEl.classList.add('show');
+    if(D('cr-av')){D('cr-av').src=S.user.pic||avFallback;D('cr-av').onerror=function(){this.src=avFallback;};}
+    if(D('cr-av-mob')){D('cr-av-mob').src=S.user.pic||avFallback;D('cr-av-mob').onerror=function(){this.src=avFallback;};}
+    if(fabEl)fabEl.classList.remove('hidden');
     if(isAdmin())D('admin-grp').style.display='';
     else D('admin-grp').style.display='none';
   }else{
-    D('creator').style.display='none';
+    if(creatorEl)creatorEl.classList.remove('show');
     D('admin-grp').style.display='none';
-    D('mnav-fab').classList.add('hidden');
+    if(fabEl)fabEl.classList.add('hidden');
   }
 }
 
