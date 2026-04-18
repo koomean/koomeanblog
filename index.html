@@ -320,7 +320,6 @@ textarea.si{min-height:85px;resize:none;line-height:1.5}
 
 <div class="root">
 
-  <!-- ══ LEFT SIDEBAR ══ -->
   <aside class="sidebar-left">
     <a class="sb-logo" href="#">
       <div class="logo-mark">KM</div>
@@ -346,7 +345,6 @@ textarea.si{min-height:85px;resize:none;line-height:1.5}
     </div>
   </aside>
 
-  <!-- ══ FEED COLUMN ══ -->
   <div class="feed-col">
     <div class="feed-hdr">
       <div class="feed-hdr-left">
@@ -415,7 +413,6 @@ textarea.si{min-height:85px;resize:none;line-height:1.5}
     </div>
   </div>
 
-  <!-- ══ RIGHT SIDEBAR ══ -->
   <aside class="sidebar-right">
     <div class="rw">
       <div class="rw-title"><i class="fas fa-magnifying-glass" style="color:var(--accent);margin-right:8px"></i>ค้นหาโพสต์</div>
@@ -426,6 +423,11 @@ textarea.si{min-height:85px;resize:none;line-height:1.5}
         </div>
       </div>
       <div class="rw-results" id="rw-results" style="display:none"></div>
+    </div>
+
+    <div class="rw" id="rw-trends" style="display:none; margin-bottom: 14px;">
+      <div class="rw-title"><i class="fas fa-fire" style="color:var(--err);margin-right:8px"></i>เทรนด์ยอดฮิต</div>
+      <div class="rw-results" id="trend-desktop" style="display:block;padding:4px 0"></div>
     </div>
 
     <div class="rw" id="rw-auth" style="display:none">
@@ -449,16 +451,12 @@ textarea.si{min-height:85px;resize:none;line-height:1.5}
     </div>
   </aside>
 
-</div><!-- /root -->
-
-<!-- ══ MOBILE BOTTOM NAV ══ -->
-<nav class="mob-nav" id="mob-nav">
+</div><nav class="mob-nav" id="mob-nav">
   <button class="mnav-btn active" id="mnav-home" onclick="navTo('home')"><i class="fas fa-house"></i><span>หน้าหลัก</span></button>
   <button class="mnav-btn" id="mnav-search" onclick="openMobSearch()"><i class="fas fa-magnifying-glass"></i><span>ค้นหา</span></button>
   <button class="mnav-btn" id="mnav-settings" onclick="openSettings()"><i class="fas fa-gear"></i><span>ตั้งค่า</span></button>
 </nav>
 
-<!-- ══ MOBILE SEARCH OVERLAY ══ -->
 <div class="mob-srch-overlay" id="mob-srch">
   <div class="mob-srch-hdr">
     <div class="mob-sbox"><i class="fas fa-magnifying-glass"></i><input class="mob-sinput" id="mob-srch-in" placeholder="ค้นหาโพสต์..." autocomplete="off"></div>
@@ -467,7 +465,6 @@ textarea.si{min-height:85px;resize:none;line-height:1.5}
   <div class="mob-srch-body" id="mob-srch-body"><div class="srch-empty"><i class="fas fa-magnifying-glass-chart"></i><p>พิมพ์เพื่อค้นหาโพสต์</p></div></div>
 </div>
 
-<!-- ══ SETTINGS DRAWER ══ -->
 <div class="set-panel" id="set-panel">
   <div class="set-bd" onclick="closeSettings()"></div>
   <div class="set-drawer">
@@ -541,7 +538,6 @@ textarea.si{min-height:85px;resize:none;line-height:1.5}
   </div>
 </div>
 
-<!-- ══ MODALS ══ -->
 <div class="overlay" id="login-modal">
   <div class="modal">
     <div class="m-logo">KM</div><div class="m-title">Sign In</div>
@@ -578,6 +574,7 @@ textarea.si{min-height:85px;resize:none;line-height:1.5}
 <div class="toast" id="toast"></div>
 
 <script>
+// !!! อย่าลืมเปลี่ยน URL ตรงนี้ให้ตรงกับ Web App URL ล่าสุดที่คุณ Deploy นะครับ !!!
 const API_URL='https://script.google.com/macros/s/AKfycbwBYhFTW68AfN4cYUJYS1DG7vw-Ocykx5kslSUQIeJJlfu0oeBIdi9xAhVmorVWQ4q7rg/exec';
 const IMGBB_KEY='5286836e6b61aa52660a8d8602503e0b';
 const SESS_KEY='kms_v3';
@@ -597,7 +594,27 @@ function openModal(id){D(id).classList.add('open');}function closeModal(id){D(id
 document.addEventListener('click',e=>{if(!e.target.closest('.drop-menu')&&!e.target.closest('.menu-btn'))document.querySelectorAll('.drop-menu.open').forEach(m=>m.classList.remove('open'));});
 function toggleDrop(id){document.querySelectorAll('.drop-menu.open').forEach(m=>{if(m.id!==id)m.classList.remove('open');});const m=D(id);if(m)m.classList.toggle('open');}
 
-// Desktop search
+// Search & Hashtags
+function getHashtags(){
+  const counts={};
+  S.posts.forEach(p=>{const m=p.content.match(/#[\wก-๙]+/g);if(m)m.forEach(t=>counts[t]=(counts[t]||0)+1);});
+  return Object.keys(counts).map(tag=>({tag,count:counts[tag]})).sort((a,b)=>b.count-a.count).slice(0,5);
+}
+function renderHashtagsUI(){
+  const tags=getHashtags();if(!tags.length)return '';
+  let h='';tags.forEach((t,i)=>{h+=`<div class="rw-hit" style="padding:10px 14px" onclick="searchTag('${t.tag}')"><div style="font-size:1.1rem;color:var(--accent);font-weight:800;width:24px">${i+1}</div><div class="rw-hit-body"><div class="rw-hit-name">${t.tag}</div><div class="rw-hit-txt">${t.count} โพสต์</div></div></div>`;});
+  return h;
+}
+function getEmptySearchHtml(){
+  const th=renderHashtagsUI();
+  if(th)return `<div class="sec-label" style="border:none">🔥 เทรนด์ฮิต</div>${th}`;
+  return `<div class="srch-empty"><i class="fas fa-magnifying-glass-chart"></i><p>พิมพ์เพื่อค้นหาโพสต์</p></div>`;
+}
+function searchTag(tag){
+  D('rw-srch').value=tag;D('rw-srch').dispatchEvent(new Event('input'));
+  if(isMob()){openMobSearch();D('mob-srch-in').value=tag;D('mob-srch-in').dispatchEvent(new Event('input'));}
+}
+
 let rwD;
 D('rw-srch').addEventListener('input',function(){
   clearTimeout(rwD);const q=this.value.trim(),res=D('rw-results');
@@ -612,13 +629,12 @@ D('rw-srch').addEventListener('input',function(){
   },200);
 });
 
-// Mobile search
 let mobSD;
-function openMobSearch(){D('mob-srch').classList.add('open');setMN('search');setTimeout(()=>D('mob-srch-in').focus(),300);}
-function closeMobSearch(){D('mob-srch').classList.remove('open');D('mob-srch-in').value='';D('mob-srch-body').innerHTML='<div class="srch-empty"><i class="fas fa-magnifying-glass-chart"></i><p>พิมพ์เพื่อค้นหาโพสต์</p></div>';setMN('home');}
+function openMobSearch(){D('mob-srch').classList.add('open');setMN('search');D('mob-srch-body').innerHTML=getEmptySearchHtml();setTimeout(()=>D('mob-srch-in').focus(),300);}
+function closeMobSearch(){D('mob-srch').classList.remove('open');D('mob-srch-in').value='';D('mob-srch-body').innerHTML=getEmptySearchHtml();setMN('home');}
 D('mob-srch-in').addEventListener('input',function(){
   clearTimeout(mobSD);const q=this.value.trim();
-  if(!q){D('mob-srch-body').innerHTML='<div class="srch-empty"><i class="fas fa-magnifying-glass-chart"></i><p>พิมพ์เพื่อค้นหาโพสต์</p></div>';return;}
+  if(!q){D('mob-srch-body').innerHTML=getEmptySearchHtml();return;}
   mobSD=setTimeout(()=>{
     const lq=q.toLowerCase(),hits=S.posts.filter(p=>p.content&&p.content.toLowerCase().includes(lq));
     const avSrc=esc(S.profile.imageUrl||''),name=esc(S.profile.name||'Koo Mean');
@@ -629,7 +645,13 @@ D('mob-srch-in').addEventListener('input',function(){
     D('mob-srch-body').innerHTML=h;
   },200);
 });
-function scrollToPost(ri){const el=D('post-'+ri);if(!el)return;el.scrollIntoView({behavior:'smooth',block:'center'});el.style.background='rgba(75,143,255,.08)';setTimeout(()=>el.style.background='',1800);}
+
+function scrollToPost(ri){
+  const el=D('post-'+ri);if(!el)return;
+  el.scrollIntoView({behavior:'smooth',block:'center'});
+  el.style.background='rgba(75,143,255,.08)';
+  setTimeout(()=>el.style.background='',1800);
+}
 
 // Settings
 function openSettings(){D('set-panel').classList.add('open');setMN('settings');}
@@ -644,58 +666,132 @@ async function saveProfile(){
   catch{toast('บันทึกไม่สำเร็จ','e');}finally{btn.disabled=false;btn.textContent='บันทึกการเปลี่ยนแปลง';}
 }
 
-// Dark mode
 let isDark=true;
 function toggleDark(){isDark=!isDark;D('dark-tog').classList.toggle('on',isDark);const r=document.documentElement.style;r.setProperty('--bg',isDark?'#07090f':'#f0f2f7');r.setProperty('--s1',isDark?'#0c0f1c':'#ffffff');r.setProperty('--s2',isDark?'#111827':'#f8fafc');r.setProperty('--s3',isDark?'#161d2e':'#edf2f7');r.setProperty('--border',isDark?'rgba(255,255,255,0.07)':'rgba(0,0,0,0.08)');r.setProperty('--borderH',isDark?'rgba(255,255,255,0.13)':'rgba(0,0,0,0.14)');r.setProperty('--txt',isDark?'#dde3f0':'#0f172a');r.setProperty('--txt2',isDark?'#7988a3':'#475569');r.setProperty('--txt3',isDark?'#3c4f68':'#94a3b8');}
 
-// Nav
 function setMN(n){['home','search','settings'].forEach(k=>D('mnav-'+k)?.classList.toggle('active',k===n));}
 function setSBN(n){['home','settings'].forEach(k=>D('sbn-'+k)?.classList.toggle('active',k===n));}
 function navTo(n){if(n==='home'){closeMobSearch();closeSettings();setMN('home');setSBN('home');}}
 
-// Auth
 function onAuthClick(){if(!S.user)openModal('login-modal');else if(confirm('ออกจากระบบหรือไม่?'))signOut();}
 function onSetLoginClick(){if(!S.user){closeSettings();openModal('login-modal');}}
 function signOut(){S.user=null;S.pendingJwt=null;localStorage.removeItem(SESS_KEY);D('auth-btn').textContent='Sign In';D('auth-btn').className='auth-pill';D('creator').style.display='none';D('admin-grp').style.display='none';D('so-grp').style.display='none';D('sb-user-card').style.display='none';D('set-ln').textContent='Sign In';D('set-ld').textContent='เข้าสู่ระบบเพื่อใช้งาน';D('rw-auth').style.display='';closeSettings();renderFeed();toast('ออกจากระบบแล้ว','','fas fa-right-from-bracket');}
 function handleCredentialResponse(res){const p=decodeJwt(res.credential);if(!p)return;closeModal('login-modal');S.pendingJwt=p;toast('กำลังตรวจสอบ...','','fas fa-circle-notch fa-spin');loadData(p.email,p.name,p.picture);}
 function doRegister(){const note=D('reg-note').value.trim();if(!note){toast('กรุณากรอกข้อมูลก่อน','e');return;}closeModal('reg-modal');const p=S.pendingJwt;toast('กำลังลงทะเบียน...','','fas fa-circle-notch fa-spin');loadData(p.email,p.name,p.picture,note);}
 
-// Load data
 async function loadData(email='',name='',pic='',note=null){
   try{
     let url=API_URL;if(email){url+=`?email=${encodeURIComponent(email)}&name=${encodeURIComponent(name)}`;if(note!==null)url+=`&action=register&note=${encodeURIComponent(note)}`;}
     const res=await apiFetch(url);if(!res.ok)throw new Error('HTTP '+res.status);const data=await res.json();
     if(data.requireRegistration){openModal('reg-modal');return;}
-    if(data.spaceProfile){const sp=data.spaceProfile;S.profile={webTitle:sp.webTitle||'Space',name:sp.name||'Koo Mean',handle:sp.handle||'@koomean',bio:sp.bio||'',imageUrl:sp.imageUrl||'',coverUrl:sp.coverUrl||''};document.title=S.profile.webTitle;['web-title','sb-title','set-app-name'].forEach(id=>{const el=D(id);if(el)el.textContent=S.profile.webTitle;});D('feed-hdr-title').textContent=S.profile.webTitle;D('prof-name').textContent=S.profile.name;D('prof-handle').textContent=S.profile.handle||'@koomean';D('prof-bio').textContent=S.profile.bio;D('rw-bio').textContent=S.profile.bio||'';if(sp.coverUrl)D('prof-cover').style.backgroundImage=`url(${sp.coverUrl})`;const init=(S.profile.name||'KM').substring(0,2).toUpperCase();D('av-fb').textContent=init;loadImg(D('av-img'),S.profile.imageUrl,D('av-fb'),init);}
-    if(email&&data.user){S.user={email:data.user.email,name,role:data.user.role,pic};localStorage.setItem(SESS_KEY,JSON.stringify(S.user));D('auth-btn').textContent='Sign Out';D('auth-btn').className='auth-pill out';D('set-ln').textContent=name;D('set-ld').textContent=data.user.email;D('so-email').textContent=data.user.email;D('so-grp').style.display='';D('rw-auth').style.display='none';D('sb-user-card').style.display='';D('sb-uc-av').src=pic||'https://ui-avatars.com/api/?name=U&background=161d2e&color=7988a3';D('sb-uc-name').textContent=name;D('sb-uc-email').textContent=data.user.email;if(data.user.role==='admin'){D('creator').style.display='';D('cr-av').src=pic||'';D('admin-grp').style.display='';toast('เข้าสู่ระบบ Admin ✓','s');}else{toast('เข้าสู่ระบบสำเร็จ ✓','s');}}else if(!email){D('rw-auth').style.display='';}
+    if(data.spaceProfile){
+        const sp=data.spaceProfile;S.profile={webTitle:sp.webTitle||'Space',name:sp.name||'Koo Mean',handle:sp.handle||'@koomean',bio:sp.bio||'',imageUrl:sp.imageUrl||'',coverUrl:sp.coverUrl||''};
+        document.title=S.profile.webTitle;['web-title','sb-title','set-app-name'].forEach(id=>{const el=D(id);if(el)el.textContent=S.profile.webTitle;});
+        D('feed-hdr-title').textContent=S.profile.webTitle;D('prof-name').textContent=S.profile.name;D('prof-handle').textContent=S.profile.handle||'@koomean';D('prof-bio').textContent=S.profile.bio;D('rw-bio').textContent=S.profile.bio||'';
+        if(sp.coverUrl)D('prof-cover').style.backgroundImage=`url(${sp.coverUrl})`;
+        const init=(S.profile.name||'KM').substring(0,2).toUpperCase();D('av-fb').textContent=init;loadImg(D('av-img'),S.profile.imageUrl,D('av-fb'),init);
+    }
+    if(email&&data.user){
+        S.user={email:data.user.email,name,role:data.user.role,pic};localStorage.setItem(SESS_KEY,JSON.stringify(S.user));
+        D('auth-btn').textContent='Sign Out';D('auth-btn').className='auth-pill out';D('set-ln').textContent=name;D('set-ld').textContent=data.user.email;D('so-email').textContent=data.user.email;D('so-grp').style.display='';D('rw-auth').style.display='none';D('sb-user-card').style.display='';D('sb-uc-av').src=pic||'https://ui-avatars.com/api/?name=U&background=161d2e&color=7988a3';D('sb-uc-name').textContent=name;D('sb-uc-email').textContent=data.user.email;
+        // เช็คให้ Admin หรือ Blog สามารถโพสต์ได้
+        if(data.user.role==='admin'||data.user.role==='blog'){
+            D('creator').style.display='';D('cr-av').src=pic||'';
+            if(data.user.role==='admin') D('admin-grp').style.display='';
+        }
+        toast(data.user.role==='admin'?'เข้าสู่ระบบ Admin ✓':'เข้าสู่ระบบสำเร็จ ✓','s');
+    }else if(!email){D('rw-auth').style.display='';}
+    
     S.posts=data.posts||[];if(S.posts.length){D('stat-posts').textContent=S.posts.length;D('prof-stats').style.display='flex';}
     renderFeed();
-  }catch(err){console.error(err);const sk=D('sk-posts');if(sk)sk.remove();D('feed').insertAdjacentHTML('beforeend',`<div class="err-banner"><i class="fas fa-exclamation-circle"></i><span>โหลดข้อมูลไม่สำเร็จ</span><button class="retry-btn" onclick="location.reload()">ลองใหม่</button></div>`);}
+    
+    // ตรวจสอบ Deep Link หลังจากโหลดเสร็จ
+    setTimeout(()=>{
+      const params=new URLSearchParams(window.location.search);
+      const target=params.get('post');
+      if(target)scrollToPost(parseInt(target));
+    },600);
+
+  }catch(err){
+      console.error(err);const sk=D('sk-posts');if(sk)sk.remove();
+      D('feed').insertAdjacentHTML('beforeend',`<div class="err-banner"><i class="fas fa-exclamation-circle"></i><span>โหลดข้อมูลไม่สำเร็จ</span><button class="retry-btn" onclick="location.reload()">ลองใหม่</button></div>`);
+  }
 }
 
-// Content
-function processContent(text,rowIdx){if(!text)return{html:'',media:'',targetLink:null};let h=esc(text.trim());const urlRx=/(https?:\/\/[^\s<]+)/g;const urls=(text.match(urlRx)||[]);h=h.replace(urlRx,u=>`<a href="${u}" target="_blank" class="post-link" rel="noopener">${u}</a>`);let media='',tLink=null,ytId=null;for(const u of urls){const m=u.match(/(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);if(m){ytId=m[1];break;}else if(!tLink)tLink=u;}if(ytId)media=`<iframe class="post-yt" src="https://www.youtube.com/embed/${ytId}" frameborder="0" allowfullscreen loading="lazy"></iframe>`;else if(tLink)media=`<div class="lp-w" id="lp-${rowIdx}"></div>`;return{html:h,media,targetLink:tLink};}
-async function fetchLP(url,id){try{const r=await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`);const d=await r.json();if(!d.contents)return;const doc=new DOMParser().parseFromString(d.contents,'text/html');const gm=(p,n)=>{let el=p?doc.querySelector(`meta[property="${p}"]`):null;if(!el&&n)el=doc.querySelector(`meta[name="${n}"]`);return el?el.getAttribute('content'):'';};const title=gm('og:title','title')||doc.title||url,desc=gm('og:description','description')||'';let img=gm('og:image','');if(img&&img.startsWith('/')){const uo=new URL(url);img=uo.origin+img;}const host=new URL(url).hostname,c=D(id);if(c&&title){c.innerHTML=`<a href="${url}" target="_blank" class="lp-card" rel="noopener">${img?`<img src="${img}" class="lp-img" onerror="this.style.display='none'" loading="lazy">`:''}
-<div class="lp-info"><div class="lp-title">${esc(title)}</div>${desc?`<div class="lp-desc">${esc(desc)}</div>`:''}
-<div class="lp-domain"><i class="fas fa-link"></i>${host}</div></div></a>`;c.style.display='block';}}catch{}}
+function processContent(text,rowIdx){
+  if(!text)return{html:'',media:'',targetLink:null};
+  let h=esc(text.trim());
+  const urlRx=/(https?:\/\/[^\s<]+)/g;const urls=(text.match(urlRx)||[]);
+  h=h.replace(urlRx,u=>`<a href="${u}" target="_blank" class="post-link" rel="noopener">${u}</a>`);
+  // แปลง Hashtag ให้คลิกได้
+  h=h.replace(/#([\wก-๙]+)/g, `<span style="color:var(--accent);cursor:pointer" onclick="searchTag('#$1')">#$1</span>`);
+  let media='',tLink=null,ytId=null;
+  for(const u of urls){
+      const m=u.match(/(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+      if(m){ytId=m[1];break;}else if(!tLink)tLink=u;
+  }
+  if(ytId)media=`<iframe class="post-yt" src="https://www.youtube.com/embed/${ytId}" frameborder="0" allowfullscreen loading="lazy"></iframe>`;
+  else if(tLink)media=`<div class="lp-w" id="lp-${rowIdx}"></div>`;
+  return{html:h,media,targetLink:tLink};
+}
 
-// Render
-function renderFeed(){const sk=D('sk-posts');if(sk)sk.remove();const feed=D('feed');const aName=esc(S.profile.name||'Koo Mean');const avSrc=esc(S.profile.imageUrl||'');const init=(S.profile.name||'KM').substring(0,2).toUpperCase();if(!S.posts.length){feed.innerHTML='<div class="sec-label">Timeline</div><div class="status"><div class="status-ico">💬</div>ยังไม่มีโพสต์</div>';return;}let html='<div class="sec-label">Timeline</div>';const lpQ=[];S.posts.forEach((p,i)=>{const likes=Array.isArray(p.likes)?p.likes:[];const cmts=Array.isArray(p.comments)?p.comments:[];const liked=S.user&&likes.includes(S.user.email);const{html:ptxt,media,targetLink}=processContent(p.content,p.rowIdx);if(targetLink)lpQ.push({url:targetLink,id:`lp-${p.rowIdx}`});const ts=p.editedTime?`แก้ไข ${fmt(p.editedTime)}`:fmt(p.timestamp);let menu='';if(S.user?.role==='admin'){menu=`<div class="post-menu-w"><button class="menu-btn" onclick="toggleDrop('dp-${p.rowIdx}')"><i class="fas fa-ellipsis"></i></button><div class="drop-menu" id="dp-${p.rowIdx}"><button class="drop-item" onclick="openEditPost(${p.rowIdx})"><i class="fas fa-pen"></i>แก้ไขโพสต์</button><button class="drop-item del" onclick="deletePost(${p.rowIdx})"><i class="fas fa-trash-alt"></i>ลบโพสต์</button></div></div>`;}let chtml='';cmts.forEach(c=>{const cM=(S.user?.role==='admin'||S.user?.email===c.email)?`<div class="cmt-mw"><button class="menu-btn" style="width:24px;height:24px;font-size:.72rem" onclick="toggleDrop('dc-${p.rowIdx}-${c.time}')"><i class="fas fa-ellipsis"></i></button><div class="drop-menu" id="dc-${p.rowIdx}-${c.time}"><button class="drop-item" onclick="openEditCmt(${p.rowIdx},${c.time})"><i class="fas fa-pen"></i>แก้ไข</button><button class="drop-item del" onclick="deleteCmt(${p.rowIdx},${c.time})"><i class="fas fa-trash-alt"></i>ลบ</button></div></div>`:'';const ct=c.editedTime?`แก้ไข ${fmt(c.editedTime)}`:fmt(c.time);chtml+=`<div class="cmt"><img class="cmt-av" src="${esc(c.pic||'')}" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(c.name||'U')}&background=161d2e&color=7988a3'" alt=""><div class="cmt-body"><div class="cmt-meta"><span class="cmt-name">${esc(c.name)}</span><span class="cmt-time">· ${ct}</span>${cM}</div><div class="cmt-txt">${esc(c.text)}</div></div></div>`;});html+=`<article class="post" id="post-${p.rowIdx}" style="animation-delay:${i*.04}s"><div class="post-av-w"><div class="post-av-fb">${init}</div><img class="post-av vis" src="${avSrc}" onerror="this.style.display='none'" alt="" loading="lazy"></div><div class="post-body"><div class="post-hdr"><span class="post-author">${aName}</span><div class="verified" style="width:14px;height:14px;font-size:.42rem"><i class="fas fa-check"></i></div><span class="post-time">· ${ts}</span>${menu}</div><div class="post-txt">${ptxt}</div>${media}${p.mediaUrl?`<img src="${esc(p.mediaUrl)}" class="post-media" onerror="this.style.display='none'" loading="lazy">`:''}
-<div class="post-acts"><button class="act${liked?' liked':''}" onclick="toggleLike(${p.rowIdx})"><i class="${liked?'fas':'far'} fa-heart"></i>${likes.length||''}</button><button class="act" onclick="toggleCmts(${p.rowIdx})"><i class="far fa-comment"></i>${cmts.length||''}</button></div>
-<div class="cmts" id="cmts-${p.rowIdx}">${chtml}<div class="cmt-inp-row"><input class="cmt-inp" id="ci-${p.rowIdx}" placeholder="${S.user?'แสดงความคิดเห็น...':'Sign in เพื่อคอมเมนต์'}" ${!S.user?'disabled':''}><button class="cmt-send" onclick="submitCmt(${p.rowIdx})"><i class="fas fa-paper-plane"></i></button></div></div></div></article>`;});feed.innerHTML=html;lpQ.forEach(q=>fetchLP(q.url,q.id));}
+async function fetchLP(url,id){try{const r=await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`);const d=await r.json();if(!d.contents)return;const doc=new DOMParser().parseFromString(d.contents,'text/html');const gm=(p,n)=>{let el=p?doc.querySelector(`meta[property="${p}"]`):null;if(!el&&n)el=doc.querySelector(`meta[name="${n}"]`);return el?el.getAttribute('content'):'';};const title=gm('og:title','title')||doc.title||url,desc=gm('og:description','description')||'';let img=gm('og:image','');if(img&&img.startsWith('/')){const uo=new URL(url);img=uo.origin+img;}const host=new URL(url).hostname,c=D(id);if(c&&title){c.innerHTML=`<a href="${url}" target="_blank" class="lp-card" rel="noopener">${img?`<img src="${img}" class="lp-img" onerror="this.style.display='none'" loading="lazy">`:''}<div class="lp-info"><div class="lp-title">${esc(title)}</div>${desc?`<div class="lp-desc">${esc(desc)}</div>`:''}<div class="lp-domain"><i class="fas fa-link"></i>${host}</div></div></a>`;c.style.display='block';}}catch{}}
 
-// Interactions
+function sharePost(ri){
+  const url=window.location.href.split('?')[0]+'?post='+ri;
+  navigator.clipboard.writeText(url).then(()=>toast('คัดลอกลิงก์แชร์แล้ว','s','fas fa-link')).catch(()=>toast('คัดลอกไม่สำเร็จ','e'));
+}
+
+function renderFeed(){
+  const sk=D('sk-posts');if(sk)sk.remove();
+  const feed=D('feed');const aName=esc(S.profile.name||'Koo Mean');const avSrc=esc(S.profile.imageUrl||'');const init=(S.profile.name||'KM').substring(0,2).toUpperCase();
+  
+  // อัปเดต Hashtag Trends
+  const tagsHtml=renderHashtagsUI();
+  if(tagsHtml&&D('rw-trends')){D('rw-trends').style.display='block';D('trend-desktop').innerHTML=tagsHtml;}
+  else if(D('rw-trends')){D('rw-trends').style.display='none';}
+
+  if(!S.posts.length){feed.innerHTML='<div class="sec-label">Timeline</div><div class="status"><div class="status-ico">💬</div>ยังไม่มีโพสต์</div>';return;}
+  
+  let html='<div class="sec-label">Timeline</div>';const lpQ=[];
+  S.posts.forEach((p,i)=>{
+    const likes=Array.isArray(p.likes)?p.likes:[];const cmts=Array.isArray(p.comments)?p.comments:[];const liked=S.user&&likes.includes(S.user.email);
+    const{html:ptxt,media,targetLink}=processContent(p.content,p.rowIdx);if(targetLink)lpQ.push({url:targetLink,id:`lp-${p.rowIdx}`});
+    const ts=p.editedTime?`แก้ไข ${fmt(p.editedTime)}`:fmt(p.timestamp);
+    
+    let menu='';
+    // ให้สิทธิ์ Admin แก้ได้หมด และ Blog แก้โพสต์ตัวเองได้
+    if(S.user?.role==='admin'||(S.user?.role==='blog'&&S.user?.email===p.email)){
+      menu=`<div class="post-menu-w"><button class="menu-btn" onclick="toggleDrop('dp-${p.rowIdx}')"><i class="fas fa-ellipsis"></i></button><div class="drop-menu" id="dp-${p.rowIdx}"><button class="drop-item" onclick="openEditPost(${p.rowIdx})"><i class="fas fa-pen"></i>แก้ไขโพสต์</button><button class="drop-item del" onclick="deletePost(${p.rowIdx})"><i class="fas fa-trash-alt"></i>ลบโพสต์</button></div></div>`;
+    }
+    
+    let chtml='';
+    cmts.forEach(c=>{
+      const cM=(S.user?.role==='admin'||S.user?.email===c.email)?`<div class="cmt-mw"><button class="menu-btn" style="width:24px;height:24px;font-size:.72rem" onclick="toggleDrop('dc-${p.rowIdx}-${c.time}')"><i class="fas fa-ellipsis"></i></button><div class="drop-menu" id="dc-${p.rowIdx}-${c.time}"><button class="drop-item" onclick="openEditCmt(${p.rowIdx},${c.time})"><i class="fas fa-pen"></i>แก้ไข</button><button class="drop-item del" onclick="deleteCmt(${p.rowIdx},${c.time})"><i class="fas fa-trash-alt"></i>ลบ</button></div></div>`:'';
+      const ct=c.editedTime?`แก้ไข ${fmt(c.editedTime)}`:fmt(c.time);
+      chtml+=`<div class="cmt"><img class="cmt-av" src="${esc(c.pic||'')}" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(c.name||'U')}&background=161d2e&color=7988a3'" alt=""><div class="cmt-body"><div class="cmt-meta"><span class="cmt-name">${esc(c.name)}</span><span class="cmt-time">· ${ct}</span>${cM}</div><div class="cmt-txt">${esc(c.text)}</div></div></div>`;
+    });
+    
+    html+=`<article class="post" id="post-${p.rowIdx}" style="animation-delay:${i*.04}s"><div class="post-av-w"><div class="post-av-fb">${init}</div><img class="post-av vis" src="${avSrc}" onerror="this.style.display='none'" alt="" loading="lazy"></div><div class="post-body"><div class="post-hdr"><span class="post-author">${aName}</span><div class="verified" style="width:14px;height:14px;font-size:.42rem"><i class="fas fa-check"></i></div><span class="post-time">· ${ts}</span>${menu}</div><div class="post-txt">${ptxt}</div>${media}${p.mediaUrl?`<img src="${esc(p.mediaUrl)}" class="post-media" onerror="this.style.display='none'" loading="lazy">`:''}
+<div class="post-acts">
+  <button class="act${liked?' liked':''}" onclick="toggleLike(${p.rowIdx})"><i class="${liked?'fas':'far'} fa-heart"></i>${likes.length||''}</button>
+  <button class="act" onclick="toggleCmts(${p.rowIdx})"><i class="far fa-comment"></i>${cmts.length||''}</button>
+  <button class="act" onclick="sharePost(${p.rowIdx})" title="คัดลอกลิงก์โพสต์"><i class="fas fa-share"></i></button>
+</div>
+<div class="cmts" id="cmts-${p.rowIdx}">${chtml}<div class="cmt-inp-row"><input class="cmt-inp" id="ci-${p.rowIdx}" placeholder="${S.user?'แสดงความคิดเห็น...':'Sign in เพื่อคอมเมนต์'}" ${!S.user?'disabled':''}><button class="cmt-send" onclick="submitCmt(${p.rowIdx})"><i class="fas fa-paper-plane"></i></button></div></div></div></article>`;
+  });
+  feed.innerHTML=html;lpQ.forEach(q=>fetchLP(q.url,q.id));
+}
+
 function toggleCmts(ri){const el=D('cmts-'+ri);const o=el.style.display==='block';el.style.display=o?'none':'block';if(!o)D('ci-'+ri)?.focus();}
 async function toggleLike(ri){if(!S.user){openModal('login-modal');return;}const p=S.posts.find(p=>p.rowIdx===ri);if(!p)return;if(!Array.isArray(p.likes))p.likes=[];const idx=p.likes.indexOf(S.user.email);if(idx>-1)p.likes.splice(idx,1);else p.likes.push(S.user.email);renderFeed();try{await fetch(API_URL,{method:'POST',body:new URLSearchParams({action:'toggleLike',email:S.user.email,rowIdx:ri}),headers:{'Content-Type':'application/x-www-form-urlencoded'}});}catch{}}
 async function submitCmt(ri){if(!S.user){openModal('login-modal');return;}const inp=D('ci-'+ri);const text=inp.value.trim();if(!text)return;inp.disabled=true;toast('กำลังส่ง...');try{const r=await fetch(API_URL,{method:'POST',body:new URLSearchParams({action:'addComment',email:S.user.email,name:S.user.name||'User',pic:S.user.pic||'',text,rowIdx:ri}),headers:{'Content-Type':'application/x-www-form-urlencoded'}});const d=await r.json();if(d.success){inp.value='';await loadData(S.user.email,S.user.name,S.user.pic);D('cmts-'+ri).style.display='block';}else toast('เกิดข้อผิดพลาด','e');}catch{toast('เชื่อมต่อล้มเหลว','e');}finally{const i=D('ci-'+ri);if(i)i.disabled=false;}}
 
-// Creator
 D('post-ta').addEventListener('input',function(){this.style.height='auto';this.style.height=this.scrollHeight+'px';const l=this.value.length,cc=D('char-c');cc.textContent=`${l} / 500`;cc.className='char-c'+(l>=450?' danger':l>=350?' warn':'');});
 D('file-in').addEventListener('change',function(){const f=this.files[0];if(!f)return;S.selFile=f;const r=new FileReader();r.onload=e=>{D('img-prev').src=e.target.result;D('img-prev-wrap').style.display='block';};r.readAsDataURL(f);});
 function removeImg(){S.selFile=null;D('file-in').value='';D('img-prev-wrap').style.display='none';}
-async function submitPost(){const content=D('post-ta').value.trim();if(!content&&!S.selFile)return;if(!S.user||S.user.role!=='admin')return;const btn=D('post-btn');btn.textContent='กำลังโพสต์...';btn.disabled=true;D('post-ta').disabled=true;let mediaUrl='';try{if(S.selFile){btn.textContent='อัปโหลดรูป...';const fd=new FormData();fd.append('image',S.selFile);const ir=await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_KEY}`,{method:'POST',body:fd});const id=await ir.json();if(id.success)mediaUrl=id.data.url;else throw new Error('ImgBB fail');}btn.textContent='กำลังบันทึก...';const r=await apiFetch(API_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({action:'addPost',email:S.user.email,content,mediaUrl})});const d=await r.json();if(d.success){D('post-ta').value='';D('post-ta').style.height='auto';D('char-c').textContent='0 / 500';removeImg();toast('โพสต์สำเร็จ!','s','fas fa-check-circle');await loadData(S.user.email,S.user.name,S.user.pic);}else throw new Error('GAS fail');}catch(e){toast('เกิดข้อผิดพลาด: '+e.message,'e');}finally{btn.textContent='โพสต์';btn.disabled=false;D('post-ta').disabled=false;}}
+async function submitPost(){const content=D('post-ta').value.trim();if(!content&&!S.selFile)return;if(!S.user||(S.user.role!=='admin'&&S.user.role!=='blog'))return;const btn=D('post-btn');btn.textContent='กำลังโพสต์...';btn.disabled=true;D('post-ta').disabled=true;let mediaUrl='';try{if(S.selFile){btn.textContent='อัปโหลดรูป...';const fd=new FormData();fd.append('image',S.selFile);const ir=await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_KEY}`,{method:'POST',body:fd});const id=await ir.json();if(id.success)mediaUrl=id.data.url;else throw new Error('ImgBB fail');}btn.textContent='กำลังบันทึก...';const r=await apiFetch(API_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({action:'addPost',email:S.user.email,content,mediaUrl})});const d=await r.json();if(d.success){D('post-ta').value='';D('post-ta').style.height='auto';D('char-c').textContent='0 / 500';removeImg();toast('โพสต์สำเร็จ!','s','fas fa-check-circle');await loadData(S.user.email,S.user.name,S.user.pic);}else throw new Error('GAS fail');}catch(e){toast('เกิดข้อผิดพลาด: '+e.message,'e');}finally{btn.textContent='โพสต์';btn.disabled=false;D('post-ta').disabled=false;}}
 
-// Edit/Delete
 function openEditPost(ri){const p=S.posts.find(p=>p.rowIdx===ri);if(!p)return;editTarget={type:'post',rowIdx:ri};D('ep-ta').value=p.content;openModal('ep-modal');}
 async function saveEditPost(){const c=D('ep-ta').value.trim();if(!c)return;const btn=D('ep-save');btn.disabled=true;btn.textContent='...';try{await apiFetch(API_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({action:'editPost',email:S.user.email,rowIdx:editTarget.rowIdx,content:c,mediaUrl:''})});closeModal('ep-modal');toast('แก้ไขสำเร็จ','s');await loadData(S.user.email,S.user.name,S.user.pic);}catch{toast('เกิดข้อผิดพลาด','e');}finally{btn.disabled=false;btn.textContent='บันทึก';}}
 async function deletePost(ri){if(!confirm('ลบโพสต์นี้หรือไม่?'))return;try{await apiFetch(API_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({action:'deletePost',email:S.user.email,rowIdx:ri})});toast('ลบสำเร็จ','s');await loadData(S.user.email,S.user.name,S.user.pic);}catch{toast('เกิดข้อผิดพลาด','e');}}
@@ -703,15 +799,11 @@ function openEditCmt(ri,cTime){const p=S.posts.find(p=>p.rowIdx===ri);if(!p)retu
 async function saveEditCmt(){const t=D('ec-ta').value.trim();if(!t)return;const btn=D('ec-save');btn.disabled=true;btn.textContent='...';try{await apiFetch(API_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({action:'editComment',email:S.user.email,rowIdx:editTarget.rowIdx,commentTime:editTarget.commentTime,text:t})});closeModal('ec-modal');toast('แก้ไขสำเร็จ','s');await loadData(S.user.email,S.user.name,S.user.pic);D('cmts-'+editTarget.rowIdx).style.display='block';}catch{toast('เกิดข้อผิดพลาด','e');}finally{btn.disabled=false;btn.textContent='บันทึก';}}
 async function deleteCmt(ri,cTime){if(!confirm('ลบคอมเมนต์นี้?'))return;try{await apiFetch(API_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({action:'deleteComment',email:S.user.email,rowIdx:ri,commentTime:cTime})});toast('ลบสำเร็จ','s');await loadData(S.user.email,S.user.name,S.user.pic);D('cmts-'+ri).style.display='block';}catch{toast('เกิดข้อผิดพลาด','e');}}
 
-// Keyboard shortcuts
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeMobSearch();closeSettings();document.querySelectorAll('.overlay.open').forEach(o=>o.classList.remove('open'));}if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();isMob()?openMobSearch():D('rw-srch').focus();}});
-
-// Responsive: show logo on mobile header
 function checkBP(){const mob=isMob();const ml=D('mob-logo');if(ml)ml.style.display=mob?'flex':'none';}
 window.addEventListener('resize',checkBP);checkBP();
 
-// Init
-(function(){const saved=localStorage.getItem(SESS_KEY);if(saved){try{const u=JSON.parse(saved);S.user=u;D('auth-btn').textContent='Sign Out';D('auth-btn').className='auth-pill out';D('set-ln').textContent=u.name;D('set-ld').textContent=u.email;D('so-email').textContent=u.email;D('so-grp').style.display='';if(u.role==='admin')D('admin-grp').style.display='';loadData(u.email,u.name,u.pic);}catch{localStorage.removeItem(SESS_KEY);loadData();}}else{loadData();}})();
+(function(){const saved=localStorage.getItem(SESS_KEY);if(saved){try{const u=JSON.parse(saved);S.user=u;D('auth-btn').textContent='Sign Out';D('auth-btn').className='auth-pill out';D('set-ln').textContent=u.name;D('set-ld').textContent=u.email;D('so-email').textContent=u.email;D('so-grp').style.display='';if(u.role==='admin'||u.role==='blog'){D('creator').style.display='';if(u.role==='admin')D('admin-grp').style.display='';}loadData(u.email,u.name,u.pic);}catch{localStorage.removeItem(SESS_KEY);loadData();}}else{loadData();}})();
 </script>
 </body>
 </html>
