@@ -420,7 +420,6 @@ textarea.si{min-height:85px;resize:none;line-height:1.5}
         </div>
       </section>
 
-      <!-- Desktop creator -->
       <section class="creator" id="creator">
         <div class="cr-row">
           <div class="cr-av-ring"><img class="cr-av" id="cr-av" alt=""></div>
@@ -511,7 +510,6 @@ textarea.si{min-height:85px;resize:none;line-height:1.5}
 
 </div>
 
-<!-- Mobile bottom nav (with FAB post button) -->
 <nav class="mob-nav" id="mob-nav">
   <button class="mnav-btn active" id="mnav-home" onclick="navTo('home')"><i class="fas fa-house"></i><span>หน้าหลัก</span></button>
   <button class="mnav-btn" id="mnav-search" onclick="openMobSearch()"><i class="fas fa-magnifying-glass"></i><span>ค้นหา</span></button>
@@ -519,7 +517,6 @@ textarea.si{min-height:85px;resize:none;line-height:1.5}
   <button class="mnav-btn" id="mnav-settings" onclick="openSettings()"><i class="fas fa-gear"></i><span>ตั้งค่า</span></button>
 </nav>
 
-<!-- Mobile search overlay -->
 <div class="mob-srch-overlay" id="mob-srch">
   <div class="mob-srch-hdr">
     <div class="mob-sbox"><i class="fas fa-magnifying-glass"></i><input class="mob-sinput" id="mob-srch-in" placeholder="ค้นหาโพสต์..." autocomplete="off"></div>
@@ -528,7 +525,6 @@ textarea.si{min-height:85px;resize:none;line-height:1.5}
   <div class="mob-srch-body" id="mob-srch-body"><div class="srch-empty"><i class="fas fa-magnifying-glass-chart"></i><p>พิมพ์เพื่อค้นหาโพสต์</p></div></div>
 </div>
 
-<!-- Mobile compose modal -->
 <div class="compose-modal" id="compose-modal">
   <div class="compose-hdr">
     <div class="compose-ttl">สร้างโพสต์ใหม่</div>
@@ -572,7 +568,6 @@ textarea.si{min-height:85px;resize:none;line-height:1.5}
   </div>
 </div>
 
-<!-- Settings drawer -->
 <div class="set-panel" id="set-panel">
   <div class="set-bd" onclick="closeSettings()"></div>
   <div class="set-drawer">
@@ -629,7 +624,6 @@ textarea.si{min-height:85px;resize:none;line-height:1.5}
       </div>
     </div>
 
-    <!-- Profile edit sub-drawer -->
     <div class="set-sub" id="sub-profile-edit">
       <div class="set-sub-hdr">
         <button class="back-btn" onclick="closeSub()"><i class="fas fa-chevron-left"></i></button>
@@ -646,7 +640,6 @@ textarea.si{min-height:85px;resize:none;line-height:1.5}
       </div>
     </div>
 
-    <!-- Account detail sub-drawer -->
     <div class="set-sub" id="sub-account">
       <div class="set-sub-hdr">
         <button class="back-btn" onclick="closeSub()"><i class="fas fa-chevron-left"></i></button>
@@ -661,7 +654,9 @@ textarea.si{min-height:85px;resize:none;line-height:1.5}
             <div class="acc-role" id="acc-role">User</div>
           </div>
         </div>
-        <div class="sf"><label class="sl">ชื่อที่แสดง</label><input class="si" id="acc-dn" type="text" readonly></div>
+        <div class="sf"><label class="sl">ชื่อที่แสดง</label><input class="si" id="acc-dn" type="text"></div>
+        <button class="save-btn" id="btn-save-name" onclick="saveAccountName()" style="margin-bottom:15px;">บันทึกชื่อ</button>
+        
         <div class="sf"><label class="sl">อีเมล</label><input class="si" id="acc-em" type="email" readonly></div>
         <div class="sf"><label class="sl">สิทธิ์ผู้ใช้</label><input class="si" id="acc-rl" type="text" readonly></div>
         <div class="sf"><label class="sl">สถานะ</label><input class="si" id="acc-st" type="text" readonly value="Active"></div>
@@ -743,6 +738,7 @@ textarea.si{min-height:85px;resize:none;line-height:1.5}
    - Mobile compose modal (FAB button)
    - Separate post fields: text, link, image, hashtag
    - Account settings button works
+   - Author profile dynamically updated
    ========================================================= */
 
 const API_URL='https://script.google.com/macros/s/AKfycbwBYhFTW68AfN4cYUJYS1DG7vw-Ocykx5kslSUQIeJJlfu0oeBIdi9xAhVmorVWQ4q7rg/exec';
@@ -787,7 +783,6 @@ function toggleDrop(id){document.querySelectorAll('.drop-menu.open').forEach(m=>
 function getHashtags(){
   const counts={};
   S.posts.forEach(p=>{
-    // combine content + dedicated hashtags field for trending
     const content=(p.content||'')+' '+((p.hashtags||[]).map(h=>'#'+h).join(' '));
     const m=content.match(/#[\wก-๙]+/g);
     if(m)m.forEach(t=>counts[t]=(counts[t]||0)+1);
@@ -830,14 +825,12 @@ function filterByTag(tag){
   closeMobSearch();closeSettings();
   renderTagFilterBar();
   renderFeed();
-  // Update URL
   try{
     const url=new URL(window.location.href);
     url.searchParams.set('tag',norm);
     url.searchParams.delete('post');
     window.history.replaceState({},'',url.toString());
   }catch{}
-  // Scroll to top
   const fm=D('feed-main');if(fm)fm.scrollTo({top:0,behavior:'smooth'});
 }
 
@@ -864,13 +857,12 @@ function shareTagLink(){
       try{document.execCommand('copy');res();}catch(e){rej(e);}finally{document.body.removeChild(ta);}
     });
   };
-  // ถ้า browser รองรับ Web Share API (มือถือส่วนใหญ่) ให้ใช้เลย
   if(navigator.share&&isMob()){
     navigator.share({
       title:'#'+S.activeTag+' · '+(S.profile.webTitle||'Koo Mean Space'),
       text:'ดูโพสต์ในหมวด #'+S.activeTag,
       url:url
-    }).catch(()=>{/* user cancelled or error — fallback to copy */
+    }).catch(()=>{
       copy(url).then(()=>toast('คัดลอกลิงก์แชร์แล้ว','s','fas fa-link')).catch(()=>toast('แชร์ไม่สำเร็จ','e'));
     });
   }else{
@@ -899,11 +891,9 @@ function renderTagFilterBar(){
 
 function postMatchesTag(p,normTag){
   if(!normTag)return true;
-  // Check dedicated hashtags field
   if(Array.isArray(p.hashtags)){
     for(const t of p.hashtags){if(normalizeTag(t)===normTag)return true;}
   }
-  // Check inline hashtags in content
   const content=(p.content||'');
   const m=content.match(/#[\wก-๙]+/g);
   if(m){for(const t of m){if(normalizeTag(t)===normTag)return true;}}
@@ -920,15 +910,18 @@ D('rw-srch').addEventListener('input',function(){
       const hay=((p.content||'')+' '+((p.hashtags||[]).join(' '))+' '+(p.link||'')).toLowerCase();
       return hay.includes(lq);
     });
-    const avSrc=esc(S.profile.imageUrl||''),name=esc(S.profile.name||'Koo Mean');
-    const hi=t=>esc(t).replace(new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi'),m=>`<mark>${esc(m)}</mark>`);
+    
     if(!hits.length){res.innerHTML='<div style="padding:12px 16px;font-size:.79rem;color:var(--txt3)">ไม่พบโพสต์</div>';res.style.display='block';return;}
     let h='';hits.slice(0,6).forEach(p=>{
       const sn=(p.content||'').substring(0,80);
+      const hi=t=>esc(t).replace(new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi'),m=>`<mark>${esc(m)}</mark>`);
+      const pName = esc(p.authorName || S.profile.name || 'Unknown');
+      const pAvSrc = esc(p.authorPic || S.profile.imageUrl || '');
+
       h+=`<div class="rw-hit" onclick="scrollToPost(${p.rowIdx})">
-        <img class="rw-hit-av" src="${avSrc}" onerror="this.style.display='none'" alt="">
+        <img class="rw-hit-av" src="${pAvSrc}" onerror="this.style.display='none'" alt="">
         <div class="rw-hit-body">
-          <div class="rw-hit-name">${name}</div>
+          <div class="rw-hit-name">${pName}</div>
           <div class="rw-hit-txt">${hi(sn)}${p.content&&p.content.length>80?'...':''}</div>
           <div class="rw-hit-time">${fmt(p.timestamp)}</div>
         </div></div>`;
@@ -949,16 +942,18 @@ D('mob-srch-in').addEventListener('input',function(){
       const hay=((p.content||'')+' '+((p.hashtags||[]).join(' '))+' '+(p.link||'')).toLowerCase();
       return hay.includes(lq);
     });
-    const avSrc=esc(S.profile.imageUrl||''),name=esc(S.profile.name||'Koo Mean');
-    const hi=t=>esc(t).replace(new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi'),m=>`<mark>${esc(m)}</mark>`);
     if(!hits.length){D('mob-srch-body').innerHTML='<div class="srch-empty"><i class="fas fa-face-frown"></i><p>ไม่พบโพสต์ที่ตรงกัน</p></div>';return;}
     let h=`<div class="srch-tag">พบ ${hits.length} โพสต์</div>`;
     hits.forEach(p=>{
       const sn=(p.content||'').substring(0,100);
+      const hi=t=>esc(t).replace(new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi'),m=>`<mark>${esc(m)}</mark>`);
+      const pName = esc(p.authorName || S.profile.name || 'Unknown');
+      const pAvSrc = esc(p.authorPic || S.profile.imageUrl || '');
+
       h+=`<div class="rw-hit" style="padding:12px 16px" onclick="closeMobSearch();scrollToPost(${p.rowIdx})">
-        <img class="rw-hit-av" src="${avSrc}" onerror="this.style.display='none'" alt="">
+        <img class="rw-hit-av" src="${pAvSrc}" onerror="this.style.display='none'" alt="">
         <div class="rw-hit-body">
-          <div class="rw-hit-name" style="font-size:.84rem">${name}</div>
+          <div class="rw-hit-name" style="font-size:.84rem">${pName}</div>
           <div class="rw-hit-txt">${hi(sn)}${p.content&&p.content.length>100?'...':''}</div>
           <div class="rw-hit-time">${fmt(p.timestamp)}</div>
         </div></div>`;
@@ -1019,6 +1014,40 @@ async function saveProfile(){
   finally{btn.disabled=false;btn.textContent='บันทึกการเปลี่ยนแปลง';}
 }
 
+async function saveAccountName() {
+  const newName = D('acc-dn').value.trim();
+  if (!newName) return toast('กรุณากรอกชื่อที่ต้องการแสดง', 'e');
+  
+  const btn = D('btn-save-name');
+  btn.disabled = true; 
+  btn.textContent = 'กำลังบันทึก...';
+  
+  try {
+    const r = await apiFetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({ action: 'updateUserName', email: S.user.email, newName: newName })
+    });
+    const d = await r.json();
+    
+    if (d.success) {
+      toast('เปลี่ยนชื่อสำเร็จ', 's', 'fas fa-check');
+      S.user.name = newName;
+      try { localStorage.setItem(SESS_KEY, JSON.stringify(S.user)); } catch {}
+      
+      applyUserUI();
+      await loadData(S.user.email, S.user.name, S.user.pic);
+    } else {
+      toast(d.message || 'เกิดข้อผิดพลาด', 'e');
+    }
+  } catch(e) {
+    toast('เชื่อมต่อล้มเหลว', 'e');
+  } finally {
+    btn.disabled = false; 
+    btn.textContent = 'บันทึกชื่อ';
+  }
+}
+
 let isDark=true;
 function toggleDark(){
   isDark=!isDark;D('dark-tog').classList.toggle('on',isDark);
@@ -1042,7 +1071,6 @@ function navTo(n){
     closeMobSearch();closeSettings();closeCompose();
     setMN('home');setSBN('home');
     if(S.activeTag)clearTagFilter();
-    // scroll to top
     const fm=D('feed-main');if(fm)fm.scrollTo({top:0,behavior:'smooth'});
   }
 }
@@ -1132,7 +1160,6 @@ async function loadData(email='',name='',pic='',note=null){
     S.posts=Array.isArray(data.posts)?data.posts:[];
     if(S.posts.length){D('stat-posts').textContent=S.posts.length;D('prof-stats').style.display='flex';}
 
-    // ใช้ tag จาก URL ถ้ามี (ทำก่อน renderFeed)
     try{
       const params=new URLSearchParams(window.location.search);
       const tagParam=params.get('tag');
@@ -1207,7 +1234,6 @@ function processContent(text,rowIdx,postLink){
   if(postLink&&!urls.includes(postLink))urls.unshift(postLink);
 
   h=h.replace(urlRx,u=>`<a href="${esc(u)}" target="_blank" class="post-link" rel="noopener">${esc(u)}</a>`);
-  // Clickable hashtags inside text
   h=h.replace(/#([\wก-๙]+)/g,`<span class="post-link" style="cursor:pointer" onclick="filterByTag('$1')">#$1</span>`);
 
   let media='',tLink=null,ytId=null;
@@ -1259,15 +1285,11 @@ function sharePost(ri){
 function renderFeed(){
   const sk=D('sk-posts');if(sk)sk.remove();
   const feed=D('feed');
-  const aName=esc(S.profile.name||'Koo Mean');
-  const avSrc=esc(S.profile.imageUrl||'');
-  const init=(S.profile.name||'KM').substring(0,2).toUpperCase();
 
   const tagsHtml=renderHashtagsUI();
   if(tagsHtml&&D('rw-trends')){D('rw-trends').style.display='block';D('trend-desktop').innerHTML=tagsHtml;}
   else if(D('rw-trends')){D('rw-trends').style.display='none';}
 
-  // Apply active tag filter
   const postsToShow=S.activeTag
     ? S.posts.filter(p=>postMatchesTag(p,S.activeTag))
     : S.posts;
@@ -1283,18 +1305,24 @@ function renderFeed(){
   const label=S.activeTag?`#${esc(S.activeTag)} · ${postsToShow.length} โพสต์`:'Timeline';
   let html=`<div class="sec-label">${label}</div>`;
   const lpQ=[];
+  
   postsToShow.forEach((p,i)=>{
+    // --- ตั้งค่าโปรไฟล์ของเจ้าของโพสต์แต่ละคน ---
+    const pName = esc(p.authorName || S.profile.name || 'Unknown');
+    const pAvSrc = esc(p.authorPic || S.profile.imageUrl || '');
+    const pInit = pName.substring(0,2).toUpperCase();
+    const isAdminPost = p.authorRole && p.authorRole.includes('admin');
+    const verifiedBadge = isAdminPost ? `<div class="verified" style="width:14px;height:14px;font-size:.42rem"><i class="fas fa-check"></i></div>` : '';
+
     const likes=Array.isArray(p.likes)?p.likes:[];
     const cmts=Array.isArray(p.comments)?p.comments:[];
     const hashtags=Array.isArray(p.hashtags)?p.hashtags:[];
     const liked=S.user&&likes.includes(S.user.email);
     const{html:ptxt,media}=processContent(p.content,p.rowIdx,p.link||null);
-    // Prepare link preview if link field exists and no YouTube
     if(p.link){
       const hasYT=/(?:youtube\.com|youtu\.be)/.test(p.link);
       if(!hasYT)lpQ.push({url:p.link,id:`lp-${p.rowIdx}`});
     }
-    // Also scan for link in content
     const urlsInText=((p.content||'').match(/(https?:\/\/[^\s<]+)/g)||[]);
     if(!p.link){
       for(const u of urlsInText){
@@ -1342,13 +1370,13 @@ function renderFeed(){
 
     html+=`<article class="post" id="post-${p.rowIdx}" style="animation-delay:${Math.min(i,8)*.04}s">
       <div class="post-av-w">
-        <div class="post-av-fb">${init}</div>
-        <img class="post-av vis" src="${avSrc}" onerror="this.style.display='none'" alt="" loading="lazy">
+        <div class="post-av-fb">${pInit}</div>
+        <img class="post-av vis" src="${pAvSrc}" onerror="this.style.display='none'" alt="" loading="lazy">
       </div>
       <div class="post-body">
         <div class="post-hdr">
-          <span class="post-author">${aName}</span>
-          <div class="verified" style="width:14px;height:14px;font-size:.42rem"><i class="fas fa-check"></i></div>
+          <span class="post-author">${pName}</span>
+          ${verifiedBadge}
           <span class="post-time">· ${ts}</span>${menu}
         </div>
         <div class="post-txt">${ptxt}</div>
@@ -1369,14 +1397,12 @@ function renderFeed(){
   });
   feed.innerHTML=html;
 
-  // Support Enter to send comment
   document.querySelectorAll('.cmt-inp').forEach(inp=>{
     inp.addEventListener('keydown',function(e){
       if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();const id=this.id.replace('ci-','');submitCmt(parseInt(id));}
     });
   });
 
-  // Deduplicate link-preview queue
   const seen=new Set();
   lpQ.forEach(q=>{
     const k=q.id+'|'+q.url;
@@ -1440,7 +1466,6 @@ function updateCharCount(isMobile){
   });
 });
 
-/* Field toggles */
 function toggleField(field,force=null,isMobile=null){
   if(isMobile===null)isMobile=isMob();
   const suffix=isMobile?'-mob':'';
@@ -1459,17 +1484,12 @@ function toggleField(field,force=null,isMobile=null){
   }
 }
 
-/* Image handling (separate for mobile/desktop) */
 D('file-in').addEventListener('change',function(){handleFilePick(this.files[0],false);});
 D('file-in-mob').addEventListener('change',function(){handleFilePick(this.files[0],true);});
 
-/* ============ Image Compression ============
-   Target: 4MB (imgbb max 5MB เผื่อ overhead)
-   กลยุทธ์: resize max 2048px → iterate quality 0.92→0.40 จนได้ขนาดพอดี
-   รักษาคุณภาพสูงสุดเท่าที่ไฟล์รองรับ — ไม่จำกัดขนาด input แต่เตือนถ้าใหญ่ผิดปกติ */
-const IMG_TARGET_BYTES = 4 * 1024 * 1024;   // 4 MB
-const IMG_WARN_BYTES = 30 * 1024 * 1024;    // เตือนถ้าเกิน 30 MB (browser อาจหน่วง)
-const IMG_MAX_DIMENSION = 2048;             // ยาวสุด 2048px
+const IMG_TARGET_BYTES = 4 * 1024 * 1024;
+const IMG_WARN_BYTES = 30 * 1024 * 1024;
+const IMG_MAX_DIMENSION = 2048;
 
 function loadImageFromFile(file){
   return new Promise((resolve,reject)=>{
@@ -1490,16 +1510,12 @@ function canvasToBlob(canvas,type,quality){
 }
 
 async function compressImage(file,targetBytes=IMG_TARGET_BYTES){
-  // GIF: ห้ามบีบ (จะเสีย animation) — แค่คืนเดิม
   if(file.type==='image/gif')return {blob:file,compressed:false};
-
-  // ถ้าเล็กพออยู่แล้ว — ไม่ต้องทำอะไร
   if(file.size<=targetBytes)return {blob:file,compressed:false};
 
   const img=await loadImageFromFile(file);
   let w=img.naturalWidth,h=img.naturalHeight;
 
-  // Resize ถ้าเกิน IMG_MAX_DIMENSION
   const maxDim=Math.max(w,h);
   if(maxDim>IMG_MAX_DIMENSION){
     const scale=IMG_MAX_DIMENSION/maxDim;
@@ -1509,45 +1525,36 @@ async function compressImage(file,targetBytes=IMG_TARGET_BYTES){
   const canvas=document.createElement('canvas');
   canvas.width=w;canvas.height=h;
   const ctx=canvas.getContext('2d');
-  // คุณภาพการ resize สูงสุด
   ctx.imageSmoothingEnabled=true;
   ctx.imageSmoothingQuality='high';
   ctx.drawImage(img,0,0,w,h);
 
-  // เลือก format: WebP ถ้ารองรับ (เล็กกว่า), ถ้าไม่ก็ JPEG, PNG ใช้เฉพาะเมื่อมี transparency
   let outType='image/jpeg';
-  // ทดสอบว่า browser export WebP ได้
   const testBlob=await canvasToBlob(canvas,'image/webp',0.9).catch(()=>null);
   if(testBlob&&testBlob.type==='image/webp')outType='image/webp';
 
-  // ถ้าต้นทางเป็น PNG ที่อาจมี transparency — ตรวจว่ามี alpha จริงไหม
   if(file.type==='image/png'){
-    // sample pixel บางตัวหา alpha < 255
     try{
       const sample=ctx.getImageData(0,0,Math.min(w,100),Math.min(h,100)).data;
       let hasAlpha=false;
       for(let i=3;i<sample.length;i+=4){if(sample[i]<255){hasAlpha=true;break;}}
       if(hasAlpha&&outType!=='image/webp'){
-        // รักษา transparency ด้วย PNG (ไม่สามารถ set quality ได้ แต่ resize ก็พอช่วย)
         outType='image/png';
       }
     }catch(_){}
   }
 
-  // Iterative quality search (PNG ไม่มี quality, ใช้แค่ resize)
   if(outType==='image/png'){
     const blob=await canvasToBlob(canvas,'image/png');
     return {blob,compressed:true,from:file.size,to:blob.size,dim:`${w}x${h}`,type:outType};
   }
 
-  // ลอง quality หลายระดับ เลือกตัวที่ใหญ่สุดที่ยังไม่เกิน target
   const qualities=[0.92,0.85,0.78,0.7,0.6,0.5,0.4];
   let best=null;
   for(const q of qualities){
     const blob=await canvasToBlob(canvas,outType,q);
     if(!blob)continue;
     if(blob.size<=targetBytes){best={blob,quality:q};break;}
-    // เก็บตัวล่าสุดไว้เผื่อไม่มีตัวไหนผ่าน
     best={blob,quality:q};
   }
 
@@ -1565,12 +1572,10 @@ async function handleFilePick(f,isMobile){
   if(!f)return;
   const inputEl=D(isMobile?'file-in-mob':'file-in');
 
-  // เช็คว่าเป็นรูปจริง
   if(!f.type.startsWith('image/')){
     toast('ต้องเป็นไฟล์รูปภาพเท่านั้น','e');
     inputEl.value='';return;
   }
-  // เตือนถ้าใหญ่ผิดปกติ (อาจหน่วงเครื่อง) — แต่ไม่บล็อก
   if(f.size>IMG_WARN_BYTES){
     if(!confirm(`ไฟล์ขนาด ${fmtBytes(f.size)} อาจใช้เวลาประมวลผลนาน ต้องการดำเนินการต่อหรือไม่?`)){
       inputEl.value='';return;
@@ -1586,7 +1591,6 @@ async function handleFilePick(f,isMobile){
       toast('กำลังบีบอัดรูปภาพ...','','fas fa-compress fa-spin');
       const result=await compressImage(f,IMG_TARGET_BYTES);
       if(result.compressed){
-        // สร้าง File object ใหม่ เพื่อให้ imgbb รับได้
         const ext=result.type==='image/webp'?'webp':(result.type==='image/png'?'png':'jpg');
         finalFile=new File([result.blob],(f.name.replace(/\.[^.]+$/,'')||'image')+'.'+ext,{type:result.type});
         const pct=Math.round((1-result.to/result.from)*100);
@@ -1594,7 +1598,6 @@ async function handleFilePick(f,isMobile){
       }
     }
 
-    // เก็บไฟล์และแสดง preview
     if(isMobile)S.selFileMob=finalFile;else S.selFile=finalFile;
     const r=new FileReader();
     r.onload=e=>{previewImg.src=e.target.result;previewWrap.style.display='block';};
@@ -1615,7 +1618,6 @@ function removeImg(isMobile=false){
   }
 }
 
-/* Mobile compose */
 function openCompose(){
   if(!canPost()){toast('คุณไม่มีสิทธิ์โพสต์','e');return;}
   D('compose-modal').classList.add('open');
@@ -1626,7 +1628,6 @@ function closeCompose(){
   D('compose-modal').classList.remove('open');
 }
 
-/* Parse hashtag input: "ข่าว #เทคโนโลยี foo" -> ["ข่าว","เทคโนโลยี","foo"] */
 function parseHashtags(raw){
   if(!raw)return[];
   return raw.split(/[\s,]+/)
@@ -1675,7 +1676,6 @@ async function submitPost(isMobile=false){
     const r=await apiFetch(API_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body});
     const d=await r.json();
     if(d.success){
-      // Reset both forms
       ['post-ta','post-ta-mob'].forEach(id=>{const e=D(id);if(e){e.value='';e.style.height='auto';}});
       ['link-in','link-in-mob','hashtag-in','hashtag-in-mob'].forEach(id=>{const e=D(id);if(e)e.value='';});
       ['field-link','field-link-mob','field-hashtag','field-hashtag-mob'].forEach(id=>{const e=D(id);if(e)e.classList.remove('visible');});
@@ -1694,17 +1694,14 @@ async function submitPost(isMobile=false){
   }
 }
 
-/* =========== Edit / Delete =========== */
 function openEditPost(ri){
   const p=S.posts.find(p=>p.rowIdx===ri);if(!p)return;
   editTarget={type:'post',rowIdx:ri,originalMediaUrl:p.mediaUrl||''};
 
-  // เติมค่าเดิม
   D('ep-ta').value=p.content||'';
   D('ep-link-in').value=p.link||'';
   D('ep-hashtag-in').value=(Array.isArray(p.hashtags)?p.hashtags:[]).join(' ');
 
-  // เปิด field ถ้ามีค่าเดิม
   const hasLink=!!(p.link);
   const hasTags=Array.isArray(p.hashtags)&&p.hashtags.length>0;
   D('ep-field-link').classList.toggle('visible',hasLink);
@@ -1712,7 +1709,6 @@ function openEditPost(ri){
   D('ep-field-hashtag').classList.toggle('visible',hasTags);
   D('ep-btn-hashtag').classList.toggle('active',hasTags);
 
-  // แสดง preview รูปเดิม (ถ้ามี)
   S.selFileEdit=null;
   D('ep-file-in').value='';
   if(p.mediaUrl){
@@ -1742,11 +1738,9 @@ function removeEditImg(){
   D('ep-file-in').value='';
   D('ep-img-prev').src='';
   D('ep-img-prev-wrap').style.display='none';
-  // Flag ว่า user ต้องการลบรูปเดิม
   editTarget.removeMedia=true;
 }
 
-// file picker สำหรับ edit modal
 D('ep-file-in').addEventListener('change',async function(){
   const f=this.files[0];if(!f)return;
   if(!f.type.startsWith('image/')){toast('ต้องเป็นไฟล์รูปภาพเท่านั้น','e');this.value='';return;}
@@ -1780,10 +1774,6 @@ async function saveEditPost(){
   const btn=D('ep-save');btn.disabled=true;btn.textContent='กำลังบันทึก...';
 
   try{
-    // ตัดสินใจเรื่อง mediaUrl:
-    // 1. ถ้า user เลือกไฟล์ใหม่ → upload ใหม่ ใช้ URL ใหม่
-    // 2. ถ้า user ลบรูป (removeMedia=true และไม่มี selFileEdit) → ส่ง '' ไปล้าง
-    // 3. ถ้าไม่แตะต้องอะไรเลย → ส่ง URL เดิมกลับไป (FIX บัครูปหาย)
     let mediaUrl=editTarget.originalMediaUrl||'';
     if(S.selFileEdit){
       btn.textContent='อัปโหลดรูป...';
@@ -1864,7 +1854,6 @@ window.addEventListener('resize',checkBP);checkBP();
 
 /* =========== Boot =========== */
 (function(){
-  // Restore theme
   try{
     const th=localStorage.getItem('kms_theme');
     if(th==='light'){isDark=true;toggleDark();}
