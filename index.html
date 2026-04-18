@@ -739,9 +739,8 @@ textarea.si{min-height:85px;resize:none;line-height:1.5}
    - Mobile compose modal (FAB button)
    - Separate post fields: text, link, image, hashtag
    - Account settings button works
-   - Author profile dynamically updated
-   - Fix: Added 'referrerpolicy="no-referrer"' to fix Google profile images
-   - Fix: Updated link preview API to Microlink + Fallback display
+   - New: Robust Universal Link Previews (Horizontal Layout)
+   - FIXED: Timeline Profile Pictures forced to Google Profile
    ========================================================= */
 
 const API_URL='https://script.google.com/macros/s/AKfycbwBYhFTW68AfN4cYUJYS1DG7vw-Ocykx5kslSUQIeJJlfu0oeBIdi9xAhVmorVWQ4q7rg/exec';
@@ -919,8 +918,10 @@ D('rw-srch').addEventListener('input',function(){
       const sn=(p.content||'').substring(0,80);
       const hi=t=>esc(t).replace(new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi'),m=>`<mark>${esc(m)}</mark>`);
       const pName = esc(p.authorName || S.profile.name || 'Unknown');
-      let rawPic = p.authorPic || S.profile.imageUrl || '';
-      if (!rawPic && S.user && p.email === S.user.email) rawPic = S.user.pic || '';
+      
+      // ดึงรูปทับเสมอ
+      let rawPic = p.authorPic || '';
+      if ((!rawPic || rawPic.includes('ui-avatars.com')) && S.user && p.email === S.user.email && S.user.pic) rawPic = S.user.pic;
       if (!rawPic) rawPic = 'https://ui-avatars.com/api/?name='+encodeURIComponent(pName)+'&background=161d2e&color=7988a3';
       const pAvSrc = esc(rawPic);
 
@@ -954,8 +955,10 @@ D('mob-srch-in').addEventListener('input',function(){
       const sn=(p.content||'').substring(0,100);
       const hi=t=>esc(t).replace(new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi'),m=>`<mark>${esc(m)}</mark>`);
       const pName = esc(p.authorName || S.profile.name || 'Unknown');
-      let rawPic = p.authorPic || S.profile.imageUrl || '';
-      if (!rawPic && S.user && p.email === S.user.email) rawPic = S.user.pic || '';
+      
+      // ดึงรูปทับเสมอ
+      let rawPic = p.authorPic || '';
+      if ((!rawPic || rawPic.includes('ui-avatars.com')) && S.user && p.email === S.user.email && S.user.pic) rawPic = S.user.pic;
       if (!rawPic) rawPic = 'https://ui-avatars.com/api/?name='+encodeURIComponent(pName)+'&background=161d2e&color=7988a3';
       const pAvSrc = esc(rawPic);
 
@@ -1339,9 +1342,16 @@ function renderFeed(){
   postsToShow.forEach((p,i)=>{
     // --- ตั้งค่าโปรไฟล์ของเจ้าของโพสต์แต่ละคน ---
     const pName = esc(p.authorName || S.profile.name || 'Unknown');
-    let rawPic = p.authorPic || S.profile.imageUrl || '';
-    if (!rawPic && S.user && p.email === S.user.email) rawPic = S.user.pic || '';
-    if (!rawPic) rawPic = 'https://ui-avatars.com/api/?name='+encodeURIComponent(pName)+'&background=161d2e&color=7988a3';
+    
+    // ดึงรูปทับเสมอ
+    let rawPic = p.authorPic || '';
+    if ((!rawPic || rawPic.includes('ui-avatars.com')) && S.user && p.email === S.user.email && S.user.pic) {
+        rawPic = S.user.pic;
+    }
+    if (!rawPic) {
+        rawPic = 'https://ui-avatars.com/api/?name='+encodeURIComponent(pName)+'&background=161d2e&color=7988a3';
+    }
+
     const pAvSrc = esc(rawPic);
     const pInit = pName.substring(0,2).toUpperCase();
     const isAdminPost = p.authorRole && p.authorRole.includes('admin');
