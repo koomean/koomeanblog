@@ -227,6 +227,22 @@ textarea.si{min-height:85px;resize:none;line-height:1.5}
 
 .sec-label{padding:12px 20px 8px;font-size:.7rem;font-weight:700;color:var(--txt3);letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid var(--border)}
 
+.tag-filter{display:flex;align-items:center;gap:10px;padding:12px 20px;background:linear-gradient(90deg,var(--glow),transparent);border-bottom:1px solid var(--border);animation:fadeUp .3s var(--ease)}
+.tag-filter-icon{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;display:flex;align-items:center;justify-content:center;font-size:.88rem;flex-shrink:0}
+.tag-filter-body{flex:1;min-width:0}
+.tag-filter-label{font-size:.7rem;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px}
+.tag-filter-name{font-family:var(--display);font-size:1rem;font-weight:800;color:var(--accent);word-break:break-word}
+.tag-filter-count{font-size:.76rem;color:var(--txt2);margin-top:2px}
+.tag-filter-acts{display:flex;gap:6px;flex-shrink:0}
+.tag-filter-btn{background:var(--s2);border:1px solid var(--border);color:var(--txt2);padding:7px 12px;border-radius:99px;font-size:.78rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:var(--font);display:flex;align-items:center;gap:5px;white-space:nowrap}
+.tag-filter-btn:hover{border-color:var(--accent);color:var(--accent)}
+.tag-filter-btn.danger{color:var(--err)}.tag-filter-btn.danger:hover{border-color:var(--err);background:rgba(255,78,106,.06)}
+@media(max-width:600px){
+  .tag-filter{padding:10px 14px;gap:8px}
+  .tag-filter-btn span{display:none}
+  .tag-filter-btn{padding:7px 10px}
+}
+
 .post{display:flex;gap:11px;padding:14px 20px;border-bottom:1px solid var(--border);transition:background .18s;animation:fadeUp .35s var(--ease) both}
 .post:hover{background:rgba(255,255,255,.018)}
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
@@ -441,6 +457,8 @@ textarea.si{min-height:85px;resize:none;line-height:1.5}
           </div>
         </div>
       </section>
+
+      <div id="tag-filter-bar" style="display:none"></div>
 
       <div id="feed">
         <div class="sec-label">Timeline</div>
@@ -672,10 +690,39 @@ textarea.si{min-height:85px;resize:none;line-height:1.5}
   </div>
 </div>
 <div class="overlay" id="ep-modal">
-  <div class="modal wide">
-    <div class="m-title" style="margin-bottom:12px;font-size:.95rem">แก้ไขโพสต์</div>
-    <textarea class="m-ta" id="ep-ta" rows="4"></textarea>
-    <div class="m-acts"><button class="btn-g" onclick="closeModal('ep-modal')">ยกเลิก</button><button class="btn-p" id="ep-save" onclick="saveEditPost()">บันทึก</button></div>
+  <div class="modal wide" style="padding:20px">
+    <div class="m-title" style="margin-bottom:14px;font-size:1rem;text-align:left">แก้ไขโพสต์</div>
+    <textarea class="m-ta" id="ep-ta" rows="4" placeholder="ข้อความ..." maxlength="500" style="margin-bottom:10px"></textarea>
+
+    <div class="cr-extras" style="margin-bottom:10px">
+      <div class="cr-extra-field" id="ep-field-link">
+        <i class="fas fa-link"></i>
+        <input type="url" class="cr-extra-input" id="ep-link-in" placeholder="วางลิงก์ (URL)...">
+        <button class="cr-extra-close" onclick="toggleEditField('link',false)"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="cr-extra-field" id="ep-field-hashtag">
+        <i class="fas fa-hashtag"></i>
+        <input type="text" class="cr-extra-input" id="ep-hashtag-in" placeholder="แท็ก คั่นด้วยเว้นวรรค">
+        <button class="cr-extra-close" onclick="toggleEditField('hashtag',false)"><i class="fas fa-times"></i></button>
+      </div>
+    </div>
+
+    <div class="cr-tools" style="margin-bottom:8px">
+      <input type="file" id="ep-file-in" accept="image/png,image/jpeg,image/gif,image/webp" style="display:none">
+      <label for="ep-file-in" class="tool-btn"><i class="far fa-image"></i><span>เปลี่ยนรูป</span></label>
+      <button type="button" class="tool-btn" id="ep-btn-link" onclick="toggleEditField('link')"><i class="fas fa-link"></i><span>ลิงก์</span></button>
+      <button type="button" class="tool-btn" id="ep-btn-hashtag" onclick="toggleEditField('hashtag')"><i class="fas fa-hashtag"></i><span>แท็ก</span></button>
+    </div>
+
+    <div id="ep-img-prev-wrap" class="img-prev-wrap" style="display:none;margin-bottom:10px">
+      <img id="ep-img-prev" class="img-prev" alt="">
+      <button class="rm-img" onclick="removeEditImg()" title="ลบรูป"><i class="fas fa-times"></i></button>
+    </div>
+
+    <div class="m-acts" style="margin-top:12px">
+      <button class="btn-g" onclick="closeModal('ep-modal')">ยกเลิก</button>
+      <button class="btn-p" id="ep-save" onclick="saveEditPost()">บันทึก</button>
+    </div>
   </div>
 </div>
 <div class="overlay" id="ec-modal">
@@ -709,7 +756,9 @@ const S={
   posts:[],
   pendingJwt:null,
   selFile:null,     // desktop file
-  selFileMob:null   // mobile file
+  selFileMob:null,  // mobile file
+  selFileEdit:null, // edit-modal file
+  activeTag:null    // hashtag กำลังถูก filter
 };
 let editTarget={};
 let toastTid;
@@ -748,7 +797,7 @@ function getHashtags(){
 function renderHashtagsUI(){
   const tags=getHashtags();if(!tags.length)return '';
   let h='';tags.forEach((t,i)=>{
-    h+=`<div class="rw-hit" style="padding:10px 14px" onclick="searchTag('${esc(t.tag)}')">
+    h+=`<div class="rw-hit" style="padding:10px 14px" onclick="filterByTag('${esc(t.tag.replace(/^#/,''))}')">
       <div style="font-size:1.1rem;color:var(--accent);font-weight:800;width:24px">${i+1}</div>
       <div class="rw-hit-body">
         <div class="rw-hit-name">${esc(t.tag)}</div>
@@ -769,6 +818,96 @@ function searchTag(tag){
   }else{
     const el=D('rw-srch');el.value=tag;el.dispatchEvent(new Event('input'));el.focus();
   }
+}
+
+/* =========== Hashtag Feed Filter =========== */
+function normalizeTag(t){return String(t||'').trim().replace(/^#+/,'').toLowerCase();}
+
+function filterByTag(tag){
+  const norm=normalizeTag(tag);
+  if(!norm){clearTagFilter();return;}
+  S.activeTag=norm;
+  closeMobSearch();closeSettings();
+  renderTagFilterBar();
+  renderFeed();
+  // Update URL
+  try{
+    const url=new URL(window.location.href);
+    url.searchParams.set('tag',norm);
+    url.searchParams.delete('post');
+    window.history.replaceState({},'',url.toString());
+  }catch{}
+  // Scroll to top
+  const fm=D('feed-main');if(fm)fm.scrollTo({top:0,behavior:'smooth'});
+}
+
+function clearTagFilter(){
+  S.activeTag=null;
+  renderTagFilterBar();
+  renderFeed();
+  try{
+    const url=new URL(window.location.href);
+    url.searchParams.delete('tag');
+    window.history.replaceState({},'',url.toString());
+  }catch{}
+}
+
+function shareTagLink(){
+  if(!S.activeTag)return;
+  const url=window.location.href.split('?')[0]+'?tag='+encodeURIComponent(S.activeTag);
+  const copy=s=>{
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      return navigator.clipboard.writeText(s);
+    }
+    return new Promise((res,rej)=>{
+      const ta=document.createElement('textarea');ta.value=s;document.body.appendChild(ta);ta.select();
+      try{document.execCommand('copy');res();}catch(e){rej(e);}finally{document.body.removeChild(ta);}
+    });
+  };
+  // ถ้า browser รองรับ Web Share API (มือถือส่วนใหญ่) ให้ใช้เลย
+  if(navigator.share&&isMob()){
+    navigator.share({
+      title:'#'+S.activeTag+' · '+(S.profile.webTitle||'Koo Mean Space'),
+      text:'ดูโพสต์ในหมวด #'+S.activeTag,
+      url:url
+    }).catch(()=>{/* user cancelled or error — fallback to copy */
+      copy(url).then(()=>toast('คัดลอกลิงก์แชร์แล้ว','s','fas fa-link')).catch(()=>toast('แชร์ไม่สำเร็จ','e'));
+    });
+  }else{
+    copy(url).then(()=>toast('คัดลอกลิงก์แท็กแล้ว','s','fas fa-link')).catch(()=>toast('คัดลอกไม่สำเร็จ','e'));
+  }
+}
+
+function renderTagFilterBar(){
+  const bar=D('tag-filter-bar');
+  if(!bar)return;
+  if(!S.activeTag){bar.style.display='none';bar.innerHTML='';return;}
+  const count=S.posts.filter(p=>postMatchesTag(p,S.activeTag)).length;
+  bar.innerHTML=`<div class="tag-filter">
+    <div class="tag-filter-icon"><i class="fas fa-hashtag"></i></div>
+    <div class="tag-filter-body">
+      <div class="tag-filter-label">กำลังดูแท็ก</div>
+      <div class="tag-filter-name">#${esc(S.activeTag)}</div>
+      <div class="tag-filter-count">${count} โพสต์</div>
+    </div>
+    <div class="tag-filter-acts">
+      <button class="tag-filter-btn" onclick="shareTagLink()" title="แชร์แท็ก"><i class="fas fa-share-nodes"></i><span>แชร์</span></button>
+      <button class="tag-filter-btn danger" onclick="clearTagFilter()" title="ล้างตัวกรอง"><i class="fas fa-times"></i><span>ล้าง</span></button>
+    </div></div>`;
+  bar.style.display='block';
+}
+
+function postMatchesTag(p,normTag){
+  if(!normTag)return true;
+  // Check dedicated hashtags field
+  if(Array.isArray(p.hashtags)){
+    for(const t of p.hashtags){if(normalizeTag(t)===normTag)return true;}
+  }
+  // Check inline hashtags in content
+  const content=(p.content||'');
+  const m=content.match(/#[\wก-๙]+/g);
+  if(m){for(const t of m){if(normalizeTag(t)===normTag)return true;}}
+  return false;
 }
 
 let rwD;
@@ -898,7 +1037,15 @@ function toggleDark(){
 
 function setMN(n){['home','search','settings'].forEach(k=>D('mnav-'+k)?.classList.toggle('active',k===n));}
 function setSBN(n){['home','settings'].forEach(k=>D('sbn-'+k)?.classList.toggle('active',k===n));}
-function navTo(n){if(n==='home'){closeMobSearch();closeSettings();closeCompose();setMN('home');setSBN('home');}}
+function navTo(n){
+  if(n==='home'){
+    closeMobSearch();closeSettings();closeCompose();
+    setMN('home');setSBN('home');
+    if(S.activeTag)clearTagFilter();
+    // scroll to top
+    const fm=D('feed-main');if(fm)fm.scrollTo({top:0,behavior:'smooth'});
+  }
+}
 
 /* =========== Auth =========== */
 function onAuthClick(){if(!S.user)openModal('login-modal');else if(confirm('ออกจากระบบหรือไม่?'))signOut();}
@@ -984,6 +1131,17 @@ async function loadData(email='',name='',pic='',note=null){
 
     S.posts=Array.isArray(data.posts)?data.posts:[];
     if(S.posts.length){D('stat-posts').textContent=S.posts.length;D('prof-stats').style.display='flex';}
+
+    // ใช้ tag จาก URL ถ้ามี (ทำก่อน renderFeed)
+    try{
+      const params=new URLSearchParams(window.location.search);
+      const tagParam=params.get('tag');
+      if(tagParam){
+        S.activeTag=normalizeTag(tagParam);
+        renderTagFilterBar();
+      }
+    }catch{}
+
     renderFeed();
 
     setTimeout(()=>{
@@ -1050,7 +1208,7 @@ function processContent(text,rowIdx,postLink){
 
   h=h.replace(urlRx,u=>`<a href="${esc(u)}" target="_blank" class="post-link" rel="noopener">${esc(u)}</a>`);
   // Clickable hashtags inside text
-  h=h.replace(/#([\wก-๙]+)/g,`<span class="post-link" style="cursor:pointer" onclick="searchTag('#$1')">#$1</span>`);
+  h=h.replace(/#([\wก-๙]+)/g,`<span class="post-link" style="cursor:pointer" onclick="filterByTag('$1')">#$1</span>`);
 
   let media='',tLink=null,ytId=null;
   for(const u of urls){
@@ -1109,14 +1267,23 @@ function renderFeed(){
   if(tagsHtml&&D('rw-trends')){D('rw-trends').style.display='block';D('trend-desktop').innerHTML=tagsHtml;}
   else if(D('rw-trends')){D('rw-trends').style.display='none';}
 
-  if(!S.posts.length){
-    feed.innerHTML='<div class="sec-label">Timeline</div><div class="status"><div class="status-ico">💬</div>ยังไม่มีโพสต์</div>';
+  // Apply active tag filter
+  const postsToShow=S.activeTag
+    ? S.posts.filter(p=>postMatchesTag(p,S.activeTag))
+    : S.posts;
+
+  if(!postsToShow.length){
+    const emptyMsg=S.activeTag
+      ? `<div class="sec-label">#${esc(S.activeTag)}</div><div class="status"><div class="status-ico">🔍</div>ไม่พบโพสต์ในแท็ก #${esc(S.activeTag)}<br><button class="tag-filter-btn" style="margin-top:12px" onclick="clearTagFilter()">ดูทั้งหมด</button></div>`
+      : '<div class="sec-label">Timeline</div><div class="status"><div class="status-ico">💬</div>ยังไม่มีโพสต์</div>';
+    feed.innerHTML=emptyMsg;
     return;
   }
 
-  let html='<div class="sec-label">Timeline</div>';
+  const label=S.activeTag?`#${esc(S.activeTag)} · ${postsToShow.length} โพสต์`:'Timeline';
+  let html=`<div class="sec-label">${label}</div>`;
   const lpQ=[];
-  S.posts.forEach((p,i)=>{
+  postsToShow.forEach((p,i)=>{
     const likes=Array.isArray(p.likes)?p.likes:[];
     const cmts=Array.isArray(p.comments)?p.comments:[];
     const hashtags=Array.isArray(p.hashtags)?p.hashtags:[];
@@ -1151,7 +1318,7 @@ function renderFeed(){
     if(hashtags.length){
       tagsHtml2='<div class="post-tags">'+hashtags.map(t=>{
         const tag='#'+String(t).replace(/^#/,'');
-        return `<span class="post-tag" onclick="searchTag('${esc(tag)}')">${esc(tag)}</span>`;
+        return `<span class="post-tag" onclick="filterByTag('${esc(tag.replace(/^#/,''))}')">${esc(tag)}</span>`;
       }).join('')+'</div>';
     }
 
@@ -1298,10 +1465,10 @@ D('file-in-mob').addEventListener('change',function(){handleFilePick(this.files[
 
 /* ============ Image Compression ============
    Target: 4MB (imgbb max 5MB เผื่อ overhead)
-   กลยุทธ์: resize max 2048px → iterate quality 0.92→0.55 จนได้ขนาดพอดี
-   รักษาคุณภาพสูงสุดเท่าที่ไฟล์รองรับ */
+   กลยุทธ์: resize max 2048px → iterate quality 0.92→0.40 จนได้ขนาดพอดี
+   รักษาคุณภาพสูงสุดเท่าที่ไฟล์รองรับ — ไม่จำกัดขนาด input แต่เตือนถ้าใหญ่ผิดปกติ */
 const IMG_TARGET_BYTES = 4 * 1024 * 1024;   // 4 MB
-const IMG_HARD_MAX = 10 * 1024 * 1024;      // 10 MB — ใหญ่กว่านี้ถือว่ามากเกินไป
+const IMG_WARN_BYTES = 30 * 1024 * 1024;    // เตือนถ้าเกิน 30 MB (browser อาจหน่วง)
 const IMG_MAX_DIMENSION = 2048;             // ยาวสุด 2048px
 
 function loadImageFromFile(file){
@@ -1403,10 +1570,11 @@ async function handleFilePick(f,isMobile){
     toast('ต้องเป็นไฟล์รูปภาพเท่านั้น','e');
     inputEl.value='';return;
   }
-  // ใหญ่เกิน hard max — ไม่ให้อัปเลย
-  if(f.size>IMG_HARD_MAX){
-    toast('ไฟล์ใหญ่เกินไป (สูงสุด 10MB)','e');
-    inputEl.value='';return;
+  // เตือนถ้าใหญ่ผิดปกติ (อาจหน่วงเครื่อง) — แต่ไม่บล็อก
+  if(f.size>IMG_WARN_BYTES){
+    if(!confirm(`ไฟล์ขนาด ${fmtBytes(f.size)} อาจใช้เวลาประมวลผลนาน ต้องการดำเนินการต่อหรือไม่?`)){
+      inputEl.value='';return;
+    }
   }
 
   const previewWrap=D(isMobile?'img-prev-wrap-mob':'img-prev-wrap');
@@ -1527,16 +1695,129 @@ async function submitPost(isMobile=false){
 }
 
 /* =========== Edit / Delete =========== */
-function openEditPost(ri){const p=S.posts.find(p=>p.rowIdx===ri);if(!p)return;editTarget={type:'post',rowIdx:ri};D('ep-ta').value=p.content||'';openModal('ep-modal');}
-async function saveEditPost(){
-  const c=D('ep-ta').value.trim();if(!c)return;
-  const btn=D('ep-save');btn.disabled=true;btn.textContent='...';
+function openEditPost(ri){
+  const p=S.posts.find(p=>p.rowIdx===ri);if(!p)return;
+  editTarget={type:'post',rowIdx:ri,originalMediaUrl:p.mediaUrl||''};
+
+  // เติมค่าเดิม
+  D('ep-ta').value=p.content||'';
+  D('ep-link-in').value=p.link||'';
+  D('ep-hashtag-in').value=(Array.isArray(p.hashtags)?p.hashtags:[]).join(' ');
+
+  // เปิด field ถ้ามีค่าเดิม
+  const hasLink=!!(p.link);
+  const hasTags=Array.isArray(p.hashtags)&&p.hashtags.length>0;
+  D('ep-field-link').classList.toggle('visible',hasLink);
+  D('ep-btn-link').classList.toggle('active',hasLink);
+  D('ep-field-hashtag').classList.toggle('visible',hasTags);
+  D('ep-btn-hashtag').classList.toggle('active',hasTags);
+
+  // แสดง preview รูปเดิม (ถ้ามี)
+  S.selFileEdit=null;
+  D('ep-file-in').value='';
+  if(p.mediaUrl){
+    D('ep-img-prev').src=p.mediaUrl;
+    D('ep-img-prev-wrap').style.display='block';
+  }else{
+    D('ep-img-prev').src='';
+    D('ep-img-prev-wrap').style.display='none';
+  }
+
+  openModal('ep-modal');
+}
+
+function toggleEditField(field,force=null){
+  const fEl=D('ep-field-'+field);
+  const bEl=D('ep-btn-'+field);
+  if(!fEl)return;
+  const show=force===null?!fEl.classList.contains('visible'):!!force;
+  fEl.classList.toggle('visible',show);
+  if(bEl)bEl.classList.toggle('active',show);
+  if(show){const inp=fEl.querySelector('.cr-extra-input');if(inp)setTimeout(()=>inp.focus(),50);}
+  else{const inp=fEl.querySelector('.cr-extra-input');if(inp)inp.value='';}
+}
+
+function removeEditImg(){
+  S.selFileEdit=null;
+  D('ep-file-in').value='';
+  D('ep-img-prev').src='';
+  D('ep-img-prev-wrap').style.display='none';
+  // Flag ว่า user ต้องการลบรูปเดิม
+  editTarget.removeMedia=true;
+}
+
+// file picker สำหรับ edit modal
+D('ep-file-in').addEventListener('change',async function(){
+  const f=this.files[0];if(!f)return;
+  if(!f.type.startsWith('image/')){toast('ต้องเป็นไฟล์รูปภาพเท่านั้น','e');this.value='';return;}
   try{
-    await apiFetch(API_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({action:'editPost',email:S.user.email,rowIdx:editTarget.rowIdx,content:c,mediaUrl:''})});
-    closeModal('ep-modal');toast('แก้ไขสำเร็จ','s');
+    let finalFile=f;
+    if(f.size>IMG_TARGET_BYTES&&f.type!=='image/gif'){
+      toast('กำลังบีบอัดรูปภาพ...','','fas fa-compress fa-spin');
+      const result=await compressImage(f,IMG_TARGET_BYTES);
+      if(result.compressed){
+        const ext=result.type==='image/webp'?'webp':(result.type==='image/png'?'png':'jpg');
+        finalFile=new File([result.blob],(f.name.replace(/\.[^.]+$/,'')||'image')+'.'+ext,{type:result.type});
+        const pct=Math.round((1-result.to/result.from)*100);
+        toast(`บีบอัดสำเร็จ ${fmtBytes(result.from)} → ${fmtBytes(result.to)} (ลด ${pct}%)`,'s','fas fa-check');
+      }
+    }
+    S.selFileEdit=finalFile;
+    editTarget.removeMedia=false;
+    const r=new FileReader();
+    r.onload=e=>{D('ep-img-prev').src=e.target.result;D('ep-img-prev-wrap').style.display='block';};
+    r.readAsDataURL(finalFile);
+  }catch(err){toast('เกิดข้อผิดพลาด: '+err.message,'e');this.value='';}
+});
+
+async function saveEditPost(){
+  const content=D('ep-ta').value.trim();
+  const link=(D('ep-link-in').value||'').trim();
+  const hashtags=parseHashtags(D('ep-hashtag-in').value||'');
+
+  if(link&&!/^https?:\/\//i.test(link)){toast('ลิงก์ต้องขึ้นต้นด้วย http:// หรือ https://','e');return;}
+
+  const btn=D('ep-save');btn.disabled=true;btn.textContent='กำลังบันทึก...';
+
+  try{
+    // ตัดสินใจเรื่อง mediaUrl:
+    // 1. ถ้า user เลือกไฟล์ใหม่ → upload ใหม่ ใช้ URL ใหม่
+    // 2. ถ้า user ลบรูป (removeMedia=true และไม่มี selFileEdit) → ส่ง '' ไปล้าง
+    // 3. ถ้าไม่แตะต้องอะไรเลย → ส่ง URL เดิมกลับไป (FIX บัครูปหาย)
+    let mediaUrl=editTarget.originalMediaUrl||'';
+    if(S.selFileEdit){
+      btn.textContent='อัปโหลดรูป...';
+      const fd=new FormData();fd.append('image',S.selFileEdit);
+      const ir=await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_KEY}`,{method:'POST',body:fd});
+      const id=await ir.json();
+      if(id.success)mediaUrl=id.data.url;else throw new Error('อัปโหลดรูปไม่สำเร็จ');
+    }else if(editTarget.removeMedia){
+      mediaUrl='';
+    }
+
+    btn.textContent='กำลังบันทึก...';
+    const body=new URLSearchParams({
+      action:'editPost',
+      email:S.user.email,
+      rowIdx:editTarget.rowIdx,
+      content:content,
+      mediaUrl:mediaUrl,
+      link:link,
+      hashtags:hashtags.join(',')
+    });
+    const r=await apiFetch(API_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body});
+    const d=await r.json();
+    if(!d.success)throw new Error(d.message||'บันทึกล้มเหลว');
+
+    closeModal('ep-modal');
+    toast('แก้ไขสำเร็จ','s','fas fa-check');
     await loadData(S.user.email,S.user.name,S.user.pic);
-  }catch{toast('เกิดข้อผิดพลาด','e');}
-  finally{btn.disabled=false;btn.textContent='บันทึก';}
+  }catch(e){
+    console.error(e);
+    toast('เกิดข้อผิดพลาด: '+(e.message||''),'e');
+  }finally{
+    btn.disabled=false;btn.textContent='บันทึก';
+  }
 }
 async function deletePost(ri){
   if(!confirm('ลบโพสต์นี้หรือไม่?'))return;
