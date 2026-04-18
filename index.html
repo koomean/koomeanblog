@@ -10,1085 +10,708 @@
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
 :root {
-  --bg: #080b12;
-  --surface: #0d1120;
-  --surface2: #111827;
-  --surface3: #161d2e;
-  --border: rgba(255,255,255,0.07);
-  --border-hover: rgba(255,255,255,0.12);
-  --txt: #e2e8f5;
-  --txt2: #7c8ba1;
-  --txt3: #3d4f65;
-  --accent: #4b8fff;
-  --accent2: #6c5ce7;
-  --accent-glow: rgba(75,143,255,0.15);
-  --like: #f0456a;
-  --success: #22d17a;
-  --danger: #ff4e6a;
-  --warn: #f59e0b;
-  --nav-h: 60px;
-  --header-h: 56px;
-  --radius: 16px;
-  --radius-sm: 10px;
-  --radius-xs: 6px;
-  --font: 'Plus Jakarta Sans', -apple-system, sans-serif;
-  --font-display: 'Bricolage Grotesque', sans-serif;
-  --ease: cubic-bezier(0.4, 0, 0.2, 1);
-  --shadow: 0 4px 24px rgba(0,0,0,0.5);
-  --shadow-lg: 0 12px 48px rgba(0,0,0,0.7);
+  --bg:#07090f; --s1:#0c0f1c; --s2:#111827; --s3:#161d2e;
+  --border:rgba(255,255,255,0.07); --borderH:rgba(255,255,255,0.13);
+  --txt:#dde3f0; --txt2:#7988a3; --txt3:#3c4f68;
+  --accent:#4b8fff; --accent2:#7c5ce7; --glow:rgba(75,143,255,0.14);
+  --like:#f0456a; --ok:#22d17a; --err:#ff4e6a; --warn:#f59e0b;
+  --ease:cubic-bezier(.4,0,.2,1);
+  --sh:0 4px 24px rgba(0,0,0,.55); --shL:0 12px 48px rgba(0,0,0,.75);
+  --r:16px; --rs:10px;
+  --font:'Plus Jakarta Sans',-apple-system,sans-serif;
+  --display:'Bricolage Grotesque',sans-serif;
+  --left-w:260px; --right-w:320px; --mob-nav:60px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg);color:var(--txt);min-height:100vh;overflow-x:hidden;overscroll-behavior:none}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:var(--border);border-radius:99px}
+img{display:block}a{text-decoration:none;color:inherit}
+input,textarea,button{font-family:var(--font)}
+
+/* ═══ DESKTOP 3-COLUMN LAYOUT ═══ */
+.root{display:flex;min-height:100vh;max-width:1280px;margin:0 auto}
+
+.sidebar-left{width:var(--left-w);flex-shrink:0;position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;padding:20px 12px;border-right:1px solid var(--border)}
+.feed-col{flex:1;min-width:0;max-width:680px;border-right:1px solid var(--border);display:flex;flex-direction:column}
+.sidebar-right{width:var(--right-w);flex-shrink:0;position:sticky;top:0;height:100vh;overflow-y:auto;padding:20px 16px;display:flex;flex-direction:column;gap:14px}
+
+/* Left sidebar */
+.sb-logo{display:flex;align-items:center;gap:10px;padding:8px 10px;margin-bottom:6px;border-radius:var(--rs)}
+.logo-mark{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:.82rem;font-weight:800;color:#fff;flex-shrink:0;box-shadow:0 2px 14px rgba(75,143,255,.35)}
+.logo-text{font-family:var(--display);font-size:1.1rem;font-weight:800;letter-spacing:-.4px;background:linear-gradient(135deg,var(--txt) 20%,var(--txt2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sb-nav{display:flex;flex-direction:column;gap:2px}
+.sb-item{display:flex;align-items:center;gap:13px;padding:12px 14px;border-radius:var(--rs);cursor:pointer;border:none;background:transparent;color:var(--txt2);font-size:.93rem;font-weight:600;width:100%;text-align:left;transition:all .2s var(--ease)}
+.sb-item i{width:20px;text-align:center;font-size:1.05rem;flex-shrink:0}
+.sb-item:hover{background:var(--s3);color:var(--txt)}
+.sb-item.active{color:var(--accent);background:var(--glow)}
+.sb-item.del{color:var(--err)}.sb-item.del:hover{background:rgba(255,78,106,.08)}
+.sb-user-card{margin-top:auto;background:var(--s2);border:1px solid var(--border);border-radius:var(--rs);padding:12px;display:none}
+.sb-uc-row{display:flex;align-items:center;gap:10px}
+.sb-uc-av{width:36px;height:36px;border-radius:50%;object-fit:cover;background:var(--s3);flex-shrink:0}
+.sb-uc-info{flex:1;min-width:0}
+.sb-uc-name{font-size:.84rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sb-uc-email{font-size:.72rem;color:var(--txt2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sb-so-btn{width:100%;margin-top:10px;background:rgba(255,78,106,.1);color:var(--err);border:1px solid rgba(255,78,106,.2);border-radius:10px;padding:9px;font-weight:700;font-size:.85rem;cursor:pointer;transition:all .2s}
+.sb-so-btn:hover{background:rgba(255,78,106,.18)}
+
+/* Right sidebar widgets */
+.rw{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.rw-title{padding:14px 16px 10px;font-weight:800;font-size:.88rem;font-family:var(--display);border-bottom:1px solid var(--border)}
+.rw-srch-pad{padding:12px}
+.rw-sbox{display:flex;align-items:center;gap:9px;background:var(--s2);border:1.5px solid var(--border);border-radius:10px;padding:9px 13px;transition:border-color .2s}
+.rw-sbox:focus-within{border-color:var(--accent)}
+.rw-sbox i{color:var(--txt3);font-size:.87rem;flex-shrink:0}
+.rw-sinput{flex:1;background:transparent;border:none;color:var(--txt);font-size:.87rem;outline:none}
+.rw-sinput::placeholder{color:var(--txt3)}
+.rw-results{padding:4px 0}
+.rw-hit{display:flex;align-items:flex-start;gap:9px;padding:10px 14px;cursor:pointer;transition:background .15s;border-bottom:1px solid var(--border)}
+.rw-hit:last-child{border-bottom:none}
+.rw-hit:hover{background:var(--s2)}
+.rw-hit-av{width:32px;height:32px;border-radius:50%;object-fit:cover;background:var(--s2);flex-shrink:0}
+.rw-hit-body{flex:1;min-width:0}
+.rw-hit-name{font-weight:700;font-size:.8rem;margin-bottom:2px}
+.rw-hit-txt{font-size:.76rem;color:var(--txt2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rw-hit-time{font-size:.7rem;color:var(--txt3);margin-top:2px}
+mark{background:rgba(75,143,255,.2);color:var(--accent);border-radius:3px;padding:0 2px}
+.rw-about-pad{padding:14px 16px}
+.rw-about-pad p{font-size:.81rem;color:var(--txt2);line-height:1.55}
+.rw-links{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.rw-link{display:flex;align-items:center;gap:6px;font-size:.77rem;color:var(--txt2);background:var(--s2);border:1px solid var(--border);padding:5px 11px;border-radius:99px;cursor:pointer;transition:all .2s}
+.rw-link:hover{color:var(--accent);border-color:var(--accent);background:var(--glow)}
+.rw-auth-pad{padding:16px;text-align:center}
+.rw-auth-btn{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;border-radius:10px;padding:9px 20px;font-weight:700;font-size:.84rem;cursor:pointer;width:100%}
+
+/* Feed column header */
+.feed-hdr{position:sticky;top:0;z-index:30;background:rgba(12,15,28,.92);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border-bottom:1px solid var(--border);padding:0 20px;height:52px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.feed-hdr-left{display:flex;align-items:center;gap:9px}
+.feed-hdr-title{font-family:var(--display);font-size:1rem;font-weight:800;letter-spacing:-.3px}
+.auth-pill{background:transparent;border:1.5px solid var(--border);color:var(--txt2);padding:7px 18px;border-radius:99px;font-size:.83rem;font-weight:600;cursor:pointer;transition:all .2s}
+.auth-pill:hover{border-color:var(--accent);color:var(--accent);background:var(--glow)}
+.auth-pill.out{border-color:transparent}.auth-pill.out:hover{border-color:var(--err);color:var(--err);background:rgba(255,78,106,.07)}
+
+/* Feed scroll area */
+.feed-main{flex:1;overflow-y:auto}
+@media(max-width:1023px){.feed-main{padding-bottom:calc(var(--mob-nav) + 4px)}}
+
+/* ═══ MOBILE (< 1024px) ═══ */
+@media(max-width:1023px){
+  .sidebar-left,.sidebar-right{display:none}
+  .feed-col{max-width:100%;border-right:none}
+  .root{max-width:100%}
+  .feed-hdr{padding:0 14px}
+  .mob-nav{display:flex}
+  .toast{bottom:calc(var(--mob-nav) + 10px)}
+}
+@media(min-width:1024px){
+  .mob-nav{display:none !important}
+  .mob-srch-overlay{display:none !important}
+  .mob-logo{display:none !important}
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-html { scroll-behavior: smooth; }
-body { font-family: var(--font); background: var(--bg); color: var(--txt); min-height: 100vh; overflow-x: hidden; overscroll-behavior: none; }
-::-webkit-scrollbar { width: 3px; } ::-webkit-scrollbar-thumb { background: var(--border-hover); border-radius: 99px; }
-img { display: block; } a { text-decoration: none; color: inherit; }
-input, textarea, button { font-family: var(--font); }
+/* Mobile bottom nav */
+.mob-nav{position:fixed;bottom:0;left:0;right:0;height:var(--mob-nav);background:rgba(12,15,28,.96);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border-top:1px solid var(--border);align-items:center;justify-content:space-around;z-index:50;padding-bottom:env(safe-area-inset-bottom);display:none}
+.mnav-btn{display:flex;flex-direction:column;align-items:center;gap:3px;background:transparent;border:none;color:var(--txt3);cursor:pointer;padding:6px 18px;border-radius:10px;transition:color .2s}
+.mnav-btn i{font-size:1.1rem}.mnav-btn span{font-size:.6rem;font-weight:600;letter-spacing:.3px}
+.mnav-btn.active{color:var(--accent)}
 
-/* ── Layout ─────────────────────────────── */
-.layout { display: flex; justify-content: center; min-height: 100vh; }
-.column { width: 100%; max-width: 600px; min-height: 100vh; background: var(--surface); border-left: 1px solid var(--border); border-right: 1px solid var(--border); display: flex; flex-direction: column; position: relative; }
-@media (max-width: 600px) { .column { border: none; } }
+/* Mobile search overlay */
+.mob-srch-overlay{position:fixed;inset:0;background:var(--s1);z-index:60;flex-direction:column;transform:translateY(100%);transition:transform .35s var(--ease);display:flex}
+.mob-srch-overlay.open{transform:none}
+.mob-srch-hdr{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--border);flex-shrink:0}
+.mob-sbox{flex:1;display:flex;align-items:center;gap:9px;background:var(--s2);border:1.5px solid var(--border);border-radius:10px;padding:9px 13px;transition:border-color .2s}
+.mob-sbox:focus-within{border-color:var(--accent)}
+.mob-sbox i{color:var(--txt3);font-size:.9rem;flex-shrink:0}
+.mob-sinput{flex:1;background:transparent;border:none;color:var(--txt);font-size:.9rem;outline:none}
+.mob-sinput::placeholder{color:var(--txt3)}
+.mob-srch-cancel{background:var(--s2);border:1px solid var(--border);color:var(--txt2);padding:8px 13px;border-radius:9px;font-size:.82rem;font-weight:600;cursor:pointer;white-space:nowrap}
+.mob-srch-body{flex:1;overflow-y:auto;padding-bottom:20px}
+.srch-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:55%;color:var(--txt3);gap:12px}
+.srch-empty i{font-size:2.2rem;opacity:.5}.srch-empty p{font-size:.86rem}
+.srch-tag{padding:8px 16px 5px;font-size:.68rem;font-weight:700;color:var(--txt3);letter-spacing:1px;text-transform:uppercase}
 
-/* ── Header ─────────────────────────────── */
-.hdr { position: sticky; top: 0; z-index: 40; height: var(--header-h); display: flex; align-items: center; justify-content: space-between; padding: 0 16px; background: rgba(13,17,32,0.88); backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%); border-bottom: 1px solid var(--border); }
-.hdr-brand { display: flex; align-items: center; gap: 10px; }
-.hdr-logo { width: 30px; height: 30px; border-radius: 9px; background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 0.72rem; font-weight: 800; color: #fff; flex-shrink: 0; box-shadow: 0 2px 12px rgba(75,143,255,0.35); }
-.hdr-title { font-family: var(--font-display); font-size: 1.05rem; font-weight: 800; letter-spacing: -0.4px; background: linear-gradient(135deg, var(--txt) 30%, var(--txt2) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-.hdr-actions { display: flex; align-items: center; gap: 8px; }
-.hdr-icon-btn { width: 34px; height: 34px; border-radius: 50%; background: var(--surface3); border: 1px solid var(--border); color: var(--txt2); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s var(--ease); font-size: 0.9rem; }
-.hdr-icon-btn:hover { background: var(--border-hover); color: var(--txt); }
-.auth-pill { background: transparent; border: 1px solid var(--border); color: var(--txt2); padding: 6px 16px; border-radius: 99px; font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: all 0.2s var(--ease); }
-.auth-pill:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-glow); }
-.auth-pill.out { border-color: transparent; color: var(--txt2); }
-.auth-pill.out:hover { border-color: var(--danger); color: var(--danger); background: rgba(255,78,106,0.08); }
+/* ═══ SETTINGS DRAWER ═══ */
+.set-panel{position:fixed;inset:0;z-index:70;pointer-events:none}
+.set-panel.open{pointer-events:all}
+.set-bd{position:absolute;inset:0;background:rgba(0,0,0,.78);opacity:0;transition:opacity .3s}
+.set-panel.open .set-bd{opacity:1}
+.set-drawer{position:absolute;right:0;top:0;bottom:0;width:min(390px,100%);background:var(--s1);border-left:1px solid var(--border);display:flex;flex-direction:column;transform:translateX(100%);transition:transform .35s var(--ease);overflow:hidden}
+.set-panel.open .set-drawer{transform:none}
+.set-hdr{display:flex;align-items:center;gap:12px;padding:16px;border-bottom:1px solid var(--border);flex-shrink:0}
+.set-hdr-t{font-family:var(--display);font-size:1rem;font-weight:800;flex:1}
+.set-close{width:32px;height:32px;border-radius:50%;background:var(--s2);border:1px solid var(--border);color:var(--txt2);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;font-size:.9rem}
+.set-close:hover{background:var(--s3);color:var(--txt)}
+.set-body{flex:1;overflow-y:auto;padding:6px 0 30px}
+.set-gl{padding:12px 16px 5px;font-size:.67rem;font-weight:700;color:var(--txt3);letter-spacing:1px;text-transform:uppercase}
+.set-row{display:flex;align-items:center;gap:12px;padding:12px 16px;cursor:pointer;border:none;background:transparent;width:100%;text-align:left;transition:background .15s}
+.set-row:hover{background:rgba(255,255,255,.03)}
+.set-icon{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:.88rem;flex-shrink:0}
+.set-info{flex:1;min-width:0}
+.set-name{font-size:.87rem;font-weight:600;color:var(--txt)}
+.set-desc{font-size:.75rem;color:var(--txt2);margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.set-arr{color:var(--txt3);font-size:.72rem}
+.set-row.del .set-name{color:var(--err)}.set-row.del:hover{background:rgba(255,78,106,.07)}
+.set-div{height:1px;background:var(--border);margin:5px 0}
+.tog{width:40px;height:23px;background:var(--s3);border-radius:99px;position:relative;cursor:pointer;border:none;transition:background .25s;flex-shrink:0}
+.tog.on{background:var(--accent)}.tog::after{content:'';width:17px;height:17px;background:#fff;border-radius:50%;position:absolute;top:3px;left:3px;transition:transform .25s var(--ease);box-shadow:0 1px 4px rgba(0,0,0,.4)}
+.tog.on::after{transform:translateX(17px)}
+.set-sub{position:absolute;inset:0;background:var(--s1);transform:translateX(100%);transition:transform .3s var(--ease);display:flex;flex-direction:column}
+.set-sub.open{transform:none}
+.set-sub-hdr{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--border);flex-shrink:0}
+.back-btn{width:30px;height:30px;border-radius:50%;background:var(--s2);border:1px solid var(--border);color:var(--txt2);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.8rem;transition:all .2s;flex-shrink:0}
+.back-btn:hover{background:var(--s3);color:var(--txt)}
+.set-sub-t{font-weight:700;font-size:.92rem;flex:1}
+.set-sub-body{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px}
+.sf{display:flex;flex-direction:column;gap:5px}
+.sl{font-size:.73rem;font-weight:600;color:var(--txt2);text-transform:uppercase;letter-spacing:.5px}
+.si{background:var(--s2);border:1.5px solid var(--border);color:var(--txt);padding:10px 13px;border-radius:var(--rs);font-size:.87rem;outline:none;transition:border-color .2s;font-family:var(--font);width:100%}
+.si:focus{border-color:var(--accent)}.si::placeholder{color:var(--txt3)}
+textarea.si{min-height:85px;resize:none;line-height:1.5}
+.save-btn{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;border-radius:10px;padding:11px;font-weight:700;font-size:.9rem;cursor:pointer;transition:all .2s;margin-top:4px}
+.save-btn:hover{box-shadow:0 4px 20px rgba(75,143,255,.4)}.save-btn:disabled{opacity:.5;cursor:not-allowed}
 
-/* ── Profile Section ─────────────────────── */
-.prof-section { border-bottom: 1px solid var(--border); }
-.prof-cover { height: 160px; background: linear-gradient(160deg, #0b1d40 0%, #060d1e 50%, var(--bg) 100%); background-size: cover; background-position: center; position: relative; overflow: hidden; }
-.prof-cover::after { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 70% 90% at 15% 50%, rgba(75,143,255,0.1) 0%, transparent 70%), radial-gradient(ellipse 50% 70% at 85% 20%, rgba(108,92,231,0.08) 0%, transparent 70%); }
-.prof-cover-fade { position: absolute; bottom: 0; left: 0; right: 0; height: 50px; background: linear-gradient(to top, var(--surface), transparent); }
-@media (max-width: 600px) { .prof-cover { height: 120px; } }
+/* ═══ PROFILE ═══ */
+.prof-cover{height:200px;background:linear-gradient(160deg,#0b1d40,#060d1e 55%,var(--bg));background-size:cover;background-position:center;position:relative;overflow:hidden;flex-shrink:0}
+.prof-cover::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 90% at 15% 50%,rgba(75,143,255,.1),transparent 70%),radial-gradient(ellipse 50% 70% at 85% 20%,rgba(108,92,231,.08),transparent 70%)}
+.cover-fade{position:absolute;bottom:0;left:0;right:0;height:60px;background:linear-gradient(to top,var(--s1),transparent)}
+@media(max-width:600px){.prof-cover{height:130px}}
+.prof-body{padding:0 20px 20px;background:var(--s1);position:relative}
+@media(max-width:600px){.prof-body{padding:0 14px 16px}}
+.prof-av-ring{position:absolute;top:-58px;left:20px;width:104px;height:104px;border-radius:50%;padding:2.5px;background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 0 0 3px var(--s1),var(--sh)}
+@media(max-width:600px){.prof-av-ring{width:80px;height:80px;top:-44px;left:14px}}
+.prof-av-inner{width:100%;height:100%;border-radius:50%;overflow:hidden;background:var(--s2);position:relative}
+.prof-av-img{width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .3s}.prof-av-img.vis{opacity:1}
+.prof-av-fb{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:1.4rem;font-weight:800;color:var(--txt2)}
+.prof-text{padding-top:56px}
+@media(max-width:600px){.prof-text{padding-top:40px}}
+.prof-name-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.prof-name{font-family:var(--display);font-size:1.2rem;font-weight:800;letter-spacing:-.3px}
+.verified{width:17px;height:17px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.5rem;color:#fff;flex-shrink:0}
+.prof-handle{color:var(--txt2);font-size:.82rem;margin-top:2px}
+.prof-bio{margin-top:9px;font-size:.9rem;line-height:1.6;opacity:.85;white-space:pre-wrap}
+.prof-stats{display:flex;gap:18px;margin-top:12px}
+.stat-n{font-weight:800}.stat-l{color:var(--txt2);font-size:.84rem;margin-left:3px}
 
-.prof-body { padding: 0 16px 18px; position: relative; }
-.prof-avatar-ring { position: absolute; top: -60px; left: 16px; width: 100px; height: 100px; border-radius: 50%; padding: 2.5px; background: linear-gradient(135deg, var(--accent), var(--accent2)); box-shadow: 0 0 0 3px var(--surface), var(--shadow); }
-@media (max-width: 600px) { .prof-avatar-ring { width: 80px; height: 80px; top: -46px; } }
-.prof-avatar-inner { width: 100%; height: 100%; border-radius: 50%; overflow: hidden; background: var(--surface2); position: relative; }
-.prof-avatar-img { width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.3s var(--ease); }
-.prof-avatar-img.vis { opacity: 1; }
-.prof-avatar-fallback { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 1.4rem; font-weight: 800; color: var(--txt2); background: linear-gradient(135deg, var(--surface2), var(--surface3)); }
+/* ═══ SKELETON ═══ */
+.sk{background:linear-gradient(90deg,var(--s2) 25%,var(--s3) 50%,var(--s2) 75%);background-size:200% 100%;animation:sk 1.6s infinite;border-radius:6px;display:block}
+@keyframes sk{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.sk-post{display:flex;gap:10px;padding:14px 20px;border-bottom:1px solid var(--border)}
+@media(max-width:600px){.sk-post{padding:14px 14px}}
+.sk-av{width:38px;height:38px;border-radius:50%;flex-shrink:0}
+.sk-lines{flex:1;display:flex;flex-direction:column;gap:7px;padding-top:2px}
 
-.prof-text { padding-top: 50px; }
-@media (max-width: 600px) { .prof-text { padding-top: 40px; } }
-.prof-name-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-.prof-name { font-family: var(--font-display); font-size: 1.15rem; font-weight: 800; letter-spacing: -0.3px; }
-.verified { width: 17px; height: 17px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.5rem; color: #fff; flex-shrink: 0; }
-.prof-handle { color: var(--txt2); font-size: 0.83rem; margin-top: 2px; }
-.prof-bio { margin-top: 10px; font-size: 0.9rem; line-height: 1.6; color: var(--txt); opacity: 0.85; white-space: pre-wrap; }
-.prof-stats { display: flex; gap: 18px; margin-top: 12px; }
-.stat { display: flex; gap: 4px; align-items: baseline; font-size: 0.85rem; }
-.stat-n { font-weight: 800; color: var(--txt); }
-.stat-l { color: var(--txt2); }
+/* ═══ CREATOR ═══ */
+.creator{padding:14px 20px;border-bottom:1px solid var(--border);display:none;background:linear-gradient(180deg,rgba(75,143,255,.03),transparent)}
+@media(max-width:600px){.creator{padding:12px 14px}}
+.cr-row{display:flex;gap:10px}
+.cr-av-ring{flex-shrink:0;width:38px;height:38px;border-radius:50%;padding:2px;background:linear-gradient(135deg,var(--accent),var(--accent2))}
+.cr-av{width:100%;height:100%;border-radius:50%;object-fit:cover;background:var(--s2)}
+.cr-body{flex:1;min-width:0}
+.cr-ta{width:100%;background:transparent;border:none;color:var(--txt);font-size:.95rem;line-height:1.6;resize:none;outline:none;min-height:44px;padding-top:8px;font-family:var(--font)}
+.cr-ta::placeholder{color:var(--txt3)}
+.cr-tools{display:flex;align-items:center;gap:2px;margin-top:5px}
+.tool-btn{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--accent);font-size:.95rem;cursor:pointer;border:none;background:transparent;transition:background .2s}
+.tool-btn:hover{background:var(--glow)}
+.cr-foot{display:flex;align-items:center;gap:10px;margin-top:8px;padding-top:9px;border-top:1px solid var(--border)}
+.char-c{font-size:.77rem;color:var(--txt3);margin-right:auto}
+.char-c.warn{color:var(--warn)}.char-c.danger{color:var(--err)}
+.post-btn{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;border-radius:99px;padding:8px 22px;font-weight:700;font-size:.87rem;cursor:pointer;transition:all .2s;box-shadow:0 2px 14px rgba(75,143,255,.3)}
+.post-btn:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 4px 22px rgba(75,143,255,.48)}
+.post-btn:disabled{opacity:.4;cursor:not-allowed}
+.img-prev-wrap{position:relative;margin-top:10px;border-radius:12px;overflow:hidden;border:1px solid var(--border)}
+.img-prev{width:100%;max-height:280px;object-fit:cover}
+.rm-img{position:absolute;top:8px;right:8px;width:28px;height:28px;background:rgba(0,0,0,.7);color:#fff;border:none;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.72rem;transition:background .2s}
+.rm-img:hover{background:var(--err)}
 
-/* ── Skeleton ───────────────────────────── */
-.sk { background: linear-gradient(90deg, var(--surface2) 25%, var(--surface3) 50%, var(--surface2) 75%); background-size: 200% 100%; animation: sk 1.6s infinite; border-radius: 6px; display: block; }
-@keyframes sk { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+/* ═══ FEED SECTION LABEL ═══ */
+.sec-label{padding:12px 20px 8px;font-size:.7rem;font-weight:700;color:var(--txt3);letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid var(--border)}
+@media(max-width:600px){.sec-label{padding:12px 14px 8px}}
 
-/* ── Post Creator ────────────────────────── */
-.creator { padding: 14px 16px; border-bottom: 1px solid var(--border); display: none; background: linear-gradient(180deg, rgba(75,143,255,0.03) 0%, transparent 100%); }
-.creator-row { display: flex; gap: 10px; }
-.ca-ring { flex-shrink: 0; width: 38px; height: 38px; border-radius: 50%; padding: 2px; background: linear-gradient(135deg, var(--accent), var(--accent2)); }
-.ca-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; background: var(--surface2); }
-.creator-input-wrap { flex: 1; min-width: 0; }
-.creator-ta { width: 100%; background: transparent; border: none; color: var(--txt); font-size: 0.95rem; line-height: 1.6; resize: none; outline: none; min-height: 44px; padding-top: 8px; font-family: var(--font); }
-.creator-ta::placeholder { color: var(--txt3); }
-.creator-tools { display: flex; align-items: center; gap: 2px; margin-top: 6px; }
-.tool-btn { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--accent); font-size: 1rem; cursor: pointer; transition: background 0.2s; border: none; background: transparent; }
-.tool-btn:hover { background: var(--accent-glow); }
-.creator-footer { display: flex; align-items: center; gap: 10px; margin-top: 8px; padding-top: 10px; border-top: 1px solid var(--border); }
-.char-c { font-size: 0.78rem; color: var(--txt3); margin-right: auto; }
-.char-c.warn { color: var(--warn); } .char-c.danger { color: var(--danger); }
-.post-btn { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; border: none; border-radius: 99px; padding: 8px 22px; font-weight: 700; font-size: 0.87rem; cursor: pointer; transition: all 0.2s var(--ease); box-shadow: 0 2px 16px rgba(75,143,255,0.3); }
-.post-btn:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 4px 24px rgba(75,143,255,0.45); }
-.post-btn:active:not(:disabled) { transform: none; }
-.post-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+/* ═══ POST CARD ═══ */
+.post{display:flex;gap:11px;padding:14px 20px;border-bottom:1px solid var(--border);transition:background .18s;animation:fadeUp .35s var(--ease) both}
+@media(max-width:600px){.post{padding:12px 14px}}
+.post:hover{background:rgba(255,255,255,.018)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.post-av-w{flex-shrink:0;width:38px;height:38px;border-radius:50%;overflow:hidden;background:var(--s2);position:relative}
+.post-av{width:38px;height:38px;object-fit:cover;border-radius:50%;opacity:0;transition:opacity .3s}.post-av.vis{opacity:1}
+.post-av-fb{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;color:var(--txt2)}
+.post-body{flex:1;min-width:0}
+.post-hdr{display:flex;align-items:center;gap:5px;margin-bottom:3px;flex-wrap:wrap}
+.post-author{font-weight:700;font-size:.88rem;letter-spacing:-.2px}
+.post-time{color:var(--txt2);font-size:.76rem}
+.post-menu-w{margin-left:auto;position:relative}
+.menu-btn{width:28px;height:28px;border-radius:50%;background:transparent;border:none;color:var(--txt3);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.85rem;transition:all .2s}
+.menu-btn:hover{background:var(--s3);color:var(--txt)}
+.drop-menu{position:absolute;right:0;top:calc(100% + 4px);background:var(--s2);border:1px solid var(--borderH);border-radius:var(--rs);padding:4px 0;min-width:152px;box-shadow:var(--shL);display:none;z-index:200;animation:fadeD .18s var(--ease)}
+.drop-menu.open{display:block}
+@keyframes fadeD{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:none}}
+.drop-item{display:flex;align-items:center;gap:9px;padding:9px 14px;font-size:.83rem;font-weight:500;cursor:pointer;border:none;background:transparent;color:var(--txt);width:100%;text-align:left;transition:background .15s}
+.drop-item:hover{background:var(--s3)}.drop-item.del{color:var(--err)}.drop-item.del:hover{background:rgba(255,78,106,.08)}
+.post-txt{font-size:.91rem;line-height:1.6;color:var(--txt);white-space:pre-wrap;word-wrap:break-word;margin-bottom:7px}
+.post-txt:empty{display:none}
+.post-link{color:var(--accent)}.post-link:hover{text-decoration:underline}
+.post-media{width:100%;border-radius:14px;margin:4px 0 8px;border:1px solid var(--border);object-fit:cover;max-height:480px}
+.post-yt{width:100%;aspect-ratio:16/9;border-radius:14px;border:1px solid var(--border);margin:4px 0 8px}
+.lp-w{display:none;margin:4px 0 8px}
+.lp-card{border:1px solid var(--border);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;transition:border-color .2s}
+.lp-card:hover{border-color:var(--borderH)}
+.lp-img{width:100%;height:145px;object-fit:cover;border-bottom:1px solid var(--border)}
+.lp-info{padding:10px 13px;background:var(--s2)}
+.lp-title{font-weight:700;font-size:.87rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.lp-desc{font-size:.79rem;color:var(--txt2);margin-top:2px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.lp-domain{font-size:.7rem;color:var(--txt3);margin-top:5px;font-weight:600;text-transform:uppercase;display:flex;align-items:center;gap:5px}
+.post-acts{display:flex;gap:18px;margin-top:7px}
+.act{display:flex;align-items:center;gap:5px;color:var(--txt2);font-size:.8rem;cursor:pointer;background:transparent;border:none;padding:4px 0;transition:color .15s}
+.act i{font-size:.9rem}.act:hover{color:var(--accent)}.act.liked{color:var(--like)}
 
-.img-preview-wrap { position: relative; margin-top: 10px; border-radius: 14px; overflow: hidden; border: 1px solid var(--border); }
-.img-preview { width: 100%; max-height: 300px; object-fit: cover; display: block; }
-.remove-img-btn { position: absolute; top: 8px; right: 8px; width: 28px; height: 28px; background: rgba(0,0,0,0.7); color: #fff; border: none; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.75rem; transition: background 0.2s; }
-.remove-img-btn:hover { background: var(--danger); }
+/* ═══ COMMENTS ═══ */
+.cmts{margin-top:12px;border-top:1px dashed var(--border);padding-top:12px;display:none}
+.cmt{display:flex;gap:8px;margin-bottom:10px}
+.cmt-av{width:26px;height:26px;border-radius:50%;object-fit:cover;flex-shrink:0}
+.cmt-body{background:var(--s2);border:1px solid var(--border);border-radius:12px;padding:7px 11px;flex:1;min-width:0}
+.cmt-meta{display:flex;align-items:center;gap:5px;margin-bottom:2px}
+.cmt-name{font-weight:700;font-size:.78rem;color:var(--txt2)}
+.cmt-time{font-size:.71rem;color:var(--txt3)}
+.cmt-mw{margin-left:auto;position:relative}
+.cmt-txt{font-size:.83rem;line-height:1.45}
+.cmt-inp-row{display:flex;gap:8px;align-items:center;margin-top:8px}
+.cmt-inp{flex:1;background:var(--s2);border:1px solid var(--border);color:var(--txt);padding:7px 13px;border-radius:99px;font-size:.83rem;outline:none;transition:border-color .2s}
+.cmt-inp:focus{border-color:var(--accent)}.cmt-inp:disabled{opacity:.5;cursor:not-allowed}
+.cmt-send{background:var(--s3);color:var(--txt2);border:1px solid var(--border);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;font-size:.78rem;flex-shrink:0}
+.cmt-send:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
 
-/* ── Feed ───────────────────────────────── */
-.feed { flex: 1; padding-bottom: calc(var(--nav-h) + 16px); }
-.section-label { padding: 10px 16px 8px; font-size: 0.72rem; font-weight: 700; color: var(--txt3); letter-spacing: 1px; text-transform: uppercase; border-bottom: 1px solid var(--border); }
-.sk-post { padding: 14px 16px; border-bottom: 1px solid var(--border); display: flex; gap: 10px; }
-.sk-av { width: 38px; height: 38px; border-radius: 50%; flex-shrink: 0; }
-.sk-lines { flex: 1; display: flex; flex-direction: column; gap: 7px; padding-top: 2px; }
+/* ═══ MODALS ═══ */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.82);backdrop-filter:blur(10px);z-index:100;display:none;justify-content:center;align-items:center;padding:20px}
+.overlay.open{display:flex;animation:ovF .2s}
+@keyframes ovF{from{opacity:0}to{opacity:1}}
+.modal{background:var(--s2);border:1px solid var(--border);border-radius:20px;width:100%;max-width:360px;padding:28px 22px;text-align:center;box-shadow:var(--shL);animation:mUp .3s var(--ease)}
+.modal.wide{max-width:500px;text-align:left}
+@keyframes mUp{from{opacity:0;transform:translateY(20px) scale(.97)}to{opacity:1;transform:none}}
+.m-logo{width:48px;height:48px;border-radius:13px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:1rem;font-weight:800;color:#fff;margin:0 auto 16px;box-shadow:0 4px 20px rgba(75,143,255,.3)}
+.m-title{font-family:var(--display);font-size:1.1rem;font-weight:800;margin-bottom:5px}
+.m-sub{font-size:.83rem;color:var(--txt2);margin-bottom:22px}
+.g_id_signin{display:flex;justify-content:center}
+.m-cancel{margin-top:15px;background:transparent;border:none;color:var(--txt2);font-size:.83rem;font-weight:600;cursor:pointer;padding:8px 16px;border-radius:99px;transition:all .2s}
+.m-cancel:hover{background:rgba(255,255,255,.05);color:var(--txt)}
+.m-input{width:100%;background:var(--s3);border:1.5px solid var(--border);color:var(--txt);padding:10px 13px;border-radius:10px;font-size:.87rem;outline:none;margin-bottom:12px;font-family:var(--font);text-align:center}
+.m-input:focus{border-color:var(--accent)}
+.m-ta{width:100%;background:var(--s3);border:1.5px solid var(--border);color:var(--txt);padding:10px 13px;border-radius:10px;font-size:.88rem;outline:none;margin-bottom:12px;font-family:var(--font);min-height:80px;resize:none;line-height:1.5}
+.m-ta:focus{border-color:var(--accent)}
+.m-acts{display:flex;gap:8px;justify-content:flex-end;margin-top:14px}
+.btn-g{background:transparent;border:1px solid var(--border);color:var(--txt2);padding:8px 16px;border-radius:8px;font-size:.84rem;font-weight:600;cursor:pointer;font-family:var(--font);transition:all .2s}
+.btn-g:hover{border-color:var(--borderH);color:var(--txt)}
+.btn-p{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;padding:8px 18px;border-radius:8px;font-size:.84rem;font-weight:700;cursor:pointer;font-family:var(--font);transition:all .2s}
+.btn-p:hover{box-shadow:0 2px 14px rgba(75,143,255,.4)}
+.btn-reg{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;border-radius:10px;padding:11px;font-weight:700;font-size:.9rem;cursor:pointer;width:100%;font-family:var(--font)}
 
-/* ── Post Card ──────────────────────────── */
-.post { display: flex; gap: 10px; padding: 14px 16px; border-bottom: 1px solid var(--border); transition: background 0.18s; animation: fadeUp 0.35s var(--ease) both; }
-.post:hover { background: rgba(255,255,255,0.018); }
-@keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-.post-av-wrap { flex-shrink: 0; width: 38px; height: 38px; border-radius: 50%; overflow: hidden; background: var(--surface2); position: relative; }
-.post-av { width: 38px; height: 38px; object-fit: cover; border-radius: 50%; opacity: 0; transition: opacity 0.3s; }
-.post-av.vis { opacity: 1; }
-.post-av-fb { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 0.78rem; font-weight: 700; color: var(--txt2); }
-.post-body { flex: 1; min-width: 0; }
-.post-hdr { display: flex; align-items: center; gap: 5px; margin-bottom: 4px; flex-wrap: wrap; }
-.post-author { font-weight: 700; font-size: 0.88rem; letter-spacing: -0.2px; }
-.post-time { color: var(--txt2); font-size: 0.77rem; }
-.post-menu-wrap { margin-left: auto; position: relative; }
-.menu-btn { width: 28px; height: 28px; border-radius: 50%; background: transparent; border: none; color: var(--txt3); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; transition: all 0.2s; }
-.menu-btn:hover { background: var(--surface3); color: var(--txt); }
-.drop-menu { position: absolute; right: 0; top: calc(100% + 4px); background: var(--surface2); border: 1px solid var(--border-hover); border-radius: var(--radius-sm); padding: 4px 0; min-width: 150px; box-shadow: var(--shadow-lg); display: none; z-index: 200; animation: fadeDown 0.18s var(--ease); }
-.drop-menu.open { display: block; }
-@keyframes fadeDown { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
-.drop-item { display: flex; align-items: center; gap: 9px; padding: 9px 14px; font-size: 0.84rem; font-weight: 500; cursor: pointer; border: none; background: transparent; color: var(--txt); width: 100%; text-align: left; transition: background 0.15s; }
-.drop-item:hover { background: var(--surface3); }
-.drop-item.del { color: var(--danger); }
-.drop-item.del:hover { background: rgba(255,78,106,0.08); }
-.post-txt { font-size: 0.91rem; line-height: 1.6; color: var(--txt); white-space: pre-wrap; word-wrap: break-word; margin-bottom: 8px; }
-.post-txt:empty { display: none; }
-.post-link { color: var(--accent); }
-.post-link:hover { text-decoration: underline; }
-.post-media { width: 100%; border-radius: 14px; margin: 4px 0 8px; border: 1px solid var(--border); object-fit: cover; max-height: 480px; }
-.post-yt { width: 100%; aspect-ratio: 16/9; border-radius: 14px; border: 1px solid var(--border); margin: 4px 0 8px; }
+/* ═══ TOAST ═══ */
+.toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--s2);border:1px solid var(--borderH);color:var(--txt);padding:10px 20px;border-radius:99px;font-size:.82rem;font-weight:500;z-index:9999;box-shadow:var(--sh);transition:transform .3s var(--ease),opacity .3s;opacity:0;pointer-events:none;display:flex;align-items:center;gap:7px;white-space:nowrap;max-width:calc(100% - 28px)}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+.toast.s{border-color:rgba(34,209,122,.4)}.toast.e{border-color:rgba(255,78,106,.4)}
 
-/* ── Link Preview ───────────────────────── */
-.lp-wrap { display: none; margin: 4px 0 8px; }
-.lp-card { border: 1px solid var(--border); border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; transition: border-color 0.2s; }
-.lp-card:hover { border-color: var(--border-hover); }
-.lp-img { width: 100%; height: 150px; object-fit: cover; border-bottom: 1px solid var(--border); }
-.lp-info { padding: 11px 13px; background: var(--surface2); }
-.lp-title { font-weight: 700; font-size: 0.89rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; color: var(--txt); }
-.lp-desc { font-size: 0.8rem; color: var(--txt2); margin-top: 3px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.lp-domain { font-size: 0.72rem; color: var(--txt3); margin-top: 5px; font-weight: 600; text-transform: uppercase; display: flex; align-items: center; gap: 5px; }
-
-/* ── Actions ─────────────────────────────── */
-.post-actions { display: flex; gap: 18px; margin-top: 6px; }
-.act { display: flex; align-items: center; gap: 5px; color: var(--txt2); font-size: 0.8rem; cursor: pointer; background: transparent; border: none; transition: color 0.15s; padding: 4px 0; }
-.act i { font-size: 0.9rem; }
-.act:hover { color: var(--accent); }
-.act.liked { color: var(--like); }
-.act.liked:hover { color: color-mix(in srgb, var(--like) 70%, transparent); }
-
-/* ── Comments ─────────────────────────────── */
-.cmts { margin-top: 12px; border-top: 1px dashed var(--border); padding-top: 12px; display: none; }
-.cmt { display: flex; gap: 8px; margin-bottom: 10px; }
-.cmt-av { width: 26px; height: 26px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
-.cmt-body { background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; padding: 7px 11px; flex: 1; min-width: 0; }
-.cmt-meta { display: flex; align-items: center; gap: 5px; margin-bottom: 2px; }
-.cmt-name { font-weight: 700; font-size: 0.78rem; color: var(--txt2); }
-.cmt-time { font-size: 0.72rem; color: var(--txt3); }
-.cmt-menu-wrap { margin-left: auto; position: relative; }
-.cmt-txt { font-size: 0.83rem; line-height: 1.45; color: var(--txt); }
-.cmt-input-row { display: flex; gap: 8px; align-items: center; margin-top: 8px; }
-.cmt-input { flex: 1; background: var(--surface2); border: 1px solid var(--border); color: var(--txt); padding: 7px 13px; border-radius: 99px; font-size: 0.83rem; outline: none; transition: border-color 0.2s; }
-.cmt-input:focus { border-color: var(--accent); }
-.cmt-input:disabled { opacity: 0.5; cursor: not-allowed; }
-.cmt-send-btn { background: var(--surface3); color: var(--txt2); border: 1px solid var(--border); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; font-size: 0.8rem; flex-shrink: 0; }
-.cmt-input:focus ~ .cmt-send-btn, .cmt-send-btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
-
-/* ── Bottom Nav ─────────────────────────── */
-.bot-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 600px; height: var(--nav-h); background: rgba(13,17,32,0.95); backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-around; z-index: 50; padding-bottom: env(safe-area-inset-bottom); }
-.nav-btn { display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; background: transparent; border: none; color: var(--txt3); transition: color 0.2s; padding: 6px 20px; border-radius: 12px; }
-.nav-btn i { font-size: 1.1rem; }
-.nav-btn span { font-size: 0.6rem; font-weight: 600; letter-spacing: 0.3px; }
-.nav-btn.active { color: var(--accent); }
-.nav-btn:hover { color: var(--txt); }
-
-/* ── Search Overlay ─────────────────────── */
-.search-overlay { position: fixed; inset: 0; background: var(--surface); z-index: 60; display: flex; flex-direction: column; transform: translateY(100%); transition: transform 0.35s var(--ease); }
-.search-overlay.open { transform: translateY(0); }
-.srch-hdr { display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
-.srch-input-wrap { flex: 1; display: flex; align-items: center; gap: 9px; background: var(--surface2); border: 1.5px solid var(--border); border-radius: 12px; padding: 9px 14px; transition: border-color 0.2s; }
-.srch-input-wrap:focus-within { border-color: var(--accent); }
-.srch-input-wrap i { color: var(--txt3); font-size: 0.9rem; flex-shrink: 0; }
-.srch-input { flex: 1; background: transparent; border: none; color: var(--txt); font-size: 0.95rem; outline: none; font-family: var(--font); }
-.srch-input::placeholder { color: var(--txt3); }
-.srch-close { background: var(--surface2); border: 1px solid var(--border); color: var(--txt2); padding: 8px 14px; border-radius: 10px; font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
-.srch-close:hover { color: var(--txt); border-color: var(--border-hover); }
-.srch-results { flex: 1; overflow-y: auto; padding-bottom: 20px; }
-.srch-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 60%; color: var(--txt3); gap: 12px; }
-.srch-empty i { font-size: 2.5rem; opacity: 0.5; }
-.srch-empty p { font-size: 0.88rem; }
-.srch-tag { padding: 8px 16px 6px; font-size: 0.7rem; font-weight: 700; color: var(--txt3); letter-spacing: 1px; text-transform: uppercase; }
-.srch-hit { display: flex; align-items: flex-start; gap: 10px; padding: 12px 16px; border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.15s; }
-.srch-hit:hover { background: var(--surface2); }
-.srch-hit-av { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; background: var(--surface2); flex-shrink: 0; }
-.srch-hit-body { flex: 1; min-width: 0; }
-.srch-hit-name { font-weight: 700; font-size: 0.86rem; margin-bottom: 2px; display: flex; align-items: center; gap: 5px; }
-.srch-hit-txt { font-size: 0.82rem; color: var(--txt2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.srch-hit-time { font-size: 0.72rem; color: var(--txt3); margin-top: 2px; }
-mark { background: rgba(75,143,255,0.22); color: var(--accent); border-radius: 3px; padding: 0 2px; }
-
-/* ── Settings Panel ─────────────────────── */
-.settings-panel { position: fixed; inset: 0; z-index: 70; display: flex; }
-.settings-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.7); opacity: 0; transition: opacity 0.3s; }
-.settings-drawer { position: absolute; right: 0; top: 0; bottom: 0; width: min(380px, 100%); background: var(--surface); border-left: 1px solid var(--border); display: flex; flex-direction: column; transform: translateX(100%); transition: transform 0.35s var(--ease); overflow: hidden; }
-.settings-panel.open .settings-backdrop { opacity: 1; }
-.settings-panel.open .settings-drawer { transform: translateX(0); }
-.settings-panel { pointer-events: none; }
-.settings-panel.open { pointer-events: all; }
-.set-hdr { display: flex; align-items: center; gap: 12px; padding: 16px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
-.set-hdr-title { font-family: var(--font-display); font-size: 1rem; font-weight: 800; flex: 1; }
-.set-close { width: 32px; height: 32px; border-radius: 50%; background: var(--surface2); border: 1px solid var(--border); color: var(--txt2); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; font-size: 0.9rem; }
-.set-close:hover { background: var(--surface3); color: var(--txt); }
-.set-body { flex: 1; overflow-y: auto; padding: 8px 0 24px; }
-.set-group { margin-bottom: 4px; }
-.set-group-label { padding: 12px 16px 6px; font-size: 0.68rem; font-weight: 700; color: var(--txt3); letter-spacing: 1px; text-transform: uppercase; }
-.set-item { display: flex; align-items: center; gap: 12px; padding: 13px 16px; cursor: pointer; transition: background 0.15s; border: none; background: transparent; width: 100%; text-align: left; }
-.set-item:hover { background: rgba(255,255,255,0.03); }
-.set-icon { width: 34px; height: 34px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; flex-shrink: 0; }
-.set-info { flex: 1; min-width: 0; }
-.set-name { font-size: 0.88rem; font-weight: 600; color: var(--txt); }
-.set-desc { font-size: 0.76rem; color: var(--txt2); margin-top: 1px; }
-.set-arrow { color: var(--txt3); font-size: 0.75rem; }
-.set-item.danger .set-name { color: var(--danger); }
-.set-divider { height: 1px; background: var(--border); margin: 6px 0; }
-
-/* ── Profile Editor (in settings) ─────────── */
-.set-sub-panel { position: absolute; inset: 0; background: var(--surface); transform: translateX(100%); transition: transform 0.3s var(--ease); display: flex; flex-direction: column; }
-.set-sub-panel.open { transform: translateX(0); }
-.set-sub-hdr { display: flex; align-items: center; gap: 10px; padding: 14px 16px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
-.back-btn { width: 30px; height: 30px; border-radius: 50%; background: var(--surface2); border: 1px solid var(--border); color: var(--txt2); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.8rem; transition: all 0.2s; flex-shrink: 0; }
-.back-btn:hover { color: var(--txt); background: var(--surface3); }
-.set-sub-title { font-weight: 700; font-size: 0.92rem; flex: 1; }
-.set-sub-body { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
-.set-field { display: flex; flex-direction: column; gap: 5px; }
-.set-label { font-size: 0.75rem; font-weight: 600; color: var(--txt2); text-transform: uppercase; letter-spacing: 0.5px; }
-.set-input { background: var(--surface2); border: 1.5px solid var(--border); color: var(--txt); padding: 10px 13px; border-radius: var(--radius-sm); font-size: 0.88rem; outline: none; transition: border-color 0.2s; font-family: var(--font); width: 100%; }
-.set-input:focus { border-color: var(--accent); }
-.set-input::placeholder { color: var(--txt3); }
-textarea.set-input { min-height: 90px; resize: none; line-height: 1.5; }
-.set-save-btn { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; border: none; border-radius: 10px; padding: 11px; font-weight: 700; font-size: 0.9rem; cursor: pointer; transition: all 0.2s; margin-top: 4px; }
-.set-save-btn:hover { box-shadow: 0 4px 20px rgba(75,143,255,0.4); }
-.set-save-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-/* ── Toggle ─────────────────────────────── */
-.toggle-wrap { display: flex; align-items: center; }
-.toggle { width: 42px; height: 24px; background: var(--surface3); border-radius: 99px; position: relative; cursor: pointer; border: none; transition: background 0.25s; flex-shrink: 0; }
-.toggle.on { background: var(--accent); }
-.toggle::after { content: ''; width: 18px; height: 18px; background: #fff; border-radius: 50%; position: absolute; top: 3px; left: 3px; transition: transform 0.25s var(--ease); box-shadow: 0 1px 4px rgba(0,0,0,0.4); }
-.toggle.on::after { transform: translateX(18px); }
-
-/* ── Modal ──────────────────────────────── */
-.overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); z-index: 100; display: none; justify-content: center; align-items: center; padding: 20px; }
-.overlay.open { display: flex; animation: ovFade 0.2s; }
-@keyframes ovFade { from { opacity: 0; } to { opacity: 1; } }
-.modal { background: var(--surface2); border: 1px solid var(--border); border-radius: 20px; width: 100%; max-width: 360px; padding: 28px 22px; text-align: center; box-shadow: var(--shadow-lg); animation: modalUp 0.3s var(--ease); }
-.modal.wide { max-width: 500px; text-align: left; }
-@keyframes modalUp { from { opacity: 0; transform: translateY(20px) scale(0.97); } to { opacity: 1; transform: none; } }
-.modal-logo { width: 48px; height: 48px; border-radius: 13px; background: linear-gradient(135deg, var(--accent), var(--accent2)); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 1rem; font-weight: 800; color: #fff; margin: 0 auto 16px; box-shadow: 0 4px 20px rgba(75,143,255,0.3); }
-.modal-title { font-family: var(--font-display); font-size: 1.1rem; font-weight: 800; margin-bottom: 5px; }
-.modal-sub { font-size: 0.83rem; color: var(--txt2); margin-bottom: 22px; }
-.g_id_signin { display: flex; justify-content: center; }
-.modal-cancel { margin-top: 16px; background: transparent; border: none; color: var(--txt2); font-size: 0.83rem; font-weight: 600; cursor: pointer; padding: 8px 16px; border-radius: 99px; transition: all 0.2s; }
-.modal-cancel:hover { background: rgba(255,255,255,0.05); color: var(--txt); }
-.modal-ta { width: 100%; background: var(--surface3); border: 1.5px solid var(--border); color: var(--txt); padding: 10px 13px; border-radius: 10px; font-size: 0.9rem; outline: none; margin-bottom: 12px; font-family: var(--font); min-height: 80px; resize: none; line-height: 1.5; }
-.modal-ta:focus { border-color: var(--accent); }
-.modal-input { width: 100%; background: var(--surface3); border: 1.5px solid var(--border); color: var(--txt); padding: 10px 13px; border-radius: 10px; font-size: 0.88rem; outline: none; margin-bottom: 12px; font-family: var(--font); text-align: center; }
-.modal-input:focus { border-color: var(--accent); }
-.modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 14px; }
-.btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--txt2); padding: 8px 16px; border-radius: 8px; font-size: 0.84rem; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: var(--font); }
-.btn-ghost:hover { border-color: var(--border-hover); color: var(--txt); }
-.btn-pri { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; border: none; padding: 8px 18px; border-radius: 8px; font-size: 0.84rem; font-weight: 700; cursor: pointer; font-family: var(--font); transition: all 0.2s; }
-.btn-pri:hover { box-shadow: 0 2px 16px rgba(75,143,255,0.4); }
-.btn-register { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; border: none; border-radius: 10px; padding: 11px; font-weight: 700; font-size: 0.9rem; cursor: pointer; width: 100%; font-family: var(--font); }
-
-/* ── Toast ──────────────────────────────── */
-.toast { position: fixed; bottom: calc(var(--nav-h) + 12px); left: 50%; transform: translateX(-50%) translateY(80px); background: var(--surface2); border: 1px solid var(--border-hover); color: var(--txt); padding: 10px 20px; border-radius: 99px; font-size: 0.83rem; font-weight: 500; z-index: 9999; box-shadow: var(--shadow); transition: transform 0.3s var(--ease), opacity 0.3s; opacity: 0; pointer-events: none; display: flex; align-items: center; gap: 7px; white-space: nowrap; max-width: calc(100% - 32px); }
-.toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
-.toast.s { border-color: rgba(34,209,122,0.4); }
-.toast.e { border-color: rgba(255,78,106,0.4); }
-
-/* ── Status ─────────────────────────────── */
-.status { text-align: center; padding: 50px 20px; color: var(--txt2); font-size: 0.9rem; display: flex; flex-direction: column; align-items: center; gap: 10px; }
-.status-icon { font-size: 2.2rem; opacity: 0.4; }
-.err-banner { margin: 12px 16px; padding: 12px 14px; background: rgba(255,78,106,0.08); border: 1px solid rgba(255,78,106,0.2); border-radius: var(--radius-sm); color: var(--danger); font-size: 0.85rem; display: flex; align-items: center; gap: 8px; }
-.retry-btn { margin-left: auto; background: transparent; border: 1px solid rgba(255,78,106,0.35); color: var(--danger); padding: 4px 12px; border-radius: 99px; font-size: 0.78rem; font-weight: 600; cursor: pointer; font-family: var(--font); flex-shrink: 0; }
+/* Status */
+.status{text-align:center;padding:52px 20px;color:var(--txt2);font-size:.9rem;display:flex;flex-direction:column;align-items:center;gap:10px}
+.status-ico{font-size:2.2rem;opacity:.4}
+.err-banner{margin:12px 20px;padding:12px 14px;background:rgba(255,78,106,.08);border:1px solid rgba(255,78,106,.2);border-radius:var(--rs);color:var(--err);font-size:.84rem;display:flex;align-items:center;gap:8px}
+.retry-btn{margin-left:auto;background:transparent;border:1px solid rgba(255,78,106,.35);color:var(--err);padding:4px 12px;border-radius:99px;font-size:.77rem;font-weight:600;cursor:pointer;font-family:var(--font);flex-shrink:0}
 </style>
 </head>
 <body>
 
-<div class="layout">
-<div class="column">
+<div class="root">
 
-  <!-- Header -->
-  <header class="hdr">
-    <div class="hdr-brand">
-      <div class="hdr-logo">KM</div>
-      <div class="hdr-title" id="hdr-title">Space</div>
+  <!-- ══ LEFT SIDEBAR ══ -->
+  <aside class="sidebar-left">
+    <a class="sb-logo" href="#">
+      <div class="logo-mark">KM</div>
+      <div class="logo-text" id="sb-title">Space</div>
+    </a>
+    <nav class="sb-nav">
+      <button class="sb-item active" id="sbn-home" onclick="navTo('home')">
+        <i class="fas fa-house"></i><span>หน้าหลัก</span>
+      </button>
+      <button class="sb-item" id="sbn-settings" onclick="openSettings()">
+        <i class="fas fa-gear"></i><span>ตั้งค่า</span>
+      </button>
+    </nav>
+    <div class="sb-user-card" id="sb-user-card">
+      <div class="sb-uc-row">
+        <img class="sb-uc-av" id="sb-uc-av" alt="">
+        <div class="sb-uc-info">
+          <div class="sb-uc-name" id="sb-uc-name"></div>
+          <div class="sb-uc-email" id="sb-uc-email"></div>
+        </div>
+      </div>
+      <button class="sb-so-btn" onclick="signOut()"><i class="fas fa-right-from-bracket"></i> ออกจากระบบ</button>
     </div>
-    <div class="hdr-actions">
+  </aside>
+
+  <!-- ══ FEED COLUMN ══ -->
+  <div class="feed-col">
+    <div class="feed-hdr">
+      <div class="feed-hdr-left">
+        <div class="logo-mark mob-logo" id="mob-logo" style="width:28px;height:28px;font-size:.7rem;display:none">KM</div>
+        <div class="feed-hdr-title" id="feed-hdr-title">Timeline</div>
+      </div>
       <button class="auth-pill" id="auth-btn" onclick="onAuthClick()">Sign In</button>
     </div>
-  </header>
 
-  <!-- Profile -->
-  <section class="prof-section">
-    <div class="prof-cover" id="prof-cover">
-      <div class="prof-cover-fade"></div>
-    </div>
-    <div class="prof-body">
-      <div class="prof-avatar-ring">
-        <div class="prof-avatar-inner" id="av-inner">
-          <div class="prof-avatar-fallback" id="av-fallback">KM</div>
-          <img class="prof-avatar-img" id="av-img" alt="">
+    <div class="feed-main" id="feed-main">
+      <section id="prof-section" style="border-bottom:1px solid var(--border)">
+        <div class="prof-cover" id="prof-cover"><div class="cover-fade"></div></div>
+        <div class="prof-body">
+          <div class="prof-av-ring">
+            <div class="prof-av-inner">
+              <div class="prof-av-fb" id="av-fb">KM</div>
+              <img class="prof-av-img" id="av-img" alt="">
+            </div>
+          </div>
+          <div class="prof-text">
+            <div class="prof-name-row">
+              <span class="prof-name" id="prof-name"><span class="sk" style="width:110px;height:17px;display:inline-block"></span></span>
+              <div class="verified"><i class="fas fa-check" style="font-size:.44rem"></i></div>
+            </div>
+            <div class="prof-handle" id="prof-handle">@koomean</div>
+            <div class="prof-bio" id="prof-bio">
+              <span class="sk" style="width:100%;height:12px;display:block;margin-top:8px"></span>
+              <span class="sk" style="width:60%;height:12px;display:block;margin-top:6px"></span>
+            </div>
+            <div class="prof-stats" id="prof-stats" style="display:none">
+              <span class="stat-n" id="stat-posts">0</span><span class="stat-l">โพสต์</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="creator" id="creator">
+        <div class="cr-row">
+          <div class="cr-av-ring"><img class="cr-av" id="cr-av" alt=""></div>
+          <div class="cr-body">
+            <textarea id="post-ta" class="cr-ta" placeholder="คุณกำลังคิดอะไรอยู่..." maxlength="500"></textarea>
+            <div class="cr-tools">
+              <input type="file" id="file-in" accept="image/png,image/jpeg,image/gif,image/webp" style="display:none">
+              <label for="file-in" class="tool-btn" title="แนบรูป"><i class="far fa-image"></i></label>
+            </div>
+            <div id="img-prev-wrap" class="img-prev-wrap" style="display:none">
+              <img id="img-prev" class="img-prev" alt="">
+              <button class="rm-img" onclick="removeImg()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="cr-foot">
+              <span class="char-c" id="char-c">0 / 500</span>
+              <button class="post-btn" id="post-btn" onclick="submitPost()">โพสต์</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div id="feed">
+        <div class="sec-label">Timeline</div>
+        <div id="sk-posts">
+          <div class="sk-post"><div class="sk sk-av"></div><div class="sk-lines"><span class="sk" style="width:35%;height:11px"></span><span class="sk" style="width:100%;height:11px"></span><span class="sk" style="width:70%;height:11px"></span></div></div>
+          <div class="sk-post"><div class="sk sk-av"></div><div class="sk-lines"><span class="sk" style="width:50%;height:11px"></span><span class="sk" style="width:88%;height:11px"></span><span class="sk" style="width:55%;height:11px"></span></div></div>
+          <div class="sk-post"><div class="sk sk-av"></div><div class="sk-lines"><span class="sk" style="width:42%;height:11px"></span><span class="sk" style="width:78%;height:11px"></span><span class="sk" style="width:65%;height:11px"></span></div></div>
         </div>
       </div>
-      <div class="prof-text">
-        <div class="prof-name-row">
-          <span class="prof-name" id="prof-name"><span class="sk" style="width:110px;height:18px;display:inline-block;"></span></span>
-          <div class="verified"><i class="fas fa-check" style="font-size:0.45rem;"></i></div>
-        </div>
-        <div class="prof-handle" id="prof-handle">@koomean</div>
-        <div class="prof-bio" id="prof-bio">
-          <span class="sk" style="width:100%;height:12px;display:block;margin-top:8px;"></span>
-          <span class="sk" style="width:65%;height:12px;display:block;margin-top:6px;"></span>
-        </div>
-        <div class="prof-stats" id="prof-stats" style="display:none">
-          <div class="stat"><span class="stat-n" id="stat-posts">0</span><span class="stat-l">โพสต์</span></div>
+    </div>
+  </div>
+
+  <!-- ══ RIGHT SIDEBAR ══ -->
+  <aside class="sidebar-right">
+    <div class="rw">
+      <div class="rw-title"><i class="fas fa-magnifying-glass" style="color:var(--accent);margin-right:8px"></i>ค้นหาโพสต์</div>
+      <div class="rw-srch-pad">
+        <div class="rw-sbox">
+          <i class="fas fa-magnifying-glass"></i>
+          <input class="rw-sinput" id="rw-srch" placeholder="พิมพ์เพื่อค้นหา... (Ctrl+K)" autocomplete="off">
         </div>
       </div>
+      <div class="rw-results" id="rw-results" style="display:none"></div>
     </div>
-  </section>
 
-  <!-- Creator (admin only) -->
-  <section class="creator" id="creator">
-    <div class="creator-row">
-      <div class="ca-ring"><img class="ca-img" id="ca-img" alt=""></div>
-      <div class="creator-input-wrap">
-        <textarea id="post-ta" class="creator-ta" placeholder="คุณกำลังคิดอะไรอยู่..." maxlength="500"></textarea>
-        <div class="creator-tools">
-          <input type="file" id="file-in" accept="image/png,image/jpeg,image/gif,image/webp" style="display:none">
-          <label for="file-in" class="tool-btn" title="แนบรูป"><i class="far fa-image"></i></label>
-        </div>
-        <div id="img-prev-wrap" class="img-preview-wrap" style="display:none">
-          <img id="img-prev" class="img-preview" alt="">
-          <button class="remove-img-btn" onclick="removeImg()"><i class="fas fa-times"></i></button>
-        </div>
-        <div class="creator-footer">
-          <span class="char-c" id="char-c">0 / 500</span>
-          <button class="post-btn" id="post-btn" onclick="submitPost()">Post</button>
-        </div>
+    <div class="rw" id="rw-auth" style="display:none">
+      <div class="rw-auth-pad">
+        <div style="font-weight:700;font-size:.9rem;margin-bottom:5px">เข้าสู่ระบบ</div>
+        <div style="font-size:.8rem;color:var(--txt2);margin-bottom:13px">เพื่อกด Like และคอมเมนต์</div>
+        <button class="rw-auth-btn" onclick="openModal('login-modal')"><i class="fab fa-google" style="margin-right:6px"></i>Sign in with Google</button>
       </div>
     </div>
-  </section>
 
-  <!-- Feed -->
-  <main class="feed" id="feed">
-    <div class="section-label">Timeline</div>
-    <div id="sk-posts">
-      <div class="sk-post"><div class="sk sk-av"></div><div class="sk-lines"><span class="sk" style="width:38%;height:12px;"></span><span class="sk" style="width:100%;height:12px;"></span><span class="sk" style="width:70%;height:12px;"></span></div></div>
-      <div class="sk-post"><div class="sk sk-av"></div><div class="sk-lines"><span class="sk" style="width:50%;height:12px;"></span><span class="sk" style="width:90%;height:12px;"></span><span class="sk" style="width:55%;height:12px;"></span></div></div>
-      <div class="sk-post"><div class="sk sk-av"></div><div class="sk-lines"><span class="sk" style="width:42%;height:12px;"></span><span class="sk" style="width:80%;height:12px;"></span><span class="sk" style="width:65%;height:12px;"></span></div></div>
+    <div class="rw">
+      <div class="rw-title">เกี่ยวกับ</div>
+      <div class="rw-about-pad">
+        <p id="rw-bio"></p>
+        <div class="rw-links">
+          <div class="rw-link" onclick="window.open('https://koomean.github.io/koomean/','_blank')"><i class="fas fa-globe"></i>เว็บไซต์</div>
+          <div class="rw-link" onclick="window.open('https://youtube.com/@koomean','_blank')"><i class="fab fa-youtube"></i>YouTube</div>
+        </div>
+        <div style="margin-top:12px;font-size:.71rem;color:var(--txt3)">Koo Mean Space v2.0 · @koomean</div>
+      </div>
     </div>
-  </main>
+  </aside>
 
-</div><!-- /column -->
-</div><!-- /layout -->
+</div><!-- /root -->
 
-<!-- Bottom Nav -->
-<nav class="bot-nav">
-  <button class="nav-btn active" id="nav-home" onclick="navTo('home')">
-    <i class="fas fa-house"></i><span>หน้าหลัก</span>
-  </button>
-  <button class="nav-btn" id="nav-search" onclick="openSearch()">
-    <i class="fas fa-magnifying-glass"></i><span>ค้นหา</span>
-  </button>
-  <button class="nav-btn" id="nav-settings" onclick="openSettings()">
-    <i class="fas fa-gear"></i><span>ตั้งค่า</span>
-  </button>
+<!-- ══ MOBILE BOTTOM NAV ══ -->
+<nav class="mob-nav" id="mob-nav">
+  <button class="mnav-btn active" id="mnav-home" onclick="navTo('home')"><i class="fas fa-house"></i><span>หน้าหลัก</span></button>
+  <button class="mnav-btn" id="mnav-search" onclick="openMobSearch()"><i class="fas fa-magnifying-glass"></i><span>ค้นหา</span></button>
+  <button class="mnav-btn" id="mnav-settings" onclick="openSettings()"><i class="fas fa-gear"></i><span>ตั้งค่า</span></button>
 </nav>
 
-<!-- Search Overlay -->
-<div class="search-overlay" id="srch-overlay">
-  <div class="srch-hdr">
-    <div class="srch-input-wrap">
-      <i class="fas fa-magnifying-glass"></i>
-      <input type="search" class="srch-input" id="srch-input" placeholder="ค้นหาโพสต์..." autocomplete="off">
-    </div>
-    <button class="srch-close" onclick="closeSearch()">ยกเลิก</button>
+<!-- ══ MOBILE SEARCH OVERLAY ══ -->
+<div class="mob-srch-overlay" id="mob-srch">
+  <div class="mob-srch-hdr">
+    <div class="mob-sbox"><i class="fas fa-magnifying-glass"></i><input class="mob-sinput" id="mob-srch-in" placeholder="ค้นหาโพสต์..." autocomplete="off"></div>
+    <button class="mob-srch-cancel" onclick="closeMobSearch()">ยกเลิก</button>
   </div>
-  <div class="srch-results" id="srch-results">
-    <div class="srch-empty">
-      <i class="fas fa-magnifying-glass-chart"></i>
-      <p>พิมพ์เพื่อค้นหาโพสต์</p>
-    </div>
-  </div>
+  <div class="mob-srch-body" id="mob-srch-body"><div class="srch-empty"><i class="fas fa-magnifying-glass-chart"></i><p>พิมพ์เพื่อค้นหาโพสต์</p></div></div>
 </div>
 
-<!-- Settings Panel -->
-<div class="settings-panel" id="settings-panel">
-  <div class="settings-backdrop" onclick="closeSettings()"></div>
-  <div class="settings-drawer">
+<!-- ══ SETTINGS DRAWER ══ -->
+<div class="set-panel" id="set-panel">
+  <div class="set-bd" onclick="closeSettings()"></div>
+  <div class="set-drawer">
     <div class="set-hdr">
-      <div class="hdr-logo">KM</div>
-      <div class="set-hdr-title">ตั้งค่า</div>
+      <div class="logo-mark">KM</div>
+      <div class="set-hdr-t">ตั้งค่า</div>
       <button class="set-close" onclick="closeSettings()"><i class="fas fa-times"></i></button>
     </div>
     <div class="set-body">
-
-      <!-- Account -->
-      <div class="set-group">
-        <div class="set-group-label">บัญชี</div>
-        <button class="set-item" id="set-login-item" onclick="onSetLoginClick()">
-          <div class="set-icon" style="background:rgba(75,143,255,0.12);color:var(--accent)"><i class="fas fa-user"></i></div>
-          <div class="set-info"><div class="set-name" id="set-login-name">Sign In</div><div class="set-desc" id="set-login-desc">เข้าสู่ระบบเพื่อใช้งาน</div></div>
-          <i class="fas fa-chevron-right set-arrow"></i>
-        </button>
-      </div>
-
-      <div class="set-divider"></div>
-
-      <!-- Admin tools -->
-      <div class="set-group" id="admin-settings-group" style="display:none">
-        <div class="set-group-label">จัดการ Space</div>
-        <button class="set-item" onclick="openSubPanel('profile-edit')">
-          <div class="set-icon" style="background:rgba(108,92,231,0.12);color:var(--accent2)"><i class="fas fa-id-card"></i></div>
+      <div class="set-gl">บัญชี</div>
+      <button class="set-row" onclick="onSetLoginClick()">
+        <div class="set-icon" style="background:rgba(75,143,255,.12);color:var(--accent)"><i class="fas fa-user"></i></div>
+        <div class="set-info"><div class="set-name" id="set-ln">Sign In</div><div class="set-desc" id="set-ld">เข้าสู่ระบบเพื่อใช้งาน</div></div>
+        <i class="fas fa-chevron-right set-arr"></i>
+      </button>
+      <div class="set-div"></div>
+      <div id="admin-grp" style="display:none">
+        <div class="set-gl">จัดการ Space</div>
+        <button class="set-row" onclick="openSub('profile-edit')">
+          <div class="set-icon" style="background:rgba(108,92,231,.12);color:var(--accent2)"><i class="fas fa-id-card"></i></div>
           <div class="set-info"><div class="set-name">แก้ไขโปรไฟล์</div><div class="set-desc">ชื่อ, Bio, รูปภาพ, ปกหน้า</div></div>
-          <i class="fas fa-chevron-right set-arrow"></i>
+          <i class="fas fa-chevron-right set-arr"></i>
         </button>
+        <div class="set-div"></div>
       </div>
-
-      <div class="set-divider"></div>
-
-      <!-- Appearance -->
-      <div class="set-group">
-        <div class="set-group-label">การแสดงผล</div>
-        <div class="set-item" style="cursor:default">
-          <div class="set-icon" style="background:rgba(34,209,122,0.12);color:var(--success)"><i class="fas fa-moon"></i></div>
-          <div class="set-info"><div class="set-name">โหมดมืด</div><div class="set-desc">ปรับแสงตามระบบอัตโนมัติ</div></div>
-          <div class="toggle-wrap"><button class="toggle on" id="dark-toggle" onclick="toggleDark()"></button></div>
-        </div>
+      <div class="set-gl">การแสดงผล</div>
+      <div class="set-row" style="cursor:default">
+        <div class="set-icon" style="background:rgba(34,209,122,.1);color:var(--ok)"><i class="fas fa-moon"></i></div>
+        <div class="set-info"><div class="set-name">โหมดมืด</div><div class="set-desc">สลับธีมสว่าง/มืด</div></div>
+        <button class="tog on" id="dark-tog" onclick="toggleDark()"></button>
       </div>
-
-      <div class="set-divider"></div>
-
-      <!-- Info -->
-      <div class="set-group">
-        <div class="set-group-label">เกี่ยวกับ</div>
-        <div class="set-item" style="cursor:default">
-          <div class="set-icon" style="background:rgba(245,158,11,0.12);color:var(--warn)"><i class="fas fa-circle-info"></i></div>
-          <div class="set-info"><div class="set-name">Koo Mean Space</div><div class="set-desc" id="set-version">v2.0 · by @koomean</div></div>
-        </div>
-        <button class="set-item" onclick="window.open('https://koomean.github.io/koomean/', '_blank')">
-          <div class="set-icon" style="background:rgba(255,255,255,0.06);color:var(--txt2)"><i class="fas fa-globe"></i></div>
-          <div class="set-info"><div class="set-name">เว็บไซต์</div><div class="set-desc">koomean.github.io/koomean</div></div>
-          <i class="fas fa-arrow-up-right-from-square set-arrow"></i>
-        </button>
-        <button class="set-item" onclick="window.open('https://youtube.com/@koomean', '_blank')">
-          <div class="set-icon" style="background:rgba(255,78,106,0.1);color:var(--danger)"><i class="fab fa-youtube"></i></div>
-          <div class="set-info"><div class="set-name">YouTube</div><div class="set-desc">@koomean</div></div>
-          <i class="fas fa-arrow-up-right-from-square set-arrow"></i>
-        </button>
+      <div class="set-div"></div>
+      <div class="set-gl">เกี่ยวกับ</div>
+      <div class="set-row" style="cursor:default">
+        <div class="set-icon" style="background:rgba(245,158,11,.1);color:var(--warn)"><i class="fas fa-circle-info"></i></div>
+        <div class="set-info"><div class="set-name" id="set-app-name">Koo Mean Space</div><div class="set-desc">v2.0 · by @koomean</div></div>
       </div>
-
-      <div class="set-divider"></div>
-
-      <!-- Danger -->
-      <div class="set-group" id="signout-group" style="display:none">
-        <button class="set-item danger" onclick="signOut()">
-          <div class="set-icon" style="background:rgba(255,78,106,0.1);color:var(--danger)"><i class="fas fa-right-from-bracket"></i></div>
+      <button class="set-row" onclick="window.open('https://koomean.github.io/koomean/','_blank')">
+        <div class="set-icon" style="background:rgba(255,255,255,.05);color:var(--txt2)"><i class="fas fa-globe"></i></div>
+        <div class="set-info"><div class="set-name">เว็บไซต์</div><div class="set-desc">koomean.github.io/koomean</div></div>
+        <i class="fas fa-arrow-up-right-from-square set-arr"></i>
+      </button>
+      <button class="set-row" onclick="window.open('https://youtube.com/@koomean','_blank')">
+        <div class="set-icon" style="background:rgba(255,78,106,.1);color:var(--err)"><i class="fab fa-youtube"></i></div>
+        <div class="set-info"><div class="set-name">YouTube</div><div class="set-desc">@koomean</div></div>
+        <i class="fas fa-arrow-up-right-from-square set-arr"></i>
+      </button>
+      <div class="set-div"></div>
+      <div id="so-grp" style="display:none">
+        <button class="set-row del" onclick="signOut()">
+          <div class="set-icon" style="background:rgba(255,78,106,.1);color:var(--err)"><i class="fas fa-right-from-bracket"></i></div>
           <div class="set-info"><div class="set-name">ออกจากระบบ</div><div class="set-desc" id="so-email"></div></div>
         </button>
       </div>
-
     </div>
-
-    <!-- Sub panel: Profile edit -->
-    <div class="set-sub-panel" id="sub-profile-edit">
+    <div class="set-sub" id="sub-profile-edit">
       <div class="set-sub-hdr">
-        <button class="back-btn" onclick="closeSubPanel()"><i class="fas fa-chevron-left"></i></button>
-        <div class="set-sub-title">แก้ไขโปรไฟล์ Space</div>
+        <button class="back-btn" onclick="closeSub()"><i class="fas fa-chevron-left"></i></button>
+        <div class="set-sub-t">แก้ไขโปรไฟล์ Space</div>
       </div>
       <div class="set-sub-body">
-        <div class="set-field"><label class="set-label">ชื่อเว็บไซต์</label><input class="set-input" id="si-title" type="text" placeholder="เช่น Koo Mean Space"></div>
-        <div class="set-field"><label class="set-label">ชื่อโปรไฟล์</label><input class="set-input" id="si-name" type="text" placeholder="เช่น Koo Mean"></div>
-        <div class="set-field"><label class="set-label">Handle</label><input class="set-input" id="si-handle" type="text" placeholder="@koomean"></div>
-        <div class="set-field"><label class="set-label">Bio</label><textarea class="set-input" id="si-bio" placeholder="เขียนบางอย่างเกี่ยวกับตัวเอง..."></textarea></div>
-        <div class="set-field"><label class="set-label">URL รูปโปรไฟล์</label><input class="set-input" id="si-img" type="url" placeholder="https://..."></div>
-        <div class="set-field"><label class="set-label">URL รูปปกหน้า</label><input class="set-input" id="si-cover" type="url" placeholder="https://..."></div>
-        <button class="set-save-btn" id="si-save-btn" onclick="saveProfile()">บันทึกการเปลี่ยนแปลง</button>
+        <div class="sf"><label class="sl">ชื่อเว็บไซต์</label><input class="si" id="si-title" type="text" placeholder="Koo Mean Space"></div>
+        <div class="sf"><label class="sl">ชื่อโปรไฟล์</label><input class="si" id="si-name" type="text" placeholder="Koo Mean"></div>
+        <div class="sf"><label class="sl">Handle</label><input class="si" id="si-handle" type="text" placeholder="@koomean"></div>
+        <div class="sf"><label class="sl">Bio</label><textarea class="si" id="si-bio" placeholder="เขียนบางอย่างเกี่ยวกับตัวเอง..."></textarea></div>
+        <div class="sf"><label class="sl">URL รูปโปรไฟล์</label><input class="si" id="si-img" type="url" placeholder="https://..."></div>
+        <div class="sf"><label class="sl">URL รูปปกหน้า</label><input class="si" id="si-cover" type="url" placeholder="https://..."></div>
+        <button class="save-btn" id="si-save" onclick="saveProfile()">บันทึกการเปลี่ยนแปลง</button>
       </div>
     </div>
-
   </div>
 </div>
 
-<!-- Login Modal -->
+<!-- ══ MODALS ══ -->
 <div class="overlay" id="login-modal">
   <div class="modal">
-    <div class="modal-logo">KM</div>
-    <div class="modal-title">Sign In</div>
-    <div class="modal-sub">เข้าสู่ระบบเพื่อใช้งานเต็มรูปแบบ</div>
+    <div class="m-logo">KM</div><div class="m-title">Sign In</div>
+    <div class="m-sub">เข้าสู่ระบบเพื่อใช้งานเต็มรูปแบบ</div>
     <div id="g_id_onload" data-client_id="906677442222-kmjgsmta70n24aoaq7osm9c1l7g1fb89.apps.googleusercontent.com" data-callback="handleCredentialResponse" data-auto_prompt="false"></div>
     <div class="g_id_signin" data-type="standard" data-theme="outline" data-size="large"></div>
-    <button class="modal-cancel" onclick="closeModal('login-modal')">ยกเลิก</button>
+    <button class="m-cancel" onclick="closeModal('login-modal')">ยกเลิก</button>
   </div>
 </div>
-
-<!-- Register Modal -->
-<div class="overlay" id="register-modal">
+<div class="overlay" id="reg-modal">
   <div class="modal">
-    <div class="modal-logo" style="background:linear-gradient(135deg,#f59e0b,#d97706)"><i class="fas fa-hand-sparkles"></i></div>
-    <div class="modal-title">ยินดีต้อนรับ!</div>
-    <div class="modal-sub">แนะนำตัวสั้นๆ เพื่อให้ Admin ทราบ</div>
-    <input type="text" id="reg-note" class="modal-input" placeholder="เช่น: ผมเป็นเพื่อน...">
-    <button class="btn-register" onclick="doRegister()">ลงทะเบียน & เข้าใช้งาน</button>
-    <button class="modal-cancel" onclick="closeModal('register-modal')">ยกเลิก</button>
+    <div class="m-logo" style="background:linear-gradient(135deg,#f59e0b,#d97706)"><i class="fas fa-hand-sparkles"></i></div>
+    <div class="m-title">ยินดีต้อนรับ!</div><div class="m-sub">แนะนำตัวสั้นๆ เพื่อให้ Admin ทราบ</div>
+    <input type="text" id="reg-note" class="m-input" placeholder="เช่น: ผมเป็นเพื่อนคุณมีนครับ">
+    <button class="btn-reg" onclick="doRegister()">ลงทะเบียน & เข้าใช้งาน</button>
+    <button class="m-cancel" onclick="closeModal('reg-modal')">ยกเลิก</button>
   </div>
 </div>
-
-<!-- Edit Post Modal -->
-<div class="overlay" id="edit-post-modal">
+<div class="overlay" id="ep-modal">
   <div class="modal wide">
-    <div class="modal-title" style="margin-bottom:12px;font-size:0.95rem;">แก้ไขโพสต์</div>
-    <textarea class="modal-ta" id="ep-ta" rows="4"></textarea>
-    <div class="modal-actions">
-      <button class="btn-ghost" onclick="closeModal('edit-post-modal')">ยกเลิก</button>
-      <button class="btn-pri" id="ep-save" onclick="saveEditPost()">บันทึก</button>
-    </div>
+    <div class="m-title" style="margin-bottom:12px;font-size:.95rem">แก้ไขโพสต์</div>
+    <textarea class="m-ta" id="ep-ta" rows="4"></textarea>
+    <div class="m-acts"><button class="btn-g" onclick="closeModal('ep-modal')">ยกเลิก</button><button class="btn-p" id="ep-save" onclick="saveEditPost()">บันทึก</button></div>
   </div>
 </div>
-
-<!-- Edit Comment Modal -->
-<div class="overlay" id="edit-cmt-modal">
+<div class="overlay" id="ec-modal">
   <div class="modal wide">
-    <div class="modal-title" style="margin-bottom:12px;font-size:0.95rem;">แก้ไขคอมเมนต์</div>
-    <textarea class="modal-ta" id="ec-ta" rows="3"></textarea>
-    <div class="modal-actions">
-      <button class="btn-ghost" onclick="closeModal('edit-cmt-modal')">ยกเลิก</button>
-      <button class="btn-pri" id="ec-save" onclick="saveEditComment()">บันทึก</button>
-    </div>
+    <div class="m-title" style="margin-bottom:12px;font-size:.95rem">แก้ไขคอมเมนต์</div>
+    <textarea class="m-ta" id="ec-ta" rows="3"></textarea>
+    <div class="m-acts"><button class="btn-g" onclick="closeModal('ec-modal')">ยกเลิก</button><button class="btn-p" id="ec-save" onclick="saveEditCmt()">บันทึก</button></div>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-// ─── Config ─────────────────────────────────────────────
-const API_URL = "https://script.google.com/macros/s/AKfycbwBYhFTW68AfN4cYUJYS1DG7vw-Ocykx5kslSUQIeJJlfu0oeBIdi9xAhVmorVWQ4q7rg/exec";
-const IMGBB_KEY = '5286836e6b61aa52660a8d8602503e0b';
-const SESSION_KEY = 'kms_session_v2';
-const TIMEOUT = 12000;
+const API_URL='https://script.google.com/macros/s/AKfycbwBYhFTW68AfN4cYUJYS1DG7vw-Ocykx5kslSUQIeJJlfu0oeBIdi9xAhVmorVWQ4q7rg/exec';
+const IMGBB_KEY='5286836e6b61aa52660a8d8602503e0b';
+const SESS_KEY='kms_v3';
+const TIMEOUT=13000;
+const S={user:null,profile:{webTitle:'Space',name:'',handle:'@koomean',bio:'',imageUrl:'',coverUrl:''},posts:[],pendingJwt:null,selFile:null};
+let editTarget={};let toastTid;
+const D=id=>document.getElementById(id);
+const isMob=()=>window.innerWidth<1024;
 
-// ─── State ──────────────────────────────────────────────
-const S = {
-  user: null,
-  profile: { webTitle: 'Space', name: '', handle: '@koomean', bio: '', imageUrl: '', coverUrl: '' },
-  posts: [],
-  pendingJwt: null,
-  selectedFile: null,
-};
-let editTarget = {};
-let toastTid;
+function esc(s){if(!s)return'';const p=document.createElement('span');p.textContent=s;return p.innerHTML;}
+function fmt(ts){if(!ts)return'';const d=new Date(ts),now=new Date(),diff=now-d;if(diff<60000)return'เมื่อกี้';if(diff<3600000)return`${Math.floor(diff/60000)} นาทีที่แล้ว`;if(diff<86400000)return`${Math.floor(diff/3600000)} ชม.ที่แล้ว`;return d.toLocaleDateString('th-TH',{day:'numeric',month:'short'})+' '+d.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'});}
+function decodeJwt(t){try{return JSON.parse(decodeURIComponent(atob(t.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')).split('').map(c=>'%'+('00'+c.charCodeAt(0).toString(16)).slice(-2)).join('')));}catch{return null;}}
+async function apiFetch(url,opts={}){const c=new AbortController(),tid=setTimeout(()=>c.abort(),TIMEOUT);try{const r=await fetch(url,{...opts,signal:c.signal});clearTimeout(tid);return r;}catch(e){clearTimeout(tid);throw e;}}
+function toast(msg,type='',icon=''){clearTimeout(toastTid);const t=D('toast');t.className='toast'+(type?' '+type:'');t.innerHTML=(icon?`<i class="${icon}"></i>`:'')+msg;requestAnimationFrame(()=>requestAnimationFrame(()=>t.classList.add('show')));toastTid=setTimeout(()=>t.classList.remove('show'),3200);}
+function loadImg(imgEl,src,fbEl,init='KM'){if(!src){if(fbEl){fbEl.style.display='flex';fbEl.textContent=init;}return;}const i=new Image();i.onload=()=>{imgEl.src=src;imgEl.classList.add('vis');if(fbEl)fbEl.style.display='none';};i.onerror=()=>{if(fbEl){fbEl.style.display='flex';fbEl.textContent=init;}};i.src=src;}
+function openModal(id){D(id).classList.add('open');}function closeModal(id){D(id).classList.remove('open');}
+document.addEventListener('click',e=>{if(!e.target.closest('.drop-menu')&&!e.target.closest('.menu-btn'))document.querySelectorAll('.drop-menu.open').forEach(m=>m.classList.remove('open'));});
+function toggleDrop(id){document.querySelectorAll('.drop-menu.open').forEach(m=>{if(m.id!==id)m.classList.remove('open');});const m=D(id);if(m)m.classList.toggle('open');}
 
-// ─── DOM refs ────────────────────────────────────────────
-const D = id => document.getElementById(id);
-
-// ─── Helpers ─────────────────────────────────────────────
-function esc(s) { if (!s) return ''; const p = document.createElement('span'); p.textContent = s; return p.innerHTML; }
-function fmt(ts) {
-  if (!ts) return '';
-  const d = new Date(ts), now = new Date(), diff = now - d;
-  if (diff < 60000) return 'เมื่อกี้';
-  if (diff < 3600000) return `${Math.floor(diff/60000)} นาทีที่แล้ว`;
-  if (diff < 86400000) return `${Math.floor(diff/3600000)} ชม.ที่แล้ว`;
-  return d.toLocaleDateString('th-TH', { day:'numeric', month:'short' }) + ' ' + d.toLocaleTimeString('th-TH', { hour:'2-digit', minute:'2-digit' });
-}
-function decodeJwt(t) {
-  try { return JSON.parse(decodeURIComponent(atob(t.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')).split('').map(c=>'%'+('00'+c.charCodeAt(0).toString(16)).slice(-2)).join(''))); }
-  catch { return null; }
-}
-async function apiFetch(url, opts = {}) {
-  const ctrl = new AbortController();
-  const tid = setTimeout(() => ctrl.abort(), TIMEOUT);
-  try { const r = await fetch(url, { ...opts, signal: ctrl.signal }); clearTimeout(tid); return r; }
-  catch (e) { clearTimeout(tid); throw e; }
-}
-
-function toast(msg, type = '', icon = '') {
-  clearTimeout(toastTid);
-  const t = D('toast');
-  t.className = 'toast' + (type ? ' '+type : '');
-  t.innerHTML = (icon ? `<i class="${icon}"></i>` : '') + msg;
-  requestAnimationFrame(() => requestAnimationFrame(() => t.classList.add('show')));
-  toastTid = setTimeout(() => t.classList.remove('show'), 3200);
-}
-
-function loadImg(imgEl, src, fallbackEl, initials = 'KM') {
-  if (!src) { if (fallbackEl) { fallbackEl.style.display = 'flex'; fallbackEl.textContent = initials; } return; }
-  const i = new Image();
-  i.onload = () => { imgEl.src = src; imgEl.classList.add('vis'); if (fallbackEl) fallbackEl.style.display = 'none'; };
-  i.onerror = () => { if (fallbackEl) { fallbackEl.style.display = 'flex'; fallbackEl.textContent = initials; } };
-  i.src = src;
-}
-
-// ─── Modals ───────────────────────────────────────────────
-function openModal(id) { D(id).classList.add('open'); }
-function closeModal(id) { D(id).classList.remove('open'); }
-document.addEventListener('click', e => {
-  if (!e.target.closest('.drop-menu') && !e.target.closest('.menu-btn')) {
-    document.querySelectorAll('.drop-menu.open').forEach(m => m.classList.remove('open'));
-  }
+// Desktop search
+let rwD;
+D('rw-srch').addEventListener('input',function(){
+  clearTimeout(rwD);const q=this.value.trim(),res=D('rw-results');
+  if(!q){res.style.display='none';return;}
+  rwD=setTimeout(()=>{
+    const lq=q.toLowerCase(),hits=S.posts.filter(p=>p.content&&p.content.toLowerCase().includes(lq));
+    const avSrc=esc(S.profile.imageUrl||''),name=esc(S.profile.name||'Koo Mean');
+    const hi=t=>esc(t).replace(new RegExp(esc(q).replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi'),m=>`<mark>${m}</mark>`);
+    if(!hits.length){res.innerHTML='<div style="padding:12px 16px;font-size:.79rem;color:var(--txt3)">ไม่พบโพสต์</div>';res.style.display='block';return;}
+    let h='';hits.slice(0,6).forEach(p=>{const sn=(p.content||'').substring(0,80);h+=`<div class="rw-hit" onclick="scrollToPost(${p.rowIdx})"><img class="rw-hit-av" src="${avSrc}" onerror="this.style.display='none'" alt=""><div class="rw-hit-body"><div class="rw-hit-name">${name}</div><div class="rw-hit-txt">${hi(sn)}${p.content.length>80?'...':''}</div><div class="rw-hit-time">${fmt(p.timestamp)}</div></div></div>`;});
+    res.innerHTML=h;res.style.display='block';
+  },200);
 });
-function toggleDrop(id) {
-  document.querySelectorAll('.drop-menu.open').forEach(m => { if (m.id !== id) m.classList.remove('open'); });
-  const m = D(id); if (m) m.classList.toggle('open');
-}
 
-// ─── Search ───────────────────────────────────────────────
-let srchDebounce;
-function openSearch() {
-  D('srch-overlay').classList.add('open');
-  setActiveNav('search');
-  setTimeout(() => D('srch-input').focus(), 300);
-}
-function closeSearch() {
-  D('srch-overlay').classList.remove('open');
-  D('srch-input').value = '';
-  D('srch-results').innerHTML = '<div class="srch-empty"><i class="fas fa-magnifying-glass-chart"></i><p>พิมพ์เพื่อค้นหาโพสต์</p></div>';
-  setActiveNav('home');
-}
-D('srch-input').addEventListener('input', function() {
-  clearTimeout(srchDebounce);
-  const q = this.value.trim();
-  if (!q) { D('srch-results').innerHTML = '<div class="srch-empty"><i class="fas fa-magnifying-glass-chart"></i><p>พิมพ์เพื่อค้นหาโพสต์</p></div>'; return; }
-  srchDebounce = setTimeout(() => renderSearch(q), 200);
+// Mobile search
+let mobSD;
+function openMobSearch(){D('mob-srch').classList.add('open');setMN('search');setTimeout(()=>D('mob-srch-in').focus(),300);}
+function closeMobSearch(){D('mob-srch').classList.remove('open');D('mob-srch-in').value='';D('mob-srch-body').innerHTML='<div class="srch-empty"><i class="fas fa-magnifying-glass-chart"></i><p>พิมพ์เพื่อค้นหาโพสต์</p></div>';setMN('home');}
+D('mob-srch-in').addEventListener('input',function(){
+  clearTimeout(mobSD);const q=this.value.trim();
+  if(!q){D('mob-srch-body').innerHTML='<div class="srch-empty"><i class="fas fa-magnifying-glass-chart"></i><p>พิมพ์เพื่อค้นหาโพสต์</p></div>';return;}
+  mobSD=setTimeout(()=>{
+    const lq=q.toLowerCase(),hits=S.posts.filter(p=>p.content&&p.content.toLowerCase().includes(lq));
+    const avSrc=esc(S.profile.imageUrl||''),name=esc(S.profile.name||'Koo Mean');
+    const hi=t=>esc(t).replace(new RegExp(esc(q).replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi'),m=>`<mark>${m}</mark>`);
+    if(!hits.length){D('mob-srch-body').innerHTML='<div class="srch-empty"><i class="fas fa-face-frown"></i><p>ไม่พบโพสต์ที่ตรงกัน</p></div>';return;}
+    let h=`<div class="srch-tag">พบ ${hits.length} โพสต์</div>`;
+    hits.forEach(p=>{const sn=(p.content||'').substring(0,100);h+=`<div class="rw-hit" style="padding:12px 16px" onclick="closeMobSearch();scrollToPost(${p.rowIdx})"><img class="rw-hit-av" src="${avSrc}" onerror="this.style.display='none'" alt=""><div class="rw-hit-body"><div class="rw-hit-name" style="font-size:.84rem">${name}</div><div class="rw-hit-txt">${hi(sn)}${p.content.length>100?'...':''}</div><div class="rw-hit-time">${fmt(p.timestamp)}</div></div></div>`;});
+    D('mob-srch-body').innerHTML=h;
+  },200);
 });
-function renderSearch(q) {
-  const lq = q.toLowerCase();
-  const hits = S.posts.filter(p => p.content && p.content.toLowerCase().includes(lq));
-  const name = esc(S.profile.name || 'Koo Mean');
-  const avSrc = esc(S.profile.imageUrl || '');
-  const initials = (S.profile.name || 'KM').substring(0,2).toUpperCase();
-  if (!hits.length) {
-    D('srch-results').innerHTML = '<div class="srch-empty"><i class="fas fa-face-frown"></i><p>ไม่พบโพสต์ที่ตรงกัน</p></div>'; return;
-  }
-  const highlighted = t => esc(t).replace(new RegExp(esc(q).replace(/[.*+?^${}()|[\]\\]/g,'\\$&'), 'gi'), m => `<mark>${m}</mark>`);
-  let html = `<div class="srch-tag">พบ ${hits.length} โพสต์</div>`;
-  hits.forEach(p => {
-    const snippet = (p.content || '').substring(0, 120);
-    html += `<div class="srch-hit" onclick="closeSearch(); scrollToPost(${p.rowIdx})">
-      <img class="srch-hit-av" src="${avSrc}" onerror="this.style.display='none'" alt="">
-      <div class="srch-hit-body">
-        <div class="srch-hit-name">${name}<div class="verified" style="width:13px;height:13px;font-size:0.4rem;"><i class="fas fa-check"></i></div></div>
-        <div class="srch-hit-txt">${highlighted(snippet)}${p.content.length > 120 ? '...' : ''}</div>
-        <div class="srch-hit-time">${fmt(p.timestamp)}</div>
-      </div>
-    </div>`;
-  });
-  D('srch-results').innerHTML = html;
-}
-function scrollToPost(rowIdx) {
-  const el = document.getElementById(`post-${rowIdx}`);
-  if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); el.style.background = 'rgba(75,143,255,0.08)'; setTimeout(() => el.style.background = '', 1500); }
+function scrollToPost(ri){const el=D('post-'+ri);if(!el)return;el.scrollIntoView({behavior:'smooth',block:'center'});el.style.background='rgba(75,143,255,.08)';setTimeout(()=>el.style.background='',1800);}
+
+// Settings
+function openSettings(){D('set-panel').classList.add('open');setMN('settings');}
+function closeSettings(){D('set-panel').classList.remove('open');closeSub();if(!D('mob-srch').classList.contains('open'))setMN('home');}
+function openSub(n){D('sub-'+n).classList.add('open');if(n==='profile-edit')prefillEdit();}
+function closeSub(){document.querySelectorAll('.set-sub.open').forEach(s=>s.classList.remove('open'));}
+function prefillEdit(){D('si-title').value=S.profile.webTitle||'';D('si-name').value=S.profile.name||'';D('si-handle').value=S.profile.handle||'@koomean';D('si-bio').value=S.profile.bio||'';D('si-img').value=S.profile.imageUrl||'';D('si-cover').value=S.profile.coverUrl||'';}
+async function saveProfile(){
+  if(!S.user||S.user.role!=='admin')return;
+  const btn=D('si-save');btn.disabled=true;btn.textContent='กำลังบันทึก...';
+  try{const r=await apiFetch(API_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({action:'updateProfile',email:S.user.email,webTitle:D('si-title').value.trim(),name:D('si-name').value.trim(),handle:D('si-handle').value.trim(),bio:D('si-bio').value.trim(),imageUrl:D('si-img').value.trim(),coverUrl:D('si-cover').value.trim()})});const d=await r.json();if(d.success){toast('บันทึกสำเร็จ','s','fas fa-check');closeSub();await loadData(S.user.email,S.user.name,S.user.pic);}else toast('เกิดข้อผิดพลาด','e');}
+  catch{toast('บันทึกไม่สำเร็จ','e');}finally{btn.disabled=false;btn.textContent='บันทึกการเปลี่ยนแปลง';}
 }
 
-// ─── Settings Panel ───────────────────────────────────────
-function openSettings() {
-  D('settings-panel').classList.add('open');
-  setActiveNav('settings');
-}
-function closeSettings() {
-  D('settings-panel').classList.remove('open');
-  closeSubPanel();
-  setActiveNav('home');
-}
-function openSubPanel(name) {
-  D('sub-' + name).classList.add('open');
-  if (name === 'profile-edit') prefillProfileEdit();
-}
-function closeSubPanel() {
-  document.querySelectorAll('.set-sub-panel.open').forEach(p => p.classList.remove('open'));
-}
-function prefillProfileEdit() {
-  D('si-title').value = S.profile.webTitle || '';
-  D('si-name').value = S.profile.name || '';
-  D('si-handle').value = S.profile.handle || '@koomean';
-  D('si-bio').value = S.profile.bio || '';
-  D('si-img').value = S.profile.imageUrl || '';
-  D('si-cover').value = S.profile.coverUrl || '';
-}
-async function saveProfile() {
-  if (!S.user || S.user.role !== 'admin') return;
-  const btn = D('si-save-btn');
-  btn.disabled = true; btn.textContent = 'กำลังบันทึก...';
-  const updates = {
-    action: 'updateProfile', email: S.user.email,
-    webTitle: D('si-title').value.trim(), name: D('si-name').value.trim(),
-    handle: D('si-handle').value.trim(), bio: D('si-bio').value.trim(),
-    imageUrl: D('si-img').value.trim(), coverUrl: D('si-cover').value.trim(),
-  };
-  try {
-    const r = await apiFetch(API_URL, { method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body: new URLSearchParams(updates) });
-    const d = await r.json();
-    if (d.success) { toast('บันทึกโปรไฟล์สำเร็จ', 's', 'fas fa-check'); closeSubPanel(); await loadData(S.user.email, S.user.name, S.user.pic); }
-    else toast('เกิดข้อผิดพลาด', 'e');
-  } catch(e) { toast('บันทึกไม่สำเร็จ', 'e'); }
-  finally { btn.disabled = false; btn.textContent = 'บันทึกการเปลี่ยนแปลง'; }
-}
+// Dark mode
+let isDark=true;
+function toggleDark(){isDark=!isDark;D('dark-tog').classList.toggle('on',isDark);const r=document.documentElement.style;r.setProperty('--bg',isDark?'#07090f':'#f0f2f7');r.setProperty('--s1',isDark?'#0c0f1c':'#ffffff');r.setProperty('--s2',isDark?'#111827':'#f8fafc');r.setProperty('--s3',isDark?'#161d2e':'#edf2f7');r.setProperty('--border',isDark?'rgba(255,255,255,0.07)':'rgba(0,0,0,0.08)');r.setProperty('--borderH',isDark?'rgba(255,255,255,0.13)':'rgba(0,0,0,0.14)');r.setProperty('--txt',isDark?'#dde3f0':'#0f172a');r.setProperty('--txt2',isDark?'#7988a3':'#475569');r.setProperty('--txt3',isDark?'#3c4f68':'#94a3b8');}
 
-// ─── Dark Mode Toggle ─────────────────────────────────────
-let isDark = true;
-function toggleDark() {
-  isDark = !isDark;
-  D('dark-toggle').classList.toggle('on', isDark);
-  document.documentElement.style.setProperty('--bg', isDark ? '#080b12' : '#f0f2f7');
-  document.documentElement.style.setProperty('--surface', isDark ? '#0d1120' : '#ffffff');
-  document.documentElement.style.setProperty('--surface2', isDark ? '#111827' : '#f8fafc');
-  document.documentElement.style.setProperty('--surface3', isDark ? '#161d2e' : '#edf2f7');
-  document.documentElement.style.setProperty('--border', isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.08)');
-  document.documentElement.style.setProperty('--border-hover', isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.14)');
-  document.documentElement.style.setProperty('--txt', isDark ? '#e2e8f5' : '#0f172a');
-  document.documentElement.style.setProperty('--txt2', isDark ? '#7c8ba1' : '#475569');
-  document.documentElement.style.setProperty('--txt3', isDark ? '#3d4f65' : '#94a3b8');
-}
+// Nav
+function setMN(n){['home','search','settings'].forEach(k=>D('mnav-'+k)?.classList.toggle('active',k===n));}
+function setSBN(n){['home','settings'].forEach(k=>D('sbn-'+k)?.classList.toggle('active',k===n));}
+function navTo(n){if(n==='home'){closeMobSearch();closeSettings();setMN('home');setSBN('home');}}
 
-// ─── Nav ──────────────────────────────────────────────────
-function setActiveNav(name) {
-  ['home','search','settings'].forEach(n => D('nav-'+n).classList.toggle('active', n===name));
-}
-function navTo(name) {
-  if (name === 'home') { closeSearch(); closeSettings(); setActiveNav('home'); }
-}
+// Auth
+function onAuthClick(){if(!S.user)openModal('login-modal');else if(confirm('ออกจากระบบหรือไม่?'))signOut();}
+function onSetLoginClick(){if(!S.user){closeSettings();openModal('login-modal');}}
+function signOut(){S.user=null;S.pendingJwt=null;localStorage.removeItem(SESS_KEY);D('auth-btn').textContent='Sign In';D('auth-btn').className='auth-pill';D('creator').style.display='none';D('admin-grp').style.display='none';D('so-grp').style.display='none';D('sb-user-card').style.display='none';D('set-ln').textContent='Sign In';D('set-ld').textContent='เข้าสู่ระบบเพื่อใช้งาน';D('rw-auth').style.display='';closeSettings();renderFeed();toast('ออกจากระบบแล้ว','','fas fa-right-from-bracket');}
+function handleCredentialResponse(res){const p=decodeJwt(res.credential);if(!p)return;closeModal('login-modal');S.pendingJwt=p;toast('กำลังตรวจสอบ...','','fas fa-circle-notch fa-spin');loadData(p.email,p.name,p.picture);}
+function doRegister(){const note=D('reg-note').value.trim();if(!note){toast('กรุณากรอกข้อมูลก่อน','e');return;}closeModal('reg-modal');const p=S.pendingJwt;toast('กำลังลงทะเบียน...','','fas fa-circle-notch fa-spin');loadData(p.email,p.name,p.picture,note);}
 
-// ─── Auth ─────────────────────────────────────────────────
-function onAuthClick() {
-  if (!S.user) openModal('login-modal');
-  else if (confirm('ออกจากระบบหรือไม่?')) signOut();
-}
-function onSetLoginClick() {
-  if (!S.user) { closeSettings(); openModal('login-modal'); }
-}
-function signOut() {
-  S.user = null; S.pendingJwt = null;
-  localStorage.removeItem(SESSION_KEY);
-  D('auth-btn').textContent = 'Sign In'; D('auth-btn').className = 'auth-pill';
-  D('creator').style.display = 'none';
-  D('admin-settings-group').style.display = 'none';
-  D('signout-group').style.display = 'none';
-  D('set-login-name').textContent = 'Sign In';
-  D('set-login-desc').textContent = 'เข้าสู่ระบบเพื่อใช้งาน';
-  closeSettings();
-  renderFeed();
-  toast('ออกจากระบบแล้ว', '', 'fas fa-right-from-bracket');
-}
-function handleCredentialResponse(res) {
-  const payload = decodeJwt(res.credential);
-  if (!payload) return;
-  closeModal('login-modal');
-  S.pendingJwt = payload;
-  toast('กำลังตรวจสอบ...', '', 'fas fa-circle-notch fa-spin');
-  loadData(payload.email, payload.name, payload.picture);
-}
-function doRegister() {
-  const note = D('reg-note').value.trim();
-  if (!note) { toast('กรุณากรอกข้อมูลก่อน', 'e'); return; }
-  closeModal('register-modal');
-  const p = S.pendingJwt;
-  toast('กำลังลงทะเบียน...', '', 'fas fa-circle-notch fa-spin');
-  loadData(p.email, p.name, p.picture, note);
-}
-
-// ─── Core Data ────────────────────────────────────────────
-async function loadData(email = '', name = '', pic = '', note = null) {
-  try {
-    let url = API_URL;
-    if (email) { url += `?email=${encodeURIComponent(email)}&name=${encodeURIComponent(name)}`; if (note !== null) url += `&action=register&note=${encodeURIComponent(note)}`; }
-    const res = await apiFetch(url);
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    const data = await res.json();
-
-    if (data.requireRegistration) { openModal('register-modal'); return; }
-
-    if (data.spaceProfile) {
-      const sp = data.spaceProfile;
-      S.profile = { webTitle: sp.webTitle || 'Space', name: sp.name || 'Koo Mean', handle: sp.handle || '@koomean', bio: sp.bio || '', imageUrl: sp.imageUrl || '', coverUrl: sp.coverUrl || '' };
-      document.title = S.profile.webTitle;
-      D('hdr-title').textContent = S.profile.webTitle;
-      D('prof-name').textContent = S.profile.name;
-      D('prof-handle').textContent = S.profile.handle || '@koomean';
-      D('prof-bio').textContent = S.profile.bio;
-      if (sp.coverUrl) D('prof-cover').style.backgroundImage = `url(${sp.coverUrl})`;
-      const initials = (S.profile.name || 'KM').substring(0,2).toUpperCase();
-      D('av-fallback').textContent = initials;
-      loadImg(D('av-img'), S.profile.imageUrl, D('av-fallback'), initials);
-    }
-
-    if (email && data.user) {
-      S.user = { email: data.user.email, name, role: data.user.role, pic };
-      localStorage.setItem(SESSION_KEY, JSON.stringify(S.user));
-      D('auth-btn').textContent = 'Sign Out'; D('auth-btn').className = 'auth-pill out';
-      D('set-login-name').textContent = name;
-      D('set-login-desc').textContent = data.user.email;
-      D('so-email').textContent = data.user.email;
-      D('signout-group').style.display = '';
-      if (data.user.role === 'admin') {
-        D('creator').style.display = '';
-        D('ca-img').src = pic || '';
-        D('admin-settings-group').style.display = '';
-        toast('เข้าสู่ระบบ Admin ✓', 's');
-      } else { toast('เข้าสู่ระบบสำเร็จ ✓', 's'); }
-    }
-
-    S.posts = data.posts || [];
-    if (S.posts.length) { D('stat-posts').textContent = S.posts.length; D('prof-stats').style.display = 'flex'; }
+// Load data
+async function loadData(email='',name='',pic='',note=null){
+  try{
+    let url=API_URL;if(email){url+=`?email=${encodeURIComponent(email)}&name=${encodeURIComponent(name)}`;if(note!==null)url+=`&action=register&note=${encodeURIComponent(note)}`;}
+    const res=await apiFetch(url);if(!res.ok)throw new Error('HTTP '+res.status);const data=await res.json();
+    if(data.requireRegistration){openModal('reg-modal');return;}
+    if(data.spaceProfile){const sp=data.spaceProfile;S.profile={webTitle:sp.webTitle||'Space',name:sp.name||'Koo Mean',handle:sp.handle||'@koomean',bio:sp.bio||'',imageUrl:sp.imageUrl||'',coverUrl:sp.coverUrl||''};document.title=S.profile.webTitle;['web-title','sb-title','set-app-name'].forEach(id=>{const el=D(id);if(el)el.textContent=S.profile.webTitle;});D('feed-hdr-title').textContent=S.profile.webTitle;D('prof-name').textContent=S.profile.name;D('prof-handle').textContent=S.profile.handle||'@koomean';D('prof-bio').textContent=S.profile.bio;D('rw-bio').textContent=S.profile.bio||'';if(sp.coverUrl)D('prof-cover').style.backgroundImage=`url(${sp.coverUrl})`;const init=(S.profile.name||'KM').substring(0,2).toUpperCase();D('av-fb').textContent=init;loadImg(D('av-img'),S.profile.imageUrl,D('av-fb'),init);}
+    if(email&&data.user){S.user={email:data.user.email,name,role:data.user.role,pic};localStorage.setItem(SESS_KEY,JSON.stringify(S.user));D('auth-btn').textContent='Sign Out';D('auth-btn').className='auth-pill out';D('set-ln').textContent=name;D('set-ld').textContent=data.user.email;D('so-email').textContent=data.user.email;D('so-grp').style.display='';D('rw-auth').style.display='none';D('sb-user-card').style.display='';D('sb-uc-av').src=pic||'https://ui-avatars.com/api/?name=U&background=161d2e&color=7988a3';D('sb-uc-name').textContent=name;D('sb-uc-email').textContent=data.user.email;if(data.user.role==='admin'){D('creator').style.display='';D('cr-av').src=pic||'';D('admin-grp').style.display='';toast('เข้าสู่ระบบ Admin ✓','s');}else{toast('เข้าสู่ระบบสำเร็จ ✓','s');}}else if(!email){D('rw-auth').style.display='';}
+    S.posts=data.posts||[];if(S.posts.length){D('stat-posts').textContent=S.posts.length;D('prof-stats').style.display='flex';}
     renderFeed();
-  } catch (err) {
-    console.error(err);
-    const sk = D('sk-posts'); if (sk) sk.remove();
-    D('feed').insertAdjacentHTML('beforeend', `<div class="err-banner"><i class="fas fa-exclamation-circle"></i><span>โหลดข้อมูลไม่สำเร็จ</span><button class="retry-btn" onclick="location.reload()">ลองใหม่</button></div>`);
-  }
+  }catch(err){console.error(err);const sk=D('sk-posts');if(sk)sk.remove();D('feed').insertAdjacentHTML('beforeend',`<div class="err-banner"><i class="fas fa-exclamation-circle"></i><span>โหลดข้อมูลไม่สำเร็จ</span><button class="retry-btn" onclick="location.reload()">ลองใหม่</button></div>`);}
 }
 
-// ─── Content Processing ───────────────────────────────────
-function processContent(text, rowIdx) {
-  if (!text) return { html: '', media: '', targetLink: null };
-  let h = esc(text.trim());
-  const urlRx = /(https?:\/\/[^\s<]+)/g;
-  const urls = (text.match(urlRx) || []);
-  h = h.replace(urlRx, u => `<a href="${u}" target="_blank" class="post-link" rel="noopener">${u}</a>`);
-  let media = '', tLink = null;
-  let ytId = null;
-  for (const u of urls) {
-    const m = u.match(/(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
-    if (m) { ytId = m[1]; break; } else if (!tLink) tLink = u;
-  }
-  if (ytId) media = `<iframe class="post-yt" src="https://www.youtube.com/embed/${ytId}" frameborder="0" allowfullscreen loading="lazy"></iframe>`;
-  else if (tLink) media = `<div class="lp-wrap" id="lp-${rowIdx}"></div>`;
-  return { html: h, media, targetLink: tLink };
-}
+// Content
+function processContent(text,rowIdx){if(!text)return{html:'',media:'',targetLink:null};let h=esc(text.trim());const urlRx=/(https?:\/\/[^\s<]+)/g;const urls=(text.match(urlRx)||[]);h=h.replace(urlRx,u=>`<a href="${u}" target="_blank" class="post-link" rel="noopener">${u}</a>`);let media='',tLink=null,ytId=null;for(const u of urls){const m=u.match(/(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);if(m){ytId=m[1];break;}else if(!tLink)tLink=u;}if(ytId)media=`<iframe class="post-yt" src="https://www.youtube.com/embed/${ytId}" frameborder="0" allowfullscreen loading="lazy"></iframe>`;else if(tLink)media=`<div class="lp-w" id="lp-${rowIdx}"></div>`;return{html:h,media,targetLink:tLink};}
+async function fetchLP(url,id){try{const r=await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`);const d=await r.json();if(!d.contents)return;const doc=new DOMParser().parseFromString(d.contents,'text/html');const gm=(p,n)=>{let el=p?doc.querySelector(`meta[property="${p}"]`):null;if(!el&&n)el=doc.querySelector(`meta[name="${n}"]`);return el?el.getAttribute('content'):'';};const title=gm('og:title','title')||doc.title||url,desc=gm('og:description','description')||'';let img=gm('og:image','');if(img&&img.startsWith('/')){const uo=new URL(url);img=uo.origin+img;}const host=new URL(url).hostname,c=D(id);if(c&&title){c.innerHTML=`<a href="${url}" target="_blank" class="lp-card" rel="noopener">${img?`<img src="${img}" class="lp-img" onerror="this.style.display='none'" loading="lazy">`:''}
+<div class="lp-info"><div class="lp-title">${esc(title)}</div>${desc?`<div class="lp-desc">${esc(desc)}</div>`:''}
+<div class="lp-domain"><i class="fas fa-link"></i>${host}</div></div></a>`;c.style.display='block';}}catch{}}
 
-async function fetchLP(url, id) {
-  try {
-    const r = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`);
-    const d = await r.json(); if (!d.contents) return;
-    const doc = new DOMParser().parseFromString(d.contents, 'text/html');
-    const gm = (prop, name) => { let el = prop ? doc.querySelector(`meta[property="${prop}"]`) : null; if (!el && name) el = doc.querySelector(`meta[name="${name}"]`); return el ? el.getAttribute('content') : ''; };
-    const title = gm('og:title','title') || doc.title || url;
-    const desc = gm('og:description','description') || '';
-    let img = gm('og:image','');
-    if (img && img.startsWith('/')) { const uo = new URL(url); img = uo.origin + img; }
-    const host = new URL(url).hostname;
-    const c = document.getElementById(id);
-    if (c && title) { c.innerHTML = `<a href="${url}" target="_blank" class="lp-card" rel="noopener">${img ? `<img src="${img}" class="lp-img" onerror="this.style.display='none'" loading="lazy">` : ''}<div class="lp-info"><div class="lp-title">${esc(title)}</div>${desc ? `<div class="lp-desc">${esc(desc)}</div>` : ''}<div class="lp-domain"><i class="fas fa-link"></i>${host}</div></div></a>`; c.style.display = 'block'; }
-  } catch {}
-}
+// Render
+function renderFeed(){const sk=D('sk-posts');if(sk)sk.remove();const feed=D('feed');const aName=esc(S.profile.name||'Koo Mean');const avSrc=esc(S.profile.imageUrl||'');const init=(S.profile.name||'KM').substring(0,2).toUpperCase();if(!S.posts.length){feed.innerHTML='<div class="sec-label">Timeline</div><div class="status"><div class="status-ico">💬</div>ยังไม่มีโพสต์</div>';return;}let html='<div class="sec-label">Timeline</div>';const lpQ=[];S.posts.forEach((p,i)=>{const likes=Array.isArray(p.likes)?p.likes:[];const cmts=Array.isArray(p.comments)?p.comments:[];const liked=S.user&&likes.includes(S.user.email);const{html:ptxt,media,targetLink}=processContent(p.content,p.rowIdx);if(targetLink)lpQ.push({url:targetLink,id:`lp-${p.rowIdx}`});const ts=p.editedTime?`แก้ไข ${fmt(p.editedTime)}`:fmt(p.timestamp);let menu='';if(S.user?.role==='admin'){menu=`<div class="post-menu-w"><button class="menu-btn" onclick="toggleDrop('dp-${p.rowIdx}')"><i class="fas fa-ellipsis"></i></button><div class="drop-menu" id="dp-${p.rowIdx}"><button class="drop-item" onclick="openEditPost(${p.rowIdx})"><i class="fas fa-pen"></i>แก้ไขโพสต์</button><button class="drop-item del" onclick="deletePost(${p.rowIdx})"><i class="fas fa-trash-alt"></i>ลบโพสต์</button></div></div>`;}let chtml='';cmts.forEach(c=>{const cM=(S.user?.role==='admin'||S.user?.email===c.email)?`<div class="cmt-mw"><button class="menu-btn" style="width:24px;height:24px;font-size:.72rem" onclick="toggleDrop('dc-${p.rowIdx}-${c.time}')"><i class="fas fa-ellipsis"></i></button><div class="drop-menu" id="dc-${p.rowIdx}-${c.time}"><button class="drop-item" onclick="openEditCmt(${p.rowIdx},${c.time})"><i class="fas fa-pen"></i>แก้ไข</button><button class="drop-item del" onclick="deleteCmt(${p.rowIdx},${c.time})"><i class="fas fa-trash-alt"></i>ลบ</button></div></div>`:'';const ct=c.editedTime?`แก้ไข ${fmt(c.editedTime)}`:fmt(c.time);chtml+=`<div class="cmt"><img class="cmt-av" src="${esc(c.pic||'')}" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(c.name||'U')}&background=161d2e&color=7988a3'" alt=""><div class="cmt-body"><div class="cmt-meta"><span class="cmt-name">${esc(c.name)}</span><span class="cmt-time">· ${ct}</span>${cM}</div><div class="cmt-txt">${esc(c.text)}</div></div></div>`;});html+=`<article class="post" id="post-${p.rowIdx}" style="animation-delay:${i*.04}s"><div class="post-av-w"><div class="post-av-fb">${init}</div><img class="post-av vis" src="${avSrc}" onerror="this.style.display='none'" alt="" loading="lazy"></div><div class="post-body"><div class="post-hdr"><span class="post-author">${aName}</span><div class="verified" style="width:14px;height:14px;font-size:.42rem"><i class="fas fa-check"></i></div><span class="post-time">· ${ts}</span>${menu}</div><div class="post-txt">${ptxt}</div>${media}${p.mediaUrl?`<img src="${esc(p.mediaUrl)}" class="post-media" onerror="this.style.display='none'" loading="lazy">`:''}
+<div class="post-acts"><button class="act${liked?' liked':''}" onclick="toggleLike(${p.rowIdx})"><i class="${liked?'fas':'far'} fa-heart"></i>${likes.length||''}</button><button class="act" onclick="toggleCmts(${p.rowIdx})"><i class="far fa-comment"></i>${cmts.length||''}</button></div>
+<div class="cmts" id="cmts-${p.rowIdx}">${chtml}<div class="cmt-inp-row"><input class="cmt-inp" id="ci-${p.rowIdx}" placeholder="${S.user?'แสดงความคิดเห็น...':'Sign in เพื่อคอมเมนต์'}" ${!S.user?'disabled':''}><button class="cmt-send" onclick="submitCmt(${p.rowIdx})"><i class="fas fa-paper-plane"></i></button></div></div></div></article>`;});feed.innerHTML=html;lpQ.forEach(q=>fetchLP(q.url,q.id));}
 
-// ─── Feed Render ──────────────────────────────────────────
-function renderFeed() {
-  const sk = D('sk-posts'); if (sk) sk.remove();
-  const feed = D('feed');
-  const authorName = esc(S.profile.name || 'Koo Mean');
-  const avSrc = esc(S.profile.imageUrl || '');
-  const initials = (S.profile.name || 'KM').substring(0,2).toUpperCase();
+// Interactions
+function toggleCmts(ri){const el=D('cmts-'+ri);const o=el.style.display==='block';el.style.display=o?'none':'block';if(!o)D('ci-'+ri)?.focus();}
+async function toggleLike(ri){if(!S.user){openModal('login-modal');return;}const p=S.posts.find(p=>p.rowIdx===ri);if(!p)return;if(!Array.isArray(p.likes))p.likes=[];const idx=p.likes.indexOf(S.user.email);if(idx>-1)p.likes.splice(idx,1);else p.likes.push(S.user.email);renderFeed();try{await fetch(API_URL,{method:'POST',body:new URLSearchParams({action:'toggleLike',email:S.user.email,rowIdx:ri}),headers:{'Content-Type':'application/x-www-form-urlencoded'}});}catch{}}
+async function submitCmt(ri){if(!S.user){openModal('login-modal');return;}const inp=D('ci-'+ri);const text=inp.value.trim();if(!text)return;inp.disabled=true;toast('กำลังส่ง...');try{const r=await fetch(API_URL,{method:'POST',body:new URLSearchParams({action:'addComment',email:S.user.email,name:S.user.name||'User',pic:S.user.pic||'',text,rowIdx:ri}),headers:{'Content-Type':'application/x-www-form-urlencoded'}});const d=await r.json();if(d.success){inp.value='';await loadData(S.user.email,S.user.name,S.user.pic);D('cmts-'+ri).style.display='block';}else toast('เกิดข้อผิดพลาด','e');}catch{toast('เชื่อมต่อล้มเหลว','e');}finally{const i=D('ci-'+ri);if(i)i.disabled=false;}}
 
-  if (!S.posts.length) {
-    feed.innerHTML = `<div class="section-label">Timeline</div><div class="status"><div class="status-icon">💬</div>ยังไม่มีโพสต์</div>`;
-    return;
-  }
+// Creator
+D('post-ta').addEventListener('input',function(){this.style.height='auto';this.style.height=this.scrollHeight+'px';const l=this.value.length,cc=D('char-c');cc.textContent=`${l} / 500`;cc.className='char-c'+(l>=450?' danger':l>=350?' warn':'');});
+D('file-in').addEventListener('change',function(){const f=this.files[0];if(!f)return;S.selFile=f;const r=new FileReader();r.onload=e=>{D('img-prev').src=e.target.result;D('img-prev-wrap').style.display='block';};r.readAsDataURL(f);});
+function removeImg(){S.selFile=null;D('file-in').value='';D('img-prev-wrap').style.display='none';}
+async function submitPost(){const content=D('post-ta').value.trim();if(!content&&!S.selFile)return;if(!S.user||S.user.role!=='admin')return;const btn=D('post-btn');btn.textContent='กำลังโพสต์...';btn.disabled=true;D('post-ta').disabled=true;let mediaUrl='';try{if(S.selFile){btn.textContent='อัปโหลดรูป...';const fd=new FormData();fd.append('image',S.selFile);const ir=await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_KEY}`,{method:'POST',body:fd});const id=await ir.json();if(id.success)mediaUrl=id.data.url;else throw new Error('ImgBB fail');}btn.textContent='กำลังบันทึก...';const r=await apiFetch(API_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({action:'addPost',email:S.user.email,content,mediaUrl})});const d=await r.json();if(d.success){D('post-ta').value='';D('post-ta').style.height='auto';D('char-c').textContent='0 / 500';removeImg();toast('โพสต์สำเร็จ!','s','fas fa-check-circle');await loadData(S.user.email,S.user.name,S.user.pic);}else throw new Error('GAS fail');}catch(e){toast('เกิดข้อผิดพลาด: '+e.message,'e');}finally{btn.textContent='โพสต์';btn.disabled=false;D('post-ta').disabled=false;}}
 
-  let html = '<div class="section-label">Timeline</div>';
-  const lpQueue = [];
-
-  S.posts.forEach((p, i) => {
-    const likes = Array.isArray(p.likes) ? p.likes : [];
-    const cmts = Array.isArray(p.comments) ? p.comments : [];
-    const hasLiked = S.user && likes.includes(S.user.email);
-    const { html: ptxt, media: pmedia, targetLink } = processContent(p.content, p.rowIdx);
-    if (targetLink) lpQueue.push({ url: targetLink, id: `lp-${p.rowIdx}` });
-    const timeStr = p.editedTime ? `แก้ไขแล้ว ${fmt(p.editedTime)}` : fmt(p.timestamp);
-
-    let menuHtml = '';
-    if (S.user?.role === 'admin') {
-      menuHtml = `<div class="post-menu-wrap"><button class="menu-btn" onclick="toggleDrop('dp-${p.rowIdx}')"><i class="fas fa-ellipsis"></i></button><div class="drop-menu" id="dp-${p.rowIdx}"><button class="drop-item" onclick="openEditPost(${p.rowIdx})"><i class="fas fa-pen"></i>แก้ไขโพสต์</button><button class="drop-item del" onclick="deletePost(${p.rowIdx})"><i class="fas fa-trash-alt"></i>ลบโพสต์</button></div></div>`;
-    }
-
-    let cmtsHtml = '';
-    cmts.forEach(c => {
-      const cMenu = (S.user?.role === 'admin' || S.user?.email === c.email) ? `<div class="cmt-menu-wrap"><button class="menu-btn" style="width:24px;height:24px;font-size:0.75rem;" onclick="toggleDrop('dc-${p.rowIdx}-${c.time}')"><i class="fas fa-ellipsis"></i></button><div class="drop-menu" id="dc-${p.rowIdx}-${c.time}"><button class="drop-item" onclick="openEditCmt(${p.rowIdx},${c.time})"><i class="fas fa-pen"></i>แก้ไข</button><button class="drop-item del" onclick="deleteCmt(${p.rowIdx},${c.time})"><i class="fas fa-trash-alt"></i>ลบ</button></div></div>` : '';
-      const ct = c.editedTime ? `แก้ไข ${fmt(c.editedTime)}` : fmt(c.time);
-      cmtsHtml += `<div class="cmt"><img class="cmt-av" src="${esc(c.pic||'')}" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(c.name||'U')}&background=161d2e&color=7c8ba1'" alt=""><div class="cmt-body"><div class="cmt-meta"><span class="cmt-name">${esc(c.name)}</span><span class="cmt-time">· ${ct}</span>${cMenu}</div><div class="cmt-txt">${esc(c.text)}</div></div></div>`;
-    });
-
-    html += `<article class="post" id="post-${p.rowIdx}" style="animation-delay:${i*0.04}s">
-      <div class="post-av-wrap">
-        <div class="post-av-fb">${initials}</div>
-        <img class="post-av vis" src="${avSrc}" onerror="this.style.display='none'" alt="" loading="lazy">
-      </div>
-      <div class="post-body">
-        <div class="post-hdr">
-          <span class="post-author">${authorName}</span>
-          <div class="verified" style="width:14px;height:14px;font-size:0.42rem;"><i class="fas fa-check"></i></div>
-          <span class="post-time">· ${timeStr}</span>
-          ${menuHtml}
-        </div>
-        <div class="post-txt">${ptxt}</div>
-        ${pmedia}
-        ${p.mediaUrl ? `<img src="${esc(p.mediaUrl)}" class="post-media" onerror="this.style.display='none'" loading="lazy">` : ''}
-        <div class="post-actions">
-          <button class="act${hasLiked?' liked':''}" onclick="toggleLike(${p.rowIdx})"><i class="${hasLiked?'fas':'far'} fa-heart"></i>${likes.length||''}</button>
-          <button class="act" onclick="toggleCmts(${p.rowIdx})"><i class="far fa-comment"></i>${cmts.length||''}</button>
-        </div>
-        <div class="cmts" id="cmts-${p.rowIdx}">
-          ${cmtsHtml}
-          <div class="cmt-input-row">
-            <input type="text" class="cmt-input" id="ci-${p.rowIdx}" placeholder="${S.user?'แสดงความคิดเห็น...':'Sign in เพื่อคอมเมนต์'}" ${!S.user?'disabled':''}>
-            <button class="cmt-send-btn" onclick="submitCmt(${p.rowIdx})"><i class="fas fa-paper-plane"></i></button>
-          </div>
-        </div>
-      </div>
-    </article>`;
-  });
-
-  feed.innerHTML = html;
-  lpQueue.forEach(q => fetchLP(q.url, q.id));
-}
-
-// ─── Interactions ─────────────────────────────────────────
-function toggleCmts(rowIdx) {
-  const el = D(`cmts-${rowIdx}`);
-  const isOpen = el.style.display === 'block';
-  el.style.display = isOpen ? 'none' : 'block';
-  if (!isOpen) D(`ci-${rowIdx}`)?.focus();
-}
-
-async function toggleLike(rowIdx) {
-  if (!S.user) { openModal('login-modal'); return; }
-  const post = S.posts.find(p => p.rowIdx === rowIdx); if (!post) return;
-  if (!Array.isArray(post.likes)) post.likes = [];
-  const idx = post.likes.indexOf(S.user.email);
-  if (idx > -1) post.likes.splice(idx, 1); else post.likes.push(S.user.email);
-  renderFeed();
-  try { await fetch(API_URL, { method:'POST', body: new URLSearchParams({ action:'toggleLike', email: S.user.email, rowIdx }), headers:{'Content-Type':'application/x-www-form-urlencoded'} }); } catch {}
-}
-
-async function submitCmt(rowIdx) {
-  if (!S.user) { openModal('login-modal'); return; }
-  const inp = D(`ci-${rowIdx}`);
-  const text = inp.value.trim(); if (!text) return;
-  inp.disabled = true; toast('กำลังส่ง...');
-  try {
-    const r = await fetch(API_URL, { method:'POST', body: new URLSearchParams({ action:'addComment', email: S.user.email, name: S.user.name||'User', pic: S.user.pic||'', text, rowIdx }), headers:{'Content-Type':'application/x-www-form-urlencoded'} });
-    const d = await r.json();
-    if (d.success) { inp.value = ''; await loadData(S.user.email, S.user.name, S.user.pic); D(`cmts-${rowIdx}`).style.display = 'block'; }
-    else toast('เกิดข้อผิดพลาด','e');
-  } catch { toast('เชื่อมต่อล้มเหลว','e'); }
-  finally { const i = D(`ci-${rowIdx}`); if(i) i.disabled = false; }
-}
-
-// ─── Post Creator ─────────────────────────────────────────
-D('post-ta').addEventListener('input', function() {
-  this.style.height = 'auto'; this.style.height = this.scrollHeight + 'px';
-  const l = this.value.length;
-  const cc = D('char-c');
-  cc.textContent = `${l} / 500`;
-  cc.className = 'char-c' + (l>=450?' danger':l>=350?' warn':'');
-});
-D('file-in').addEventListener('change', function() {
-  const file = this.files[0]; if (!file) return;
-  S.selectedFile = file;
-  const reader = new FileReader();
-  reader.onload = e => { D('img-prev').src = e.target.result; D('img-prev-wrap').style.display = 'block'; };
-  reader.readAsDataURL(file);
-});
-function removeImg() { S.selectedFile = null; D('file-in').value = ''; D('img-prev-wrap').style.display = 'none'; }
-
-async function submitPost() {
-  const content = D('post-ta').value.trim();
-  if (!content && !S.selectedFile) return;
-  if (!S.user || S.user.role !== 'admin') return;
-  const btn = D('post-btn');
-  btn.textContent = 'กำลังโพสต์...'; btn.disabled = true; D('post-ta').disabled = true;
-  let mediaUrl = '';
-  try {
-    if (S.selectedFile) {
-      btn.textContent = 'อัปโหลดรูป...';
-      const fd = new FormData(); fd.append('image', S.selectedFile);
-      const ir = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_KEY}`, { method:'POST', body: fd });
-      const id = await ir.json();
-      if (id.success) mediaUrl = id.data.url; else throw new Error('ImgBB fail');
-    }
-    btn.textContent = 'กำลังบันทึก...';
-    const r = await apiFetch(API_URL, { method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body: new URLSearchParams({ action:'addPost', email: S.user.email, content, mediaUrl }) });
-    const d = await r.json();
-    if (d.success) {
-      D('post-ta').value = ''; D('post-ta').style.height = 'auto'; D('char-c').textContent = '0 / 500';
-      removeImg(); toast('โพสต์สำเร็จ!', 's', 'fas fa-check-circle');
-      await loadData(S.user.email, S.user.name, S.user.pic);
-    } else throw new Error('GAS fail');
-  } catch(e) { toast('เกิดข้อผิดพลาด: ' + e.message, 'e'); }
-  finally { btn.textContent = 'Post'; btn.disabled = false; D('post-ta').disabled = false; }
-}
-
-// ─── Edit/Delete ──────────────────────────────────────────
-function openEditPost(rowIdx) {
-  const p = S.posts.find(p => p.rowIdx === rowIdx); if (!p) return;
-  editTarget = { type:'post', rowIdx };
-  D('ep-ta').value = p.content;
-  openModal('edit-post-modal');
-}
-async function saveEditPost() {
-  const content = D('ep-ta').value.trim(); if (!content) return;
-  const btn = D('ep-save'); btn.disabled = true; btn.textContent = '...';
-  try {
-    await apiFetch(API_URL, { method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body: new URLSearchParams({ action:'editPost', email: S.user.email, rowIdx: editTarget.rowIdx, content, mediaUrl:'' }) });
-    closeModal('edit-post-modal'); toast('แก้ไขสำเร็จ','s');
-    await loadData(S.user.email, S.user.name, S.user.pic);
-  } catch { toast('เกิดข้อผิดพลาด','e'); }
-  finally { btn.disabled = false; btn.textContent = 'บันทึก'; }
-}
-async function deletePost(rowIdx) {
-  if (!confirm('ลบโพสต์นี้หรือไม่?')) return;
-  try { await apiFetch(API_URL, { method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body: new URLSearchParams({ action:'deletePost', email: S.user.email, rowIdx }) }); toast('ลบสำเร็จ','s'); await loadData(S.user.email, S.user.name, S.user.pic); } catch { toast('เกิดข้อผิดพลาด','e'); }
-}
-function openEditCmt(rowIdx, cTime) {
-  const p = S.posts.find(p => p.rowIdx === rowIdx); if (!p) return;
-  const c = p.comments.find(c => c.time === cTime); if (!c) return;
-  editTarget = { type:'comment', rowIdx, commentTime: cTime };
-  D('ec-ta').value = c.text; openModal('edit-cmt-modal');
-}
-async function saveEditComment() {
-  const text = D('ec-ta').value.trim(); if (!text) return;
-  const btn = D('ec-save'); btn.disabled = true; btn.textContent = '...';
-  try {
-    await apiFetch(API_URL, { method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body: new URLSearchParams({ action:'editComment', email: S.user.email, rowIdx: editTarget.rowIdx, commentTime: editTarget.commentTime, text }) });
-    closeModal('edit-cmt-modal'); toast('แก้ไขสำเร็จ','s');
-    await loadData(S.user.email, S.user.name, S.user.pic);
-    D(`cmts-${editTarget.rowIdx}`).style.display = 'block';
-  } catch { toast('เกิดข้อผิดพลาด','e'); }
-  finally { btn.disabled = false; btn.textContent = 'บันทึก'; }
-}
-async function deleteCmt(rowIdx, cTime) {
-  if (!confirm('ลบคอมเมนต์นี้?')) return;
-  try { await apiFetch(API_URL, { method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body: new URLSearchParams({ action:'deleteComment', email: S.user.email, rowIdx, commentTime: cTime }) }); toast('ลบสำเร็จ','s'); await loadData(S.user.email, S.user.name, S.user.pic); D(`cmts-${rowIdx}`).style.display = 'block'; } catch { toast('เกิดข้อผิดพลาด','e'); }
-}
+// Edit/Delete
+function openEditPost(ri){const p=S.posts.find(p=>p.rowIdx===ri);if(!p)return;editTarget={type:'post',rowIdx:ri};D('ep-ta').value=p.content;openModal('ep-modal');}
+async function saveEditPost(){const c=D('ep-ta').value.trim();if(!c)return;const btn=D('ep-save');btn.disabled=true;btn.textContent='...';try{await apiFetch(API_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({action:'editPost',email:S.user.email,rowIdx:editTarget.rowIdx,content:c,mediaUrl:''})});closeModal('ep-modal');toast('แก้ไขสำเร็จ','s');await loadData(S.user.email,S.user.name,S.user.pic);}catch{toast('เกิดข้อผิดพลาด','e');}finally{btn.disabled=false;btn.textContent='บันทึก';}}
+async function deletePost(ri){if(!confirm('ลบโพสต์นี้หรือไม่?'))return;try{await apiFetch(API_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({action:'deletePost',email:S.user.email,rowIdx:ri})});toast('ลบสำเร็จ','s');await loadData(S.user.email,S.user.name,S.user.pic);}catch{toast('เกิดข้อผิดพลาด','e');}}
+function openEditCmt(ri,cTime){const p=S.posts.find(p=>p.rowIdx===ri);if(!p)return;const c=p.comments.find(c=>c.time===cTime);if(!c)return;editTarget={type:'comment',rowIdx:ri,commentTime:cTime};D('ec-ta').value=c.text;openModal('ec-modal');}
+async function saveEditCmt(){const t=D('ec-ta').value.trim();if(!t)return;const btn=D('ec-save');btn.disabled=true;btn.textContent='...';try{await apiFetch(API_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({action:'editComment',email:S.user.email,rowIdx:editTarget.rowIdx,commentTime:editTarget.commentTime,text:t})});closeModal('ec-modal');toast('แก้ไขสำเร็จ','s');await loadData(S.user.email,S.user.name,S.user.pic);D('cmts-'+editTarget.rowIdx).style.display='block';}catch{toast('เกิดข้อผิดพลาด','e');}finally{btn.disabled=false;btn.textContent='บันทึก';}}
+async function deleteCmt(ri,cTime){if(!confirm('ลบคอมเมนต์นี้?'))return;try{await apiFetch(API_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({action:'deleteComment',email:S.user.email,rowIdx:ri,commentTime:cTime})});toast('ลบสำเร็จ','s');await loadData(S.user.email,S.user.name,S.user.pic);D('cmts-'+ri).style.display='block';}catch{toast('เกิดข้อผิดพลาด','e');}}
 
 // Keyboard shortcuts
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') { closeSearch(); closeSettings(); document.querySelectorAll('.overlay.open').forEach(o => o.classList.remove('open')); }
-});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeMobSearch();closeSettings();document.querySelectorAll('.overlay.open').forEach(o=>o.classList.remove('open'));}if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();isMob()?openMobSearch():D('rw-srch').focus();}});
 
-// ─── Init ─────────────────────────────────────────────────
-(function init() {
-  const saved = localStorage.getItem(SESSION_KEY);
-  if (saved) {
-    try {
-      const u = JSON.parse(saved);
-      S.user = u;
-      D('auth-btn').textContent = 'Sign Out'; D('auth-btn').className = 'auth-pill out';
-      D('set-login-name').textContent = u.name;
-      D('set-login-desc').textContent = u.email;
-      D('so-email').textContent = u.email;
-      D('signout-group').style.display = '';
-      if (u.role === 'admin') { D('admin-settings-group').style.display = ''; }
-      loadData(u.email, u.name, u.pic);
-    } catch { localStorage.removeItem(SESSION_KEY); loadData(); }
-  } else { loadData(); }
-})();
+// Responsive: show logo on mobile header
+function checkBP(){const mob=isMob();const ml=D('mob-logo');if(ml)ml.style.display=mob?'flex':'none';}
+window.addEventListener('resize',checkBP);checkBP();
+
+// Init
+(function(){const saved=localStorage.getItem(SESS_KEY);if(saved){try{const u=JSON.parse(saved);S.user=u;D('auth-btn').textContent='Sign Out';D('auth-btn').className='auth-pill out';D('set-ln').textContent=u.name;D('set-ld').textContent=u.email;D('so-email').textContent=u.email;D('so-grp').style.display='';if(u.role==='admin')D('admin-grp').style.display='';loadData(u.email,u.name,u.pic);}catch{localStorage.removeItem(SESS_KEY);loadData();}}else{loadData();}})();
 </script>
 </body>
 </html>
