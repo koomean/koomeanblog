@@ -375,7 +375,7 @@ textarea.si{min-height:85px;resize:none;line-height:1.5}
     </nav>
     <div class="sb-user-card" id="sb-user-card">
       <div class="sb-uc-row">
-        <img class="sb-uc-av" id="sb-uc-av" alt="">
+        <img class="sb-uc-av" id="sb-uc-av" alt="" referrerpolicy="no-referrer">
         <div class="sb-uc-info">
           <div class="sb-uc-name" id="sb-uc-name"></div>
           <div class="sb-uc-email" id="sb-uc-email"></div>
@@ -401,7 +401,7 @@ textarea.si{min-height:85px;resize:none;line-height:1.5}
           <div class="prof-av-ring">
             <div class="prof-av-inner">
               <div class="prof-av-fb" id="av-fb">KM</div>
-              <img class="prof-av-img" id="av-img" alt="">
+              <img class="prof-av-img" id="av-img" alt="" referrerpolicy="no-referrer">
             </div>
           </div>
           <div class="prof-text">
@@ -423,7 +423,7 @@ textarea.si{min-height:85px;resize:none;line-height:1.5}
 
       <section class="creator" id="creator">
         <div class="cr-row">
-          <div class="cr-av-ring"><img class="cr-av" id="cr-av" alt=""></div>
+          <div class="cr-av-ring"><img class="cr-av" id="cr-av" alt="" referrerpolicy="no-referrer"></div>
           <div class="cr-body">
             <textarea id="post-ta" class="cr-ta" placeholder="คุณกำลังคิดอะไรอยู่..." maxlength="500"></textarea>
 
@@ -533,7 +533,7 @@ textarea.si{min-height:85px;resize:none;line-height:1.5}
   </div>
   <div class="compose-body">
     <div class="cr-row">
-      <div class="cr-av-ring"><img class="cr-av" id="cr-av-mob" alt=""></div>
+      <div class="cr-av-ring"><img class="cr-av" id="cr-av-mob" alt="" referrerpolicy="no-referrer"></div>
       <div class="cr-body">
         <textarea id="post-ta-mob" class="cr-ta" placeholder="คุณกำลังคิดอะไรอยู่..." maxlength="500" style="min-height:100px"></textarea>
 
@@ -648,7 +648,7 @@ textarea.si{min-height:85px;resize:none;line-height:1.5}
       </div>
       <div class="set-sub-body">
         <div class="acc-card">
-          <img class="acc-av" id="acc-av" alt="">
+          <img class="acc-av" id="acc-av" alt="" referrerpolicy="no-referrer">
           <div class="acc-info">
             <div class="acc-name" id="acc-name"></div>
             <div class="acc-email" id="acc-email"></div>
@@ -740,7 +740,8 @@ textarea.si{min-height:85px;resize:none;line-height:1.5}
    - Separate post fields: text, link, image, hashtag
    - Account settings button works
    - Author profile dynamically updated
-   - New: Robust Universal Link Previews (Horizontal Layout)
+   - Fix: Added 'referrerpolicy="no-referrer"' to fix Google profile images
+   - Fix: Updated link preview API to Microlink + Fallback display
    ========================================================= */
 
 const API_URL='https://script.google.com/macros/s/AKfycbwBYhFTW68AfN4cYUJYS1DG7vw-Ocykx5kslSUQIeJJlfu0oeBIdi9xAhVmorVWQ4q7rg/exec';
@@ -924,7 +925,7 @@ D('rw-srch').addEventListener('input',function(){
       const pAvSrc = esc(rawPic);
 
       h+=`<div class="rw-hit" onclick="scrollToPost(${p.rowIdx})">
-        <img class="rw-hit-av" src="${pAvSrc}" onerror="this.style.display='none'" alt="">
+        <img class="rw-hit-av" src="${pAvSrc}" onerror="this.style.display='none'" alt="" referrerpolicy="no-referrer">
         <div class="rw-hit-body">
           <div class="rw-hit-name">${pName}</div>
           <div class="rw-hit-txt">${hi(sn)}${p.content&&p.content.length>80?'...':''}</div>
@@ -959,7 +960,7 @@ D('mob-srch-in').addEventListener('input',function(){
       const pAvSrc = esc(rawPic);
 
       h+=`<div class="rw-hit" style="padding:12px 16px" onclick="closeMobSearch();scrollToPost(${p.rowIdx})">
-        <img class="rw-hit-av" src="${pAvSrc}" onerror="this.style.display='none'" alt="">
+        <img class="rw-hit-av" src="${pAvSrc}" onerror="this.style.display='none'" alt="" referrerpolicy="no-referrer">
         <div class="rw-hit-body">
           <div class="rw-hit-name" style="font-size:.84rem">${pName}</div>
           <div class="rw-hit-txt">${hi(sn)}${p.content&&p.content.length>100?'...':''}</div>
@@ -1259,48 +1260,41 @@ async function fetchLP(url,id){
     let title='', desc='', img='', host='';
     host = new URL(url).hostname.replace('www.','');
     
-    // 1. ใช้ Dub.co API (รวดเร็วและแม่นยำสำหรับการดึง Meta Tags รูปแบบใหม่)
     try {
-      const r = await fetch(`https://api.dub.co/metatags?url=${encodeURIComponent(url)}`);
+      const r = await fetch(`https://api.microlink.io/?url=${encodeURIComponent(url)}`);
       if(r.ok) {
         const d = await r.json();
-        title = d.title;
-        desc = d.description;
-        img = d.image;
+        if(d.status === 'success') {
+          title = d.data.title || '';
+          desc = d.data.description || '';
+          img = (d.data.image && d.data.image.url) ? d.data.image.url : '';
+        }
       }
     } catch(e) {}
 
-    // 2. ถ้าไม่ได้ผล กลับมาใช้ AllOrigins (ระบบดึงข้อมูลสำรอง)
     if(!title) {
-      const r2 = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`);
-      const d2 = await r2.json();
-      if(d2.contents) {
-        const doc = new DOMParser().parseFromString(d2.contents,'text/html');
-        const gm = (p,n) => {
-          let el = p ? doc.querySelector(`meta[property="${p}"]`) : null;
-          if(!el && n) el = doc.querySelector(`meta[name="${n}"]`);
-          return el ? el.getAttribute('content') : '';
-        };
-        title = gm('og:title','title') || doc.title || url;
-        desc = gm('og:description','description') || '';
-        img = gm('og:image','');
-        if(img && img.startsWith('/')){
-          img = new URL(url).origin + (img.startsWith('//') ? img.substring(1) : img);
+      try {
+        const r = await fetch(`https://api.dub.co/metatags?url=${encodeURIComponent(url)}`);
+        if(r.ok) {
+          const d = await r.json();
+          title = d.title || '';
+          desc = d.description || '';
+          img = d.image || '';
         }
-      }
+      } catch(e) {}
     }
 
     const c = D(id);
-    if(c && title){
+    if(c && (title || host)){
       c.innerHTML=`<a href="${esc(url)}" target="_blank" class="lp-card" rel="noopener">
         <div class="lp-info">
-          <div class="lp-title">${esc(title)}</div>
+          <div class="lp-title">${esc(title || host)}</div>
           ${desc ? `<div class="lp-desc">${esc(desc)}</div>` : ''}
           <div class="lp-domain"><i class="fas fa-link"></i> ${esc(host)}</div>
         </div>
-        ${img ? `<img src="${esc(img)}" class="lp-img" onerror="this.style.display='none'" loading="lazy">` : ''}
+        ${img ? `<img src="${esc(img)}" class="lp-img" onerror="this.style.display='none'" loading="lazy" referrerpolicy="no-referrer">` : ''}
       </a>`;
-      c.style.display='block';
+      c.style.display='flex';
     }
   }catch(e){
     console.error("Link Preview Error:", e);
@@ -1400,7 +1394,7 @@ function renderFeed(){
         </div></div>`:'';
       const ct=c.editedTime?`แก้ไข ${fmt(c.editedTime)}`:fmt(c.time);
       chtml+=`<div class="cmt">
-        <img class="cmt-av" src="${esc(c.pic||'')}" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(c.name||'U')}&background=161d2e&color=7988a3'" alt="">
+        <img class="cmt-av" src="${esc(c.pic||'')}" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(c.name||'U')}&background=161d2e&color=7988a3'" alt="" referrerpolicy="no-referrer">
         <div class="cmt-body">
           <div class="cmt-meta"><span class="cmt-name">${esc(c.name)}</span><span class="cmt-time">· ${ct}</span>${cM}</div>
           <div class="cmt-txt">${esc(c.text)}</div>
@@ -1410,7 +1404,7 @@ function renderFeed(){
     html+=`<article class="post" id="post-${p.rowIdx}" style="animation-delay:${Math.min(i,8)*.04}s">
       <div class="post-av-w">
         <div class="post-av-fb">${pInit}</div>
-        <img class="post-av vis" src="${pAvSrc}" onerror="this.style.display='none'" alt="" loading="lazy">
+        <img class="post-av vis" src="${pAvSrc}" onerror="this.style.display='none'" alt="" loading="lazy" referrerpolicy="no-referrer">
       </div>
       <div class="post-body">
         <div class="post-hdr">
