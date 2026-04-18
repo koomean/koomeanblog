@@ -1,1890 +1,930 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title id="web-title">Koo Mean Space</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&display=swap" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-<script src="https://accounts.google.com/gsi/client" async defer></script>
-<style>
-:root {
-  --bg:#07090f; --s1:#0c0f1c; --s2:#111827; --s3:#161d2e;
-  --border:rgba(255,255,255,0.07); --borderH:rgba(255,255,255,0.13);
-  --txt:#dde3f0; --txt2:#7988a3; --txt3:#3c4f68;
-  --accent:#4b8fff; --accent2:#7c5ce7; --glow:rgba(75,143,255,0.14);
-  --like:#f0456a; --ok:#22d17a; --err:#ff4e6a; --warn:#f59e0b;
-  --ease:cubic-bezier(.4,0,.2,1);
-  --sh:0 4px 24px rgba(0,0,0,.55); --shL:0 12px 48px rgba(0,0,0,.75);
-  --r:16px; --rs:10px;
-  --font:'Plus Jakarta Sans',-apple-system,sans-serif;
-  --display:'Bricolage Grotesque',sans-serif;
-  --left-w:260px; --right-w:320px; --mob-nav:60px;
-}
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html{scroll-behavior:smooth}
-body{font-family:var(--font);background:var(--bg);color:var(--txt);min-height:100vh;overflow-x:hidden;overscroll-behavior:none}
-::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:var(--border);border-radius:99px}
-img{display:block}a{text-decoration:none;color:inherit}
-input,textarea,button{font-family:var(--font)}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <title>Koo Mean SITE V.3</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <style>
+        :root {
+            --bg-color: #050505;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --card-hover: rgba(255, 255, 255, 0.08);
+            --text-main: #f5f5f7;
+            --text-muted: #86868b;
+            --text-dim: #5c5c62;
+            --accent: #2997ff;
+            --accent-glow: rgba(41, 151, 255, 0.4);
+            --accent-special: #ff9f0a;
+            --accent-admin: #34c759;
+            --accent-danger: #ff3b30;
+            --navbar-height: 70px;
+            --ease: cubic-bezier(0.4, 0, 0.2, 1);
+            --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        html { scroll-behavior: smooth; }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+            display: flex; flex-direction: column; align-items: center;
+            padding-top: calc(var(--navbar-height) + 40px);
+            padding-bottom: 80px;
+            overflow-x: hidden; position: relative;
+        }
+        body::before, body::after {
+            content: ''; position: fixed; border-radius: 50%;
+            filter: blur(100px); z-index: -1; opacity: 0.5;
+            animation: floatOrb 20s infinite alternate ease-in-out; pointer-events: none;
+        }
+        body::before { width: 400px; height: 400px; background: var(--accent-glow); top: -100px; left: -100px; }
+        body::after  { width: 500px; height: 500px; background: rgba(255, 159, 10, 0.15); bottom: -150px; right: -150px; animation-delay: -10s; }
+        @keyframes floatOrb { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(100px, 50px) scale(1.2); } }
+        
+        .global-loader-container { position: fixed; inset: 0; background-color: var(--bg-color); z-index: 99999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity .8s ease, visibility .8s ease; overflow: hidden; }
+        .global-loader-container.hidden { opacity: 0; visibility: hidden; pointer-events: none; transform: scale(1.05); }
+        .glow-orb { position: absolute; width: 300px; height: 300px; background: radial-gradient(circle, rgba(41, 151, 255, 0.15) 0%, transparent 70%); border-radius: 50%; animation: pulseOrb 2s infinite alternate; z-index: 0; }
+        .g-spinner { width: 65px; height: 65px; border: 4px solid rgba(255, 255, 255, 0.05); border-top-color: var(--accent); border-right-color: var(--accent-special); border-radius: 50%; animation: spin 1s var(--ease-bounce) infinite; z-index: 1; margin-bottom: 25px; box-shadow: 0 0 25px var(--accent-glow); }
+        .g-loader-text { z-index: 1; color: var(--text-main); font-size: 1.3rem; font-weight: 700; letter-spacing: 4px; animation: pulseTextLoader 1.5s infinite alternate; text-align: center; }
+        .g-loader-subtext { z-index: 1; margin-top: 8px; color: var(--text-muted); font-size: 0.85rem; letter-spacing: 1.5px; text-transform: uppercase; text-align: center; }
+        @keyframes pulseOrb { 0% { transform: scale(0.8); opacity: 0.5; } 100% { transform: scale(1.3); opacity: 1; } }
+        @keyframes pulseTextLoader { 0% { opacity: 0.6; text-shadow: 0 0 0 transparent; } 100% { opacity: 1; text-shadow: 0 0 15px var(--accent-glow); } }
+        
+        .navbar { position: fixed; top: 0; left: 0; width: 100%; height: var(--navbar-height); background: rgba(10, 10, 12, 0.6); backdrop-filter: saturate(180%) blur(25px); -webkit-backdrop-filter: saturate(180%) blur(25px); display: flex; justify-content: space-between; align-items: center; padding: 0 25px; z-index: 1000; border-bottom: 1px solid rgba(255, 255, 255, 0.05); box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3); }
+        .nav-left  { display: flex; align-items: center; gap: 20px; }
+        .nav-logo  { font-size: 1.15rem; font-weight: 700; color: var(--text-main); text-decoration: none; display: flex; align-items: center; gap: 10px; transition: transform .3s; }
+        .nav-logo:hover { transform: scale(1.05); }
+        .menu-link { color: var(--text-muted); cursor: pointer; font-size: 0.95rem; font-weight: 500; transition: color .3s, transform .2s; display: flex; align-items: center; gap: 6px; user-select: none; }
+        .menu-link:hover, .menu-link.active { color: var(--text-main); transform: translateY(-2px); }
+        
+        .dropdown { position: relative; }
+        .dropdown-content { display: none; position: absolute; top: calc(100% + 15px); left: 0; background: rgba(20, 20, 22, 0.85); backdrop-filter: blur(25px); min-width: 180px; border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.1); overflow: hidden; z-index: 1001; box-shadow: 0 15px 50px rgba(0,0,0,0.6); }
+        .dropdown-content.show { display: block; animation: fadeInDrop .3s; }
+        @keyframes fadeInDrop { from { opacity: 0; transform: translateY(-15px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        .dropdown-content a { color: var(--text-main); padding: 14px 20px; text-decoration: none; display: block; font-size: 0.95rem; border-bottom: 1px solid rgba(255,255,255,0.05); transition: all .2s; cursor: pointer; }
+        .dropdown-content a:last-child { border-bottom: none; }
+        .dropdown-content a:hover { background: rgba(255,255,255,0.1); padding-left: 25px; color: var(--accent); }
+        
+        .nav-right { display: flex; align-items: center; gap: 18px; }
+        .status-indicator { display: flex; align-items: center; gap: 8px; cursor: pointer; background: rgba(255,255,255,0.05); padding: 5px 12px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); font-size: 0.85rem; font-weight: 600; transition: all .3s; }
+        .status-indicator:hover { background: rgba(255,255,255,0.1); transform: translateY(-2px); }
+        .status-dot { width: 10px; height: 10px; border-radius: 50%; transition: .3s; flex-shrink: 0; }
+        .status-dot.checking { background-color: #ffcc00; animation: blink 1s infinite; }
+        .status-dot.ok { background-color: var(--accent-admin); box-shadow: 0 0 10px rgba(52,199,89,0.5); }
+        .status-dot.error { background-color: var(--accent-danger); box-shadow: 0 0 10px rgba(255,59,48,0.5); }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        
+        .nav-clock { font-variant-numeric: tabular-nums; font-size: 0.9rem; color: var(--text-muted); font-weight: 600; background: rgba(255,255,255,0.05); padding: 5px 12px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); }
+        .nav-user-container { cursor: pointer; display: flex; align-items: center; position: relative; }
+        .nav-profile-img { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,255,255,0.1); transition: all .3s; }
+        .nav-profile-img:hover { transform: scale(1.1) rotate(5deg); border-color: var(--accent); box-shadow: 0 0 15px var(--accent-glow); }
+        .nav-user-badge { position: absolute; bottom: -3px; right: -3px; width: 14px; height: 14px; border-radius: 50%; background: var(--accent-admin); border: 2px solid rgba(10,10,12,.9); display: none; }
+        .nav-user-badge.visible { display: block; }
+        
+        .profile-section { text-align: center; margin-bottom: 40px; width: 100%; max-width: 600px; padding: 0 20px; }
+        .profile-img-wrap { position: relative; display: inline-block; margin-bottom: 18px; }
+        .profile-img { width: 110px; height: 110px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,255,255,0.1); box-shadow: 0 0 20px var(--accent-glow); animation: profilePulse 3s infinite alternate; transition: transform .5s; }
+        .profile-img:hover { transform: scale(1.05); }
+        @keyframes profilePulse { 0% { box-shadow: 0 0 15px rgba(41, 151, 255, 0.2); } 100% { box-shadow: 0 0 35px rgba(41, 151, 255, 0.6); } }
+        h1 { font-size: clamp(28px, 6vw, 36px); font-weight: 700; letter-spacing: -0.02em; margin-bottom: 10px; text-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+        p.bio { font-size: 1.05rem; color: var(--text-muted); font-weight: 400; line-height: 1.5; }
+        
+        .search-container { width: 100%; max-width: 600px; padding: 0 20px; margin-bottom: 35px; position: relative; }
+        .search-input { width: 100%; padding: 16px 20px 16px 50px; border-radius: 25px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); color: var(--text-main); font-size: 1.05rem; outline: none; transition: all .4s; font-family: inherit; }
+        .search-input:focus { background: rgba(255,255,255,0.08); border-color: var(--accent); box-shadow: 0 15px 40px rgba(0,0,0,0.4), 0 0 0 3px rgba(41,151,255,0.2); transform: scale(1.02); }
+        .search-icon { position: absolute; left: 40px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 1.1rem; pointer-events: none; transition: color .3s; }
+        .search-input:focus ~ .search-icon { color: var(--accent); }
+        .search-clear { position: absolute; right: 30px; top: 50%; transform: translateY(-50%); color: var(--text-muted); cursor: pointer; background: rgba(255,255,255,0.08); border: none; width: 24px; height: 24px; border-radius: 50%; display: none; align-items: center; justify-content: center; font-size: .7rem; transition: all .2s; }
+        .search-clear.visible { display: flex; }
+        .search-clear:hover { background: rgba(255,255,255,0.15); color: var(--text-main); }
+        
+        .video-container { width: 100%; max-width: 600px; padding: 0 20px; margin-bottom: 35px; display: none; }
+        .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; border-radius: 24px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); background: #111; box-shadow: 0 15px 40px rgba(0,0,0,0.4); }
+        .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+        
+        .container { width: 100%; max-width: 600px; padding: 0 20px 40px 20px; display: flex; flex-direction: column; gap: 15px; }
+        .link-card { background: var(--card-bg); padding: 20px 25px; border-radius: 20px; text-decoration: none; color: var(--text-main); display: flex; align-items: center; border: 1px solid rgba(255,255,255,0.06); transition: all .4s; cursor: pointer; position: relative; overflow: hidden; backdrop-filter: blur(15px); }
+        .link-card::before { content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(to right, transparent, rgba(255,255,255,0.08), transparent); transform: skewX(-25deg); transition: .6s ease-in-out; }
+        .link-card:hover::before { left: 150%; }
+        .link-card:hover { background: var(--card-hover); transform: translateY(-6px) scale(1.015); border-color: rgba(255,255,255,0.15); box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 20px rgba(41, 151, 255, 0.15); }
+        
+        .link-card.special-access { background: rgba(255, 159, 10, 0.08); border-color: rgba(255, 159, 10, 0.2); }
+        .link-card.special-access:hover { box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 20px rgba(255, 159, 10, 0.2); }
+        .link-card.admin-access { background: rgba(52, 199, 89, 0.08); border-color: rgba(52, 199, 89, 0.2); }
+        .link-card.admin-access:hover { box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 20px rgba(52, 199, 89, 0.2); }
+        .link-card.starred-card { border-color: rgba(255, 204, 0, 0.3); box-shadow: 0 5px 15px rgba(255, 204, 0, 0.05); }
+        .link-card.starred-card:hover { box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 25px rgba(255, 204, 0, 0.2); }
+        
+        .group-divider { color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; margin: 20px 0 5px 10px; font-weight: 600; display: flex; align-items: center; }
+        .group-divider::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.05); margin-left: 15px; }
+        .group-divider.starred-divider { color: #ffcc00; }
+        .group-divider.starred-divider::after { background: rgba(255, 204, 0, 0.15); }
+        
+        .link-icon { font-size: 1.6rem; margin-right: 18px; width: 35px; text-align: center; transition: transform .3s; flex-shrink: 0; }
+        .link-card:hover .link-icon { transform: scale(1.2) rotate(-5deg); }
+        .link-text { font-size: 1.05rem; font-weight: 600; letter-spacing: -0.01em; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        
+        .badge-group { display: flex; gap: 4px; margin-left: 10px; flex-shrink: 0; flex-wrap: wrap; justify-content: flex-end; max-width: 170px; }
+        .badge { font-size: 0.7rem; padding: 4px 10px; border-radius: 10px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; white-space: nowrap; display: inline-flex; align-items: center; gap: 4px; }
+        .badge i { font-size: .65rem; }
+        .badge-vip { background: linear-gradient(135deg, rgba(255, 159, 10, 0.2), rgba(255, 69, 58, 0.2)); color: var(--accent-special); border: 1px solid rgba(255, 159, 10, 0.3); }
+        .badge-admin { background: linear-gradient(135deg, rgba(52, 199, 89, 0.2), rgba(0, 153, 51, 0.2)); color: var(--accent-admin); border: 1px solid rgba(52, 199, 89, 0.3); }
+        .badge-role { background: linear-gradient(135deg, rgba(100, 120, 220, 0.18), rgba(140, 100, 220, 0.18)); color: #9db4ff; border: 1px solid rgba(140, 160, 220, 0.25); }
+        
+        .unlock-btn { position: fixed; bottom: 35px; right: 35px; background: rgba(20, 20, 22, 0.85); backdrop-filter: saturate(180%) blur(20px); color: var(--text-muted); border: 1px solid rgba(255,255,255,0.1); border-radius: 50%; width: 55px; height: 55px; display: flex; justify-content: center; align-items: center; transition: all .4s; z-index: 100; cursor: pointer; box-shadow: 0 10px 30px rgba(0,0,0,0.4); font-size: 1.3rem; }
+        .unlock-btn:hover { background: rgba(40, 40, 45, 0.9); color: var(--text-main); transform: scale(1.1) translateY(-5px); box-shadow: 0 15px 40px rgba(0,0,0,0.6); }
+        .unlock-btn.active { color: var(--accent-special); border-color: rgba(255, 159, 10, 0.4); box-shadow: 0 0 20px rgba(255, 159, 10, 0.3); }
+        .unlock-btn.admin-mode { color: var(--accent-admin); border-color: rgba(52, 199, 89, 0.4); box-shadow: 0 0 20px rgba(52, 199, 89, 0.3); }
+        
+        .modal { display: none; position: fixed; z-index: 2000; inset: 0; background-color: rgba(0,0,0,0.7); backdrop-filter: blur(15px); justify-content: center; align-items: center; padding: 20px; }
+        .modal-content { background: rgba(20, 20, 22, 0.95); border: 1px solid rgba(255,255,255,0.1); border-radius: 28px; padding: 35px; width: 100%; max-width: 420px; text-align: left; position: relative; box-shadow: 0 30px 60px rgba(0,0,0,0.7); animation: modalZoom .4s var(--ease); max-height: 90vh; overflow-y: auto; }
+        @keyframes modalZoom { from { transform: scale(0.8) translateY(20px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
+        
+        .close-modal { position: absolute; top: 20px; right: 25px; color: var(--text-muted); cursor: pointer; font-size: 1.8rem; transition: .3s; background: none; border: none; padding: 0; line-height: 1; font-family: inherit; z-index: 2; }
+        .close-modal:hover { color: var(--text-main); transform: rotate(90deg); }
+        .modal h2 { margin-top: 0; font-size: 1.5rem; margin-bottom: 15px; font-weight: 700; background: linear-gradient(90deg, #fff, #86868b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .modal p { color: var(--text-muted); line-height: 1.7; font-size: 1rem; white-space: pre-wrap; }
+        
+        .status-list { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
+        .status-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.1); color: var(--text-main); font-size: 0.95rem; gap: 10px; }
+        .status-item:last-child { border-bottom: none; }
+        .status-badge { padding: 5px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; white-space: nowrap; }
+        .status-badge.status-ok { background: rgba(52, 199, 89, 0.15); color: var(--accent-admin); border: 1px solid rgba(52,199,89,0.3); }
+        .status-badge.status-error { background: rgba(255, 59, 48, 0.15); color: var(--accent-danger); border: 1px solid rgba(255,59,48,0.3); }
+        .status-badge.status-checking { background: rgba(255, 204, 0, 0.15); color: #ffcc00; border: 1px solid rgba(255,204,0,0.3); }
+        
+        .fade-in { opacity: 0; transform: translateY(30px); transition: opacity .8s ease-out, transform .8s; }
+        .fade-in.visible { opacity: 1; transform: translateY(0); }
+        
+        .sk-card { background: linear-gradient(90deg, rgba(255,255,255,0.03) 25%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0.03) 75%); background-size: 200% 100%; animation: skGlow 1.6s infinite; height: 66px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); }
+        @keyframes skGlow { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+        
+        .admin-tab-container { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
+        .admin-tab { background: none; border: none; color: var(--text-muted); font-size: 1rem; font-weight: 600; cursor: pointer; padding: 8px 15px; border-radius: 8px; transition: .3s; font-family: inherit; }
+        .admin-tab.active { background: rgba(255,255,255,0.1); color: var(--text-main); }
+        .admin-tab:hover:not(.active) { color: var(--text-main); background: rgba(255,255,255,0.04); }
+        .admin-list { max-height: 350px; overflow-y: auto; padding-right: 10px; }
+        .admin-list::-webkit-scrollbar { width: 6px; }
+        .admin-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
+        .admin-item { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 12px 15px; border-radius: 12px; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.05); gap: 10px; }
+        .admin-item-title { font-size: 0.95rem; font-weight: 600; color: var(--text-main); margin-bottom: 5px; word-break: break-all; }
+        .admin-item-subtitle { font-size: 0.8rem; color: var(--text-muted); word-break: break-all; }
+        .admin-select { background: rgba(0,0,0,0.5); color: var(--text-main); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; padding: 6px 10px; font-size: 0.85rem; outline: none; font-family: inherit; }
+        .admin-select:focus { border-color: var(--accent); }
+        .admin-btn-save { background: var(--accent); color: #fff; border: none; border-radius: 8px; padding: 7px 12px; font-size: 0.8rem; font-weight: bold; cursor: pointer; margin-left: 10px; transition: .3s; font-family: inherit; }
+        .admin-btn-save:hover:not(:disabled) { background: #1a75ff; transform: scale(1.05); }
+        .card-star-btn { background: none; border: none; cursor: pointer; padding: 6px 4px 6px 10px; color: rgba(255,255,255,0.2); font-size: 1rem; line-height: 1; transition: color .2s, transform .2s; flex-shrink: 0; }
+        .card-star-btn:hover { transform: scale(1.3); }
+        .card-star-btn.starred { color: #ffcc00; filter: drop-shadow(0 0 5px rgba(255,204,0,.5)); }
+        
+        #toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(20px); background: rgba(20,20,22,0.95); border: 1px solid rgba(255,255,255,0.1); color: var(--text-main); padding: 12px 22px; border-radius: 99px; font-size: 0.88rem; font-weight: 600; z-index: 9999; opacity: 0; transition: opacity .3s, transform .3s; pointer-events: none; box-shadow: 0 8px 30px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 8px; max-width: calc(100% - 40px); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+        #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+        #toast.success { border-color: rgba(52,199,89,.4); }
+        #toast.error { border-color: rgba(255,59,48,.4); }
+        
+        .role-chips { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-bottom: 20px; }
+        .role-chip { padding: 6px 14px; border-radius: 20px; font-weight: 700; text-transform: uppercase; font-size: 0.78rem; letter-spacing: .04em; display: inline-flex; align-items: center; gap: 5px; }
+        .m-btn { padding: 12px 30px; border-radius: 25px; cursor: pointer; font-weight: bold; width: 100%; transition: all .3s; font-size: 0.95rem; border: 1px solid; font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .m-btn.m-admin { background: rgba(52, 199, 89, 0.15); color: var(--accent-admin); border-color: rgba(52, 199, 89, 0.4); }
+        .m-btn.m-admin:hover { background: rgba(52, 199, 89, 0.25); transform: translateY(-2px); }
+        .m-btn.m-danger { background: rgba(255,59,48,0.15); color: var(--accent-danger); border-color: rgba(255,59,48,0.3); }
+        .m-btn.m-danger:hover { background: rgba(255,59,48,0.25); transform: translateY(-2px); }
+        .m-btn.m-primary { background: rgba(41, 151, 255, 0.15); color: var(--accent); border-color: rgba(41, 151, 255, 0.4); }
+        .m-btn.m-primary:hover { background: rgba(41, 151, 255, 0.25); transform: translateY(-2px); }
+        
+        .settings-section { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 16px 18px; margin-bottom: 18px; text-align: left; }
+        .settings-label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 10px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+        .settings-input-row { display: flex; gap: 8px; }
+        .settings-input { flex: 1; min-width: 0; background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.1); color: var(--text-main); padding: 10px 14px; border-radius: 10px; outline: none; font-size: 0.95rem; font-family: inherit; transition: .2s; }
+        .settings-input:focus { border-color: var(--accent); background: rgba(0,0,0,0.5); }
+        .settings-btn { background: var(--accent); color: #fff; border: none; padding: 10px 16px; border-radius: 10px; font-weight: bold; cursor: pointer; font-family: inherit; font-size: 0.85rem; transition: .2s; }
+        .settings-btn:hover:not(:disabled) { background: #1a75ff; transform: scale(1.03); }
+        .settings-hint { font-size: 0.72rem; color: var(--text-dim); margin-top: 8px; }
 
-.root{display:flex;min-height:100vh;max-width:1280px;margin:0 auto}
-
-.sidebar-left{width:var(--left-w);flex-shrink:0;position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;padding:20px 12px;border-right:1px solid var(--border)}
-.feed-col{flex:1;min-width:0;max-width:680px;border-right:1px solid var(--border);display:flex;flex-direction:column}
-.sidebar-right{width:var(--right-w);flex-shrink:0;position:sticky;top:0;height:100vh;overflow-y:auto;padding:20px 16px;display:flex;flex-direction:column;gap:14px}
-
-.sb-logo{display:flex;align-items:center;gap:10px;padding:8px 10px;margin-bottom:6px;border-radius:var(--rs)}
-.logo-mark{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:.82rem;font-weight:800;color:#fff;flex-shrink:0;box-shadow:0 2px 14px rgba(75,143,255,.35)}
-.logo-text{font-family:var(--display);font-size:1.1rem;font-weight:800;letter-spacing:-.4px;background:linear-gradient(135deg,var(--txt) 20%,var(--txt2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.sb-nav{display:flex;flex-direction:column;gap:2px}
-.sb-item{display:flex;align-items:center;gap:13px;padding:12px 14px;border-radius:var(--rs);cursor:pointer;border:none;background:transparent;color:var(--txt2);font-size:.93rem;font-weight:600;width:100%;text-align:left;transition:all .2s var(--ease)}
-.sb-item i{width:20px;text-align:center;font-size:1.05rem;flex-shrink:0}
-.sb-item:hover{background:var(--s3);color:var(--txt)}
-.sb-item.active{color:var(--accent);background:var(--glow)}
-.sb-item.del{color:var(--err)}.sb-item.del:hover{background:rgba(255,78,106,.08)}
-.sb-user-card{margin-top:auto;background:var(--s2);border:1px solid var(--border);border-radius:var(--rs);padding:12px;display:none}
-.sb-uc-row{display:flex;align-items:center;gap:10px}
-.sb-uc-av{width:36px;height:36px;border-radius:50%;object-fit:cover;background:var(--s3);flex-shrink:0}
-.sb-uc-info{flex:1;min-width:0}
-.sb-uc-name{font-size:.84rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.sb-uc-email{font-size:.72rem;color:var(--txt2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.sb-so-btn{width:100%;margin-top:10px;background:rgba(255,78,106,.1);color:var(--err);border:1px solid rgba(255,78,106,.2);border-radius:10px;padding:9px;font-weight:700;font-size:.85rem;cursor:pointer;transition:all .2s}
-.sb-so-btn:hover{background:rgba(255,78,106,.18)}
-
-.rw{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
-.rw-title{padding:14px 16px 10px;font-weight:800;font-size:.88rem;font-family:var(--display);border-bottom:1px solid var(--border)}
-.rw-srch-pad{padding:12px}
-.rw-sbox{display:flex;align-items:center;gap:9px;background:var(--s2);border:1.5px solid var(--border);border-radius:10px;padding:9px 13px;transition:border-color .2s}
-.rw-sbox:focus-within{border-color:var(--accent)}
-.rw-sbox i{color:var(--txt3);font-size:.87rem;flex-shrink:0}
-.rw-sinput{flex:1;background:transparent;border:none;color:var(--txt);font-size:.87rem;outline:none}
-.rw-sinput::placeholder{color:var(--txt3)}
-.rw-results{padding:4px 0}
-.rw-hit{display:flex;align-items:flex-start;gap:9px;padding:10px 14px;cursor:pointer;transition:background .15s;border-bottom:1px solid var(--border)}
-.rw-hit:last-child{border-bottom:none}
-.rw-hit:hover{background:var(--s2)}
-.rw-hit-av{width:32px;height:32px;border-radius:50%;object-fit:cover;background:var(--s2);flex-shrink:0}
-.rw-hit-body{flex:1;min-width:0}
-.rw-hit-name{font-weight:700;font-size:.8rem;margin-bottom:2px}
-.rw-hit-txt{font-size:.76rem;color:var(--txt2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.rw-hit-time{font-size:.7rem;color:var(--txt3);margin-top:2px}
-mark{background:rgba(75,143,255,.2);color:var(--accent);border-radius:3px;padding:0 2px}
-.rw-about-pad{padding:14px 16px}
-.rw-about-pad p{font-size:.81rem;color:var(--txt2);line-height:1.55}
-.rw-links{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
-.rw-link{display:flex;align-items:center;gap:6px;font-size:.77rem;color:var(--txt2);background:var(--s2);border:1px solid var(--border);padding:5px 11px;border-radius:99px;cursor:pointer;transition:all .2s}
-.rw-link:hover{color:var(--accent);border-color:var(--accent);background:var(--glow)}
-.rw-auth-pad{padding:16px;text-align:center}
-.rw-auth-btn{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;border-radius:10px;padding:9px 20px;font-weight:700;font-size:.84rem;cursor:pointer;width:100%}
-
-.feed-hdr{position:sticky;top:0;z-index:30;background:rgba(12,15,28,.92);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border-bottom:1px solid var(--border);padding:0 20px;height:52px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
-.feed-hdr-left{display:flex;align-items:center;gap:9px}
-.feed-hdr-title{font-family:var(--display);font-size:1rem;font-weight:800;letter-spacing:-.3px}
-.auth-pill{background:transparent;border:1.5px solid var(--border);color:var(--txt2);padding:7px 18px;border-radius:99px;font-size:.83rem;font-weight:600;cursor:pointer;transition:all .2s}
-.auth-pill:hover{border-color:var(--accent);color:var(--accent);background:var(--glow)}
-.auth-pill.out{border-color:transparent}.auth-pill.out:hover{border-color:var(--err);color:var(--err);background:rgba(255,78,106,.07)}
-
-.feed-main{flex:1;overflow-y:auto}
-
-.mob-nav{position:fixed;bottom:0;left:0;right:0;height:var(--mob-nav);background:rgba(12,15,28,.96);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border-top:1px solid var(--border);align-items:center;justify-content:space-around;z-index:50;padding-bottom:env(safe-area-inset-bottom);display:none}
-.mnav-btn{display:flex;flex-direction:column;align-items:center;gap:3px;background:transparent;border:none;color:var(--txt3);cursor:pointer;padding:6px 14px;border-radius:10px;transition:color .2s}
-.mnav-btn i{font-size:1.1rem}.mnav-btn span{font-size:.6rem;font-weight:600;letter-spacing:.3px}
-.mnav-btn.active{color:var(--accent)}
-.mnav-fab{position:relative;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;display:flex;align-items:center;justify-content:center;font-size:1rem;box-shadow:0 4px 18px rgba(75,143,255,.45);border:none;cursor:pointer;margin-top:-20px}
-.mnav-fab.hidden{display:none}
-
-.mob-srch-overlay{position:fixed;inset:0;background:var(--s1);z-index:60;flex-direction:column;transform:translateY(100%);transition:transform .35s var(--ease);display:flex}
-.mob-srch-overlay.open{transform:none}
-.mob-srch-hdr{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--border);flex-shrink:0}
-.mob-sbox{flex:1;display:flex;align-items:center;gap:9px;background:var(--s2);border:1.5px solid var(--border);border-radius:10px;padding:9px 13px;transition:border-color .2s}
-.mob-sbox:focus-within{border-color:var(--accent)}
-.mob-sbox i{color:var(--txt3);font-size:.9rem;flex-shrink:0}
-.mob-sinput{flex:1;background:transparent;border:none;color:var(--txt);font-size:.9rem;outline:none}
-.mob-sinput::placeholder{color:var(--txt3)}
-.mob-srch-cancel{background:var(--s2);border:1px solid var(--border);color:var(--txt2);padding:8px 13px;border-radius:9px;font-size:.82rem;font-weight:600;cursor:pointer;white-space:nowrap}
-.mob-srch-body{flex:1;overflow-y:auto;padding-bottom:20px}
-.srch-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:55%;color:var(--txt3);gap:12px}
-.srch-empty i{font-size:2.2rem;opacity:.5}.srch-empty p{font-size:.86rem}
-.srch-tag{padding:8px 16px 5px;font-size:.68rem;font-weight:700;color:var(--txt3);letter-spacing:1px;text-transform:uppercase}
-
-.set-panel{position:fixed;inset:0;z-index:70;pointer-events:none}
-.set-panel.open{pointer-events:all}
-.set-bd{position:absolute;inset:0;background:rgba(0,0,0,.78);opacity:0;transition:opacity .3s}
-.set-panel.open .set-bd{opacity:1}
-.set-drawer{position:absolute;right:0;top:0;bottom:0;width:min(390px,100%);background:var(--s1);border-left:1px solid var(--border);display:flex;flex-direction:column;transform:translateX(100%);transition:transform .35s var(--ease);overflow:hidden}
-.set-panel.open .set-drawer{transform:none}
-.set-hdr{display:flex;align-items:center;gap:12px;padding:16px;border-bottom:1px solid var(--border);flex-shrink:0}
-.set-hdr-t{font-family:var(--display);font-size:1rem;font-weight:800;flex:1}
-.set-close{width:32px;height:32px;border-radius:50%;background:var(--s2);border:1px solid var(--border);color:var(--txt2);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;font-size:.9rem}
-.set-close:hover{background:var(--s3);color:var(--txt)}
-.set-body{flex:1;overflow-y:auto;padding:6px 0 30px}
-.set-gl{padding:12px 16px 5px;font-size:.67rem;font-weight:700;color:var(--txt3);letter-spacing:1px;text-transform:uppercase}
-.set-row{display:flex;align-items:center;gap:12px;padding:12px 16px;cursor:pointer;border:none;background:transparent;width:100%;text-align:left;transition:background .15s}
-.set-row:hover{background:rgba(255,255,255,.03)}
-.set-icon{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:.88rem;flex-shrink:0}
-.set-info{flex:1;min-width:0}
-.set-name{font-size:.87rem;font-weight:600;color:var(--txt)}
-.set-desc{font-size:.75rem;color:var(--txt2);margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.set-arr{color:var(--txt3);font-size:.72rem}
-.set-row.del .set-name{color:var(--err)}.set-row.del:hover{background:rgba(255,78,106,.07)}
-.set-div{height:1px;background:var(--border);margin:5px 0}
-.tog{width:40px;height:23px;background:var(--s3);border-radius:99px;position:relative;cursor:pointer;border:none;transition:background .25s;flex-shrink:0}
-.tog.on{background:var(--accent)}.tog::after{content:'';width:17px;height:17px;background:#fff;border-radius:50%;position:absolute;top:3px;left:3px;transition:transform .25s var(--ease);box-shadow:0 1px 4px rgba(0,0,0,.4)}
-.tog.on::after{transform:translateX(17px)}
-.set-sub{position:absolute;inset:0;background:var(--s1);transform:translateX(100%);transition:transform .3s var(--ease);display:flex;flex-direction:column}
-.set-sub.open{transform:none}
-.set-sub-hdr{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--border);flex-shrink:0}
-.back-btn{width:30px;height:30px;border-radius:50%;background:var(--s2);border:1px solid var(--border);color:var(--txt2);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.8rem;transition:all .2s;flex-shrink:0}
-.back-btn:hover{background:var(--s3);color:var(--txt)}
-.set-sub-t{font-weight:700;font-size:.92rem;flex:1}
-.set-sub-body{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px}
-.sf{display:flex;flex-direction:column;gap:5px}
-.sl{font-size:.73rem;font-weight:600;color:var(--txt2);text-transform:uppercase;letter-spacing:.5px}
-.si{background:var(--s2);border:1.5px solid var(--border);color:var(--txt);padding:10px 13px;border-radius:var(--rs);font-size:.87rem;outline:none;transition:border-color .2s;font-family:var(--font);width:100%}
-.si:focus{border-color:var(--accent)}.si::placeholder{color:var(--txt3)}
-textarea.si{min-height:85px;resize:none;line-height:1.5}
-.save-btn{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;border-radius:10px;padding:11px;font-weight:700;font-size:.9rem;cursor:pointer;transition:all .2s;margin-top:4px}
-.save-btn:hover{box-shadow:0 4px 20px rgba(75,143,255,.4)}.save-btn:disabled{opacity:.5;cursor:not-allowed}
-
-/* Account info card */
-.acc-card{background:var(--s2);border:1px solid var(--border);border-radius:var(--rs);padding:14px;display:flex;align-items:center;gap:12px;margin-bottom:10px}
-.acc-av{width:52px;height:52px;border-radius:50%;object-fit:cover;flex-shrink:0;background:var(--s3)}
-.acc-info{flex:1;min-width:0}
-.acc-name{font-weight:700;font-size:.95rem;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.acc-email{font-size:.77rem;color:var(--txt2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.acc-role{display:inline-block;margin-top:5px;font-size:.68rem;font-weight:700;padding:2px 9px;border-radius:99px;background:var(--glow);color:var(--accent);text-transform:uppercase;letter-spacing:.5px}
-.acc-role.admin{background:rgba(255,78,106,.1);color:var(--err)}
-.acc-role.blog{background:rgba(34,209,122,.1);color:var(--ok)}
-
-.prof-cover{height:200px;background:linear-gradient(160deg,#0b1d40,#060d1e 55%,var(--bg));background-size:cover;background-position:center;position:relative;overflow:hidden;flex-shrink:0}
-.prof-cover::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 90% at 15% 50%,rgba(75,143,255,.1),transparent 70%),radial-gradient(ellipse 50% 70% at 85% 20%,rgba(108,92,231,.08),transparent 70%)}
-.cover-fade{position:absolute;bottom:0;left:0;right:0;height:60px;background:linear-gradient(to top,var(--s1),transparent)}
-.prof-body{padding:0 20px 20px;background:var(--s1);position:relative}
-.prof-av-ring{position:absolute;top:-58px;left:20px;width:104px;height:104px;border-radius:50%;padding:2.5px;background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 0 0 3px var(--s1),var(--sh)}
-.prof-av-inner{width:100%;height:100%;border-radius:50%;overflow:hidden;background:var(--s2);position:relative}
-.prof-av-img{width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .3s}.prof-av-img.vis{opacity:1}
-.prof-av-fb{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:1.4rem;font-weight:800;color:var(--txt2)}
-.prof-text{padding-top:56px}
-.prof-name-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-.prof-name{font-family:var(--display);font-size:1.2rem;font-weight:800;letter-spacing:-.3px}
-.verified{width:17px;height:17px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.5rem;color:#fff;flex-shrink:0}
-.prof-handle{color:var(--txt2);font-size:.82rem;margin-top:2px}
-.prof-bio{margin-top:9px;font-size:.9rem;line-height:1.6;opacity:.85;white-space:pre-wrap}
-.prof-stats{display:flex;gap:18px;margin-top:12px}
-.stat-n{font-weight:800}.stat-l{color:var(--txt2);font-size:.84rem;margin-left:3px}
-
-.sk{background:linear-gradient(90deg,var(--s2) 25%,var(--s3) 50%,var(--s2) 75%);background-size:200% 100%;animation:sk 1.6s infinite;border-radius:6px;display:block}
-@keyframes sk{0%{background-position:200% 0}100%{background-position:-200% 0}}
-.sk-post{display:flex;gap:10px;padding:14px 20px;border-bottom:1px solid var(--border)}
-.sk-av{width:38px;height:38px;border-radius:50%;flex-shrink:0}
-.sk-lines{flex:1;display:flex;flex-direction:column;gap:7px;padding-top:2px}
-
-.creator{padding:14px 20px;border-bottom:1px solid var(--border);display:none;background:linear-gradient(180deg,rgba(75,143,255,.05),transparent)}
-.creator.show{display:block;animation:fadeUp .3s var(--ease) both}
-.cr-row{display:flex;gap:10px}
-.cr-av-ring{flex-shrink:0;width:38px;height:38px;border-radius:50%;padding:2px;background:linear-gradient(135deg,var(--accent),var(--accent2))}
-.cr-av{width:100%;height:100%;border-radius:50%;object-fit:cover;background:var(--s2)}
-.cr-body{flex:1;min-width:0}
-.cr-ta{width:100%;background:transparent;border:none;color:var(--txt);font-size:.95rem;line-height:1.6;resize:none;outline:none;min-height:44px;padding-top:8px;font-family:var(--font)}
-.cr-ta::placeholder{color:var(--txt3)}
-
-/* NEW: Expandable fields for Link and Hashtag */
-.cr-extras{display:flex;flex-direction:column;gap:8px;margin-top:8px}
-.cr-extra-field{display:none;background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:0 12px;align-items:center;gap:8px;transition:border-color .2s}
-.cr-extra-field.visible{display:flex}
-.cr-extra-field:focus-within{border-color:var(--accent)}
-.cr-extra-field i{color:var(--accent);font-size:.85rem;flex-shrink:0}
-.cr-extra-input{flex:1;background:transparent;border:none;color:var(--txt);font-size:.85rem;outline:none;padding:9px 0;font-family:var(--font)}
-.cr-extra-input::placeholder{color:var(--txt3)}
-.cr-extra-close{background:transparent;border:none;color:var(--txt3);cursor:pointer;padding:4px;font-size:.8rem}
-.cr-extra-close:hover{color:var(--err)}
-
-.cr-tools{display:flex;align-items:center;gap:4px;margin-top:8px;flex-wrap:wrap}
-.tool-btn{min-width:34px;height:34px;padding:0 10px;border-radius:99px;display:flex;align-items:center;justify-content:center;gap:6px;color:var(--accent);font-size:.85rem;cursor:pointer;border:1px solid transparent;background:transparent;transition:all .2s;font-weight:600;font-family:var(--font)}
-.tool-btn span{font-size:.76rem}
-.tool-btn:hover{background:var(--glow);border-color:var(--glow)}
-.tool-btn.active{background:var(--glow);border-color:var(--accent)}
-.cr-foot{display:flex;align-items:center;gap:10px;margin-top:10px;padding-top:9px;border-top:1px solid var(--border)}
-.char-c{font-size:.77rem;color:var(--txt3);margin-right:auto}
-.char-c.warn{color:var(--warn)}.char-c.danger{color:var(--err)}
-.post-btn{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;border-radius:99px;padding:8px 22px;font-weight:700;font-size:.87rem;cursor:pointer;transition:all .2s;box-shadow:0 2px 14px rgba(75,143,255,.3)}
-.post-btn:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 4px 22px rgba(75,143,255,.48)}
-.post-btn:disabled{opacity:.4;cursor:not-allowed}
-.img-prev-wrap{position:relative;margin-top:10px;border-radius:12px;overflow:hidden;border:1px solid var(--border)}
-.img-prev{width:100%;max-height:280px;object-fit:cover}
-.rm-img{position:absolute;top:8px;right:8px;width:28px;height:28px;background:rgba(0,0,0,.7);color:#fff;border:none;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.72rem;transition:background .2s}
-.rm-img:hover{background:var(--err)}
-
-/* Mobile compose modal */
-.compose-modal{position:fixed;inset:0;background:rgba(0,0,0,.82);backdrop-filter:blur(10px);z-index:80;display:none;flex-direction:column}
-.compose-modal.open{display:flex;animation:ovF .2s}
-.compose-hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border);background:var(--s1);flex-shrink:0}
-.compose-ttl{font-family:var(--display);font-size:1rem;font-weight:800}
-.compose-cancel{background:transparent;border:none;color:var(--txt2);font-size:1.1rem;cursor:pointer;padding:4px 8px}
-.compose-body{flex:1;overflow-y:auto;background:var(--s1);padding:16px}
-
-.sec-label{padding:12px 20px 8px;font-size:.7rem;font-weight:700;color:var(--txt3);letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid var(--border)}
-
-.tag-filter{display:flex;align-items:center;gap:10px;padding:12px 20px;background:linear-gradient(90deg,var(--glow),transparent);border-bottom:1px solid var(--border);animation:fadeUp .3s var(--ease)}
-.tag-filter-icon{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;display:flex;align-items:center;justify-content:center;font-size:.88rem;flex-shrink:0}
-.tag-filter-body{flex:1;min-width:0}
-.tag-filter-label{font-size:.7rem;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px}
-.tag-filter-name{font-family:var(--display);font-size:1rem;font-weight:800;color:var(--accent);word-break:break-word}
-.tag-filter-count{font-size:.76rem;color:var(--txt2);margin-top:2px}
-.tag-filter-acts{display:flex;gap:6px;flex-shrink:0}
-.tag-filter-btn{background:var(--s2);border:1px solid var(--border);color:var(--txt2);padding:7px 12px;border-radius:99px;font-size:.78rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:var(--font);display:flex;align-items:center;gap:5px;white-space:nowrap}
-.tag-filter-btn:hover{border-color:var(--accent);color:var(--accent)}
-.tag-filter-btn.danger{color:var(--err)}.tag-filter-btn.danger:hover{border-color:var(--err);background:rgba(255,78,106,.06)}
-@media(max-width:600px){
-  .tag-filter{padding:10px 14px;gap:8px}
-  .tag-filter-btn span{display:none}
-  .tag-filter-btn{padding:7px 10px}
-}
-
-.post{display:flex;gap:11px;padding:14px 20px;border-bottom:1px solid var(--border);transition:background .18s;animation:fadeUp .35s var(--ease) both}
-.post:hover{background:rgba(255,255,255,.018)}
-@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-.post-av-w{flex-shrink:0;width:38px;height:38px;border-radius:50%;overflow:hidden;background:var(--s2);position:relative}
-.post-av{width:38px;height:38px;object-fit:cover;border-radius:50%;opacity:0;transition:opacity .3s}.post-av.vis{opacity:1}
-.post-av-fb{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;color:var(--txt2)}
-.post-body{flex:1;min-width:0}
-.post-hdr{display:flex;align-items:center;gap:5px;margin-bottom:3px;flex-wrap:wrap}
-.post-author{font-weight:700;font-size:.88rem;letter-spacing:-.2px}
-.post-time{color:var(--txt2);font-size:.76rem}
-.post-menu-w{margin-left:auto;position:relative}
-.menu-btn{width:28px;height:28px;border-radius:50%;background:transparent;border:none;color:var(--txt3);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.85rem;transition:all .2s}
-.menu-btn:hover{background:var(--s3);color:var(--txt)}
-.drop-menu{position:absolute;right:0;top:calc(100% + 4px);background:var(--s2);border:1px solid var(--borderH);border-radius:var(--rs);padding:4px 0;min-width:152px;box-shadow:var(--shL);display:none;z-index:200;animation:fadeD .18s var(--ease)}
-.drop-menu.open{display:block}
-@keyframes fadeD{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:none}}
-.drop-item{display:flex;align-items:center;gap:9px;padding:9px 14px;font-size:.83rem;font-weight:500;cursor:pointer;border:none;background:transparent;color:var(--txt);width:100%;text-align:left;transition:background .15s}
-.drop-item:hover{background:var(--s3)}.drop-item.del{color:var(--err)}.drop-item.del:hover{background:rgba(255,78,106,.08)}
-.post-txt{font-size:.91rem;line-height:1.6;color:var(--txt);white-space:pre-wrap;word-wrap:break-word;margin-bottom:7px}
-.post-txt:empty{display:none}
-.post-link{color:var(--accent)}.post-link:hover{text-decoration:underline}
-.post-tags{display:flex;flex-wrap:wrap;gap:5px;margin:4px 0 8px}
-.post-tag{background:var(--glow);color:var(--accent);border:1px solid transparent;padding:3px 10px;border-radius:99px;font-size:.74rem;font-weight:600;cursor:pointer;transition:all .15s}
-.post-tag:hover{border-color:var(--accent)}
-.post-media{width:100%;border-radius:14px;margin:4px 0 8px;border:1px solid var(--border);object-fit:cover;max-height:480px}
-.post-yt{width:100%;aspect-ratio:16/9;border-radius:14px;border:1px solid var(--border);margin:4px 0 8px}
-.lp-w{display:none;margin:4px 0 8px}
-.lp-card{border:1px solid var(--border);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;transition:border-color .2s}
-.lp-card:hover{border-color:var(--borderH)}
-.lp-img{width:100%;height:145px;object-fit:cover;border-bottom:1px solid var(--border)}
-.lp-info{padding:10px 13px;background:var(--s2)}
-.lp-title{font-weight:700;font-size:.87rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.lp-desc{font-size:.79rem;color:var(--txt2);margin-top:2px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.lp-domain{font-size:.7rem;color:var(--txt3);margin-top:5px;font-weight:600;text-transform:uppercase;display:flex;align-items:center;gap:5px}
-.post-acts{display:flex;gap:18px;margin-top:7px}
-.act{display:flex;align-items:center;gap:5px;color:var(--txt2);font-size:.8rem;cursor:pointer;background:transparent;border:none;padding:4px 0;transition:color .15s}
-.act i{font-size:.9rem}.act:hover{color:var(--accent)}.act.liked{color:var(--like)}
-
-.cmts{margin-top:12px;border-top:1px dashed var(--border);padding-top:12px;display:none}
-.cmt{display:flex;gap:8px;margin-bottom:10px}
-.cmt-av{width:26px;height:26px;border-radius:50%;object-fit:cover;flex-shrink:0}
-.cmt-body{background:var(--s2);border:1px solid var(--border);border-radius:12px;padding:7px 11px;flex:1;min-width:0}
-.cmt-meta{display:flex;align-items:center;gap:5px;margin-bottom:2px}
-.cmt-name{font-weight:700;font-size:.78rem;color:var(--txt2)}
-.cmt-time{font-size:.71rem;color:var(--txt3)}
-.cmt-mw{margin-left:auto;position:relative}
-.cmt-txt{font-size:.83rem;line-height:1.45}
-.cmt-inp-row{display:flex;gap:8px;align-items:center;margin-top:8px}
-.cmt-inp{flex:1;background:var(--s2);border:1px solid var(--border);color:var(--txt);padding:7px 13px;border-radius:99px;font-size:.83rem;outline:none;transition:border-color .2s}
-.cmt-inp:focus{border-color:var(--accent)}.cmt-inp:disabled{opacity:.5;cursor:not-allowed}
-.cmt-send{background:var(--s3);color:var(--txt2);border:1px solid var(--border);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;font-size:.78rem;flex-shrink:0}
-.cmt-send:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
-
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.82);backdrop-filter:blur(10px);z-index:100;display:none;justify-content:center;align-items:center;padding:20px}
-.overlay.open{display:flex;animation:ovF .2s}
-@keyframes ovF{from{opacity:0}to{opacity:1}}
-.modal{background:var(--s2);border:1px solid var(--border);border-radius:20px;width:100%;max-width:360px;padding:28px 22px;text-align:center;box-shadow:var(--shL);animation:mUp .3s var(--ease)}
-.modal.wide{max-width:500px;text-align:left}
-@keyframes mUp{from{opacity:0;transform:translateY(20px) scale(.97)}to{opacity:1;transform:none}}
-.m-logo{width:48px;height:48px;border-radius:13px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:1rem;font-weight:800;color:#fff;margin:0 auto 16px;box-shadow:0 4px 20px rgba(75,143,255,.3)}
-.m-title{font-family:var(--display);font-size:1.1rem;font-weight:800;margin-bottom:5px}
-.m-sub{font-size:.83rem;color:var(--txt2);margin-bottom:22px}
-.g_id_signin{display:flex;justify-content:center}
-.m-cancel{margin-top:15px;background:transparent;border:none;color:var(--txt2);font-size:.83rem;font-weight:600;cursor:pointer;padding:8px 16px;border-radius:99px;transition:all .2s}
-.m-cancel:hover{background:rgba(255,255,255,.05);color:var(--txt)}
-.m-input{width:100%;background:var(--s3);border:1.5px solid var(--border);color:var(--txt);padding:10px 13px;border-radius:10px;font-size:.87rem;outline:none;margin-bottom:12px;font-family:var(--font);text-align:center}
-.m-input:focus{border-color:var(--accent)}
-.m-ta{width:100%;background:var(--s3);border:1.5px solid var(--border);color:var(--txt);padding:10px 13px;border-radius:10px;font-size:.88rem;outline:none;margin-bottom:12px;font-family:var(--font);min-height:80px;resize:none;line-height:1.5}
-.m-ta:focus{border-color:var(--accent)}
-.m-acts{display:flex;gap:8px;justify-content:flex-end;margin-top:14px}
-.btn-g{background:transparent;border:1px solid var(--border);color:var(--txt2);padding:8px 16px;border-radius:8px;font-size:.84rem;font-weight:600;cursor:pointer;font-family:var(--font);transition:all .2s}
-.btn-g:hover{border-color:var(--borderH);color:var(--txt)}
-.btn-p{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;padding:8px 18px;border-radius:8px;font-size:.84rem;font-weight:700;cursor:pointer;font-family:var(--font);transition:all .2s}
-.btn-p:hover{box-shadow:0 2px 14px rgba(75,143,255,.4)}
-.btn-reg{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;border-radius:10px;padding:11px;font-weight:700;font-size:.9rem;cursor:pointer;width:100%;font-family:var(--font)}
-
-.toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--s2);border:1px solid var(--borderH);color:var(--txt);padding:10px 20px;border-radius:99px;font-size:.82rem;font-weight:500;z-index:9999;box-shadow:var(--sh);transition:transform .3s var(--ease),opacity .3s;opacity:0;pointer-events:none;display:flex;align-items:center;gap:7px;white-space:nowrap;max-width:calc(100% - 28px)}
-.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
-.toast.s{border-color:rgba(34,209,122,.4)}.toast.e{border-color:rgba(255,78,106,.4)}
-
-.status{text-align:center;padding:52px 20px;color:var(--txt2);font-size:.9rem;display:flex;flex-direction:column;align-items:center;gap:10px}
-.status-ico{font-size:2.2rem;opacity:.4}
-.err-banner{margin:12px 20px;padding:12px 14px;background:rgba(255,78,106,.08);border:1px solid rgba(255,78,106,.2);border-radius:var(--rs);color:var(--err);font-size:.84rem;display:flex;align-items:center;gap:8px}
-.retry-btn{margin-left:auto;background:transparent;border:1px solid rgba(255,78,106,.35);color:var(--err);padding:4px 12px;border-radius:99px;font-size:.77rem;font-weight:600;cursor:pointer;font-family:var(--font);flex-shrink:0}
-
-@media(max-width:1023px){
-  .sidebar-left,.sidebar-right{display:none}
-  .feed-col{max-width:100%;border-right:none}
-  .root{max-width:100%}
-  .feed-hdr{padding:0 14px}
-  .feed-main{padding-bottom:calc(var(--mob-nav) + 4px)}
-  .mob-nav{display:flex !important}
-  .toast{bottom:calc(var(--mob-nav) + 10px)}
-  .creator{padding:12px 14px}
-}
-@media(min-width:1024px){
-  .mob-nav{display:none !important}
-  .mob-srch-overlay{display:none !important}
-  .compose-modal{display:none !important}
-  .mob-logo{display:none !important}
-}
-@media(max-width:600px){
-  .prof-cover{height:130px}
-  .prof-body{padding:0 14px 16px}
-  .prof-av-ring{width:80px;height:80px;top:-44px;left:14px}
-  .prof-text{padding-top:40px}
-  .sk-post{padding:14px 14px}
-  .sec-label{padding:12px 14px 8px}
-  .post{padding:12px 14px}
-}
-</style>
+        @media (max-width: 500px) {
+            .status-text { display: none; }
+            .nav-logo span { display: none; }
+            .unlock-btn { bottom: 25px; right: 25px; width: 50px; height: 50px; }
+            .badge-group { max-width: 120px; }
+            .badge { font-size: .62rem; padding: 3px 8px; }
+            .navbar { padding: 0 15px; gap: 8px; }
+            .nav-left { gap: 12px; }
+            .nav-right { gap: 10px; }
+            .modal-content { padding: 28px 22px; }
+        }
+    </style>
 </head>
 <body>
+    <div id="global-loader" class="global-loader-container">
+        <div class="glow-orb"></div>
+        <div class="g-spinner"></div>
+        <div class="g-loader-text">INITIALIZING...</div>
+        <div class="g-loader-subtext">Fetching secure data</div>
+    </div>
 
-<div class="root">
-
-  <aside class="sidebar-left">
-    <a class="sb-logo" href="#">
-      <div class="logo-mark">KM</div>
-      <div class="logo-text" id="sb-title">Space</div>
-    </a>
-    <nav class="sb-nav">
-      <button class="sb-item active" id="sbn-home" onclick="navTo('home')">
-        <i class="fas fa-house"></i><span>หน้าหลัก</span>
-      </button>
-      <button class="sb-item" id="sbn-settings" onclick="openSettings()">
-        <i class="fas fa-gear"></i><span>ตั้งค่า</span>
-      </button>
+    <nav class="navbar">
+        <div class="nav-left">
+            <a href="#" class="nav-logo">
+                <span style="font-size: 1.3rem;">💻</span><span>Koo Mean SITE V.3</span>
+            </a>
+            <div class="dropdown">
+                <div class="menu-link dropbtn" id="apps-dropbtn">Apps <i class="fas fa-chevron-down" style="font-size: 0.7rem; margin-left:4px; margin-top: 2px;"></i></div>
+                <div class="dropdown-content" id="apps-dropdown-list"></div>
+            </div>
+            <div class="dropdown" id="admin-simulate-dropdown" style="display: none;">
+                <div class="menu-link dropbtn" id="simulate-dropbtn" style="color: var(--accent-admin); font-weight: bold;">
+                    <i class="fas fa-eye" style="margin-right: 4px;"></i> <span id="view-as-text">View As: ADMIN</span> <i class="fas fa-chevron-down" style="font-size: 0.7rem; margin-left:4px; margin-top: 2px;"></i>
+                </div>
+                <div class="dropdown-content" id="simulate-dropdown-list"></div>
+            </div>
+            <div class="menu-link" id="about-btn">About</div>
+        </div>
+        <div class="nav-right">
+            <div class="status-indicator" id="status-btn">
+                <div class="status-dot checking" id="nav-status-dot"></div>
+                <div class="status-text" id="nav-status-text">Checking...</div>
+            </div>
+            <div class="nav-clock" id="nav-clock">00:00</div>
+            <div class="nav-user-container" id="profile-btn">
+                <img id="nav-profile-img" src="https://ui-avatars.com/api/?name=User" class="nav-profile-img" onerror="this.src='https://ui-avatars.com/api/?name=User&background=161616&color=86868b'">
+                <div class="nav-user-badge" id="nav-user-badge"></div>
+            </div>
+        </div>
     </nav>
-    <div class="sb-user-card" id="sb-user-card">
-      <div class="sb-uc-row">
-        <img class="sb-uc-av" id="sb-uc-av" alt="">
-        <div class="sb-uc-info">
-          <div class="sb-uc-name" id="sb-uc-name"></div>
-          <div class="sb-uc-email" id="sb-uc-email"></div>
-        </div>
-      </div>
-      <button class="sb-so-btn" onclick="signOut()"><i class="fas fa-right-from-bracket"></i> ออกจากระบบ</button>
-    </div>
-  </aside>
 
-  <div class="feed-col">
-    <div class="feed-hdr">
-      <div class="feed-hdr-left">
-        <div class="logo-mark mob-logo" id="mob-logo" style="width:28px;height:28px;font-size:.7rem;display:none">KM</div>
-        <div class="feed-hdr-title" id="feed-hdr-title">Timeline</div>
-      </div>
-      <button class="auth-pill" id="auth-btn" onclick="onAuthClick()">Sign In</button>
+    <div class="profile-section fade-in" id="profile-section">
+        <div class="profile-img-wrap">
+            <img src="" class="profile-img" id="main-profile-img" onerror="this.src='https://ui-avatars.com/api/?name=M&background=161616&color=86868b'">
+        </div>
+        <h1 id="profile-name">...</h1>
+        <p class="bio" id="profile-bio">...<br><br></p>
     </div>
 
-    <div class="feed-main" id="feed-main">
-      <section id="prof-section" style="border-bottom:1px solid var(--border)">
-        <div class="prof-cover" id="prof-cover"><div class="cover-fade"></div></div>
-        <div class="prof-body">
-          <div class="prof-av-ring">
-            <div class="prof-av-inner">
-              <div class="prof-av-fb" id="av-fb">KM</div>
-              <img class="prof-av-img" id="av-img" alt="">
-            </div>
-          </div>
-          <div class="prof-text">
-            <div class="prof-name-row">
-              <span class="prof-name" id="prof-name"><span class="sk" style="width:110px;height:17px;display:inline-block"></span></span>
-              <div class="verified"><i class="fas fa-check" style="font-size:.44rem"></i></div>
-            </div>
-            <div class="prof-handle" id="prof-handle">@koomean</div>
-            <div class="prof-bio" id="prof-bio">
-              <span class="sk" style="width:100%;height:12px;display:block;margin-top:8px"></span>
-              <span class="sk" style="width:60%;height:12px;display:block;margin-top:6px"></span>
-            </div>
-            <div class="prof-stats" id="prof-stats" style="display:none">
-              <span class="stat-n" id="stat-posts">0</span><span class="stat-l">โพสต์</span>
-            </div>
-          </div>
+    <div class="search-container fade-in">
+        <input type="text" id="search-input" class="search-input" placeholder="Search links..." autocomplete="off">
+        <i class="fas fa-search search-icon"></i>
+        <button class="search-clear" id="search-clear" title="ล้างการค้นหา"><i class="fas fa-times"></i></button>
+    </div>
+
+    <div class="video-container fade-in" id="featured-video">
+        <div class="video-wrapper"><iframe id="youtube-iframe" src="" frameborder="0" allowfullscreen loading="lazy"></iframe></div>
+    </div>
+
+    <div class="container" id="links-container">
+        <div class="sk-card"></div>
+        <div class="sk-card"></div>
+        <div class="sk-card"></div>
+        <div class="sk-card"></div>
+    </div>
+
+    <div id="about-modal" class="modal">
+        <div class="modal-content">
+            <button class="close-modal" id="close-about-btn" aria-label="Close">&times;</button>
+            <h2>About</h2>
+            <p id="modal-text">...</p>
         </div>
-      </section>
+    </div>
 
-      <!-- Desktop creator -->
-      <section class="creator" id="creator">
-        <div class="cr-row">
-          <div class="cr-av-ring"><img class="cr-av" id="cr-av" alt=""></div>
-          <div class="cr-body">
-            <textarea id="post-ta" class="cr-ta" placeholder="คุณกำลังคิดอะไรอยู่..." maxlength="500"></textarea>
+    <div id="status-modal" class="modal">
+        <div class="modal-content">
+            <button class="close-modal" id="close-status-btn" aria-label="Close">&times;</button>
+            <h2><i class="fas fa-server" style="margin-right: 10px;"></i>System Status</h2>
+            <div class="status-list">
+                <div class="status-item"><span><i class="fas fa-globe" style="margin-right:8px; color:var(--text-muted);"></i>Web Interface</span><span class="status-badge status-ok">Operational</span></div>
+                <div class="status-item"><span><i class="fas fa-database" style="margin-right:8px; color:var(--text-muted);"></i>Database (API)</span><span class="status-badge status-checking" id="badge-api">Checking...</span></div>
+                <div class="status-item"><span><i class="fas fa-photo-video" style="margin-right:8px; color:var(--text-muted);"></i>Media Components</span><span class="status-badge status-checking" id="badge-media">Checking...</span></div>
+                <div class="status-item"><span><i class="fas fa-shield-alt" style="margin-right:8px; color:var(--text-muted);"></i>Session</span><span class="status-badge status-checking" id="badge-session">Checking...</span></div>
+            </div>
+        </div>
+    </div>
 
-            <div class="cr-extras">
-              <div class="cr-extra-field" id="field-link">
-                <i class="fas fa-link"></i>
-                <input type="url" class="cr-extra-input" id="link-in" placeholder="วางลิงก์ (URL) ที่นี่...">
-                <button class="cr-extra-close" onclick="toggleField('link',false)"><i class="fas fa-times"></i></button>
-              </div>
-              <div class="cr-extra-field" id="field-hashtag">
-                <i class="fas fa-hashtag"></i>
-                <input type="text" class="cr-extra-input" id="hashtag-in" placeholder="แท็ก คั่นด้วยเว้นวรรค เช่น ข่าว เทคโนโลยี">
-                <button class="cr-extra-close" onclick="toggleField('hashtag',false)"><i class="fas fa-times"></i></button>
-              </div>
+    <div id="user-profile-modal" class="modal">
+        <div class="modal-content" style="text-align: center; padding: 38px 30px;">
+            <button class="close-modal" id="close-profile-btn" aria-label="Close">&times;</button>
+            <img id="modal-user-pic" src="" alt="" style="width: 85px; height: 85px; border-radius: 50%; margin-bottom: 15px; border: 3px solid rgba(255,255,255,0.1); box-shadow: 0 5px 20px rgba(0,0,0,0.4); object-fit: cover;">
+            <h2 id="modal-user-name" style="margin-bottom: 5px; font-size: 1.3rem;">Name</h2>
+            <p id="modal-user-email" style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 18px;">email</p>
+            <div class="role-chips" id="role-chips-container"></div>
+            
+            <div class="settings-section">
+                <div class="settings-label"><i class="fas fa-id-badge"></i> ชื่อที่แสดง (Display Name)</div>
+                <div class="settings-input-row">
+                    <input type="text" id="display-name-input" class="settings-input" placeholder="กรอกชื่อที่อยากให้คนอื่นเห็น" maxlength="40" autocomplete="off">
+                    <button id="save-display-name-btn" class="settings-btn">บันทึก</button>
+                </div>
+                <div class="settings-hint">เว้นว่าง = กลับไปใช้ชื่อ Google</div>
             </div>
 
-            <div class="cr-tools">
-              <input type="file" id="file-in" accept="image/png,image/jpeg,image/gif,image/webp" style="display:none">
-              <label for="file-in" class="tool-btn" title="แนบรูป"><i class="far fa-image"></i><span>รูปภาพ</span></label>
-              <button type="button" class="tool-btn" id="btn-link" onclick="toggleField('link')"><i class="fas fa-link"></i><span>ลิงก์</span></button>
-              <button type="button" class="tool-btn" id="btn-hashtag" onclick="toggleField('hashtag')"><i class="fas fa-hashtag"></i><span>แท็ก</span></button>
+            <div id="admin-panel-btn" style="display: none; margin-bottom: 10px;">
+                <button id="open-admin-btn" class="m-btn m-admin">
+                    <i class="fas fa-cog"></i> Manage System (Admin)
+                </button>
             </div>
-            <div id="img-prev-wrap" class="img-prev-wrap" style="display:none">
-              <img id="img-prev" class="img-prev" alt="">
-              <button class="rm-img" onclick="removeImg()"><i class="fas fa-times"></i></button>
+            <button id="logout-btn" class="m-btn m-danger">
+                <i class="fas fa-sign-out-alt"></i> Sign Out
+            </button>
+        </div>
+    </div>
+
+    <div id="ask-note-modal" class="modal">
+        <div class="modal-content" style="text-align: center; padding-top: 40px;">
+            <button class="close-modal" id="close-note-btn" aria-label="Close">&times;</button>
+            <h2 style="color: var(--accent-special);"><i class="fas fa-hand-sparkles"></i> ยินดีต้อนรับ!</h2>
+            <p style="margin-bottom: 20px; font-size: 0.95rem;">ระบบพบว่าคุณเป็นผู้ใช้งานใหม่<br>กรุณาบอกแอดมินสักนิดว่าคุณคือใคร</p>
+            <input type="text" id="new-user-note" class="search-input" placeholder="เช่น: ผมเพื่อนแอดมินเองครับ" style="width: 100%; margin-bottom: 20px; text-align: center;">
+            <button id="submit-note-btn" class="m-btn m-primary">
+                <i class="fas fa-paper-plane"></i> ส่งข้อความ & เข้าสู่ระบบ
+            </button>
+        </div>
+    </div>
+
+    <div id="admin-dashboard-modal" class="modal">
+        <div class="modal-content" style="max-width: 550px;">
+            <button class="close-modal" id="close-admin-btn" aria-label="Close">&times;</button>
+            <h2><i class="fas fa-shield-alt" style="color: var(--accent-admin); margin-right: 10px;"></i>Admin Dashboard</h2>
+            <div class="admin-tab-container">
+                <button class="admin-tab active" id="tab-btn-links" data-tab="links">🔗 Links Auth</button>
+                <button class="admin-tab" id="tab-btn-users" data-tab="users">👥 User Roles</button>
             </div>
-            <div class="cr-foot">
-              <span class="char-c" id="char-c">0 / 500</span>
-              <button class="post-btn" id="post-btn" onclick="submitPost()">โพสต์</button>
+            <div id="admin-tab-links" class="admin-list"></div>
+            <div id="admin-tab-users" class="admin-list" style="display: none;"></div>
+        </div>
+    </div>
+
+    <div id="login-modal" class="modal">
+        <div class="modal-content" style="text-align: center; padding-top: 45px;">
+            <button class="close-modal" id="close-login-btn" aria-label="Close">&times;</button>
+            <h2 style="justify-content: center; display: flex; align-items: center; gap: 10px;"><i class="fas fa-user-circle"></i> Sign In</h2>
+            <p style="margin-bottom: 25px; font-size: 0.95rem;">ล็อกอินด้วยบัญชี Google เพื่อเข้าถึงลิงก์พิเศษ</p>
+            <div style="display: flex; justify-content: center; margin-bottom: 10px;">
+                <div id="g_id_onload"
+                    data-client_id="906677442222-kmjgsmta70n24aoaq7osm9c1l7g1fb89.apps.googleusercontent.com"
+                    data-context="signin"
+                    data-ux_mode="popup"
+                    data-callback="handleCredentialResponse"
+                    data-auto_prompt="false">
+                </div>
+                <div class="g_id_signin" data-type="standard" data-shape="pill" data-theme="outline" data-text="signin_with" data-size="large" data-logo_alignment="left"></div>
             </div>
-          </div>
         </div>
-      </section>
-
-      <div id="tag-filter-bar" style="display:none"></div>
-
-      <div id="feed">
-        <div class="sec-label">Timeline</div>
-        <div id="sk-posts">
-          <div class="sk-post"><div class="sk sk-av"></div><div class="sk-lines"><span class="sk" style="width:35%;height:11px"></span><span class="sk" style="width:100%;height:11px"></span><span class="sk" style="width:70%;height:11px"></span></div></div>
-          <div class="sk-post"><div class="sk sk-av"></div><div class="sk-lines"><span class="sk" style="width:50%;height:11px"></span><span class="sk" style="width:88%;height:11px"></span><span class="sk" style="width:55%;height:11px"></span></div></div>
-          <div class="sk-post"><div class="sk sk-av"></div><div class="sk-lines"><span class="sk" style="width:42%;height:11px"></span><span class="sk" style="width:78%;height:11px"></span><span class="sk" style="width:65%;height:11px"></span></div></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <aside class="sidebar-right">
-    <div class="rw">
-      <div class="rw-title"><i class="fas fa-magnifying-glass" style="color:var(--accent);margin-right:8px"></i>ค้นหาโพสต์</div>
-      <div class="rw-srch-pad">
-        <div class="rw-sbox">
-          <i class="fas fa-magnifying-glass"></i>
-          <input class="rw-sinput" id="rw-srch" placeholder="พิมพ์เพื่อค้นหา... (Ctrl+K)" autocomplete="off">
-        </div>
-      </div>
-      <div class="rw-results" id="rw-results" style="display:none"></div>
     </div>
 
-    <div class="rw" id="rw-trends" style="display:none">
-      <div class="rw-title"><i class="fas fa-fire" style="color:var(--err);margin-right:8px"></i>เทรนด์ยอดฮิต</div>
-      <div class="rw-results" id="trend-desktop" style="display:block;padding:4px 0"></div>
-    </div>
+    <button class="unlock-btn" id="unlockBtn" title="Sign In / Profile"><i class="fas fa-lock"></i></button>
+    <div id="toast"></div>
 
-    <div class="rw" id="rw-auth" style="display:none">
-      <div class="rw-auth-pad">
-        <div style="font-weight:700;font-size:.9rem;margin-bottom:5px">เข้าสู่ระบบ</div>
-        <div style="font-size:.8rem;color:var(--txt2);margin-bottom:13px">เพื่อกด Like และคอมเมนต์</div>
-        <button class="rw-auth-btn" onclick="openModal('login-modal')"><i class="fab fa-google" style="margin-right:6px"></i>Sign in with Google</button>
-      </div>
-    </div>
+    <script>
+    // ════════════════════════════════════════════════════════════════
+    // § 1 · CONSTANTS & STATE
+    // ════════════════════════════════════════════════════════════════
+    const API_URL = "https://script.google.com/macros/s/AKfycbwBYhFTW68AfN4cYUJYS1DG7vw-Ocykx5kslSUQIeJJlfu0oeBIdi9xAhVmorVWQ4q7rg/exec";
+    const COOKIE_NAME = 'koomean_tok';
+    const COOKIE_MAX_AGE = 7 * 24 * 60 * 60; // 7 days in seconds
+    const FETCH_TIMEOUT = 20000;
+    const MAX_RETRIES = 2;
 
-    <div class="rw">
-      <div class="rw-title">เกี่ยวกับ</div>
-      <div class="rw-about-pad">
-        <p id="rw-bio"></p>
-        <div class="rw-links">
-          <div class="rw-link" onclick="window.open('https://koomean.github.io/koomean/','_blank')"><i class="fas fa-globe"></i>เว็บไซต์</div>
-          <div class="rw-link" onclick="window.open('https://youtube.com/@koomean','_blank')"><i class="fab fa-youtube"></i>YouTube</div>
-        </div>
-        <div style="margin-top:12px;font-size:.71rem;color:var(--txt3)">Koo Mean Space v2.1 · @koomean</div>
-      </div>
-    </div>
-  </aside>
+    const state = {
+        accessRoles    : ['public'],
+        viewAsRole     : null,
+        allLinks       : [],
+        allUsers       : [],
+        aboutText      : '',
+        isLoggedIn     : false,
+        currentUser    : null,
+        token          : null,
+        tokenExpires   : 0,
+        pendingIdToken : null,
+        sysStatus      : { api: 'checking', media: 'checking', session: 'checking' },
+        clientIp       : '',
+    };
 
-</div>
+    const $ = (id) => document.getElementById(id);
+    const DOM = {
+        navStatusDot  : $('nav-status-dot'),
+        navStatusText : $('nav-status-text'),
+        navClock      : $('nav-clock'),
+        navProfileImg : $('nav-profile-img'),
+        navUserBadge  : $('nav-user-badge'),
+        badgeApi      : $('badge-api'),
+        badgeMedia    : $('badge-media'),
+        badgeSession  : $('badge-session'),
+        linksContainer: $('links-container'),
+        searchInput   : $('search-input'),
+        searchClear   : $('search-clear'),
+        mainProfileImg: $('main-profile-img'),
+        profileName   : $('profile-name'),
+        profileBio    : $('profile-bio'),
+        youtubeIframe : $('youtube-iframe'),
+        featuredVideo : $('featured-video'),
+        appsDropdown  : $('apps-dropdown-list'),
+        simulateMenu  : $('admin-simulate-dropdown'),
+        simulateList  : $('simulate-dropdown-list'),
+        viewAsText    : $('view-as-text'),
+        aboutModal    : $('about-modal'),
+        statusModal   : $('status-modal'),
+        loginModal    : $('login-modal'),
+        userProfModal : $('user-profile-modal'),
+        askNoteModal  : $('ask-note-modal'),
+        adminDashModal: $('admin-dashboard-modal'),
+        modalText     : $('modal-text'),
+        newUserNote   : $('new-user-note'),
+        unlockBtn     : $('unlockBtn'),
+        adminTabLinks : $('admin-tab-links'),
+        adminTabUsers : $('admin-tab-users'),
+        roleChipsBox  : $('role-chips-container'),
+        dispNameInput : $('display-name-input'),
+        dispNameBtn   : $('save-display-name-btn'),
+    };
 
-<!-- Mobile bottom nav (with FAB post button) -->
-<nav class="mob-nav" id="mob-nav">
-  <button class="mnav-btn active" id="mnav-home" onclick="navTo('home')"><i class="fas fa-house"></i><span>หน้าหลัก</span></button>
-  <button class="mnav-btn" id="mnav-search" onclick="openMobSearch()"><i class="fas fa-magnifying-glass"></i><span>ค้นหา</span></button>
-  <button class="mnav-fab hidden" id="mnav-fab" onclick="openCompose()" title="สร้างโพสต์"><i class="fas fa-plus"></i></button>
-  <button class="mnav-btn" id="mnav-settings" onclick="openSettings()"><i class="fas fa-gear"></i><span>ตั้งค่า</span></button>
-</nav>
-
-<!-- Mobile search overlay -->
-<div class="mob-srch-overlay" id="mob-srch">
-  <div class="mob-srch-hdr">
-    <div class="mob-sbox"><i class="fas fa-magnifying-glass"></i><input class="mob-sinput" id="mob-srch-in" placeholder="ค้นหาโพสต์..." autocomplete="off"></div>
-    <button class="mob-srch-cancel" onclick="closeMobSearch()">ยกเลิก</button>
-  </div>
-  <div class="mob-srch-body" id="mob-srch-body"><div class="srch-empty"><i class="fas fa-magnifying-glass-chart"></i><p>พิมพ์เพื่อค้นหาโพสต์</p></div></div>
-</div>
-
-<!-- Mobile compose modal -->
-<div class="compose-modal" id="compose-modal">
-  <div class="compose-hdr">
-    <div class="compose-ttl">สร้างโพสต์ใหม่</div>
-    <button class="compose-cancel" onclick="closeCompose()"><i class="fas fa-times"></i></button>
-  </div>
-  <div class="compose-body">
-    <div class="cr-row">
-      <div class="cr-av-ring"><img class="cr-av" id="cr-av-mob" alt=""></div>
-      <div class="cr-body">
-        <textarea id="post-ta-mob" class="cr-ta" placeholder="คุณกำลังคิดอะไรอยู่..." maxlength="500" style="min-height:100px"></textarea>
-
-        <div class="cr-extras">
-          <div class="cr-extra-field" id="field-link-mob">
-            <i class="fas fa-link"></i>
-            <input type="url" class="cr-extra-input" id="link-in-mob" placeholder="วางลิงก์ (URL) ที่นี่...">
-            <button class="cr-extra-close" onclick="toggleField('link',false,true)"><i class="fas fa-times"></i></button>
-          </div>
-          <div class="cr-extra-field" id="field-hashtag-mob">
-            <i class="fas fa-hashtag"></i>
-            <input type="text" class="cr-extra-input" id="hashtag-in-mob" placeholder="แท็ก คั่นด้วยเว้นวรรค">
-            <button class="cr-extra-close" onclick="toggleField('hashtag',false,true)"><i class="fas fa-times"></i></button>
-          </div>
-        </div>
-
-        <div class="cr-tools">
-          <input type="file" id="file-in-mob" accept="image/png,image/jpeg,image/gif,image/webp" style="display:none">
-          <label for="file-in-mob" class="tool-btn"><i class="far fa-image"></i><span>รูปภาพ</span></label>
-          <button type="button" class="tool-btn" id="btn-link-mob" onclick="toggleField('link',null,true)"><i class="fas fa-link"></i><span>ลิงก์</span></button>
-          <button type="button" class="tool-btn" id="btn-hashtag-mob" onclick="toggleField('hashtag',null,true)"><i class="fas fa-hashtag"></i><span>แท็ก</span></button>
-        </div>
-        <div id="img-prev-wrap-mob" class="img-prev-wrap" style="display:none">
-          <img id="img-prev-mob" class="img-prev" alt="">
-          <button class="rm-img" onclick="removeImg(true)"><i class="fas fa-times"></i></button>
-        </div>
-        <div class="cr-foot">
-          <span class="char-c" id="char-c-mob">0 / 500</span>
-          <button class="post-btn" id="post-btn-mob" onclick="submitPost(true)">โพสต์</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Settings drawer -->
-<div class="set-panel" id="set-panel">
-  <div class="set-bd" onclick="closeSettings()"></div>
-  <div class="set-drawer">
-    <div class="set-hdr">
-      <div class="logo-mark">KM</div>
-      <div class="set-hdr-t">ตั้งค่า</div>
-      <button class="set-close" onclick="closeSettings()"><i class="fas fa-times"></i></button>
-    </div>
-    <div class="set-body">
-      <div class="set-gl">บัญชี</div>
-      <button class="set-row" id="set-acc-row" onclick="onSetAccountClick()">
-        <div class="set-icon" style="background:rgba(75,143,255,.12);color:var(--accent)"><i class="fas fa-user"></i></div>
-        <div class="set-info"><div class="set-name" id="set-ln">Sign In</div><div class="set-desc" id="set-ld">เข้าสู่ระบบเพื่อใช้งาน</div></div>
-        <i class="fas fa-chevron-right set-arr"></i>
-      </button>
-      <div class="set-div"></div>
-      <div id="admin-grp" style="display:none">
-        <div class="set-gl">จัดการ Space</div>
-        <button class="set-row" onclick="openSub('profile-edit')">
-          <div class="set-icon" style="background:rgba(108,92,231,.12);color:var(--accent2)"><i class="fas fa-id-card"></i></div>
-          <div class="set-info"><div class="set-name">แก้ไขโปรไฟล์</div><div class="set-desc">ชื่อ, Bio, รูปภาพ, ปกหน้า</div></div>
-          <i class="fas fa-chevron-right set-arr"></i>
-        </button>
-        <div class="set-div"></div>
-      </div>
-      <div class="set-gl">การแสดงผล</div>
-      <div class="set-row" style="cursor:default" onclick="event.stopPropagation()">
-        <div class="set-icon" style="background:rgba(34,209,122,.1);color:var(--ok)"><i class="fas fa-moon"></i></div>
-        <div class="set-info"><div class="set-name">โหมดมืด</div><div class="set-desc">สลับธีมสว่าง/มืด</div></div>
-        <button class="tog on" id="dark-tog" onclick="toggleDark()"></button>
-      </div>
-      <div class="set-div"></div>
-      <div class="set-gl">เกี่ยวกับ</div>
-      <div class="set-row" style="cursor:default">
-        <div class="set-icon" style="background:rgba(245,158,11,.1);color:var(--warn)"><i class="fas fa-circle-info"></i></div>
-        <div class="set-info"><div class="set-name" id="set-app-name">Koo Mean Space</div><div class="set-desc">v2.1 · by @koomean</div></div>
-      </div>
-      <button class="set-row" onclick="window.open('https://koomean.github.io/koomean/','_blank')">
-        <div class="set-icon" style="background:rgba(255,255,255,.05);color:var(--txt2)"><i class="fas fa-globe"></i></div>
-        <div class="set-info"><div class="set-name">เว็บไซต์</div><div class="set-desc">koomean.github.io/koomean</div></div>
-        <i class="fas fa-arrow-up-right-from-square set-arr"></i>
-      </button>
-      <button class="set-row" onclick="window.open('https://youtube.com/@koomean','_blank')">
-        <div class="set-icon" style="background:rgba(255,78,106,.1);color:var(--err)"><i class="fab fa-youtube"></i></div>
-        <div class="set-info"><div class="set-name">YouTube</div><div class="set-desc">@koomean</div></div>
-        <i class="fas fa-arrow-up-right-from-square set-arr"></i>
-      </button>
-      <div class="set-div"></div>
-      <div id="so-grp" style="display:none">
-        <button class="set-row del" onclick="signOut()">
-          <div class="set-icon" style="background:rgba(255,78,106,.1);color:var(--err)"><i class="fas fa-right-from-bracket"></i></div>
-          <div class="set-info"><div class="set-name">ออกจากระบบ</div><div class="set-desc" id="so-email"></div></div>
-        </button>
-      </div>
-    </div>
-
-    <!-- Profile edit sub-drawer -->
-    <div class="set-sub" id="sub-profile-edit">
-      <div class="set-sub-hdr">
-        <button class="back-btn" onclick="closeSub()"><i class="fas fa-chevron-left"></i></button>
-        <div class="set-sub-t">แก้ไขโปรไฟล์ Space</div>
-      </div>
-      <div class="set-sub-body">
-        <div class="sf"><label class="sl">ชื่อเว็บไซต์</label><input class="si" id="si-title" type="text" placeholder="Koo Mean Space"></div>
-        <div class="sf"><label class="sl">ชื่อโปรไฟล์</label><input class="si" id="si-name" type="text" placeholder="Koo Mean"></div>
-        <div class="sf"><label class="sl">Handle</label><input class="si" id="si-handle" type="text" placeholder="@koomean"></div>
-        <div class="sf"><label class="sl">Bio</label><textarea class="si" id="si-bio" placeholder="เขียนบางอย่างเกี่ยวกับตัวเอง..."></textarea></div>
-        <div class="sf"><label class="sl">URL รูปโปรไฟล์</label><input class="si" id="si-img" type="url" placeholder="https://..."></div>
-        <div class="sf"><label class="sl">URL รูปปกหน้า</label><input class="si" id="si-cover" type="url" placeholder="https://..."></div>
-        <button class="save-btn" id="si-save" onclick="saveProfile()">บันทึกการเปลี่ยนแปลง</button>
-      </div>
-    </div>
-
-    <!-- Account detail sub-drawer -->
-    <div class="set-sub" id="sub-account">
-      <div class="set-sub-hdr">
-        <button class="back-btn" onclick="closeSub()"><i class="fas fa-chevron-left"></i></button>
-        <div class="set-sub-t">ข้อมูลบัญชี</div>
-      </div>
-      <div class="set-sub-body">
-        <div class="acc-card">
-          <img class="acc-av" id="acc-av" alt="">
-          <div class="acc-info">
-            <div class="acc-name" id="acc-name"></div>
-            <div class="acc-email" id="acc-email"></div>
-            <div class="acc-role" id="acc-role">User</div>
-          </div>
-        </div>
-        <div class="sf"><label class="sl">ชื่อที่แสดง</label><input class="si" id="acc-dn" type="text" readonly></div>
-        <div class="sf"><label class="sl">อีเมล</label><input class="si" id="acc-em" type="email" readonly></div>
-        <div class="sf"><label class="sl">สิทธิ์ผู้ใช้</label><input class="si" id="acc-rl" type="text" readonly></div>
-        <div class="sf"><label class="sl">สถานะ</label><input class="si" id="acc-st" type="text" readonly value="Active"></div>
-        <button class="save-btn" style="background:rgba(255,78,106,.12);color:var(--err);box-shadow:none" onclick="signOut()"><i class="fas fa-right-from-bracket" style="margin-right:6px"></i>ออกจากระบบ</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="overlay" id="login-modal">
-  <div class="modal">
-    <div class="m-logo">KM</div><div class="m-title">Sign In</div>
-    <div class="m-sub">เข้าสู่ระบบเพื่อใช้งานเต็มรูปแบบ</div>
-    <div id="g_id_onload" data-client_id="906677442222-kmjgsmta70n24aoaq7osm9c1l7g1fb89.apps.googleusercontent.com" data-callback="handleCredentialResponse" data-auto_prompt="false"></div>
-    <div class="g_id_signin" data-type="standard" data-theme="outline" data-size="large"></div>
-    <button class="m-cancel" onclick="closeModal('login-modal')">ยกเลิก</button>
-  </div>
-</div>
-<div class="overlay" id="reg-modal">
-  <div class="modal">
-    <div class="m-logo" style="background:linear-gradient(135deg,#f59e0b,#d97706)"><i class="fas fa-hand-sparkles"></i></div>
-    <div class="m-title">ยินดีต้อนรับ!</div><div class="m-sub">แนะนำตัวสั้นๆ เพื่อให้ Admin ทราบ</div>
-    <input type="text" id="reg-note" class="m-input" placeholder="เช่น: ผมเป็นเพื่อนคุณมีนครับ">
-    <button class="btn-reg" onclick="doRegister()">ลงทะเบียน & เข้าใช้งาน</button>
-    <button class="m-cancel" onclick="closeModal('reg-modal')">ยกเลิก</button>
-  </div>
-</div>
-<div class="overlay" id="ep-modal">
-  <div class="modal wide" style="padding:20px">
-    <div class="m-title" style="margin-bottom:14px;font-size:1rem;text-align:left">แก้ไขโพสต์</div>
-    <textarea class="m-ta" id="ep-ta" rows="4" placeholder="ข้อความ..." maxlength="500" style="margin-bottom:10px"></textarea>
-
-    <div class="cr-extras" style="margin-bottom:10px">
-      <div class="cr-extra-field" id="ep-field-link">
-        <i class="fas fa-link"></i>
-        <input type="url" class="cr-extra-input" id="ep-link-in" placeholder="วางลิงก์ (URL)...">
-        <button class="cr-extra-close" onclick="toggleEditField('link',false)"><i class="fas fa-times"></i></button>
-      </div>
-      <div class="cr-extra-field" id="ep-field-hashtag">
-        <i class="fas fa-hashtag"></i>
-        <input type="text" class="cr-extra-input" id="ep-hashtag-in" placeholder="แท็ก คั่นด้วยเว้นวรรค">
-        <button class="cr-extra-close" onclick="toggleEditField('hashtag',false)"><i class="fas fa-times"></i></button>
-      </div>
-    </div>
-
-    <div class="cr-tools" style="margin-bottom:8px">
-      <input type="file" id="ep-file-in" accept="image/png,image/jpeg,image/gif,image/webp" style="display:none">
-      <label for="ep-file-in" class="tool-btn"><i class="far fa-image"></i><span>เปลี่ยนรูป</span></label>
-      <button type="button" class="tool-btn" id="ep-btn-link" onclick="toggleEditField('link')"><i class="fas fa-link"></i><span>ลิงก์</span></button>
-      <button type="button" class="tool-btn" id="ep-btn-hashtag" onclick="toggleEditField('hashtag')"><i class="fas fa-hashtag"></i><span>แท็ก</span></button>
-    </div>
-
-    <div id="ep-img-prev-wrap" class="img-prev-wrap" style="display:none;margin-bottom:10px">
-      <img id="ep-img-prev" class="img-prev" alt="">
-      <button class="rm-img" onclick="removeEditImg()" title="ลบรูป"><i class="fas fa-times"></i></button>
-    </div>
-
-    <div class="m-acts" style="margin-top:12px">
-      <button class="btn-g" onclick="closeModal('ep-modal')">ยกเลิก</button>
-      <button class="btn-p" id="ep-save" onclick="saveEditPost()">บันทึก</button>
-    </div>
-  </div>
-</div>
-<div class="overlay" id="ec-modal">
-  <div class="modal wide">
-    <div class="m-title" style="margin-bottom:12px;font-size:.95rem">แก้ไขคอมเมนต์</div>
-    <textarea class="m-ta" id="ec-ta" rows="3"></textarea>
-    <div class="m-acts"><button class="btn-g" onclick="closeModal('ec-modal')">ยกเลิก</button><button class="btn-p" id="ec-save" onclick="saveEditCmt()">บันทึก</button></div>
-  </div>
-</div>
-
-<div class="toast" id="toast"></div>
-
-<script>
-/* =========================================================
-   Koo Mean Space v2.1
-   Fixes:
-   - Role check normalized (admin/blog can post)
-   - Mobile compose modal (FAB button)
-   - Separate post fields: text, link, image, hashtag
-   - Account settings button works
-   ========================================================= */
-
-const API_URL='https://script.google.com/macros/s/AKfycbwBYhFTW68AfN4cYUJYS1DG7vw-Ocykx5kslSUQIeJJlfu0oeBIdi9xAhVmorVWQ4q7rg/exec';
-const IMGBB_KEY='5286836e6b61aa52660a8d8602503e0b';
-const SESS_KEY='kms_v3';
-const TIMEOUT=13000;
-
-const S={
-  user:null,
-  profile:{webTitle:'Space',name:'',handle:'@koomean',bio:'',imageUrl:'',coverUrl:''},
-  posts:[],
-  pendingJwt:null,
-  selFile:null,     // desktop file
-  selFileMob:null,  // mobile file
-  selFileEdit:null, // edit-modal file
-  activeTag:null    // hashtag กำลังถูก filter
-};
-let editTarget={};
-let toastTid;
-
-const D=id=>document.getElementById(id);
-const isMob=()=>window.innerWidth<1024;
-
-/* Normalize role once, use everywhere */
-function getRole(u){return ((u||S.user||{}).role||'').toString().trim().toLowerCase();}
-function canPost(){const r=getRole();return r.includes('admin')||r.includes('blog');}
-function isAdmin(){return getRole().includes('admin');}
-
-function esc(s){if(s==null)return'';const p=document.createElement('span');p.textContent=String(s);return p.innerHTML;}
-function fmt(ts){if(!ts)return'';const d=new Date(ts),now=new Date(),diff=now-d;if(isNaN(diff))return'';if(diff<60000)return'เมื่อกี้';if(diff<3600000)return`${Math.floor(diff/60000)} นาทีที่แล้ว`;if(diff<86400000)return`${Math.floor(diff/3600000)} ชม.ที่แล้ว`;return d.toLocaleDateString('th-TH',{day:'numeric',month:'short'})+' '+d.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'});}
-function decodeJwt(t){try{return JSON.parse(decodeURIComponent(atob(t.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')).split('').map(c=>'%'+('00'+c.charCodeAt(0).toString(16)).slice(-2)).join('')));}catch{return null;}}
-async function apiFetch(url,opts={}){const c=new AbortController(),tid=setTimeout(()=>c.abort(),TIMEOUT);try{const r=await fetch(url,{...opts,signal:c.signal});clearTimeout(tid);return r;}catch(e){clearTimeout(tid);throw e;}}
-function toast(msg,type='',icon=''){clearTimeout(toastTid);const t=D('toast');t.className='toast'+(type?' '+type:'');t.innerHTML=(icon?`<i class="${icon}"></i>`:'')+msg;requestAnimationFrame(()=>requestAnimationFrame(()=>t.classList.add('show')));toastTid=setTimeout(()=>t.classList.remove('show'),3200);}
-function loadImg(imgEl,src,fbEl,init='KM'){if(!src){if(fbEl){fbEl.style.display='flex';fbEl.textContent=init;}return;}const i=new Image();i.onload=()=>{imgEl.src=src;imgEl.classList.add('vis');if(fbEl)fbEl.style.display='none';};i.onerror=()=>{if(fbEl){fbEl.style.display='flex';fbEl.textContent=init;}};i.src=src;}
-
-function openModal(id){D(id).classList.add('open');}
-function closeModal(id){D(id).classList.remove('open');}
-document.addEventListener('click',e=>{if(!e.target.closest('.drop-menu')&&!e.target.closest('.menu-btn'))document.querySelectorAll('.drop-menu.open').forEach(m=>m.classList.remove('open'));});
-function toggleDrop(id){document.querySelectorAll('.drop-menu.open').forEach(m=>{if(m.id!==id)m.classList.remove('open');});const m=D(id);if(m)m.classList.toggle('open');}
-
-/* =========== Hashtags / Search =========== */
-function getHashtags(){
-  const counts={};
-  S.posts.forEach(p=>{
-    // combine content + dedicated hashtags field for trending
-    const content=(p.content||'')+' '+((p.hashtags||[]).map(h=>'#'+h).join(' '));
-    const m=content.match(/#[\wก-๙]+/g);
-    if(m)m.forEach(t=>counts[t]=(counts[t]||0)+1);
-  });
-  return Object.keys(counts).map(tag=>({tag,count:counts[tag]})).sort((a,b)=>b.count-a.count).slice(0,5);
-}
-function renderHashtagsUI(){
-  const tags=getHashtags();if(!tags.length)return '';
-  let h='';tags.forEach((t,i)=>{
-    h+=`<div class="rw-hit" style="padding:10px 14px" onclick="filterByTag('${esc(t.tag.replace(/^#/,''))}')">
-      <div style="font-size:1.1rem;color:var(--accent);font-weight:800;width:24px">${i+1}</div>
-      <div class="rw-hit-body">
-        <div class="rw-hit-name">${esc(t.tag)}</div>
-        <div class="rw-hit-txt">${t.count} โพสต์</div>
-      </div></div>`;
-  });
-  return h;
-}
-function getEmptySearchHtml(){
-  const th=renderHashtagsUI();
-  if(th)return `<div class="sec-label" style="border:none">🔥 เทรนด์ฮิต</div>${th}`;
-  return `<div class="srch-empty"><i class="fas fa-magnifying-glass-chart"></i><p>พิมพ์เพื่อค้นหาโพสต์</p></div>`;
-}
-function searchTag(tag){
-  if(isMob()){
-    openMobSearch();
-    setTimeout(()=>{const el=D('mob-srch-in');if(el){el.value=tag;el.dispatchEvent(new Event('input'));el.focus();}},320);
-  }else{
-    const el=D('rw-srch');el.value=tag;el.dispatchEvent(new Event('input'));el.focus();
-  }
-}
-
-/* =========== Hashtag Feed Filter =========== */
-function normalizeTag(t){return String(t||'').trim().replace(/^#+/,'').toLowerCase();}
-
-function filterByTag(tag){
-  const norm=normalizeTag(tag);
-  if(!norm){clearTagFilter();return;}
-  S.activeTag=norm;
-  closeMobSearch();closeSettings();
-  renderTagFilterBar();
-  renderFeed();
-  // Update URL
-  try{
-    const url=new URL(window.location.href);
-    url.searchParams.set('tag',norm);
-    url.searchParams.delete('post');
-    window.history.replaceState({},'',url.toString());
-  }catch{}
-  // Scroll to top
-  const fm=D('feed-main');if(fm)fm.scrollTo({top:0,behavior:'smooth'});
-}
-
-function clearTagFilter(){
-  S.activeTag=null;
-  renderTagFilterBar();
-  renderFeed();
-  try{
-    const url=new URL(window.location.href);
-    url.searchParams.delete('tag');
-    window.history.replaceState({},'',url.toString());
-  }catch{}
-}
-
-function shareTagLink(){
-  if(!S.activeTag)return;
-  const url=window.location.href.split('?')[0]+'?tag='+encodeURIComponent(S.activeTag);
-  const copy=s=>{
-    if(navigator.clipboard&&navigator.clipboard.writeText){
-      return navigator.clipboard.writeText(s);
+    function hideGlobalLoader() {
+        const loader = $('global-loader');
+        if (loader) loader.classList.add('hidden');
     }
-    return new Promise((res,rej)=>{
-      const ta=document.createElement('textarea');ta.value=s;document.body.appendChild(ta);ta.select();
-      try{document.execCommand('copy');res();}catch(e){rej(e);}finally{document.body.removeChild(ta);}
-    });
-  };
-  // ถ้า browser รองรับ Web Share API (มือถือส่วนใหญ่) ให้ใช้เลย
-  if(navigator.share&&isMob()){
-    navigator.share({
-      title:'#'+S.activeTag+' · '+(S.profile.webTitle||'Koo Mean Space'),
-      text:'ดูโพสต์ในหมวด #'+S.activeTag,
-      url:url
-    }).catch(()=>{/* user cancelled or error — fallback to copy */
-      copy(url).then(()=>toast('คัดลอกลิงก์แชร์แล้ว','s','fas fa-link')).catch(()=>toast('แชร์ไม่สำเร็จ','e'));
-    });
-  }else{
-    copy(url).then(()=>toast('คัดลอกลิงก์แท็กแล้ว','s','fas fa-link')).catch(()=>toast('คัดลอกไม่สำเร็จ','e'));
-  }
-}
-
-function renderTagFilterBar(){
-  const bar=D('tag-filter-bar');
-  if(!bar)return;
-  if(!S.activeTag){bar.style.display='none';bar.innerHTML='';return;}
-  const count=S.posts.filter(p=>postMatchesTag(p,S.activeTag)).length;
-  bar.innerHTML=`<div class="tag-filter">
-    <div class="tag-filter-icon"><i class="fas fa-hashtag"></i></div>
-    <div class="tag-filter-body">
-      <div class="tag-filter-label">กำลังดูแท็ก</div>
-      <div class="tag-filter-name">#${esc(S.activeTag)}</div>
-      <div class="tag-filter-count">${count} โพสต์</div>
-    </div>
-    <div class="tag-filter-acts">
-      <button class="tag-filter-btn" onclick="shareTagLink()" title="แชร์แท็ก"><i class="fas fa-share-nodes"></i><span>แชร์</span></button>
-      <button class="tag-filter-btn danger" onclick="clearTagFilter()" title="ล้างตัวกรอง"><i class="fas fa-times"></i><span>ล้าง</span></button>
-    </div></div>`;
-  bar.style.display='block';
-}
-
-function postMatchesTag(p,normTag){
-  if(!normTag)return true;
-  // Check dedicated hashtags field
-  if(Array.isArray(p.hashtags)){
-    for(const t of p.hashtags){if(normalizeTag(t)===normTag)return true;}
-  }
-  // Check inline hashtags in content
-  const content=(p.content||'');
-  const m=content.match(/#[\wก-๙]+/g);
-  if(m){for(const t of m){if(normalizeTag(t)===normTag)return true;}}
-  return false;
-}
-
-let rwD;
-D('rw-srch').addEventListener('input',function(){
-  clearTimeout(rwD);const q=this.value.trim(),res=D('rw-results');
-  if(!q){res.style.display='none';return;}
-  rwD=setTimeout(()=>{
-    const lq=q.toLowerCase();
-    const hits=S.posts.filter(p=>{
-      const hay=((p.content||'')+' '+((p.hashtags||[]).join(' '))+' '+(p.link||'')).toLowerCase();
-      return hay.includes(lq);
-    });
-    const avSrc=esc(S.profile.imageUrl||''),name=esc(S.profile.name||'Koo Mean');
-    const hi=t=>esc(t).replace(new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi'),m=>`<mark>${esc(m)}</mark>`);
-    if(!hits.length){res.innerHTML='<div style="padding:12px 16px;font-size:.79rem;color:var(--txt3)">ไม่พบโพสต์</div>';res.style.display='block';return;}
-    let h='';hits.slice(0,6).forEach(p=>{
-      const sn=(p.content||'').substring(0,80);
-      h+=`<div class="rw-hit" onclick="scrollToPost(${p.rowIdx})">
-        <img class="rw-hit-av" src="${avSrc}" onerror="this.style.display='none'" alt="">
-        <div class="rw-hit-body">
-          <div class="rw-hit-name">${name}</div>
-          <div class="rw-hit-txt">${hi(sn)}${p.content&&p.content.length>80?'...':''}</div>
-          <div class="rw-hit-time">${fmt(p.timestamp)}</div>
-        </div></div>`;
-    });
-    res.innerHTML=h;res.style.display='block';
-  },200);
-});
-
-let mobSD;
-function openMobSearch(){D('mob-srch').classList.add('open');setMN('search');D('mob-srch-body').innerHTML=getEmptySearchHtml();setTimeout(()=>D('mob-srch-in').focus(),300);}
-function closeMobSearch(){D('mob-srch').classList.remove('open');D('mob-srch-in').value='';D('mob-srch-body').innerHTML=getEmptySearchHtml();setMN('home');}
-D('mob-srch-in').addEventListener('input',function(){
-  clearTimeout(mobSD);const q=this.value.trim();
-  if(!q){D('mob-srch-body').innerHTML=getEmptySearchHtml();return;}
-  mobSD=setTimeout(()=>{
-    const lq=q.toLowerCase();
-    const hits=S.posts.filter(p=>{
-      const hay=((p.content||'')+' '+((p.hashtags||[]).join(' '))+' '+(p.link||'')).toLowerCase();
-      return hay.includes(lq);
-    });
-    const avSrc=esc(S.profile.imageUrl||''),name=esc(S.profile.name||'Koo Mean');
-    const hi=t=>esc(t).replace(new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi'),m=>`<mark>${esc(m)}</mark>`);
-    if(!hits.length){D('mob-srch-body').innerHTML='<div class="srch-empty"><i class="fas fa-face-frown"></i><p>ไม่พบโพสต์ที่ตรงกัน</p></div>';return;}
-    let h=`<div class="srch-tag">พบ ${hits.length} โพสต์</div>`;
-    hits.forEach(p=>{
-      const sn=(p.content||'').substring(0,100);
-      h+=`<div class="rw-hit" style="padding:12px 16px" onclick="closeMobSearch();scrollToPost(${p.rowIdx})">
-        <img class="rw-hit-av" src="${avSrc}" onerror="this.style.display='none'" alt="">
-        <div class="rw-hit-body">
-          <div class="rw-hit-name" style="font-size:.84rem">${name}</div>
-          <div class="rw-hit-txt">${hi(sn)}${p.content&&p.content.length>100?'...':''}</div>
-          <div class="rw-hit-time">${fmt(p.timestamp)}</div>
-        </div></div>`;
-    });
-    D('mob-srch-body').innerHTML=h;
-  },200);
-});
-
-function scrollToPost(ri){
-  const el=D('post-'+ri);if(!el)return;
-  el.scrollIntoView({behavior:'smooth',block:'center'});
-  el.style.background='rgba(75,143,255,.08)';
-  setTimeout(()=>el.style.background='',1800);
-}
-
-/* =========== Settings =========== */
-function openSettings(){D('set-panel').classList.add('open');setMN('settings');}
-function closeSettings(){D('set-panel').classList.remove('open');closeSub();if(!D('mob-srch').classList.contains('open'))setMN('home');}
-function openSub(n){D('sub-'+n).classList.add('open');if(n==='profile-edit')prefillEdit();if(n==='account')prefillAccount();}
-function closeSub(){document.querySelectorAll('.set-sub.open').forEach(s=>s.classList.remove('open'));}
-
-function onSetAccountClick(){
-  if(!S.user){closeSettings();openModal('login-modal');return;}
-  openSub('account');
-}
-
-function prefillAccount(){
-  if(!S.user)return;
-  const r=getRole();const rLabel=r?r.charAt(0).toUpperCase()+r.slice(1):'User';
-  D('acc-av').src=S.user.pic||'https://ui-avatars.com/api/?name='+encodeURIComponent(S.user.name||'U')+'&background=161d2e&color=7988a3';
-  D('acc-av').onerror=function(){this.src='https://ui-avatars.com/api/?name='+encodeURIComponent(S.user.name||'U')+'&background=161d2e&color=7988a3';};
-  D('acc-name').textContent=S.user.name||'';
-  D('acc-email').textContent=S.user.email||'';
-  const rb=D('acc-role');rb.textContent=rLabel;rb.className='acc-role '+(r.includes('admin')?'admin':(r.includes('blog')?'blog':''));
-  D('acc-dn').value=S.user.name||'';
-  D('acc-em').value=S.user.email||'';
-  D('acc-rl').value=rLabel;
-}
-
-function prefillEdit(){
-  D('si-title').value=S.profile.webTitle||'';
-  D('si-name').value=S.profile.name||'';
-  D('si-handle').value=S.profile.handle||'@koomean';
-  D('si-bio').value=S.profile.bio||'';
-  D('si-img').value=S.profile.imageUrl||'';
-  D('si-cover').value=S.profile.coverUrl||'';
-}
-
-async function saveProfile(){
-  if(!isAdmin())return toast('เฉพาะ Admin เท่านั้น','e');
-  const btn=D('si-save');btn.disabled=true;btn.textContent='กำลังบันทึก...';
-  try{
-    const r=await apiFetch(API_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({action:'updateProfile',email:S.user.email,webTitle:D('si-title').value.trim(),name:D('si-name').value.trim(),handle:D('si-handle').value.trim(),bio:D('si-bio').value.trim(),imageUrl:D('si-img').value.trim(),coverUrl:D('si-cover').value.trim()})});
-    const d=await r.json();
-    if(d.success){toast('บันทึกสำเร็จ','s','fas fa-check');closeSub();await loadData(S.user.email,S.user.name,S.user.pic);}
-    else toast('เกิดข้อผิดพลาด','e');
-  }catch{toast('บันทึกไม่สำเร็จ','e');}
-  finally{btn.disabled=false;btn.textContent='บันทึกการเปลี่ยนแปลง';}
-}
-
-let isDark=true;
-function toggleDark(){
-  isDark=!isDark;D('dark-tog').classList.toggle('on',isDark);
-  const r=document.documentElement.style;
-  r.setProperty('--bg',isDark?'#07090f':'#f0f2f7');
-  r.setProperty('--s1',isDark?'#0c0f1c':'#ffffff');
-  r.setProperty('--s2',isDark?'#111827':'#f8fafc');
-  r.setProperty('--s3',isDark?'#161d2e':'#edf2f7');
-  r.setProperty('--border',isDark?'rgba(255,255,255,0.07)':'rgba(0,0,0,0.08)');
-  r.setProperty('--borderH',isDark?'rgba(255,255,255,0.13)':'rgba(0,0,0,0.14)');
-  r.setProperty('--txt',isDark?'#dde3f0':'#0f172a');
-  r.setProperty('--txt2',isDark?'#7988a3':'#475569');
-  r.setProperty('--txt3',isDark?'#3c4f68':'#94a3b8');
-  try{localStorage.setItem('kms_theme',isDark?'dark':'light');}catch{}
-}
-
-function setMN(n){['home','search','settings'].forEach(k=>D('mnav-'+k)?.classList.toggle('active',k===n));}
-function setSBN(n){['home','settings'].forEach(k=>D('sbn-'+k)?.classList.toggle('active',k===n));}
-function navTo(n){
-  if(n==='home'){
-    closeMobSearch();closeSettings();closeCompose();
-    setMN('home');setSBN('home');
-    if(S.activeTag)clearTagFilter();
-    // scroll to top
-    const fm=D('feed-main');if(fm)fm.scrollTo({top:0,behavior:'smooth'});
-  }
-}
-
-/* =========== Auth =========== */
-function onAuthClick(){if(!S.user)openModal('login-modal');else if(confirm('ออกจากระบบหรือไม่?'))signOut();}
-
-function signOut(){
-  S.user=null;S.pendingJwt=null;
-  try{localStorage.removeItem(SESS_KEY);}catch{}
-  D('auth-btn').textContent='Sign In';D('auth-btn').className='auth-pill';
-  D('creator').classList.remove('show');
-  D('admin-grp').style.display='none';
-  D('so-grp').style.display='none';
-  D('sb-user-card').style.display='none';
-  D('set-ln').textContent='Sign In';D('set-ld').textContent='เข้าสู่ระบบเพื่อใช้งาน';
-  D('rw-auth').style.display='';
-  D('mnav-fab').classList.add('hidden');
-  closeSettings();closeCompose();
-  renderFeed();
-  toast('ออกจากระบบแล้ว','','fas fa-right-from-bracket');
-}
-
-function handleCredentialResponse(res){
-  const p=decodeJwt(res.credential);if(!p)return;
-  closeModal('login-modal');S.pendingJwt=p;
-  toast('กำลังตรวจสอบ...','','fas fa-circle-notch fa-spin');
-  loadData(p.email,p.name,p.picture);
-}
-
-function doRegister(){
-  const note=D('reg-note').value.trim();
-  if(!note){toast('กรุณากรอกข้อมูลก่อน','e');return;}
-  closeModal('reg-modal');
-  const p=S.pendingJwt;
-  toast('กำลังลงทะเบียน...','','fas fa-circle-notch fa-spin');
-  loadData(p.email,p.name,p.picture,note);
-}
-
-/* =========== Load data =========== */
-async function loadData(email='',name='',pic='',note=null){
-  try{
-    let url=API_URL;
-    if(email){
-      url+=`?email=${encodeURIComponent(email)}&name=${encodeURIComponent(name)}`;
-      if(note!==null)url+=`&action=register&note=${encodeURIComponent(note)}`;
+    
+    function isSafeUrl(url) {
+        if (!url) return false;
+        try { const { protocol } = new URL(String(url)); return protocol === 'http:' || protocol === 'https:'; } catch { return false; }
     }
-    const res=await apiFetch(url);
-    if(!res.ok)throw new Error('HTTP '+res.status);
-    const data=await res.json();
-
-    if(data.requireRegistration){openModal('reg-modal');return;}
-
-    if(data.spaceProfile){
-      const sp=data.spaceProfile;
-      S.profile={
-        webTitle:sp.webTitle||'Space',
-        name:sp.name||'Koo Mean',
-        handle:sp.handle||'@koomean',
-        bio:sp.bio||'',
-        imageUrl:sp.imageUrl||'',
-        coverUrl:sp.coverUrl||''
-      };
-      document.title=S.profile.webTitle;
-      ['web-title','sb-title','set-app-name'].forEach(id=>{const el=D(id);if(el)el.textContent=S.profile.webTitle;});
-      D('feed-hdr-title').textContent=S.profile.webTitle;
-      D('prof-name').textContent=S.profile.name;
-      D('prof-handle').textContent=S.profile.handle||'@koomean';
-      D('prof-bio').textContent=S.profile.bio;
-      D('rw-bio').textContent=S.profile.bio||'';
-      if(sp.coverUrl)D('prof-cover').style.backgroundImage=`url(${sp.coverUrl})`;
-      const init=(S.profile.name||'KM').substring(0,2).toUpperCase();
-      D('av-fb').textContent=init;
-      loadImg(D('av-img'),S.profile.imageUrl,D('av-fb'),init);
+    
+    function getIconColor(iconClass) {
+        const l = (iconClass || '').toLowerCase();
+        if (l.includes('facebook'))  return '#1877F2';
+        if (l.includes('youtube'))   return '#FF0000';
+        if (l.includes('instagram')) return '#E4405F';
+        if (l.includes('line'))      return '#00C300';
+        if (l.includes('tiktok') || l.includes('github') || l.includes('twitter') || l.includes('x-twitter')) return '#ffffff';
+        if (l.includes('discord'))   return '#5865F2';
+        return 'var(--accent)';
+    }
+    
+    function debounce(fn, ms) {
+        let timer;
+        return (...args) => { clearTimeout(timer); timer = setTimeout(() => fn(...args), ms); };
+    }
+    
+    function escHtml(s) {
+        if (s == null) return '';
+        return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+    
+    function parseRoles(input) {
+        if (!input) return [];
+        if (Array.isArray(input)) return input.map(r => String(r || '').trim().toLowerCase()).filter(Boolean);
+        return String(input).split(/[,;|]+/).map(r => r.trim().toLowerCase()).filter(Boolean);
+    }
+    
+    function dedupe(arr) {
+        const seen = new Set(); const out = [];
+        for (const x of arr) { if (!seen.has(x)) { seen.add(x); out.push(x); } }
+        return out;
     }
 
-    if(email&&data.user){
-      const rawRole=(data.user.role||'').toString();
-      S.user={email:data.user.email,name,role:rawRole,pic};
-      try{localStorage.setItem(SESS_KEY,JSON.stringify(S.user));}catch{}
-      applyUserUI();
-      toast(isAdmin()?'เข้าสู่ระบบ Admin ✓':'เข้าสู่ระบบสำเร็จ ✓','s');
-    }else if(!email){
-      D('rw-auth').style.display='';
+    // --- Cookies ---
+    function setCookie(name, value, maxAgeSec) {
+        const secure = location.protocol === 'https:' ? '; Secure' : '';
+        document.cookie = name + '=' + encodeURIComponent(value) + '; path=/; max-age=' + maxAgeSec + '; SameSite=Strict' + secure;
+    }
+    function getCookie(name) {
+        const safe = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const m = document.cookie.match(new RegExp('(?:^|; )' + safe + '=([^;]*)'));
+        return m ? decodeURIComponent(m[1]) : null;
+    }
+    function deleteCookie(name) { document.cookie = name + '=; path=/; max-age=0; SameSite=Strict'; }
+    function saveSessionCookie(token, expiresMs) {
+        state.token = token;
+        state.tokenExpires = expiresMs || (Date.now() + COOKIE_MAX_AGE * 1000);
+        const remaining = Math.max(60, Math.floor((state.tokenExpires - Date.now()) / 1000));
+        setCookie(COOKIE_NAME, token, Math.min(remaining, COOKIE_MAX_AGE));
+    }
+    function loadSessionCookie() { const tok = getCookie(COOKIE_NAME); if (!tok) return null; state.token = tok; return tok; }
+    function clearSessionCookie() { state.token = null; state.tokenExpires = 0; deleteCookie(COOKIE_NAME); }
+
+    // --- Network ---
+    const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+    async function timedFetch(url, opts = {}) {
+        const ctrl = new AbortController();
+        const timer = setTimeout(() => ctrl.abort(), FETCH_TIMEOUT);
+        try { const res = await fetch(url, { ...opts, signal: ctrl.signal }); clearTimeout(timer); return res; } 
+        catch (err) { clearTimeout(timer); throw err; }
+    }
+    async function getApi(withToken = true) {
+        let url = API_URL;
+        if (withToken && state.token) url += '?token=' + encodeURIComponent(state.token);
+        let lastErr;
+        for (let i = 0; i <= MAX_RETRIES; i++) {
+            try {
+                const res = await timedFetch(url);
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                return await res.json();
+            } catch (e) { lastErr = e; await sleep(500 * (i+1)); }
+        }
+        throw lastErr;
+    }
+    async function postApi(action, body, { needAuth = true } = {}) {
+        const payload = Object.assign({ action }, body || {});
+        if (needAuth && state.token) payload.token = state.token;
+        if (state.clientIp) payload.ip = state.clientIp;
+        payload.userAgent = (navigator.userAgent || '').substring(0, 250);
+        let lastErr;
+        for (let i = 0; i <= MAX_RETRIES; i++) {
+            try {
+                const res = await timedFetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(payload),
+                    redirect: 'follow'
+                });
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                const data = await res.json();
+                if (data && data.needLogin && needAuth) {
+                    clearSessionCookie(); state.isLoggedIn = false; state.currentUser = null;
+                    applyLoggedOutUI(); toast('เซสชันหมดอายุ กรุณาเข้าสู่ระบบใหม่', 'error', 'fas fa-lock');
+                }
+                return data;
+            } catch (e) { lastErr = e; if (i < MAX_RETRIES) await sleep(500 * (i+1)); }
+        }
+        throw lastErr;
+    }
+    async function fetchClientIp() {
+        try {
+            const res = await fetch('https://api.ipify.org?format=json', { cache: 'no-store' });
+            if (res.ok) { const j = await res.json(); if (j && j.ip) state.clientIp = String(j.ip).substring(0, 45); }
+        } catch { }
     }
 
-    S.posts=Array.isArray(data.posts)?data.posts:[];
-    if(S.posts.length){D('stat-posts').textContent=S.posts.length;D('prof-stats').style.display='flex';}
-
-    // ใช้ tag จาก URL ถ้ามี (ทำก่อน renderFeed)
-    try{
-      const params=new URLSearchParams(window.location.search);
-      const tagParam=params.get('tag');
-      if(tagParam){
-        S.activeTag=normalizeTag(tagParam);
-        renderTagFilterBar();
-      }
-    }catch{}
-
-    renderFeed();
-
-    setTimeout(()=>{
-      const params=new URLSearchParams(window.location.search);
-      const target=params.get('post');
-      if(target)scrollToPost(parseInt(target));
-    },600);
-
-  }catch(err){
-    console.error(err);
-    const sk=D('sk-posts');if(sk)sk.remove();
-    D('feed').insertAdjacentHTML('beforeend',`<div class="err-banner"><i class="fas fa-exclamation-circle"></i><span>โหลดข้อมูลไม่สำเร็จ</span><button class="retry-btn" onclick="location.reload()">ลองใหม่</button></div>`);
-  }
-}
-
-/* Central function to update UI based on current user */
-function applyUserUI(){
-  var creatorEl=D('creator');
-  var fabEl=D('mnav-fab');
-
-  if(!S.user){
-    D('auth-btn').textContent='Sign In';D('auth-btn').className='auth-pill';
-    if(creatorEl)creatorEl.classList.remove('show');
-    D('admin-grp').style.display='none';
-    D('so-grp').style.display='none';D('sb-user-card').style.display='none';
-    if(fabEl)fabEl.classList.add('hidden');
-    D('rw-auth').style.display='';
-    return;
-  }
-  D('auth-btn').textContent='Sign Out';D('auth-btn').className='auth-pill out';
-  D('set-ln').textContent=S.user.name||'';
-  D('set-ld').textContent=S.user.email||'';
-  D('so-email').textContent=S.user.email||'';
-  D('so-grp').style.display='';
-  D('rw-auth').style.display='none';
-  D('sb-user-card').style.display='';
-  var avFallback='https://ui-avatars.com/api/?name='+encodeURIComponent(S.user.name||'U')+'&background=161d2e&color=7988a3';
-  D('sb-uc-av').src=S.user.pic||avFallback;
-  D('sb-uc-av').onerror=function(){this.src=avFallback;};
-  D('sb-uc-name').textContent=S.user.name||'';
-  D('sb-uc-email').textContent=S.user.email||'';
-
-  if(canPost()){
-    if(creatorEl)creatorEl.classList.add('show');
-    if(D('cr-av')){D('cr-av').src=S.user.pic||avFallback;D('cr-av').onerror=function(){this.src=avFallback;};}
-    if(D('cr-av-mob')){D('cr-av-mob').src=S.user.pic||avFallback;D('cr-av-mob').onerror=function(){this.src=avFallback;};}
-    if(fabEl)fabEl.classList.remove('hidden');
-    if(isAdmin())D('admin-grp').style.display='';
-    else D('admin-grp').style.display='none';
-  }else{
-    if(creatorEl)creatorEl.classList.remove('show');
-    D('admin-grp').style.display='none';
-    if(fabEl)fabEl.classList.add('hidden');
-  }
-}
-
-/* =========== Content rendering =========== */
-function processContent(text,rowIdx,postLink){
-  if(!text&&!postLink)return{html:'',media:'',targetLink:null};
-  let h=esc((text||'').trim());
-  const urlRx=/(https?:\/\/[^\s<]+)/g;
-  const urls=[...((text||'').match(urlRx)||[])];
-  if(postLink&&!urls.includes(postLink))urls.unshift(postLink);
-
-  h=h.replace(urlRx,u=>`<a href="${esc(u)}" target="_blank" class="post-link" rel="noopener">${esc(u)}</a>`);
-  // Clickable hashtags inside text
-  h=h.replace(/#([\wก-๙]+)/g,`<span class="post-link" style="cursor:pointer" onclick="filterByTag('$1')">#$1</span>`);
-
-  let media='',tLink=null,ytId=null;
-  for(const u of urls){
-    const m=u.match(/(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
-    if(m){ytId=m[1];break;}else if(!tLink)tLink=u;
-  }
-  if(ytId)media=`<iframe class="post-yt" src="https://www.youtube.com/embed/${ytId}" frameborder="0" allowfullscreen loading="lazy"></iframe>`;
-  else if(tLink)media=`<div class="lp-w" id="lp-${rowIdx}"></div>`;
-  return{html:h,media,targetLink:tLink};
-}
-
-async function fetchLP(url,id){
-  try{
-    const r=await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`);
-    const d=await r.json();if(!d.contents)return;
-    const doc=new DOMParser().parseFromString(d.contents,'text/html');
-    const gm=(p,n)=>{let el=p?doc.querySelector(`meta[property="${p}"]`):null;if(!el&&n)el=doc.querySelector(`meta[name="${n}"]`);return el?el.getAttribute('content'):'';};
-    const title=gm('og:title','title')||doc.title||url;
-    const desc=gm('og:description','description')||'';
-    let img=gm('og:image','');
-    if(img&&img.startsWith('/')){const uo=new URL(url);img=uo.origin+img;}
-    const host=new URL(url).hostname;
-    const c=D(id);
-    if(c&&title){
-      c.innerHTML=`<a href="${esc(url)}" target="_blank" class="lp-card" rel="noopener">
-        ${img?`<img src="${esc(img)}" class="lp-img" onerror="this.style.display='none'" loading="lazy">`:''}
-        <div class="lp-info">
-          <div class="lp-title">${esc(title)}</div>
-          ${desc?`<div class="lp-desc">${esc(desc)}</div>`:''}
-          <div class="lp-domain"><i class="fas fa-link"></i>${esc(host)}</div>
-        </div></a>`;
-      c.style.display='block';
-    }
-  }catch{}
-}
-
-function sharePost(ri){
-  const url=window.location.href.split('?')[0]+'?post='+ri;
-  if(navigator.clipboard&&navigator.clipboard.writeText){
-    navigator.clipboard.writeText(url).then(()=>toast('คัดลอกลิงก์แชร์แล้ว','s','fas fa-link')).catch(()=>toast('คัดลอกไม่สำเร็จ','e'));
-  }else{
-    const ta=document.createElement('textarea');ta.value=url;document.body.appendChild(ta);ta.select();
-    try{document.execCommand('copy');toast('คัดลอกลิงก์แชร์แล้ว','s','fas fa-link');}catch{toast('คัดลอกไม่สำเร็จ','e');}
-    document.body.removeChild(ta);
-  }
-}
-
-function renderFeed(){
-  const sk=D('sk-posts');if(sk)sk.remove();
-  const feed=D('feed');
-  const aName=esc(S.profile.name||'Koo Mean');
-  const avSrc=esc(S.profile.imageUrl||'');
-  const init=(S.profile.name||'KM').substring(0,2).toUpperCase();
-
-  const tagsHtml=renderHashtagsUI();
-  if(tagsHtml&&D('rw-trends')){D('rw-trends').style.display='block';D('trend-desktop').innerHTML=tagsHtml;}
-  else if(D('rw-trends')){D('rw-trends').style.display='none';}
-
-  // Apply active tag filter
-  const postsToShow=S.activeTag
-    ? S.posts.filter(p=>postMatchesTag(p,S.activeTag))
-    : S.posts;
-
-  if(!postsToShow.length){
-    const emptyMsg=S.activeTag
-      ? `<div class="sec-label">#${esc(S.activeTag)}</div><div class="status"><div class="status-ico">🔍</div>ไม่พบโพสต์ในแท็ก #${esc(S.activeTag)}<br><button class="tag-filter-btn" style="margin-top:12px" onclick="clearTagFilter()">ดูทั้งหมด</button></div>`
-      : '<div class="sec-label">Timeline</div><div class="status"><div class="status-ico">💬</div>ยังไม่มีโพสต์</div>';
-    feed.innerHTML=emptyMsg;
-    return;
-  }
-
-  const label=S.activeTag?`#${esc(S.activeTag)} · ${postsToShow.length} โพสต์`:'Timeline';
-  let html=`<div class="sec-label">${label}</div>`;
-  const lpQ=[];
-  postsToShow.forEach((p,i)=>{
-    const likes=Array.isArray(p.likes)?p.likes:[];
-    const cmts=Array.isArray(p.comments)?p.comments:[];
-    const hashtags=Array.isArray(p.hashtags)?p.hashtags:[];
-    const liked=S.user&&likes.includes(S.user.email);
-    const{html:ptxt,media}=processContent(p.content,p.rowIdx,p.link||null);
-    // Prepare link preview if link field exists and no YouTube
-    if(p.link){
-      const hasYT=/(?:youtube\.com|youtu\.be)/.test(p.link);
-      if(!hasYT)lpQ.push({url:p.link,id:`lp-${p.rowIdx}`});
-    }
-    // Also scan for link in content
-    const urlsInText=((p.content||'').match(/(https?:\/\/[^\s<]+)/g)||[]);
-    if(!p.link){
-      for(const u of urlsInText){
-        if(!/(?:youtube\.com|youtu\.be)/.test(u)){lpQ.push({url:u,id:`lp-${p.rowIdx}`});break;}
-      }
+    // --- Toast ---
+    let _toastTimer = null;
+    function toast(msg, type = '', icon = '') {
+        const el = $('toast'); clearTimeout(_toastTimer);
+        el.className = ''; if (type) el.classList.add(type);
+        el.innerHTML = (icon ? `<i class="${escHtml(icon)}"></i>` : '') + escHtml(msg);
+        requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('show')));
+        _toastTimer = setTimeout(() => el.classList.remove('show'), 2800);
     }
 
-    const ts=p.editedTime?`แก้ไข ${fmt(p.editedTime)}`:fmt(p.timestamp);
-
-    let menu='';
-    if(isAdmin()||(S.user&&S.user.email===p.email)){
-      menu=`<div class="post-menu-w">
-        <button class="menu-btn" onclick="toggleDrop('dp-${p.rowIdx}')"><i class="fas fa-ellipsis"></i></button>
-        <div class="drop-menu" id="dp-${p.rowIdx}">
-          <button class="drop-item" onclick="openEditPost(${p.rowIdx})"><i class="fas fa-pen"></i>แก้ไขโพสต์</button>
-          <button class="drop-item del" onclick="deletePost(${p.rowIdx})"><i class="fas fa-trash-alt"></i>ลบโพสต์</button>
-        </div></div>`;
+    // --- System Status ---
+    const STATUS_CONFIG = {
+        ok       : { cls: 'status-ok',       label: 'Operational' },
+        error    : { cls: 'status-error',    label: 'Outage'      },
+        checking : { cls: 'status-checking', label: 'Checking...' },
+        unauthed : { cls: 'status-checking', label: 'Logged out'  },
+        active   : { cls: 'status-ok',       label: 'Active'      },
+    };
+    function setSystemStatus(component, status) { state.sysStatus[component] = status; renderOverallStatus(); }
+    function applyBadge(el, status) {
+        const cfg = STATUS_CONFIG[status] || STATUS_CONFIG.checking;
+        el.className = 'status-badge ' + cfg.cls; el.textContent = cfg.label;
+    }
+    function renderOverallStatus() {
+        const { api, media, session } = state.sysStatus;
+        applyBadge(DOM.badgeApi, api); applyBadge(DOM.badgeMedia, media); applyBadge(DOM.badgeSession, session);
+        if (api === 'error' || media === 'error') {
+            DOM.navStatusDot.className = 'status-dot error';
+            DOM.navStatusText.textContent = 'System Issue';
+            DOM.navStatusText.style.color = 'var(--accent-danger)';
+        } else if (api === 'checking' || media === 'checking') {
+            DOM.navStatusDot.className = 'status-dot checking';
+            DOM.navStatusText.textContent = 'Checking...';
+            DOM.navStatusText.style.color = '#ffcc00';
+        } else {
+            DOM.navStatusDot.className = 'status-dot ok';
+            DOM.navStatusText.textContent = 'All Systems Normal';
+            DOM.navStatusText.style.color = 'var(--accent-admin)';
+        }
     }
 
-    let tagsHtml2='';
-    if(hashtags.length){
-      tagsHtml2='<div class="post-tags">'+hashtags.map(t=>{
-        const tag='#'+String(t).replace(/^#/,'');
-        return `<span class="post-tag" onclick="filterByTag('${esc(tag.replace(/^#/,''))}')">${esc(tag)}</span>`;
-      }).join('')+'</div>';
+    // --- UI Interactions ---
+    function startClock() {
+        const tick = () => { DOM.navClock.textContent = new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }); };
+        tick(); setInterval(tick, 1000);
+    }
+    
+    const fadeObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry, i) => {
+            if (entry.isIntersecting) {
+                setTimeout(() => entry.target.classList.add('visible'), i * 60);
+                fadeObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-in').forEach(el => fadeObserver.observe(el));
+    
+    const openModal  = (el) => { el.style.display = 'flex'; };
+    const closeModal = (el) => { el.style.display = 'none'; };
+    
+    function handleSearchInput() {
+        const term = DOM.searchInput.value.toLowerCase().trim();
+        DOM.searchClear.classList.toggle('visible', term.length > 0);
+        if (term) {
+            const filtered = state.allLinks.filter(l => (l.title || '').toLowerCase().includes(term) || (l.url || '').toLowerCase().includes(term));
+            renderLinks(filtered);
+        } else { renderLinks(state.allLinks); }
+    }
+    DOM.searchInput.addEventListener('input', debounce(handleSearchInput, 150));
+    DOM.searchClear.addEventListener('click', () => { DOM.searchInput.value = ''; handleSearchInput(); DOM.searchInput.focus(); });
+    
+    // --- Role System ---
+    function userIsAdmin() { return state.isLoggedIn && state.currentUser && parseRoles(state.currentUser.role).includes('admin'); }
+    function effectiveRoles() {
+        const own = parseRoles(state.currentUser ? state.currentUser.role : '');
+        if (userIsAdmin() && state.viewAsRole) { return state.viewAsRole === 'admin' ? ['admin', 'public'] : [state.viewAsRole, 'public']; }
+        const roles = own.length ? own.slice() : ['public'];
+        if (!roles.includes('public')) roles.push('public');
+        return dedupe(roles);
+    }
+    function hasAccessToLink(link) {
+        const linkGroups = parseRoles(link.group || 'public');
+        if (!linkGroups.length) return true;
+        const eff = effectiveRoles();
+        if (eff.includes('admin') && !state.viewAsRole) return true;
+        if (linkGroups.includes('public')) return true;
+        return linkGroups.some(g => eff.includes(g));
+    }
+    function isSpecialLink(link) {
+        const linkGroups = parseRoles(link.group || 'public');
+        return linkGroups.length > 0 && !linkGroups.includes('public');
+    }
+    function extractUniqueRoles() {
+        const roles = new Set(['admin', 'public']);
+        state.allLinks.forEach(link => parseRoles(link.group).forEach(g => roles.add(g)));
+        state.allUsers.forEach(user => parseRoles(user.role).forEach(g => roles.add(g)));
+        return Array.from(roles).sort();
+    }
+    function buildSimulateMenu() {
+        if (!userIsAdmin()) { DOM.simulateMenu.style.display = 'none'; return; }
+        DOM.simulateMenu.style.display = 'block';
+        const frag = document.createDocumentFragment();
+        const noneItem = document.createElement('a'); noneItem.textContent = '✨ View As Yourself'; noneItem.style.color = 'var(--accent-admin)'; noneItem.addEventListener('click', (e) => { e.preventDefault(); simulateRole(null); }); frag.appendChild(noneItem);
+        extractUniqueRoles().forEach(role => {
+            const a = document.createElement('a'); a.textContent = role.toUpperCase(); a.addEventListener('click', (e) => { e.preventDefault(); simulateRole(role); }); frag.appendChild(a);
+        });
+        DOM.simulateList.innerHTML = ''; DOM.simulateList.appendChild(frag);
+    }
+    function simulateRole(role) {
+        state.viewAsRole = role;
+        DOM.viewAsText.textContent = role ? `View As: ${role.toUpperCase()}` : `View As: ADMIN`;
+        renderLinks(state.allLinks); DOM.simulateList.classList.remove('show');
     }
 
-    let chtml='';
-    cmts.forEach(c=>{
-      const canEditCmt=isAdmin()||(S.user&&S.user.email===c.email);
-      const cM=canEditCmt?`<div class="cmt-mw">
-        <button class="menu-btn" style="width:24px;height:24px;font-size:.72rem" onclick="toggleDrop('dc-${p.rowIdx}-${c.time}')"><i class="fas fa-ellipsis"></i></button>
-        <div class="drop-menu" id="dc-${p.rowIdx}-${c.time}">
-          <button class="drop-item" onclick="openEditCmt(${p.rowIdx},${c.time})"><i class="fas fa-pen"></i>แก้ไข</button>
-          <button class="drop-item del" onclick="deleteCmt(${p.rowIdx},${c.time})"><i class="fas fa-trash-alt"></i>ลบ</button>
-        </div></div>`:'';
-      const ct=c.editedTime?`แก้ไข ${fmt(c.editedTime)}`:fmt(c.time);
-      chtml+=`<div class="cmt">
-        <img class="cmt-av" src="${esc(c.pic||'')}" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(c.name||'U')}&background=161d2e&color=7988a3'" alt="">
-        <div class="cmt-body">
-          <div class="cmt-meta"><span class="cmt-name">${esc(c.name)}</span><span class="cmt-time">· ${ct}</span>${cM}</div>
-          <div class="cmt-txt">${esc(c.text)}</div>
-        </div></div>`;
+    // --- Authentication & Main Flow ---
+    window.handleCredentialResponse = async function(res) {
+        if (!res || !res.credential) { toast('Google sign-in failed', 'error'); return; }
+        closeModal(DOM.loginModal);
+        state.pendingIdToken = res.credential;
+        setSystemStatus('api', 'checking'); setSystemStatus('session', 'checking');
+        await fetchClientIp();
+        try {
+            const data = await postApi('login', { idToken: res.credential }, { needAuth: false });
+            if (data.requireRegistration) { hideGlobalLoader(); openModal(DOM.askNoteModal); renderLinks(state.allLinks); return; }
+            if (!data.success) { toast(data.message || 'Login failed', 'error'); setSystemStatus('session', 'unauthed'); renderLinks(state.allLinks); hideGlobalLoader(); return; }
+            applyLoginResponse(data); await refreshPageData();
+        } catch (err) { toast('เชื่อมต่อเซิร์ฟเวอร์ไม่ได้', 'error'); setSystemStatus('api', 'error'); hideGlobalLoader(); }
+    };
+    
+    async function submitNewRegistration() {
+        const note = (DOM.newUserNote.value || '').trim().substring(0, 300) || '-';
+        closeModal(DOM.askNoteModal);
+        try {
+            const data = await postApi('login', { idToken: state.pendingIdToken, register: true, note: note }, { needAuth: false });
+            if (!data.success) { toast(data.message || 'Registration failed', 'error'); hideGlobalLoader(); return; }
+            applyLoginResponse(data); await refreshPageData();
+        } catch (e) { toast('เชื่อมต่อเซิร์ฟเวอร์ไม่ได้', 'error'); hideGlobalLoader(); }
+    }
+    
+    function applyLoginResponse(data) {
+        saveSessionCookie(data.token, data.expires);
+        state.isLoggedIn = true;
+        state.currentUser = data.user;
+        updateUIPostLogin();
+    }
+    
+    function updateUIPostLogin() {
+        DOM.unlockBtn.classList.add('active');
+        if (userIsAdmin()) {
+            DOM.unlockBtn.classList.add('admin-mode');
+            $('admin-panel-btn').style.display = 'block';
+            buildSimulateMenu();
+        } else {
+            DOM.unlockBtn.classList.remove('admin-mode');
+            $('admin-panel-btn').style.display = 'none';
+            DOM.simulateMenu.style.display = 'none';
+        }
+        DOM.navProfileImg.src = state.currentUser.pic || 'https://ui-avatars.com/api/?name=User';
+        $('modal-user-pic').src = state.currentUser.pic || 'https://ui-avatars.com/api/?name=User';
+        $('modal-user-name').textContent = state.currentUser.displayName || state.currentUser.name;
+        $('modal-user-email').textContent = state.currentUser.email;
+        DOM.dispNameInput.value = state.currentUser.displayName || '';
+
+        const roles = parseRoles(state.currentUser.role);
+        DOM.roleChipsBox.innerHTML = roles.map(r => `<span class="role-chip badge-role">${escHtml(r)}</span>`).join('');
+        if (roles.includes('admin')) DOM.roleChipsBox.innerHTML += `<span class="role-chip badge-admin"><i class="fas fa-crown"></i> Admin</span>`;
+        DOM.navUserBadge.classList.toggle('visible', roles.includes('admin'));
+    }
+    
+    function applyLoggedOutUI() {
+        DOM.unlockBtn.classList.remove('active', 'admin-mode');
+        DOM.navProfileImg.src = 'https://ui-avatars.com/api/?name=User';
+        DOM.navUserBadge.classList.remove('visible');
+        DOM.simulateMenu.style.display = 'none';
+    }
+
+    async function refreshPageData() {
+        try {
+            const data = await getApi(!!state.token);
+            setSystemStatus('api', 'ok');
+            if (data.profile) {
+                DOM.profileName.textContent = data.profile.name || 'Koo Mean';
+                DOM.profileBio.innerHTML = (data.profile.bio || '').replace(/\n/g, '<br>');
+                DOM.mainProfileImg.src = data.profile.imageUrl || '';
+                if (data.profile.videoUrl) {
+                    DOM.featuredVideo.style.display = 'block';
+                    DOM.youtubeIframe.src = data.profile.videoUrl;
+                    setSystemStatus('media', 'ok');
+                } else { DOM.featuredVideo.style.display = 'none'; }
+            }
+            if (data.aboutText) state.aboutText = data.aboutText;
+            if (data.links) state.allLinks = data.links;
+            if (data.apps) DOM.appsDropdown.innerHTML = data.apps.map(a => `<a href="${escHtml(a.url)}" target="_blank">${escHtml(a.name)}</a>`).join('');
+            if (data.allUsers && userIsAdmin()) state.allUsers = data.allUsers;
+
+            if (data.user && state.token) {
+                state.currentUser = data.user; state.isLoggedIn = true;
+                setSystemStatus('session', 'active'); updateUIPostLogin();
+            } else {
+                state.isLoggedIn = false; setSystemStatus('session', 'unauthed'); applyLoggedOutUI();
+            }
+            renderLinks(state.allLinks); hideGlobalLoader();
+        } catch (e) {
+            setSystemStatus('api', 'error'); toast('โหลดข้อมูลไม่สำเร็จ', 'error'); hideGlobalLoader();
+        }
+    }
+
+    function renderLinks(links) {
+        DOM.linksContainer.innerHTML = '';
+        if (!links || !links.length) {
+            DOM.linksContainer.innerHTML = '<div style="text-align:center; color:var(--text-muted); padding: 20px;">ไม่พบลิงก์</div>';
+            return;
+        }
+        const visibleLinks = links.filter(hasAccessToLink);
+        const groups = { starred: [], normal: [] };
+        visibleLinks.forEach(l => l.starred ? groups.starred.push(l) : groups.normal.push(l));
+
+        let html = '';
+        if (groups.starred.length) {
+            html += `<div class="group-divider starred-divider"><i class="fas fa-star" style="margin-right:8px;"></i> Pinned</div>`;
+            html += groups.starred.map(buildLinkCard).join('');
+        }
+        if (groups.normal.length) {
+            if (groups.starred.length) html += `<div class="group-divider"><i class="fas fa-layer-group" style="margin-right:8px;"></i> All Links</div>`;
+            html += groups.normal.map(buildLinkCard).join('');
+        }
+        DOM.linksContainer.innerHTML = html || '<div style="text-align:center; color:var(--text-muted);">ไม่มีสิทธิ์เข้าถึงลิงก์ใดๆ</div>';
+    }
+
+    function buildLinkCard(link) {
+        const isSpecial = isSpecialLink(link);
+        const isAdm = parseRoles(link.group).includes('admin');
+        let cls = 'link-card' + (link.starred ? ' starred-card' : '') + (isAdm ? ' admin-access' : (isSpecial ? ' special-access' : ''));
+        let badges = '';
+        if (isAdm) badges += `<span class="badge badge-admin"><i class="fas fa-shield-alt"></i> Admin</span>`;
+        else if (isSpecial) badges += `<span class="badge badge-vip"><i class="fas fa-lock"></i> ${escHtml(link.group)}</span>`;
+        const iconColor = getIconColor(link.icon);
+        return `
+            <a href="${escHtml(link.url)}" target="_blank" class="${cls}">
+                <div class="link-icon" style="color: ${iconColor}"><i class="${escHtml(link.icon || 'fas fa-link')}"></i></div>
+                <div class="link-text">${escHtml(link.title)}</div>
+                ${badges ? `<div class="badge-group">${badges}</div>` : ''}
+            </a>`;
+    }
+
+    // --- Events & Listeners ---
+    DOM.dispNameBtn.addEventListener('click', async () => {
+        const dn = DOM.dispNameInput.value.trim();
+        DOM.dispNameBtn.disabled = true; DOM.dispNameBtn.textContent = '...';
+        try {
+            const res = await postApi('updateDisplayName', { displayName: dn });
+            if (res.success) {
+                toast('อัปเดตชื่อสำเร็จ', 'success'); state.currentUser.displayName = res.displayName;
+                $('modal-user-name').textContent = res.displayName || state.currentUser.name;
+            } else toast(res.message || 'Error', 'error');
+        } catch(e) { toast('เชื่อมต่อล้มเหลว', 'error'); } finally {
+            DOM.dispNameBtn.disabled = false; DOM.dispNameBtn.textContent = 'บันทึก';
+        }
     });
 
-    html+=`<article class="post" id="post-${p.rowIdx}" style="animation-delay:${Math.min(i,8)*.04}s">
-      <div class="post-av-w">
-        <div class="post-av-fb">${init}</div>
-        <img class="post-av vis" src="${avSrc}" onerror="this.style.display='none'" alt="" loading="lazy">
-      </div>
-      <div class="post-body">
-        <div class="post-hdr">
-          <span class="post-author">${aName}</span>
-          <div class="verified" style="width:14px;height:14px;font-size:.42rem"><i class="fas fa-check"></i></div>
-          <span class="post-time">· ${ts}</span>${menu}
-        </div>
-        <div class="post-txt">${ptxt}</div>
-        ${tagsHtml2}
-        ${media}
-        ${p.mediaUrl?`<img src="${esc(p.mediaUrl)}" class="post-media" onerror="this.style.display='none'" loading="lazy">`:''}
-        <div class="post-acts">
-          <button class="act${liked?' liked':''}" onclick="toggleLike(${p.rowIdx})"><i class="${liked?'fas':'far'} fa-heart"></i>${likes.length||''}</button>
-          <button class="act" onclick="toggleCmts(${p.rowIdx})"><i class="far fa-comment"></i>${cmts.length||''}</button>
-          <button class="act" onclick="sharePost(${p.rowIdx})" title="คัดลอกลิงก์โพสต์"><i class="fas fa-share"></i></button>
-        </div>
-        <div class="cmts" id="cmts-${p.rowIdx}">${chtml}
-          <div class="cmt-inp-row">
-            <input class="cmt-inp" id="ci-${p.rowIdx}" placeholder="${S.user?'แสดงความคิดเห็น...':'Sign in เพื่อคอมเมนต์'}" ${!S.user?'disabled':''}>
-            <button class="cmt-send" onclick="submitCmt(${p.rowIdx})"><i class="fas fa-paper-plane"></i></button>
-          </div></div>
-      </div></article>`;
-  });
-  feed.innerHTML=html;
-
-  // Support Enter to send comment
-  document.querySelectorAll('.cmt-inp').forEach(inp=>{
-    inp.addEventListener('keydown',function(e){
-      if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();const id=this.id.replace('ci-','');submitCmt(parseInt(id));}
+    DOM.unlockBtn.addEventListener('click', () => state.isLoggedIn ? openModal(DOM.userProfModal) : openModal(DOM.loginModal));
+    $('logout-btn').addEventListener('click', async () => {
+        if(confirm('ต้องการออกจากระบบ?')) {
+            try { await postApi('logout', {}); } catch(e){}
+            clearSessionCookie(); state.isLoggedIn = false; state.currentUser = null;
+            applyLoggedOutUI(); closeModal(DOM.userProfModal); toast('ออกจากระบบแล้ว', 'success'); refreshPageData();
+        }
     });
-  });
+    $('submit-note-btn').addEventListener('click', submitNewRegistration);
+    $('about-btn').addEventListener('click', () => { $('modal-text').textContent = state.aboutText || 'No info.'; openModal(DOM.aboutModal); });
+    $('status-btn').addEventListener('click', () => openModal(DOM.statusModal));
+    $('profile-btn').addEventListener('click', () => state.isLoggedIn ? openModal(DOM.userProfModal) : openModal(DOM.loginModal));
+    $('apps-dropbtn').addEventListener('click', (e) => { e.stopPropagation(); DOM.appsDropdown.classList.toggle('show'); });
+    $('simulate-dropbtn').addEventListener('click', (e) => { e.stopPropagation(); DOM.simulateList.classList.toggle('show'); });
+    $('open-admin-btn').addEventListener('click', () => { closeModal(DOM.userProfModal); openModal(DOM.adminDashModal); renderAdminLinks(); });
 
-  // Deduplicate link-preview queue
-  const seen=new Set();
-  lpQ.forEach(q=>{
-    const k=q.id+'|'+q.url;
-    if(seen.has(k))return;seen.add(k);
-    fetchLP(q.url,q.id);
-  });
-}
-
-function toggleCmts(ri){
-  const el=D('cmts-'+ri);
-  const o=el.style.display==='block';
-  el.style.display=o?'none':'block';
-  if(!o)D('ci-'+ri)?.focus();
-}
-
-async function toggleLike(ri){
-  if(!S.user){openModal('login-modal');return;}
-  const p=S.posts.find(p=>p.rowIdx===ri);if(!p)return;
-  if(!Array.isArray(p.likes))p.likes=[];
-  const idx=p.likes.indexOf(S.user.email);
-  if(idx>-1)p.likes.splice(idx,1);else p.likes.push(S.user.email);
-  renderFeed();
-  try{
-    await fetch(API_URL,{method:'POST',body:new URLSearchParams({action:'toggleLike',email:S.user.email,rowIdx:ri}),headers:{'Content-Type':'application/x-www-form-urlencoded'}});
-  }catch{}
-}
-
-async function submitCmt(ri){
-  if(!S.user){openModal('login-modal');return;}
-  const inp=D('ci-'+ri);if(!inp)return;
-  const text=inp.value.trim();if(!text)return;
-  inp.disabled=true;toast('กำลังส่ง...');
-  try{
-    const r=await fetch(API_URL,{method:'POST',body:new URLSearchParams({action:'addComment',email:S.user.email,name:S.user.name||'User',pic:S.user.pic||'',text,rowIdx:ri}),headers:{'Content-Type':'application/x-www-form-urlencoded'}});
-    const d=await r.json();
-    if(d.success){
-      inp.value='';
-      await loadData(S.user.email,S.user.name,S.user.pic);
-      const cm=D('cmts-'+ri);if(cm)cm.style.display='block';
-    }else toast('เกิดข้อผิดพลาด','e');
-  }catch{toast('เชื่อมต่อล้มเหลว','e');}
-  finally{const i=D('ci-'+ri);if(i)i.disabled=false;}
-}
-
-/* =========== Composer =========== */
-function updateCharCount(isMobile){
-  const ta=D(isMobile?'post-ta-mob':'post-ta');
-  const cc=D(isMobile?'char-c-mob':'char-c');
-  if(!ta||!cc)return;
-  const l=ta.value.length;
-  cc.textContent=`${l} / 500`;
-  cc.className='char-c'+(l>=450?' danger':l>=350?' warn':'');
-}
-
-['post-ta','post-ta-mob'].forEach(id=>{
-  const el=D(id);if(!el)return;
-  el.addEventListener('input',function(){
-    this.style.height='auto';
-    this.style.height=Math.min(this.scrollHeight,260)+'px';
-    updateCharCount(id.endsWith('-mob'));
-  });
-});
-
-/* Field toggles */
-function toggleField(field,force=null,isMobile=null){
-  if(isMobile===null)isMobile=isMob();
-  const suffix=isMobile?'-mob':'';
-  const fEl=D('field-'+field+suffix);
-  const bEl=D('btn-'+field+suffix);
-  if(!fEl)return;
-  const show=force===null?!fEl.classList.contains('visible'):!!force;
-  fEl.classList.toggle('visible',show);
-  if(bEl)bEl.classList.toggle('active',show);
-  if(show){
-    const inp=fEl.querySelector('.cr-extra-input');
-    if(inp)setTimeout(()=>inp.focus(),50);
-  }else{
-    const inp=fEl.querySelector('.cr-extra-input');
-    if(inp)inp.value='';
-  }
-}
-
-/* Image handling (separate for mobile/desktop) */
-D('file-in').addEventListener('change',function(){handleFilePick(this.files[0],false);});
-D('file-in-mob').addEventListener('change',function(){handleFilePick(this.files[0],true);});
-
-/* ============ Image Compression ============
-   Target: 4MB (imgbb max 5MB เผื่อ overhead)
-   กลยุทธ์: resize max 2048px → iterate quality 0.92→0.40 จนได้ขนาดพอดี
-   รักษาคุณภาพสูงสุดเท่าที่ไฟล์รองรับ — ไม่จำกัดขนาด input แต่เตือนถ้าใหญ่ผิดปกติ */
-const IMG_TARGET_BYTES = 4 * 1024 * 1024;   // 4 MB
-const IMG_WARN_BYTES = 30 * 1024 * 1024;    // เตือนถ้าเกิน 30 MB (browser อาจหน่วง)
-const IMG_MAX_DIMENSION = 2048;             // ยาวสุด 2048px
-
-function loadImageFromFile(file){
-  return new Promise((resolve,reject)=>{
-    const url=URL.createObjectURL(file);
-    const img=new Image();
-    img.onload=()=>{URL.revokeObjectURL(url);resolve(img);};
-    img.onerror=()=>{URL.revokeObjectURL(url);reject(new Error('โหลดรูปไม่สำเร็จ'));};
-    img.src=url;
-  });
-}
-
-function canvasToBlob(canvas,type,quality){
-  return new Promise((resolve,reject)=>{
-    canvas.toBlob(blob=>{
-      if(blob)resolve(blob);else reject(new Error('แปลงรูปไม่สำเร็จ'));
-    },type,quality);
-  });
-}
-
-async function compressImage(file,targetBytes=IMG_TARGET_BYTES){
-  // GIF: ห้ามบีบ (จะเสีย animation) — แค่คืนเดิม
-  if(file.type==='image/gif')return {blob:file,compressed:false};
-
-  // ถ้าเล็กพออยู่แล้ว — ไม่ต้องทำอะไร
-  if(file.size<=targetBytes)return {blob:file,compressed:false};
-
-  const img=await loadImageFromFile(file);
-  let w=img.naturalWidth,h=img.naturalHeight;
-
-  // Resize ถ้าเกิน IMG_MAX_DIMENSION
-  const maxDim=Math.max(w,h);
-  if(maxDim>IMG_MAX_DIMENSION){
-    const scale=IMG_MAX_DIMENSION/maxDim;
-    w=Math.round(w*scale);h=Math.round(h*scale);
-  }
-
-  const canvas=document.createElement('canvas');
-  canvas.width=w;canvas.height=h;
-  const ctx=canvas.getContext('2d');
-  // คุณภาพการ resize สูงสุด
-  ctx.imageSmoothingEnabled=true;
-  ctx.imageSmoothingQuality='high';
-  ctx.drawImage(img,0,0,w,h);
-
-  // เลือก format: WebP ถ้ารองรับ (เล็กกว่า), ถ้าไม่ก็ JPEG, PNG ใช้เฉพาะเมื่อมี transparency
-  let outType='image/jpeg';
-  // ทดสอบว่า browser export WebP ได้
-  const testBlob=await canvasToBlob(canvas,'image/webp',0.9).catch(()=>null);
-  if(testBlob&&testBlob.type==='image/webp')outType='image/webp';
-
-  // ถ้าต้นทางเป็น PNG ที่อาจมี transparency — ตรวจว่ามี alpha จริงไหม
-  if(file.type==='image/png'){
-    // sample pixel บางตัวหา alpha < 255
-    try{
-      const sample=ctx.getImageData(0,0,Math.min(w,100),Math.min(h,100)).data;
-      let hasAlpha=false;
-      for(let i=3;i<sample.length;i+=4){if(sample[i]<255){hasAlpha=true;break;}}
-      if(hasAlpha&&outType!=='image/webp'){
-        // รักษา transparency ด้วย PNG (ไม่สามารถ set quality ได้ แต่ resize ก็พอช่วย)
-        outType='image/png';
-      }
-    }catch(_){}
-  }
-
-  // Iterative quality search (PNG ไม่มี quality, ใช้แค่ resize)
-  if(outType==='image/png'){
-    const blob=await canvasToBlob(canvas,'image/png');
-    return {blob,compressed:true,from:file.size,to:blob.size,dim:`${w}x${h}`,type:outType};
-  }
-
-  // ลอง quality หลายระดับ เลือกตัวที่ใหญ่สุดที่ยังไม่เกิน target
-  const qualities=[0.92,0.85,0.78,0.7,0.6,0.5,0.4];
-  let best=null;
-  for(const q of qualities){
-    const blob=await canvasToBlob(canvas,outType,q);
-    if(!blob)continue;
-    if(blob.size<=targetBytes){best={blob,quality:q};break;}
-    // เก็บตัวล่าสุดไว้เผื่อไม่มีตัวไหนผ่าน
-    best={blob,quality:q};
-  }
-
-  if(!best)throw new Error('บีบอัดรูปไม่สำเร็จ');
-  return {blob:best.blob,compressed:true,from:file.size,to:best.blob.size,dim:`${w}x${h}`,type:outType,quality:best.quality};
-}
-
-function fmtBytes(n){
-  if(n<1024)return n+' B';
-  if(n<1024*1024)return (n/1024).toFixed(1)+' KB';
-  return (n/1024/1024).toFixed(2)+' MB';
-}
-
-async function handleFilePick(f,isMobile){
-  if(!f)return;
-  const inputEl=D(isMobile?'file-in-mob':'file-in');
-
-  // เช็คว่าเป็นรูปจริง
-  if(!f.type.startsWith('image/')){
-    toast('ต้องเป็นไฟล์รูปภาพเท่านั้น','e');
-    inputEl.value='';return;
-  }
-  // เตือนถ้าใหญ่ผิดปกติ (อาจหน่วงเครื่อง) — แต่ไม่บล็อก
-  if(f.size>IMG_WARN_BYTES){
-    if(!confirm(`ไฟล์ขนาด ${fmtBytes(f.size)} อาจใช้เวลาประมวลผลนาน ต้องการดำเนินการต่อหรือไม่?`)){
-      inputEl.value='';return;
-    }
-  }
-
-  const previewWrap=D(isMobile?'img-prev-wrap-mob':'img-prev-wrap');
-  const previewImg=D(isMobile?'img-prev-mob':'img-prev');
-
-  try{
-    let finalFile=f;
-    if(f.size>IMG_TARGET_BYTES&&f.type!=='image/gif'){
-      toast('กำลังบีบอัดรูปภาพ...','','fas fa-compress fa-spin');
-      const result=await compressImage(f,IMG_TARGET_BYTES);
-      if(result.compressed){
-        // สร้าง File object ใหม่ เพื่อให้ imgbb รับได้
-        const ext=result.type==='image/webp'?'webp':(result.type==='image/png'?'png':'jpg');
-        finalFile=new File([result.blob],(f.name.replace(/\.[^.]+$/,'')||'image')+'.'+ext,{type:result.type});
-        const pct=Math.round((1-result.to/result.from)*100);
-        toast(`บีบอัดสำเร็จ ${fmtBytes(result.from)} → ${fmtBytes(result.to)} (ลด ${pct}%)`,'s','fas fa-check');
-      }
-    }
-
-    // เก็บไฟล์และแสดง preview
-    if(isMobile)S.selFileMob=finalFile;else S.selFile=finalFile;
-    const r=new FileReader();
-    r.onload=e=>{previewImg.src=e.target.result;previewWrap.style.display='block';};
-    r.readAsDataURL(finalFile);
-
-  }catch(err){
-    console.error(err);
-    toast('เกิดข้อผิดพลาดกับรูปภาพ: '+err.message,'e');
-    inputEl.value='';
-  }
-}
-
-function removeImg(isMobile=false){
-  if(isMobile){
-    S.selFileMob=null;D('file-in-mob').value='';D('img-prev-wrap-mob').style.display='none';
-  }else{
-    S.selFile=null;D('file-in').value='';D('img-prev-wrap').style.display='none';
-  }
-}
-
-/* Mobile compose */
-function openCompose(){
-  if(!canPost()){toast('คุณไม่มีสิทธิ์โพสต์','e');return;}
-  D('compose-modal').classList.add('open');
-  if(S.user&&D('cr-av-mob'))D('cr-av-mob').src=S.user.pic||'';
-  setTimeout(()=>D('post-ta-mob').focus(),200);
-}
-function closeCompose(){
-  D('compose-modal').classList.remove('open');
-}
-
-/* Parse hashtag input: "ข่าว #เทคโนโลยี foo" -> ["ข่าว","เทคโนโลยี","foo"] */
-function parseHashtags(raw){
-  if(!raw)return[];
-  return raw.split(/[\s,]+/)
-    .map(s=>s.trim().replace(/^#+/,''))
-    .filter(s=>s&&/^[\wก-๙]+$/.test(s))
-    .slice(0,10);
-}
-
-async function submitPost(isMobile=false){
-  if(!S.user||!canPost()){toast('คุณไม่มีสิทธิ์โพสต์','e');return;}
-
-  const suffix=isMobile?'-mob':'';
-  const ta=D('post-ta'+suffix);
-  const linkEl=D('link-in'+suffix);
-  const tagEl=D('hashtag-in'+suffix);
-  const btn=D('post-btn'+suffix);
-  const file=isMobile?S.selFileMob:S.selFile;
-
-  const content=ta.value.trim();
-  const link=(linkEl.value||'').trim();
-  const hashtags=parseHashtags(tagEl.value||'');
-
-  if(!content&&!file&&!link&&!hashtags.length){toast('กรุณากรอกข้อมูลอย่างน้อย 1 อย่าง','e');return;}
-  if(link&&!/^https?:\/\//i.test(link)){toast('ลิงก์ต้องขึ้นต้นด้วย http:// หรือ https://','e');return;}
-
-  btn.textContent='กำลังโพสต์...';btn.disabled=true;ta.disabled=true;
-
-  let mediaUrl='';
-  try{
-    if(file){
-      btn.textContent='อัปโหลดรูป...';
-      const fd=new FormData();fd.append('image',file);
-      const ir=await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_KEY}`,{method:'POST',body:fd});
-      const id=await ir.json();
-      if(id.success)mediaUrl=id.data.url;else throw new Error('อัปโหลดรูปไม่สำเร็จ');
-    }
-    btn.textContent='กำลังบันทึก...';
-    const body=new URLSearchParams({
-      action:'addPost',
-      email:S.user.email,
-      content,
-      mediaUrl,
-      link,
-      hashtags:hashtags.join(',')
+    // Modals Close logic
+    window.addEventListener('click', (e) => {
+        if (!e.target.closest('.dropdown')) document.querySelectorAll('.dropdown-content').forEach(d => d.classList.remove('show'));
+        [DOM.aboutModal, DOM.statusModal, DOM.loginModal, DOM.userProfModal, DOM.adminDashModal, DOM.askNoteModal].forEach(m => { if (e.target === m) closeModal(m); });
     });
-    const r=await apiFetch(API_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body});
-    const d=await r.json();
-    if(d.success){
-      // Reset both forms
-      ['post-ta','post-ta-mob'].forEach(id=>{const e=D(id);if(e){e.value='';e.style.height='auto';}});
-      ['link-in','link-in-mob','hashtag-in','hashtag-in-mob'].forEach(id=>{const e=D(id);if(e)e.value='';});
-      ['field-link','field-link-mob','field-hashtag','field-hashtag-mob'].forEach(id=>{const e=D(id);if(e)e.classList.remove('visible');});
-      ['btn-link','btn-link-mob','btn-hashtag','btn-hashtag-mob'].forEach(id=>{const e=D(id);if(e)e.classList.remove('active');});
-      updateCharCount(false);updateCharCount(true);
-      removeImg(false);removeImg(true);
-      closeCompose();
-      toast('โพสต์สำเร็จ!','s','fas fa-check-circle');
-      await loadData(S.user.email,S.user.name,S.user.pic);
-    }else throw new Error(d.error||'บันทึกล้มเหลว');
-  }catch(e){
-    console.error(e);
-    toast('เกิดข้อผิดพลาด: '+(e.message||''),'e');
-  }finally{
-    btn.textContent='โพสต์';btn.disabled=false;ta.disabled=false;
-  }
-}
-
-/* =========== Edit / Delete =========== */
-function openEditPost(ri){
-  const p=S.posts.find(p=>p.rowIdx===ri);if(!p)return;
-  editTarget={type:'post',rowIdx:ri,originalMediaUrl:p.mediaUrl||''};
-
-  // เติมค่าเดิม
-  D('ep-ta').value=p.content||'';
-  D('ep-link-in').value=p.link||'';
-  D('ep-hashtag-in').value=(Array.isArray(p.hashtags)?p.hashtags:[]).join(' ');
-
-  // เปิด field ถ้ามีค่าเดิม
-  const hasLink=!!(p.link);
-  const hasTags=Array.isArray(p.hashtags)&&p.hashtags.length>0;
-  D('ep-field-link').classList.toggle('visible',hasLink);
-  D('ep-btn-link').classList.toggle('active',hasLink);
-  D('ep-field-hashtag').classList.toggle('visible',hasTags);
-  D('ep-btn-hashtag').classList.toggle('active',hasTags);
-
-  // แสดง preview รูปเดิม (ถ้ามี)
-  S.selFileEdit=null;
-  D('ep-file-in').value='';
-  if(p.mediaUrl){
-    D('ep-img-prev').src=p.mediaUrl;
-    D('ep-img-prev-wrap').style.display='block';
-  }else{
-    D('ep-img-prev').src='';
-    D('ep-img-prev-wrap').style.display='none';
-  }
-
-  openModal('ep-modal');
-}
-
-function toggleEditField(field,force=null){
-  const fEl=D('ep-field-'+field);
-  const bEl=D('ep-btn-'+field);
-  if(!fEl)return;
-  const show=force===null?!fEl.classList.contains('visible'):!!force;
-  fEl.classList.toggle('visible',show);
-  if(bEl)bEl.classList.toggle('active',show);
-  if(show){const inp=fEl.querySelector('.cr-extra-input');if(inp)setTimeout(()=>inp.focus(),50);}
-  else{const inp=fEl.querySelector('.cr-extra-input');if(inp)inp.value='';}
-}
-
-function removeEditImg(){
-  S.selFileEdit=null;
-  D('ep-file-in').value='';
-  D('ep-img-prev').src='';
-  D('ep-img-prev-wrap').style.display='none';
-  // Flag ว่า user ต้องการลบรูปเดิม
-  editTarget.removeMedia=true;
-}
-
-// file picker สำหรับ edit modal
-D('ep-file-in').addEventListener('change',async function(){
-  const f=this.files[0];if(!f)return;
-  if(!f.type.startsWith('image/')){toast('ต้องเป็นไฟล์รูปภาพเท่านั้น','e');this.value='';return;}
-  try{
-    let finalFile=f;
-    if(f.size>IMG_TARGET_BYTES&&f.type!=='image/gif'){
-      toast('กำลังบีบอัดรูปภาพ...','','fas fa-compress fa-spin');
-      const result=await compressImage(f,IMG_TARGET_BYTES);
-      if(result.compressed){
-        const ext=result.type==='image/webp'?'webp':(result.type==='image/png'?'png':'jpg');
-        finalFile=new File([result.blob],(f.name.replace(/\.[^.]+$/,'')||'image')+'.'+ext,{type:result.type});
-        const pct=Math.round((1-result.to/result.from)*100);
-        toast(`บีบอัดสำเร็จ ${fmtBytes(result.from)} → ${fmtBytes(result.to)} (ลด ${pct}%)`,'s','fas fa-check');
-      }
-    }
-    S.selFileEdit=finalFile;
-    editTarget.removeMedia=false;
-    const r=new FileReader();
-    r.onload=e=>{D('ep-img-prev').src=e.target.result;D('ep-img-prev-wrap').style.display='block';};
-    r.readAsDataURL(finalFile);
-  }catch(err){toast('เกิดข้อผิดพลาด: '+err.message,'e');this.value='';}
-});
-
-async function saveEditPost(){
-  const content=D('ep-ta').value.trim();
-  const link=(D('ep-link-in').value||'').trim();
-  const hashtags=parseHashtags(D('ep-hashtag-in').value||'');
-
-  if(link&&!/^https?:\/\//i.test(link)){toast('ลิงก์ต้องขึ้นต้นด้วย http:// หรือ https://','e');return;}
-
-  const btn=D('ep-save');btn.disabled=true;btn.textContent='กำลังบันทึก...';
-
-  try{
-    // ตัดสินใจเรื่อง mediaUrl:
-    // 1. ถ้า user เลือกไฟล์ใหม่ → upload ใหม่ ใช้ URL ใหม่
-    // 2. ถ้า user ลบรูป (removeMedia=true และไม่มี selFileEdit) → ส่ง '' ไปล้าง
-    // 3. ถ้าไม่แตะต้องอะไรเลย → ส่ง URL เดิมกลับไป (FIX บัครูปหาย)
-    let mediaUrl=editTarget.originalMediaUrl||'';
-    if(S.selFileEdit){
-      btn.textContent='อัปโหลดรูป...';
-      const fd=new FormData();fd.append('image',S.selFileEdit);
-      const ir=await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_KEY}`,{method:'POST',body:fd});
-      const id=await ir.json();
-      if(id.success)mediaUrl=id.data.url;else throw new Error('อัปโหลดรูปไม่สำเร็จ');
-    }else if(editTarget.removeMedia){
-      mediaUrl='';
-    }
-
-    btn.textContent='กำลังบันทึก...';
-    const body=new URLSearchParams({
-      action:'editPost',
-      email:S.user.email,
-      rowIdx:editTarget.rowIdx,
-      content:content,
-      mediaUrl:mediaUrl,
-      link:link,
-      hashtags:hashtags.join(',')
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            document.querySelectorAll('.modal').forEach(m => { if (m.style.display === 'flex') closeModal(m); });
+            document.querySelectorAll('.dropdown-content').forEach(d => d.classList.remove('show'));
+        }
     });
-    const r=await apiFetch(API_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body});
-    const d=await r.json();
-    if(!d.success)throw new Error(d.message||'บันทึกล้มเหลว');
 
-    closeModal('ep-modal');
-    toast('แก้ไขสำเร็จ','s','fas fa-check');
-    await loadData(S.user.email,S.user.name,S.user.pic);
-  }catch(e){
-    console.error(e);
-    toast('เกิดข้อผิดพลาด: '+(e.message||''),'e');
-  }finally{
-    btn.disabled=false;btn.textContent='บันทึก';
-  }
-}
-async function deletePost(ri){
-  if(!confirm('ลบโพสต์นี้หรือไม่?'))return;
-  try{
-    await apiFetch(API_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({action:'deletePost',email:S.user.email,rowIdx:ri})});
-    toast('ลบสำเร็จ','s');
-    await loadData(S.user.email,S.user.name,S.user.pic);
-  }catch{toast('เกิดข้อผิดพลาด','e');}
-}
-function openEditCmt(ri,cTime){
-  const p=S.posts.find(p=>p.rowIdx===ri);if(!p)return;
-  const c=(p.comments||[]).find(c=>c.time===cTime);if(!c)return;
-  editTarget={type:'comment',rowIdx:ri,commentTime:cTime};
-  D('ec-ta').value=c.text;openModal('ec-modal');
-}
-async function saveEditCmt(){
-  const t=D('ec-ta').value.trim();if(!t)return;
-  const btn=D('ec-save');btn.disabled=true;btn.textContent='...';
-  try{
-    await apiFetch(API_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({action:'editComment',email:S.user.email,rowIdx:editTarget.rowIdx,commentTime:editTarget.commentTime,text:t})});
-    closeModal('ec-modal');toast('แก้ไขสำเร็จ','s');
-    await loadData(S.user.email,S.user.name,S.user.pic);
-    const cm=D('cmts-'+editTarget.rowIdx);if(cm)cm.style.display='block';
-  }catch{toast('เกิดข้อผิดพลาด','e');}
-  finally{btn.disabled=false;btn.textContent='บันทึก';}
-}
-async function deleteCmt(ri,cTime){
-  if(!confirm('ลบคอมเมนต์นี้?'))return;
-  try{
-    await apiFetch(API_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({action:'deleteComment',email:S.user.email,rowIdx:ri,commentTime:cTime})});
-    toast('ลบสำเร็จ','s');
-    await loadData(S.user.email,S.user.name,S.user.pic);
-    const cm=D('cmts-'+ri);if(cm)cm.style.display='block';
-  }catch{toast('เกิดข้อผิดพลาด','e');}
-}
+    // --- Admin Tabs ---
+    DOM.adminTabLinks.addEventListener('click', () => {
+        $('tab-btn-links').classList.add('active'); $('tab-btn-users').classList.remove('active');
+        $('admin-tab-links').style.display = 'block'; $('admin-tab-users').style.display = 'none';
+        renderAdminLinks();
+    });
+    DOM.adminTabUsers.addEventListener('click', () => {
+        $('tab-btn-users').classList.add('active'); $('tab-btn-links').classList.remove('active');
+        $('admin-tab-users').style.display = 'block'; $('admin-tab-links').style.display = 'none';
+        renderAdminUsers();
+    });
 
-/* =========== Keyboard shortcuts / responsive =========== */
-document.addEventListener('keydown',e=>{
-  if(e.key==='Escape'){closeMobSearch();closeSettings();closeCompose();document.querySelectorAll('.overlay.open').forEach(o=>o.classList.remove('open'));}
-  if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();isMob()?openMobSearch():D('rw-srch').focus();}
-});
-function checkBP(){const mob=isMob();const ml=D('mob-logo');if(ml)ml.style.display=mob?'flex':'none';}
-window.addEventListener('resize',checkBP);checkBP();
-
-/* =========== Boot =========== */
-(function(){
-  // Restore theme
-  try{
-    const th=localStorage.getItem('kms_theme');
-    if(th==='light'){isDark=true;toggleDark();}
-  }catch{}
-
-  const saved=(()=>{try{return localStorage.getItem(SESS_KEY);}catch{return null;}})();
-  if(saved){
-    try{
-      const u=JSON.parse(saved);
-      S.user=u;
-      applyUserUI();
-      loadData(u.email,u.name,u.pic);
-    }catch{
-      try{localStorage.removeItem(SESS_KEY);}catch{}
-      loadData();
+    function renderAdminLinks() {
+        $('admin-tab-links').innerHTML = state.allLinks.map(l => `
+            <div class="admin-item">
+                <div style="flex:1;">
+                    <div class="admin-item-title">${escHtml(l.title)}</div>
+                    <div class="admin-item-subtitle">${escHtml(l.url)}</div>
+                </div>
+                <select class="admin-select" id="sel-grp-${escHtml(l.title)}">
+                    <option value="public" ${l.group==='public'?'selected':''}>Public</option>
+                    <option value="vip" ${l.group==='vip'?'selected':''}>VIP</option>
+                    <option value="friend" ${l.group==='friend'?'selected':''}>Friend</option>
+                    <option value="admin" ${l.group==='admin'?'selected':''}>Admin</option>
+                </select>
+                <button class="card-star-btn ${l.starred?'starred':''}" onclick="toggleStar('${escHtml(l.title)}')"><i class="fas fa-star"></i></button>
+                <button class="admin-btn-save" onclick="saveLinkRole('${escHtml(l.title)}')">Save</button>
+            </div>
+        `).join('');
     }
-  }else{
-    loadData();
-  }
-})();
-</script>
+    function renderAdminUsers() {
+        $('admin-tab-users').innerHTML = state.allUsers.map(u => `
+            <div class="admin-item">
+                <div style="flex:1;">
+                    <div class="admin-item-title">${escHtml(u.name || u.displayName || 'User')}</div>
+                    <div class="admin-item-subtitle">${escHtml(u.email)}</div>
+                </div>
+                <select class="admin-select" id="sel-usr-${escHtml(u.email)}">
+                    <option value="public" ${u.role==='public'?'selected':''}>Public</option>
+                    <option value="friend" ${u.role==='friend'?'selected':''}>Friend</option>
+                    <option value="vip" ${u.role==='vip'?'selected':''}>VIP</option>
+                    <option value="blog" ${u.role==='blog'?'selected':''}>Blog</option>
+                    <option value="admin" ${u.role==='admin'?'selected':''}>Admin</option>
+                </select>
+                <button class="admin-btn-save" onclick="saveUserRole('${escHtml(u.email)}')">Save</button>
+            </div>
+        `).join('');
+    }
+
+    window.toggleStar = async function(title) {
+        const l = state.allLinks.find(x => x.title === title); if(!l) return;
+        const newVal = !l.starred;
+        try {
+            const res = await postApi('updateLink', { title, group: l.group, starred: newVal });
+            if(res.success) { l.starred = newVal; renderAdminLinks(); renderLinks(state.allLinks); toast('Updated', 'success'); }
+        } catch(e){ toast('Error', 'error'); }
+    };
+    window.saveLinkRole = async function(title) {
+        const grp = $('sel-grp-'+title).value;
+        const l = state.allLinks.find(x => x.title === title);
+        try {
+            const res = await postApi('updateLink', { title, group: grp, starred: l.starred });
+            if(res.success) { l.group = grp; renderLinks(state.allLinks); toast('Saved', 'success'); }
+        } catch(e){ toast('Error', 'error'); }
+    };
+    window.saveUserRole = async function(email) {
+        const role = $('sel-usr-'+email).value;
+        const u = state.allUsers.find(x => x.email === email);
+        try {
+            const res = await postApi('updateRole', { targetEmail: email, role });
+            if(res.success) { u.role = role; toast('Saved', 'success'); }
+        } catch(e){ toast('Error', 'error'); }
+    };
+
+    // --- BOOTSTRAP ---
+    window.onload = () => {
+        startClock();
+        loadSessionCookie();
+        refreshPageData();
+    };
+
+    </script>
 </body>
 </html>
