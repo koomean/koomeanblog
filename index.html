@@ -92,25 +92,9 @@ mark{background:rgba(75,143,255,.2);color:var(--accent);border-radius:3px;paddin
 
 /* Feed scroll area */
 .feed-main{flex:1;overflow-y:auto}
-@media(max-width:1023px){.feed-main{padding-bottom:calc(var(--mob-nav) + 4px)}}
-
-/* ═══ MOBILE (< 1024px) ═══ */
-@media(max-width:1023px){
-  .sidebar-left,.sidebar-right{display:none}
-  .feed-col{max-width:100%;border-right:none}
-  .root{max-width:100%}
-  .feed-hdr{padding:0 14px}
-  .mob-nav{display:flex}
-  .toast{bottom:calc(var(--mob-nav) + 10px)}
-}
-@media(min-width:1024px){
-  .mob-nav{display:none !important}
-  .mob-srch-overlay{display:none !important}
-  .mob-logo{display:none !important}
-}
 
 /* Mobile bottom nav */
-.mob-nav{position:fixed;bottom:0;left:0;right:0;height:var(--mob-nav);background:rgba(12,15,28,.96);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border-top:1px solid var(--border);align-items:center;justify-content:space-around;z-index:50;padding-bottom:env(safe-area-inset-bottom);display:none}
+.mob-nav{position:fixed;bottom:0;left:0;right:0;height:var(--mob-nav);background:rgba(12,15,28,.96);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border-top:1px solid var(--border);align-items:center;justify-content:space-around;z-index:50;padding-bottom:env(safe-area-inset-bottom);}
 .mnav-btn{display:flex;flex-direction:column;align-items:center;gap:3px;background:transparent;border:none;color:var(--txt3);cursor:pointer;padding:6px 18px;border-radius:10px;transition:color .2s}
 .mnav-btn i{font-size:1.1rem}.mnav-btn span{font-size:.6rem;font-weight:600;letter-spacing:.3px}
 .mnav-btn.active{color:var(--accent)}
@@ -174,16 +158,12 @@ textarea.si{min-height:85px;resize:none;line-height:1.5}
 .prof-cover{height:200px;background:linear-gradient(160deg,#0b1d40,#060d1e 55%,var(--bg));background-size:cover;background-position:center;position:relative;overflow:hidden;flex-shrink:0}
 .prof-cover::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 90% at 15% 50%,rgba(75,143,255,.1),transparent 70%),radial-gradient(ellipse 50% 70% at 85% 20%,rgba(108,92,231,.08),transparent 70%)}
 .cover-fade{position:absolute;bottom:0;left:0;right:0;height:60px;background:linear-gradient(to top,var(--s1),transparent)}
-@media(max-width:600px){.prof-cover{height:130px}}
 .prof-body{padding:0 20px 20px;background:var(--s1);position:relative}
-@media(max-width:600px){.prof-body{padding:0 14px 16px}}
 .prof-av-ring{position:absolute;top:-58px;left:20px;width:104px;height:104px;border-radius:50%;padding:2.5px;background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 0 0 3px var(--s1),var(--sh)}
-@media(max-width:600px){.prof-av-ring{width:80px;height:80px;top:-44px;left:14px}}
 .prof-av-inner{width:100%;height:100%;border-radius:50%;overflow:hidden;background:var(--s2);position:relative}
 .prof-av-img{width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .3s}.prof-av-img.vis{opacity:1}
 .prof-av-fb{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:1.4rem;font-weight:800;color:var(--txt2)}
 .prof-text{padding-top:56px}
-@media(max-width:600px){.prof-text{padding-top:40px}}
 .prof-name-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .prof-name{font-family:var(--display);font-size:1.2rem;font-weight:800;letter-spacing:-.3px}
 .verified{width:17px;height:17px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.5rem;color:#fff;flex-shrink:0}
@@ -196,13 +176,11 @@ textarea.si{min-height:85px;resize:none;line-height:1.5}
 .sk{background:linear-gradient(90deg,var(--s2) 25%,var(--s3) 50%,var(--s2) 75%);background-size:200% 100%;animation:sk 1.6s infinite;border-radius:6px;display:block}
 @keyframes sk{0%{background-position:200% 0}100%{background-position:-200% 0}}
 .sk-post{display:flex;gap:10px;padding:14px 20px;border-bottom:1px solid var(--border)}
-@media(max-width:600px){.sk-post{padding:14px 14px}}
 .sk-av{width:38px;height:38px;border-radius:50%;flex-shrink:0}
 .sk-lines{flex:1;display:flex;flex-direction:column;gap:7px;padding-top:2px}
 
 /* ═══ CREATOR ═══ */
 .creator{padding:14px 20px;border-bottom:1px solid var(--border);display:none;background:linear-gradient(180deg,rgba(75,143,255,.03),transparent)}
-@media(max-width:600px){.creator{padding:12px 14px}}
 .cr-row{display:flex;gap:10px}
 .cr-av-ring{flex-shrink:0;width:38px;height:38px;border-radius:50%;padding:2px;background:linear-gradient(135deg,var(--accent),var(--accent2))}
 .cr-av{width:100%;height:100%;border-radius:50%;object-fit:cover;background:var(--s2)}
@@ -225,11 +203,9 @@ textarea.si{min-height:85px;resize:none;line-height:1.5}
 
 /* ═══ FEED SECTION LABEL ═══ */
 .sec-label{padding:12px 20px 8px;font-size:.7rem;font-weight:700;color:var(--txt3);letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid var(--border)}
-@media(max-width:600px){.sec-label{padding:12px 14px 8px}}
 
 /* ═══ POST CARD ═══ */
 .post{display:flex;gap:11px;padding:14px 20px;border-bottom:1px solid var(--border);transition:background .18s;animation:fadeUp .35s var(--ease) both}
-@media(max-width:600px){.post{padding:12px 14px}}
 .post:hover{background:rgba(255,255,255,.018)}
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 .post-av-w{flex-shrink:0;width:38px;height:38px;border-radius:50%;overflow:hidden;background:var(--s2);position:relative}
@@ -314,6 +290,32 @@ textarea.si{min-height:85px;resize:none;line-height:1.5}
 .status-ico{font-size:2.2rem;opacity:.4}
 .err-banner{margin:12px 20px;padding:12px 14px;background:rgba(255,78,106,.08);border:1px solid rgba(255,78,106,.2);border-radius:var(--rs);color:var(--err);font-size:.84rem;display:flex;align-items:center;gap:8px}
 .retry-btn{margin-left:auto;background:transparent;border:1px solid rgba(255,78,106,.35);color:var(--err);padding:4px 12px;border-radius:99px;font-size:.77rem;font-weight:600;cursor:pointer;font-family:var(--font);flex-shrink:0}
+
+/* ═══ RESPONSIVE OVERRIDES (MOBILE & TABLET) ═══ */
+@media(max-width:1023px){
+  .sidebar-left,.sidebar-right{display:none}
+  .feed-col{max-width:100%;border-right:none}
+  .root{max-width:100%}
+  .feed-hdr{padding:0 14px}
+  .feed-main{padding-bottom:calc(var(--mob-nav) + 4px)}
+  .mob-nav{display:flex !important}
+  .toast{bottom:calc(var(--mob-nav) + 10px)}
+}
+@media(min-width:1024px){
+  .mob-nav{display:none !important}
+  .mob-srch-overlay{display:none !important}
+  .mob-logo{display:none !important}
+}
+@media(max-width:600px){
+  .prof-cover{height:130px}
+  .prof-body{padding:0 14px 16px}
+  .prof-av-ring{width:80px;height:80px;top:-44px;left:14px}
+  .prof-text{padding-top:40px}
+  .sk-post{padding:14px 14px}
+  .creator{padding:12px 14px}
+  .sec-label{padding:12px 14px 8px}
+  .post{padding:12px 14px}
+}
 </style>
 </head>
 <body>
@@ -574,7 +576,7 @@ textarea.si{min-height:85px;resize:none;line-height:1.5}
 <div class="toast" id="toast"></div>
 
 <script>
-// !!! อย่าลืมเปลี่ยน URL ตรงนี้ให้ตรงกับ Web App URL ล่าสุดที่คุณ Deploy นะครับ !!!
+// ใส่ Web App URL ของคุณที่ Deploy ใหม่ล่าสุดลงไปตรงนี้ครับ
 const API_URL='https://script.google.com/macros/s/AKfycbwBYhFTW68AfN4cYUJYS1DG7vw-Ocykx5kslSUQIeJJlfu0oeBIdi9xAhVmorVWQ4q7rg/exec';
 const IMGBB_KEY='5286836e6b61aa52660a8d8602503e0b';
 const SESS_KEY='kms_v3';
@@ -694,7 +696,6 @@ async function loadData(email='',name='',pic='',note=null){
     if(email&&data.user){
         S.user={email:data.user.email,name,role:data.user.role,pic};localStorage.setItem(SESS_KEY,JSON.stringify(S.user));
         D('auth-btn').textContent='Sign Out';D('auth-btn').className='auth-pill out';D('set-ln').textContent=name;D('set-ld').textContent=data.user.email;D('so-email').textContent=data.user.email;D('so-grp').style.display='';D('rw-auth').style.display='none';D('sb-user-card').style.display='';D('sb-uc-av').src=pic||'https://ui-avatars.com/api/?name=U&background=161d2e&color=7988a3';D('sb-uc-name').textContent=name;D('sb-uc-email').textContent=data.user.email;
-        // เช็คให้ Admin หรือ Blog สามารถโพสต์ได้
         if(data.user.role==='admin'||data.user.role==='blog'){
             D('creator').style.display='';D('cr-av').src=pic||'';
             if(data.user.role==='admin') D('admin-grp').style.display='';
@@ -705,7 +706,6 @@ async function loadData(email='',name='',pic='',note=null){
     S.posts=data.posts||[];if(S.posts.length){D('stat-posts').textContent=S.posts.length;D('prof-stats').style.display='flex';}
     renderFeed();
     
-    // ตรวจสอบ Deep Link หลังจากโหลดเสร็จ
     setTimeout(()=>{
       const params=new URLSearchParams(window.location.search);
       const target=params.get('post');
@@ -723,7 +723,6 @@ function processContent(text,rowIdx){
   let h=esc(text.trim());
   const urlRx=/(https?:\/\/[^\s<]+)/g;const urls=(text.match(urlRx)||[]);
   h=h.replace(urlRx,u=>`<a href="${u}" target="_blank" class="post-link" rel="noopener">${u}</a>`);
-  // แปลง Hashtag ให้คลิกได้
   h=h.replace(/#([\wก-๙]+)/g, `<span style="color:var(--accent);cursor:pointer" onclick="searchTag('#$1')">#$1</span>`);
   let media='',tLink=null,ytId=null;
   for(const u of urls){
@@ -746,7 +745,6 @@ function renderFeed(){
   const sk=D('sk-posts');if(sk)sk.remove();
   const feed=D('feed');const aName=esc(S.profile.name||'Koo Mean');const avSrc=esc(S.profile.imageUrl||'');const init=(S.profile.name||'KM').substring(0,2).toUpperCase();
   
-  // อัปเดต Hashtag Trends
   const tagsHtml=renderHashtagsUI();
   if(tagsHtml&&D('rw-trends')){D('rw-trends').style.display='block';D('trend-desktop').innerHTML=tagsHtml;}
   else if(D('rw-trends')){D('rw-trends').style.display='none';}
@@ -760,7 +758,6 @@ function renderFeed(){
     const ts=p.editedTime?`แก้ไข ${fmt(p.editedTime)}`:fmt(p.timestamp);
     
     let menu='';
-    // ให้สิทธิ์ Admin แก้ได้หมด และ Blog แก้โพสต์ตัวเองได้
     if(S.user?.role==='admin'||(S.user?.role==='blog'&&S.user?.email===p.email)){
       menu=`<div class="post-menu-w"><button class="menu-btn" onclick="toggleDrop('dp-${p.rowIdx}')"><i class="fas fa-ellipsis"></i></button><div class="drop-menu" id="dp-${p.rowIdx}"><button class="drop-item" onclick="openEditPost(${p.rowIdx})"><i class="fas fa-pen"></i>แก้ไขโพสต์</button><button class="drop-item del" onclick="deletePost(${p.rowIdx})"><i class="fas fa-trash-alt"></i>ลบโพสต์</button></div></div>`;
     }
