@@ -241,8 +241,8 @@ textarea.si{min-height:85px;resize:none;line-height:1.5}
 .post:hover{background:rgba(255,255,255,.018)}
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 .post-av-w{flex-shrink:0;width:38px;height:38px;border-radius:50%;overflow:hidden;background:var(--s2);position:relative}
-.post-av{width:38px;height:38px;object-fit:cover;border-radius:50%;opacity:0;transition:opacity .3s}.post-av.vis{opacity:1}
-.post-av-fb{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;color:var(--txt2)}
+.post-av{width:38px;height:38px;object-fit:cover;border-radius:50%;opacity:0;transition:opacity .3s;position:relative;z-index:1}.post-av.vis{opacity:1}
+.post-av-fb{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;color:var(--txt2);z-index:0}
 .post-body{flex:1;min-width:0}
 .post-hdr{display:flex;align-items:center;gap:5px;margin-bottom:3px;flex-wrap:wrap}
 .post-author{font-weight:700;font-size:.88rem;letter-spacing:-.2px}
@@ -732,17 +732,6 @@ textarea.si{min-height:85px;resize:none;line-height:1.5}
 <div class="toast" id="toast"></div>
 
 <script>
-/* =========================================================
-   Koo Mean Space v2.1
-   Fixes:
-   - Role check normalized (admin/blog can post)
-   - Mobile compose modal (FAB button)
-   - Separate post fields: text, link, image, hashtag
-   - Account settings button works
-   - New: Robust Universal Link Previews (Horizontal Layout)
-   - FIXED: Timeline Profile Pictures forced to Google Profile
-   ========================================================= */
-
 const API_URL='https://script.google.com/macros/s/AKfycbwBYhFTW68AfN4cYUJYS1DG7vw-Ocykx5kslSUQIeJJlfu0oeBIdi9xAhVmorVWQ4q7rg/exec';
 const IMGBB_KEY='5286836e6b61aa52660a8d8602503e0b';
 const SESS_KEY='kms_v3';
@@ -753,10 +742,10 @@ const S={
   profile:{webTitle:'Space',name:'',handle:'@koomean',bio:'',imageUrl:'',coverUrl:''},
   posts:[],
   pendingJwt:null,
-  selFile:null,     // desktop file
-  selFileMob:null,  // mobile file
-  selFileEdit:null, // edit-modal file
-  activeTag:null    // hashtag กำลังถูก filter
+  selFile:null,
+  selFileMob:null,
+  selFileEdit:null,
+  activeTag:null
 };
 let editTarget={};
 let toastTid;
@@ -764,7 +753,6 @@ let toastTid;
 const D=id=>document.getElementById(id);
 const isMob=()=>window.innerWidth<1024;
 
-/* Normalize role once, use everywhere */
 function getRole(u){return ((u||S.user||{}).role||'').toString().trim().toLowerCase();}
 function canPost(){const r=getRole();return r.includes('admin')||r.includes('blog');}
 function isAdmin(){return getRole().includes('admin');}
@@ -902,6 +890,19 @@ function postMatchesTag(p,normTag){
   return false;
 }
 
+/* =========== Helper: resolve avatar URL for any post/comment author =========== */
+function resolveAvatar(email, authorPic, authorName) {
+  let pic = authorPic || '';
+  // If the post belongs to the currently logged-in user, prefer their Google pic
+  if (S.user && email === S.user.email && S.user.pic) {
+    if (!pic || pic.includes('ui-avatars.com')) pic = S.user.pic;
+  }
+  if (!pic) {
+    pic = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(authorName || 'U') + '&background=161d2e&color=7988a3&bold=true';
+  }
+  return pic;
+}
+
 let rwD;
 D('rw-srch').addEventListener('input',function(){
   clearTimeout(rwD);const q=this.value.trim(),res=D('rw-results');
@@ -917,18 +918,13 @@ D('rw-srch').addEventListener('input',function(){
     let h='';hits.slice(0,6).forEach(p=>{
       const sn=(p.content||'').substring(0,80);
       const hi=t=>esc(t).replace(new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi'),m=>`<mark>${esc(m)}</mark>`);
-      const pName = esc(p.authorName || S.profile.name || 'Unknown');
-      
-      // ดึงรูปทับเสมอ
-      let rawPic = p.authorPic || '';
-      if ((!rawPic || rawPic.includes('ui-avatars.com')) && S.user && p.email === S.user.email && S.user.pic) rawPic = S.user.pic;
-      if (!rawPic) rawPic = 'https://ui-avatars.com/api/?name='+encodeURIComponent(pName)+'&background=161d2e&color=7988a3';
-      const pAvSrc = esc(rawPic);
+      const pName = p.authorName || S.profile.name || 'Unknown';
+      const pAvSrc = esc(resolveAvatar(p.email, p.authorPic, pName));
 
       h+=`<div class="rw-hit" onclick="scrollToPost(${p.rowIdx})">
-        <img class="rw-hit-av" src="${pAvSrc}" onerror="this.style.display='none'" alt="" referrerpolicy="no-referrer">
+        <img class="rw-hit-av" src="${pAvSrc}" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(pName)}&background=161d2e&color=7988a3&bold=true'" alt="" referrerpolicy="no-referrer">
         <div class="rw-hit-body">
-          <div class="rw-hit-name">${pName}</div>
+          <div class="rw-hit-name">${esc(pName)}</div>
           <div class="rw-hit-txt">${hi(sn)}${p.content&&p.content.length>80?'...':''}</div>
           <div class="rw-hit-time">${fmt(p.timestamp)}</div>
         </div></div>`;
@@ -954,18 +950,13 @@ D('mob-srch-in').addEventListener('input',function(){
     hits.forEach(p=>{
       const sn=(p.content||'').substring(0,100);
       const hi=t=>esc(t).replace(new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi'),m=>`<mark>${esc(m)}</mark>`);
-      const pName = esc(p.authorName || S.profile.name || 'Unknown');
-      
-      // ดึงรูปทับเสมอ
-      let rawPic = p.authorPic || '';
-      if ((!rawPic || rawPic.includes('ui-avatars.com')) && S.user && p.email === S.user.email && S.user.pic) rawPic = S.user.pic;
-      if (!rawPic) rawPic = 'https://ui-avatars.com/api/?name='+encodeURIComponent(pName)+'&background=161d2e&color=7988a3';
-      const pAvSrc = esc(rawPic);
+      const pName = p.authorName || S.profile.name || 'Unknown';
+      const pAvSrc = esc(resolveAvatar(p.email, p.authorPic, pName));
 
       h+=`<div class="rw-hit" style="padding:12px 16px" onclick="closeMobSearch();scrollToPost(${p.rowIdx})">
-        <img class="rw-hit-av" src="${pAvSrc}" onerror="this.style.display='none'" alt="" referrerpolicy="no-referrer">
+        <img class="rw-hit-av" src="${pAvSrc}" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(pName)}&background=161d2e&color=7988a3&bold=true'" alt="" referrerpolicy="no-referrer">
         <div class="rw-hit-body">
-          <div class="rw-hit-name" style="font-size:.84rem">${pName}</div>
+          <div class="rw-hit-name" style="font-size:.84rem">${esc(pName)}</div>
           <div class="rw-hit-txt">${hi(sn)}${p.content&&p.content.length>100?'...':''}</div>
           <div class="rw-hit-time">${fmt(p.timestamp)}</div>
         </div></div>`;
@@ -1029,11 +1020,9 @@ async function saveProfile(){
 async function saveAccountName() {
   const newName = D('acc-dn').value.trim();
   if (!newName) return toast('กรุณากรอกชื่อที่ต้องการแสดง', 'e');
-  
   const btn = D('btn-save-name');
   btn.disabled = true; 
   btn.textContent = 'กำลังบันทึก...';
-  
   try {
     const r = await apiFetch(API_URL, {
       method: 'POST',
@@ -1041,12 +1030,10 @@ async function saveAccountName() {
       body: new URLSearchParams({ action: 'updateUserName', email: S.user.email, newName: newName })
     });
     const d = await r.json();
-    
     if (d.success) {
       toast('เปลี่ยนชื่อสำเร็จ', 's', 'fas fa-check');
       S.user.name = newName;
       try { localStorage.setItem(SESS_KEY, JSON.stringify(S.user)); } catch {}
-      
       applyUserUI();
       await loadData(S.user.email, S.user.name, S.user.pic);
     } else {
@@ -1196,7 +1183,6 @@ async function loadData(email='',name='',pic='',note=null){
   }
 }
 
-/* Central function to update UI based on current user */
 function applyUserUI(){
   var creatorEl=D('creator');
   var fabEl=D('mnav-fab');
@@ -1262,7 +1248,6 @@ async function fetchLP(url,id){
   try{
     let title='', desc='', img='', host='';
     host = new URL(url).hostname.replace('www.','');
-    
     try {
       const r = await fetch(`https://api.microlink.io/?url=${encodeURIComponent(url)}`);
       if(r.ok) {
@@ -1274,7 +1259,6 @@ async function fetchLP(url,id){
         }
       }
     } catch(e) {}
-
     if(!title) {
       try {
         const r = await fetch(`https://api.dub.co/metatags?url=${encodeURIComponent(url)}`);
@@ -1286,7 +1270,6 @@ async function fetchLP(url,id){
         }
       } catch(e) {}
     }
-
     const c = D(id);
     if(c && (title || host)){
       c.innerHTML=`<a href="${esc(url)}" target="_blank" class="lp-card" rel="noopener">
@@ -1340,20 +1323,9 @@ function renderFeed(){
   const lpQ=[];
   
   postsToShow.forEach((p,i)=>{
-    // --- ตั้งค่าโปรไฟล์ของเจ้าของโพสต์แต่ละคน ---
-    const pName = esc(p.authorName || S.profile.name || 'Unknown');
-    
-    // ดึงรูปทับเสมอ
-    let rawPic = p.authorPic || '';
-    if ((!rawPic || rawPic.includes('ui-avatars.com')) && S.user && p.email === S.user.email && S.user.pic) {
-        rawPic = S.user.pic;
-    }
-    if (!rawPic) {
-        rawPic = 'https://ui-avatars.com/api/?name='+encodeURIComponent(pName)+'&background=161d2e&color=7988a3';
-    }
-
-    const pAvSrc = esc(rawPic);
-    const pInit = pName.substring(0,2).toUpperCase();
+    const pName = p.authorName || S.profile.name || 'Unknown';
+    const pAvSrc = esc(resolveAvatar(p.email, p.authorPic, pName));
+    const pInit = (pName||'??').substring(0,2).toUpperCase();
     const isAdminPost = p.authorRole && p.authorRole.includes('admin');
     const verifiedBadge = isAdminPost ? `<div class="verified" style="width:14px;height:14px;font-size:.42rem"><i class="fas fa-check"></i></div>` : '';
 
@@ -1403,8 +1375,9 @@ function renderFeed(){
           <button class="drop-item del" onclick="deleteCmt(${p.rowIdx},${c.time})"><i class="fas fa-trash-alt"></i>ลบ</button>
         </div></div>`:'';
       const ct=c.editedTime?`แก้ไข ${fmt(c.editedTime)}`:fmt(c.time);
+      const cPic = resolveAvatar(c.email, c.pic, c.name);
       chtml+=`<div class="cmt">
-        <img class="cmt-av" src="${esc(c.pic||'')}" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(c.name||'U')}&background=161d2e&color=7988a3'" alt="" referrerpolicy="no-referrer">
+        <img class="cmt-av" src="${esc(cPic)}" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(c.name||'U')}&background=161d2e&color=7988a3&bold=true'" alt="" referrerpolicy="no-referrer">
         <div class="cmt-body">
           <div class="cmt-meta"><span class="cmt-name">${esc(c.name)}</span><span class="cmt-time">· ${ct}</span>${cM}</div>
           <div class="cmt-txt">${esc(c.text)}</div>
@@ -1414,11 +1387,11 @@ function renderFeed(){
     html+=`<article class="post" id="post-${p.rowIdx}" style="animation-delay:${Math.min(i,8)*.04}s">
       <div class="post-av-w">
         <div class="post-av-fb">${pInit}</div>
-        <img class="post-av vis" src="${pAvSrc}" onerror="this.style.display='none'" alt="" loading="lazy" referrerpolicy="no-referrer">
+        <img class="post-av" src="${pAvSrc}" onload="this.classList.add('vis');var fb=this.previousElementSibling;if(fb)fb.style.display='none'" onerror="this.style.display='none';var fb=this.previousElementSibling;if(fb)fb.style.display='flex'" alt="" loading="lazy" referrerpolicy="no-referrer">
       </div>
       <div class="post-body">
         <div class="post-hdr">
-          <span class="post-author">${pName}</span>
+          <span class="post-author">${esc(pName)}</span>
           ${verifiedBadge}
           <span class="post-time">· ${ts}</span>${menu}
         </div>
@@ -1555,43 +1528,34 @@ function canvasToBlob(canvas,type,quality){
 async function compressImage(file,targetBytes=IMG_TARGET_BYTES){
   if(file.type==='image/gif')return {blob:file,compressed:false};
   if(file.size<=targetBytes)return {blob:file,compressed:false};
-
   const img=await loadImageFromFile(file);
   let w=img.naturalWidth,h=img.naturalHeight;
-
   const maxDim=Math.max(w,h);
   if(maxDim>IMG_MAX_DIMENSION){
     const scale=IMG_MAX_DIMENSION/maxDim;
     w=Math.round(w*scale);h=Math.round(h*scale);
   }
-
   const canvas=document.createElement('canvas');
   canvas.width=w;canvas.height=h;
   const ctx=canvas.getContext('2d');
   ctx.imageSmoothingEnabled=true;
   ctx.imageSmoothingQuality='high';
   ctx.drawImage(img,0,0,w,h);
-
   let outType='image/jpeg';
   const testBlob=await canvasToBlob(canvas,'image/webp',0.9).catch(()=>null);
   if(testBlob&&testBlob.type==='image/webp')outType='image/webp';
-
   if(file.type==='image/png'){
     try{
       const sample=ctx.getImageData(0,0,Math.min(w,100),Math.min(h,100)).data;
       let hasAlpha=false;
       for(let i=3;i<sample.length;i+=4){if(sample[i]<255){hasAlpha=true;break;}}
-      if(hasAlpha&&outType!=='image/webp'){
-        outType='image/png';
-      }
+      if(hasAlpha&&outType!=='image/webp')outType='image/png';
     }catch(_){}
   }
-
   if(outType==='image/png'){
     const blob=await canvasToBlob(canvas,'image/png');
     return {blob,compressed:true,from:file.size,to:blob.size,dim:`${w}x${h}`,type:outType};
   }
-
   const qualities=[0.92,0.85,0.78,0.7,0.6,0.5,0.4];
   let best=null;
   for(const q of qualities){
@@ -1600,7 +1564,6 @@ async function compressImage(file,targetBytes=IMG_TARGET_BYTES){
     if(blob.size<=targetBytes){best={blob,quality:q};break;}
     best={blob,quality:q};
   }
-
   if(!best)throw new Error('บีบอัดรูปไม่สำเร็จ');
   return {blob:best.blob,compressed:true,from:file.size,to:best.blob.size,dim:`${w}x${h}`,type:outType,quality:best.quality};
 }
@@ -1614,7 +1577,6 @@ function fmtBytes(n){
 async function handleFilePick(f,isMobile){
   if(!f)return;
   const inputEl=D(isMobile?'file-in-mob':'file-in');
-
   if(!f.type.startsWith('image/')){
     toast('ต้องเป็นไฟล์รูปภาพเท่านั้น','e');
     inputEl.value='';return;
@@ -1624,10 +1586,8 @@ async function handleFilePick(f,isMobile){
       inputEl.value='';return;
     }
   }
-
   const previewWrap=D(isMobile?'img-prev-wrap-mob':'img-prev-wrap');
   const previewImg=D(isMobile?'img-prev-mob':'img-prev');
-
   try{
     let finalFile=f;
     if(f.size>IMG_TARGET_BYTES&&f.type!=='image/gif'){
@@ -1640,12 +1600,10 @@ async function handleFilePick(f,isMobile){
         toast(`บีบอัดสำเร็จ ${fmtBytes(result.from)} → ${fmtBytes(result.to)} (ลด ${pct}%)`,'s','fas fa-check');
       }
     }
-
     if(isMobile)S.selFileMob=finalFile;else S.selFile=finalFile;
     const r=new FileReader();
     r.onload=e=>{previewImg.src=e.target.result;previewWrap.style.display='block';};
     r.readAsDataURL(finalFile);
-
   }catch(err){
     console.error(err);
     toast('เกิดข้อผิดพลาดกับรูปภาพ: '+err.message,'e');
@@ -1681,23 +1639,18 @@ function parseHashtags(raw){
 
 async function submitPost(isMobile=false){
   if(!S.user||!canPost()){toast('คุณไม่มีสิทธิ์โพสต์','e');return;}
-
   const suffix=isMobile?'-mob':'';
   const ta=D('post-ta'+suffix);
   const linkEl=D('link-in'+suffix);
   const tagEl=D('hashtag-in'+suffix);
   const btn=D('post-btn'+suffix);
   const file=isMobile?S.selFileMob:S.selFile;
-
   const content=ta.value.trim();
   const link=(linkEl.value||'').trim();
   const hashtags=parseHashtags(tagEl.value||'');
-
   if(!content&&!file&&!link&&!hashtags.length){toast('กรุณากรอกข้อมูลอย่างน้อย 1 อย่าง','e');return;}
   if(link&&!/^https?:\/\//i.test(link)){toast('ลิงก์ต้องขึ้นต้นด้วย http:// หรือ https://','e');return;}
-
   btn.textContent='กำลังโพสต์...';btn.disabled=true;ta.disabled=true;
-
   let mediaUrl='';
   try{
     if(file){
@@ -1740,18 +1693,15 @@ async function submitPost(isMobile=false){
 function openEditPost(ri){
   const p=S.posts.find(p=>p.rowIdx===ri);if(!p)return;
   editTarget={type:'post',rowIdx:ri,originalMediaUrl:p.mediaUrl||''};
-
   D('ep-ta').value=p.content||'';
   D('ep-link-in').value=p.link||'';
   D('ep-hashtag-in').value=(Array.isArray(p.hashtags)?p.hashtags:[]).join(' ');
-
   const hasLink=!!(p.link);
   const hasTags=Array.isArray(p.hashtags)&&p.hashtags.length>0;
   D('ep-field-link').classList.toggle('visible',hasLink);
   D('ep-btn-link').classList.toggle('active',hasLink);
   D('ep-field-hashtag').classList.toggle('visible',hasTags);
   D('ep-btn-hashtag').classList.toggle('active',hasTags);
-
   S.selFileEdit=null;
   D('ep-file-in').value='';
   if(p.mediaUrl){
@@ -1761,7 +1711,6 @@ function openEditPost(ri){
     D('ep-img-prev').src='';
     D('ep-img-prev-wrap').style.display='none';
   }
-
   openModal('ep-modal');
 }
 
@@ -1811,11 +1760,8 @@ async function saveEditPost(){
   const content=D('ep-ta').value.trim();
   const link=(D('ep-link-in').value||'').trim();
   const hashtags=parseHashtags(D('ep-hashtag-in').value||'');
-
   if(link&&!/^https?:\/\//i.test(link)){toast('ลิงก์ต้องขึ้นต้นด้วย http:// หรือ https://','e');return;}
-
   const btn=D('ep-save');btn.disabled=true;btn.textContent='กำลังบันทึก...';
-
   try{
     let mediaUrl=editTarget.originalMediaUrl||'';
     if(S.selFileEdit){
@@ -1827,7 +1773,6 @@ async function saveEditPost(){
     }else if(editTarget.removeMedia){
       mediaUrl='';
     }
-
     btn.textContent='กำลังบันทึก...';
     const body=new URLSearchParams({
       action:'editPost',
@@ -1841,7 +1786,6 @@ async function saveEditPost(){
     const r=await apiFetch(API_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body});
     const d=await r.json();
     if(!d.success)throw new Error(d.message||'บันทึกล้มเหลว');
-
     closeModal('ep-modal');
     toast('แก้ไขสำเร็จ','s','fas fa-check');
     await loadData(S.user.email,S.user.name,S.user.pic);
@@ -1901,7 +1845,6 @@ window.addEventListener('resize',checkBP);checkBP();
     const th=localStorage.getItem('kms_theme');
     if(th==='light'){isDark=true;toggleDark();}
   }catch{}
-
   const saved=(()=>{try{return localStorage.getItem(SESS_KEY);}catch{return null;}})();
   if(saved){
     try{
