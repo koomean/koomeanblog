@@ -504,7 +504,7 @@ textarea.si{min-height:85px;resize:none;line-height:1.5}
           <div class="rw-link" onclick="window.open('https://koomean.github.io/koomean/','_blank')"><i class="fas fa-globe"></i>เว็บไซต์</div>
           <div class="rw-link" onclick="window.open('https://youtube.com/@koomean','_blank')"><i class="fab fa-youtube"></i>YouTube</div>
         </div>
-        <div style="margin-top:12px;font-size:.71rem;color:var(--txt3)">Koo Mean Space v2.1 · @koomean</div>
+        <div style="margin-top:12px;font-size:.71rem;color:var(--txt3)">Koo Mean Space v3.0 · @koomean</div>
       </div>
     </div>
   </aside>
@@ -604,7 +604,7 @@ textarea.si{min-height:85px;resize:none;line-height:1.5}
       <div class="set-gl">เกี่ยวกับ</div>
       <div class="set-row" style="cursor:default">
         <div class="set-icon" style="background:rgba(245,158,11,.1);color:var(--warn)"><i class="fas fa-circle-info"></i></div>
-        <div class="set-info"><div class="set-name" id="set-app-name">Koo Mean Space</div><div class="set-desc">v2.1 · by @koomean</div></div>
+        <div class="set-info"><div class="set-name" id="set-app-name">Koo Mean Space</div><div class="set-desc">v3.0 · by @koomean</div></div>
       </div>
       <button class="set-row" onclick="window.open('https://koomean.github.io/koomean/','_blank')">
         <div class="set-icon" style="background:rgba(255,255,255,.05);color:var(--txt2)"><i class="fas fa-globe"></i></div>
@@ -733,12 +733,12 @@ textarea.si{min-height:85px;resize:none;line-height:1.5}
 
 <script>
 const API_URL='https://script.google.com/macros/s/AKfycbwBYhFTW68AfN4cYUJYS1DG7vw-Ocykx5kslSUQIeJJlfu0oeBIdi9xAhVmorVWQ4q7rg/exec';
-const IMGBB_KEY='5286836e6b61aa52660a8d8602503e0b';
 const SESS_KEY='kms_v3';
 const TIMEOUT=13000;
 
 const S={
   user:null,
+  idToken:null, // เก็บ Google JWT
   profile:{webTitle:'Space',name:'',handle:'@koomean',bio:'',imageUrl:'',coverUrl:''},
   posts:[],
   pendingJwt:null,
@@ -753,7 +753,7 @@ let toastTid;
 const D=id=>document.getElementById(id);
 const isMob=()=>window.innerWidth<1024;
 
-function getRole(u){return ((u||S.user||{}).role||'').toString().trim().toLowerCase();}
+function getRole(){return ((S.user||{}).role||'').toString().trim().toLowerCase();}
 function canPost(){const r=getRole();return r.includes('admin')||r.includes('blog');}
 function isAdmin(){return getRole().includes('admin');}
 
@@ -761,6 +761,34 @@ function esc(s){if(s==null)return'';const p=document.createElement('span');p.tex
 function fmt(ts){if(!ts)return'';const d=new Date(ts),now=new Date(),diff=now-d;if(isNaN(diff))return'';if(diff<60000)return'เมื่อกี้';if(diff<3600000)return`${Math.floor(diff/60000)} นาทีที่แล้ว`;if(diff<86400000)return`${Math.floor(diff/3600000)} ชม.ที่แล้ว`;return d.toLocaleDateString('th-TH',{day:'numeric',month:'short'})+' '+d.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'});}
 function decodeJwt(t){try{return JSON.parse(decodeURIComponent(atob(t.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')).split('').map(c=>'%'+('00'+c.charCodeAt(0).toString(16)).slice(-2)).join('')));}catch{return null;}}
 async function apiFetch(url,opts={}){const c=new AbortController(),tid=setTimeout(()=>c.abort(),TIMEOUT);try{const r=await fetch(url,{...opts,signal:c.signal});clearTimeout(tid);return r;}catch(e){clearTimeout(tid);throw e;}}
+
+// ฟังก์ชัน POST ส่ง Data พร้อม JWT Token ไป Backend V3.0
+async function postData(action, params = {}) {
+  if (!S.idToken) throw new Error("Authentication required");
+  const fd = new URLSearchParams();
+  fd.append('action', action);
+  fd.append('idToken', S.idToken);
+  for (const k in params) fd.append(k, params[k]);
+  const r = await apiFetch(API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: fd
+  });
+  return await r.json();
+}
+
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      const res = reader.result;
+      resolve(res.includes(',') ? res.split(',')[1] : res);
+    };
+    reader.onerror = error => reject(error);
+  });
+}
+
 function toast(msg,type='',icon=''){clearTimeout(toastTid);const t=D('toast');t.className='toast'+(type?' '+type:'');t.innerHTML=(icon?`<i class="${icon}"></i>`:'')+msg;requestAnimationFrame(()=>requestAnimationFrame(()=>t.classList.add('show')));toastTid=setTimeout(()=>t.classList.remove('show'),3200);}
 function loadImg(imgEl,src,fbEl,init='KM'){if(!src){if(fbEl){fbEl.style.display='flex';fbEl.textContent=init;}return;}const i=new Image();i.onload=()=>{imgEl.src=src;imgEl.classList.add('vis');if(fbEl)fbEl.style.display='none';};i.onerror=()=>{if(fbEl){fbEl.style.display='flex';fbEl.textContent=init;}};i.src=src;}
 
@@ -893,7 +921,6 @@ function postMatchesTag(p,normTag){
 /* =========== Helper: resolve avatar URL for any post/comment author =========== */
 function resolveAvatar(email, authorPic, authorName) {
   let pic = authorPic || '';
-  // If the post belongs to the currently logged-in user, prefer their Google pic
   if (S.user && email === S.user.email && S.user.pic) {
     if (!pic || pic.includes('ui-avatars.com')) pic = S.user.pic;
   }
@@ -1009,8 +1036,15 @@ async function saveProfile(){
   if(!isAdmin())return toast('เฉพาะ Admin เท่านั้น','e');
   const btn=D('si-save');btn.disabled=true;btn.textContent='กำลังบันทึก...';
   try{
-    const r=await apiFetch(API_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({action:'updateProfile',email:S.user.email,webTitle:D('si-title').value.trim(),name:D('si-name').value.trim(),handle:D('si-handle').value.trim(),bio:D('si-bio').value.trim(),imageUrl:D('si-img').value.trim(),coverUrl:D('si-cover').value.trim()})});
-    const d=await r.json();
+    const d = await postData('updateProfile', {
+      email: S.user.email,
+      webTitle: D('si-title').value.trim(),
+      name: D('si-name').value.trim(),
+      handle: D('si-handle').value.trim(),
+      bio: D('si-bio').value.trim(),
+      imageUrl: D('si-img').value.trim(),
+      coverUrl: D('si-cover').value.trim()
+    });
     if(d.success){toast('บันทึกสำเร็จ','s','fas fa-check');closeSub();await loadData(S.user.email,S.user.name,S.user.pic);}
     else toast('เกิดข้อผิดพลาด','e');
   }catch{toast('บันทึกไม่สำเร็จ','e');}
@@ -1024,12 +1058,7 @@ async function saveAccountName() {
   btn.disabled = true; 
   btn.textContent = 'กำลังบันทึก...';
   try {
-    const r = await apiFetch(API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams({ action: 'updateUserName', email: S.user.email, newName: newName })
-    });
-    const d = await r.json();
+    const d = await postData('updateUserName', { email: S.user.email, newName: newName });
     if (d.success) {
       toast('เปลี่ยนชื่อสำเร็จ', 's', 'fas fa-check');
       S.user.name = newName;
@@ -1077,8 +1106,8 @@ function navTo(n){
 /* =========== Auth =========== */
 function onAuthClick(){if(!S.user)openModal('login-modal');else if(confirm('ออกจากระบบหรือไม่?'))signOut();}
 
-function signOut(){
-  S.user=null;S.pendingJwt=null;
+function signOut(silent = false){
+  S.user=null; S.pendingJwt=null; S.idToken=null;
   try{localStorage.removeItem(SESS_KEY);}catch{}
   D('auth-btn').textContent='Sign In';D('auth-btn').className='auth-pill';
   D('creator').classList.remove('show');
@@ -1090,14 +1119,15 @@ function signOut(){
   D('mnav-fab').classList.add('hidden');
   closeSettings();closeCompose();
   renderFeed();
-  toast('ออกจากระบบแล้ว','','fas fa-right-from-bracket');
+  if(!silent) toast('ออกจากระบบแล้ว','','fas fa-right-from-bracket');
 }
 
 function handleCredentialResponse(res){
   const p=decodeJwt(res.credential);if(!p)return;
-  closeModal('login-modal');S.pendingJwt=p;
+  closeModal('login-modal');
+  S.pendingJwt=p; S.idToken=res.credential;
   toast('กำลังตรวจสอบ...','','fas fa-circle-notch fa-spin');
-  loadData(p.email,p.name,p.picture);
+  loadData(p.email,p.name,p.picture, null, true);
 }
 
 function doRegister(){
@@ -1106,20 +1136,38 @@ function doRegister(){
   closeModal('reg-modal');
   const p=S.pendingJwt;
   toast('กำลังลงทะเบียน...','','fas fa-circle-notch fa-spin');
-  loadData(p.email,p.name,p.picture,note);
+  loadData(p.email,p.name,p.picture,note,true);
 }
 
 /* =========== Load data =========== */
-async function loadData(email='',name='',pic='',note=null){
+async function loadData(email='',name='',pic='',note=null, isFreshLogin=false){
   try{
     let url=API_URL;
+    let queryParams = [];
+    if(S.idToken) queryParams.push(`idToken=${encodeURIComponent(S.idToken)}`);
     if(email){
-      url+=`?email=${encodeURIComponent(email)}&name=${encodeURIComponent(name)}`;
-      if(note!==null)url+=`&action=register&note=${encodeURIComponent(note)}`;
+      queryParams.push(`email=${encodeURIComponent(email)}`);
+      queryParams.push(`name=${encodeURIComponent(name)}`);
+      if(note!==null){
+        queryParams.push(`action=register`);
+        queryParams.push(`note=${encodeURIComponent(note)}`);
+      }
     }
+    if(queryParams.length > 0) url += '?' + queryParams.join('&');
     const res=await apiFetch(url);
     if(!res.ok)throw new Error('HTTP '+res.status);
     const data=await res.json();
+
+    if(data.authError) {
+      if(isFreshLogin) {
+        signOut(true);
+        toast('ยืนยันตัวตนไม่ผ่าน กรุณาลองใหม่', 'e', 'fas fa-times');
+      } else {
+        signOut(true);
+        loadData(); // reload as public
+      }
+      return;
+    }
 
     if(data.requireRegistration){openModal('reg-modal');return;}
 
@@ -1148,10 +1196,10 @@ async function loadData(email='',name='',pic='',note=null){
 
     if(email&&data.user){
       const rawRole=(data.user.role||'').toString();
-      S.user={email:data.user.email,name,role:rawRole,pic};
+      S.user={email:data.user.email,name,role:rawRole,pic, idToken: S.idToken};
       try{localStorage.setItem(SESS_KEY,JSON.stringify(S.user));}catch{}
       applyUserUI();
-      toast(isAdmin()?'เข้าสู่ระบบ Admin ✓':'เข้าสู่ระบบสำเร็จ ✓','s');
+      if(isFreshLogin) toast(isAdmin()?'เข้าสู่ระบบ Admin ✓':'เข้าสู่ระบบสำเร็จ ✓','s');
     }else if(!email){
       D('rw-auth').style.display='';
     }
@@ -1442,7 +1490,7 @@ async function toggleLike(ri){
   if(idx>-1)p.likes.splice(idx,1);else p.likes.push(S.user.email);
   renderFeed();
   try{
-    await fetch(API_URL,{method:'POST',body:new URLSearchParams({action:'toggleLike',email:S.user.email,rowIdx:ri}),headers:{'Content-Type':'application/x-www-form-urlencoded'}});
+    await postData('toggleLike', { email: S.user.email, rowIdx: ri });
   }catch{}
 }
 
@@ -1452,8 +1500,13 @@ async function submitCmt(ri){
   const text=inp.value.trim();if(!text)return;
   inp.disabled=true;toast('กำลังส่ง...');
   try{
-    const r=await fetch(API_URL,{method:'POST',body:new URLSearchParams({action:'addComment',email:S.user.email,name:S.user.name||'User',pic:S.user.pic||'',text,rowIdx:ri}),headers:{'Content-Type':'application/x-www-form-urlencoded'}});
-    const d=await r.json();
+    const d = await postData('addComment', {
+      email: S.user.email,
+      name: S.user.name || 'User',
+      pic: S.user.pic || '',
+      text: text,
+      rowIdx: ri
+    });
     if(d.success){
       inp.value='';
       await loadData(S.user.email,S.user.name,S.user.pic);
@@ -1655,22 +1708,19 @@ async function submitPost(isMobile=false){
   try{
     if(file){
       btn.textContent='อัปโหลดรูป...';
-      const fd=new FormData();fd.append('image',file);
-      const ir=await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_KEY}`,{method:'POST',body:fd});
-      const id=await ir.json();
-      if(id.success)mediaUrl=id.data.url;else throw new Error('อัปโหลดรูปไม่สำเร็จ');
+      const b64 = await fileToBase64(file);
+      const id = await postData('uploadImage', { imageBase64: b64 });
+      if(id.success)mediaUrl=id.url;else throw new Error('อัปโหลดรูปไม่สำเร็จ');
     }
     btn.textContent='กำลังบันทึก...';
-    const body=new URLSearchParams({
-      action:'addPost',
-      email:S.user.email,
-      content,
-      mediaUrl,
-      link,
-      hashtags:hashtags.join(',')
+    const d = await postData('addPost', {
+      email: S.user.email,
+      content: content,
+      mediaUrl: mediaUrl,
+      link: link,
+      hashtags: hashtags.join(',')
     });
-    const r=await apiFetch(API_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body});
-    const d=await r.json();
+
     if(d.success){
       ['post-ta','post-ta-mob'].forEach(id=>{const e=D(id);if(e){e.value='';e.style.height='auto';}});
       ['link-in','link-in-mob','hashtag-in','hashtag-in-mob'].forEach(id=>{const e=D(id);if(e)e.value='';});
@@ -1766,25 +1816,21 @@ async function saveEditPost(){
     let mediaUrl=editTarget.originalMediaUrl||'';
     if(S.selFileEdit){
       btn.textContent='อัปโหลดรูป...';
-      const fd=new FormData();fd.append('image',S.selFileEdit);
-      const ir=await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_KEY}`,{method:'POST',body:fd});
-      const id=await ir.json();
-      if(id.success)mediaUrl=id.data.url;else throw new Error('อัปโหลดรูปไม่สำเร็จ');
+      const b64 = await fileToBase64(S.selFileEdit);
+      const id = await postData('uploadImage', { imageBase64: b64 });
+      if(id.success)mediaUrl=id.url;else throw new Error('อัปโหลดรูปไม่สำเร็จ');
     }else if(editTarget.removeMedia){
       mediaUrl='';
     }
     btn.textContent='กำลังบันทึก...';
-    const body=new URLSearchParams({
-      action:'editPost',
-      email:S.user.email,
-      rowIdx:editTarget.rowIdx,
-      content:content,
-      mediaUrl:mediaUrl,
-      link:link,
-      hashtags:hashtags.join(',')
+    const d = await postData('editPost', {
+      email: S.user.email,
+      rowIdx: editTarget.rowIdx,
+      content: content,
+      mediaUrl: mediaUrl,
+      link: link,
+      hashtags: hashtags.join(',')
     });
-    const r=await apiFetch(API_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body});
-    const d=await r.json();
     if(!d.success)throw new Error(d.message||'บันทึกล้มเหลว');
     closeModal('ep-modal');
     toast('แก้ไขสำเร็จ','s','fas fa-check');
@@ -1799,7 +1845,7 @@ async function saveEditPost(){
 async function deletePost(ri){
   if(!confirm('ลบโพสต์นี้หรือไม่?'))return;
   try{
-    await apiFetch(API_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({action:'deletePost',email:S.user.email,rowIdx:ri})});
+    await postData('deletePost', { email: S.user.email, rowIdx: ri });
     toast('ลบสำเร็จ','s');
     await loadData(S.user.email,S.user.name,S.user.pic);
   }catch{toast('เกิดข้อผิดพลาด','e');}
@@ -1814,7 +1860,12 @@ async function saveEditCmt(){
   const t=D('ec-ta').value.trim();if(!t)return;
   const btn=D('ec-save');btn.disabled=true;btn.textContent='...';
   try{
-    await apiFetch(API_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({action:'editComment',email:S.user.email,rowIdx:editTarget.rowIdx,commentTime:editTarget.commentTime,text:t})});
+    await postData('editComment', {
+      email: S.user.email,
+      rowIdx: editTarget.rowIdx,
+      commentTime: editTarget.commentTime,
+      text: t
+    });
     closeModal('ec-modal');toast('แก้ไขสำเร็จ','s');
     await loadData(S.user.email,S.user.name,S.user.pic);
     const cm=D('cmts-'+editTarget.rowIdx);if(cm)cm.style.display='block';
@@ -1824,7 +1875,11 @@ async function saveEditCmt(){
 async function deleteCmt(ri,cTime){
   if(!confirm('ลบคอมเมนต์นี้?'))return;
   try{
-    await apiFetch(API_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({action:'deleteComment',email:S.user.email,rowIdx:ri,commentTime:cTime})});
+    await postData('deleteComment', {
+      email: S.user.email,
+      rowIdx: ri,
+      commentTime: cTime
+    });
     toast('ลบสำเร็จ','s');
     await loadData(S.user.email,S.user.name,S.user.pic);
     const cm=D('cmts-'+ri);if(cm)cm.style.display='block';
@@ -1850,8 +1905,9 @@ window.addEventListener('resize',checkBP);checkBP();
     try{
       const u=JSON.parse(saved);
       S.user=u;
+      S.idToken=u.idToken; // โหลด Token เก่ากลับมา
       applyUserUI();
-      loadData(u.email,u.name,u.pic);
+      loadData(u.email,u.name,u.pic, null, false);
     }catch{
       try{localStorage.removeItem(SESS_KEY);}catch{}
       loadData();
