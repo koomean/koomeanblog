@@ -734,6 +734,11 @@ textarea.si{min-height:85px;resize:none;line-height:1.5}
 <script>
 const API_URL='https://script.google.com/macros/s/AKfycbwBYhFTW68AfN4cYUJYS1DG7vw-Ocykx5kslSUQIeJJlfu0oeBIdi9xAhVmorVWQ4q7rg/exec';
 const SESS_KEY='kms_v3';
+const BLOG_CACHE_KEY='kms_blog_cache_v4';
+const BLOG_CACHE_MAX_AGE=5*60*1000;
+const LP_CACHE_KEY='kms_link_preview_cache_v1';
+const LP_CACHE_MAX_AGE=24*60*60*1000;
+const POST_POLL_MS=25000;
 const TIMEOUT=13000;
 
 const S={
@@ -749,6 +754,9 @@ const S={
 };
 let editTarget={};
 let toastTid;
+let pollTid=null;
+let postsRefreshing=false;
+let lastPostsSig='';
 
 const D=id=>document.getElementById(id);
 const isMob=()=>window.innerWidth<1024;
@@ -760,7 +768,12 @@ function isAdmin(){return getRole().includes('admin');}
 function esc(s){if(s==null)return'';const p=document.createElement('span');p.textContent=String(s);return p.innerHTML;}
 function fmt(ts){if(!ts)return'';const d=new Date(ts),now=new Date(),diff=now-d;if(isNaN(diff))return'';if(diff<60000)return'เมื่อกี้';if(diff<3600000)return`${Math.floor(diff/60000)} นาทีที่แล้ว`;if(diff<86400000)return`${Math.floor(diff/3600000)} ชม.ที่แล้ว`;return d.toLocaleDateString('th-TH',{day:'numeric',month:'short'})+' '+d.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'});}
 function decodeJwt(t){try{return JSON.parse(decodeURIComponent(atob(t.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')).split('').map(c=>'%'+('00'+c.charCodeAt(0).toString(16)).slice(-2)).join('')));}catch{return null;}}
-async function apiFetch(url,opts={}){const c=new AbortController(),tid=setTimeout(()=>c.abort(),TIMEOUT);try{const r=await fetch(url,{...opts,signal:c.signal});clearTimeout(tid);return r;}catch(e){clearTimeout(tid);throw e;}}
+async function apiFetch(url,opts={}){const c=new AbortController(),tid=setTimeout(()=>c.abort(),TIMEOUT);try{const r=await fetch(url,{cache:'no-store',...opts,signal:c.signal});clearTimeout(tid);return r;}catch(e){clearTimeout(tid);throw e;}}
+function apiUrl(params={}){
+  const q=new URLSearchParams(params);
+  q.set('_', Date.now().toString());
+  return API_URL+'?'+q.toString();
+}
 
 // ฟังก์ชัน POST ส่ง Data พร้อม JWT Token ไป Backend V3.0
 async function postData(action, params = {}) {
@@ -791,6 +804,107 @@ function fileToBase64(file) {
 
 function toast(msg,type='',icon=''){clearTimeout(toastTid);const t=D('toast');t.className='toast'+(type?' '+type:'');t.innerHTML=(icon?`<i class="${icon}"></i>`:'')+msg;requestAnimationFrame(()=>requestAnimationFrame(()=>t.classList.add('show')));toastTid=setTimeout(()=>t.classList.remove('show'),3200);}
 function loadImg(imgEl,src,fbEl,init='KM'){if(!src){if(fbEl){fbEl.style.display='flex';fbEl.textContent=init;}return;}const i=new Image();i.onload=()=>{imgEl.src=src;imgEl.classList.add('vis');if(fbEl)fbEl.style.display='none';};i.onerror=()=>{if(fbEl){fbEl.style.display='flex';fbEl.textContent=init;}};i.src=src;}
+
+function postsSig(posts){
+  return JSON.stringify((posts||[]).map(p=>[
+    p.rowIdx,p.timestamp,p.editedTime,p.content,p.mediaUrl,p.link,
+    Array.isArray(p.hashtags)?p.hashtags.join(','):'',
+    Array.isArray(p.likes)?p.likes.join('|'):'',
+    Array.isArray(p.comments)?p.comments.map(c=>[c.time,c.editedTime,c.text,c.email].join(':')).join('|'):''
+  ]));
+}
+
+function applySpaceProfile(sp){
+  if(!sp)return;
+  S.profile={
+    webTitle:sp.webTitle||'Space',
+    name:sp.name||'Koo Mean',
+    handle:sp.handle||'@koomean',
+    bio:sp.bio||'',
+    imageUrl:sp.imageUrl||'',
+    coverUrl:sp.coverUrl||''
+  };
+  document.title=S.profile.webTitle;
+  ['web-title','sb-title','set-app-name'].forEach(id=>{const el=D(id);if(el)el.textContent=S.profile.webTitle;});
+  D('feed-hdr-title').textContent=S.profile.webTitle;
+  D('prof-name').textContent=S.profile.name;
+  D('prof-handle').textContent=S.profile.handle||'@koomean';
+  D('prof-bio').textContent=S.profile.bio;
+  D('rw-bio').textContent=S.profile.bio||'';
+  if(sp.coverUrl)D('prof-cover').style.backgroundImage=`url(${sp.coverUrl})`;
+  const init=(S.profile.name||'KM').substring(0,2).toUpperCase();
+  D('av-fb').textContent=init;
+  loadImg(D('av-img'),S.profile.imageUrl,D('av-fb'),init);
+}
+
+function setPosts(posts, opts={}){
+  S.posts=Array.isArray(posts)?posts:[];
+  lastPostsSig=postsSig(S.posts);
+  D('stat-posts').textContent=S.posts.length;
+  D('prof-stats').style.display=S.posts.length?'flex':'none';
+  if(opts.render!==false)renderFeed();
+}
+
+function saveBlogCache(){
+  try{
+    localStorage.setItem(BLOG_CACHE_KEY,JSON.stringify({
+      ts:Date.now(),
+      profile:S.profile,
+      posts:S.posts
+    }));
+  }catch{}
+}
+
+function restoreBlogCache(){
+  try{
+    const raw=localStorage.getItem(BLOG_CACHE_KEY);
+    if(!raw)return false;
+    const c=JSON.parse(raw);
+    if(!c||!c.ts||Date.now()-c.ts>BLOG_CACHE_MAX_AGE)return false;
+    applySpaceProfile(c.profile);
+    setPosts(c.posts||[]);
+    return true;
+  }catch{return false;}
+}
+
+function getLpCache(url){
+  try{
+    const raw=localStorage.getItem(LP_CACHE_KEY);
+    const cache=raw?JSON.parse(raw):{};
+    const item=cache[url];
+    if(!item||Date.now()-item.ts>LP_CACHE_MAX_AGE)return null;
+    return item.data;
+  }catch{return null;}
+}
+
+function setLpCache(url,data){
+  try{
+    const raw=localStorage.getItem(LP_CACHE_KEY);
+    const cache=raw?JSON.parse(raw):{};
+    cache[url]={ts:Date.now(),data};
+    const keys=Object.keys(cache).slice(-80);
+    const trimmed={};
+    keys.forEach(k=>trimmed[k]=cache[k]);
+    localStorage.setItem(LP_CACHE_KEY,JSON.stringify(trimmed));
+  }catch{}
+}
+
+function renderLPCard(url,id,data){
+  const c=D(id);
+  if(!c)return;
+  const host=data.host||'';
+  const title=data.title||host;
+  if(!title&&!host)return;
+  c.innerHTML=`<a href="${esc(url)}" target="_blank" class="lp-card" rel="noopener">
+    <div class="lp-info">
+      <div class="lp-title">${esc(title)}</div>
+      ${data.desc ? `<div class="lp-desc">${esc(data.desc)}</div>` : ''}
+      <div class="lp-domain"><i class="fas fa-link"></i> ${esc(host)}</div>
+    </div>
+    ${data.img ? `<img src="${esc(data.img)}" class="lp-img" onerror="this.style.display='none'" loading="lazy" referrerpolicy="no-referrer">` : ''}
+  </a>`;
+  c.style.display='flex';
+}
 
 function openModal(id){D(id).classList.add('open');}
 function closeModal(id){D(id).classList.remove('open');}
@@ -1143,16 +1257,16 @@ function doRegister(){
 async function loadData(email='',name='',pic='',note=null, isFreshLogin=false){
   try{
     let url=API_URL;
-    let queryParams = [];
+    let queryParams = [`action=${note!==null?'register':'all'}`];
     if(S.idToken) queryParams.push(`idToken=${encodeURIComponent(S.idToken)}`);
     if(email){
       queryParams.push(`email=${encodeURIComponent(email)}`);
       queryParams.push(`name=${encodeURIComponent(name)}`);
       if(note!==null){
-        queryParams.push(`action=register`);
         queryParams.push(`note=${encodeURIComponent(note)}`);
       }
     }
+    queryParams.push(`_=${Date.now()}`);
     if(queryParams.length > 0) url += '?' + queryParams.join('&');
     const res=await apiFetch(url);
     if(!res.ok)throw new Error('HTTP '+res.status);
@@ -1172,26 +1286,7 @@ async function loadData(email='',name='',pic='',note=null, isFreshLogin=false){
     if(data.requireRegistration){openModal('reg-modal');return;}
 
     if(data.spaceProfile){
-      const sp=data.spaceProfile;
-      S.profile={
-        webTitle:sp.webTitle||'Space',
-        name:sp.name||'Koo Mean',
-        handle:sp.handle||'@koomean',
-        bio:sp.bio||'',
-        imageUrl:sp.imageUrl||'',
-        coverUrl:sp.coverUrl||''
-      };
-      document.title=S.profile.webTitle;
-      ['web-title','sb-title','set-app-name'].forEach(id=>{const el=D(id);if(el)el.textContent=S.profile.webTitle;});
-      D('feed-hdr-title').textContent=S.profile.webTitle;
-      D('prof-name').textContent=S.profile.name;
-      D('prof-handle').textContent=S.profile.handle||'@koomean';
-      D('prof-bio').textContent=S.profile.bio;
-      D('rw-bio').textContent=S.profile.bio||'';
-      if(sp.coverUrl)D('prof-cover').style.backgroundImage=`url(${sp.coverUrl})`;
-      const init=(S.profile.name||'KM').substring(0,2).toUpperCase();
-      D('av-fb').textContent=init;
-      loadImg(D('av-img'),S.profile.imageUrl,D('av-fb'),init);
+      applySpaceProfile(data.spaceProfile);
     }
 
     if(email&&data.user){
@@ -1204,8 +1299,7 @@ async function loadData(email='',name='',pic='',note=null, isFreshLogin=false){
       D('rw-auth').style.display='';
     }
 
-    S.posts=Array.isArray(data.posts)?data.posts:[];
-    if(S.posts.length){D('stat-posts').textContent=S.posts.length;D('prof-stats').style.display='flex';}
+    setPosts(data.posts||[], { render:false });
 
     try{
       const params=new URLSearchParams(window.location.search);
@@ -1217,6 +1311,8 @@ async function loadData(email='',name='',pic='',note=null, isFreshLogin=false){
     }catch{}
 
     renderFeed();
+    saveBlogCache();
+    startAutoRefresh();
 
     setTimeout(()=>{
       const params=new URLSearchParams(window.location.search);
@@ -1230,6 +1326,49 @@ async function loadData(email='',name='',pic='',note=null, isFreshLogin=false){
     D('feed').insertAdjacentHTML('beforeend',`<div class="err-banner"><i class="fas fa-exclamation-circle"></i><span>โหลดข้อมูลไม่สำเร็จ</span><button class="retry-btn" onclick="location.reload()">ลองใหม่</button></div>`);
   }
 }
+
+async function refreshPosts(opts={}){
+  if(postsRefreshing)return false;
+  if(document.hidden&&!opts.force)return false;
+  postsRefreshing=true;
+  try{
+    const params={action:'postsOnly'};
+    if(S.idToken)params.idToken=S.idToken;
+    const res=await apiFetch(apiUrl(params));
+    if(!res.ok)throw new Error('HTTP '+res.status);
+    const data=await res.json();
+    if(data.authError&&!opts.silent){
+      signOut(true);
+      await loadData();
+      return false;
+    }
+    const nextPosts=Array.isArray(data.posts)?data.posts:[];
+    const nextSig=postsSig(nextPosts);
+    if(nextSig!==lastPostsSig){
+      setPosts(nextPosts);
+      saveBlogCache();
+      if(opts.announce)toast('อัปเดตโพสต์ล่าสุดแล้ว','s','fas fa-rotate');
+      return true;
+    }
+    return false;
+  }catch(err){
+    if(!opts.silent)toast('อัปเดตโพสต์ไม่สำเร็จ','e','fas fa-wifi');
+    return false;
+  }finally{
+    postsRefreshing=false;
+  }
+}
+
+function startAutoRefresh(){
+  if(pollTid)return;
+  pollTid=setInterval(()=>refreshPosts({silent:true}),POST_POLL_MS);
+}
+
+document.addEventListener('visibilitychange',()=>{
+  if(!document.hidden)refreshPosts({silent:true,force:true});
+});
+window.addEventListener('focus',()=>refreshPosts({silent:true,force:true}));
+window.addEventListener('online',()=>refreshPosts({silent:false,force:true,announce:true}));
 
 function applyUserUI(){
   var creatorEl=D('creator');
@@ -1296,6 +1435,11 @@ async function fetchLP(url,id){
   try{
     let title='', desc='', img='', host='';
     host = new URL(url).hostname.replace('www.','');
+    const cached=getLpCache(url);
+    if(cached){
+      renderLPCard(url,id,cached);
+      return;
+    }
     try {
       const r = await fetch(`https://api.microlink.io/?url=${encodeURIComponent(url)}`);
       if(r.ok) {
@@ -1318,17 +1462,10 @@ async function fetchLP(url,id){
         }
       } catch(e) {}
     }
-    const c = D(id);
-    if(c && (title || host)){
-      c.innerHTML=`<a href="${esc(url)}" target="_blank" class="lp-card" rel="noopener">
-        <div class="lp-info">
-          <div class="lp-title">${esc(title || host)}</div>
-          ${desc ? `<div class="lp-desc">${esc(desc)}</div>` : ''}
-          <div class="lp-domain"><i class="fas fa-link"></i> ${esc(host)}</div>
-        </div>
-        ${img ? `<img src="${esc(img)}" class="lp-img" onerror="this.style.display='none'" loading="lazy" referrerpolicy="no-referrer">` : ''}
-      </a>`;
-      c.style.display='flex';
+    if(title || host){
+      const data={title:title||host,desc,img,host};
+      setLpCache(url,data);
+      renderLPCard(url,id,data);
     }
   }catch(e){
     console.error("Link Preview Error:", e);
@@ -1509,7 +1646,7 @@ async function submitCmt(ri){
     });
     if(d.success){
       inp.value='';
-      await loadData(S.user.email,S.user.name,S.user.pic);
+      await refreshPosts({force:true,silent:true});
       const cm=D('cmts-'+ri);if(cm)cm.style.display='block';
     }else toast('เกิดข้อผิดพลาด','e');
   }catch{toast('เชื่อมต่อล้มเหลว','e');}
@@ -1730,7 +1867,7 @@ async function submitPost(isMobile=false){
       removeImg(false);removeImg(true);
       closeCompose();
       toast('โพสต์สำเร็จ!','s','fas fa-check-circle');
-      await loadData(S.user.email,S.user.name,S.user.pic);
+      await refreshPosts({force:true,silent:true,announce:true});
     }else throw new Error(d.error||'บันทึกล้มเหลว');
   }catch(e){
     console.error(e);
@@ -1834,7 +1971,7 @@ async function saveEditPost(){
     if(!d.success)throw new Error(d.message||'บันทึกล้มเหลว');
     closeModal('ep-modal');
     toast('แก้ไขสำเร็จ','s','fas fa-check');
-    await loadData(S.user.email,S.user.name,S.user.pic);
+    await refreshPosts({force:true,silent:true});
   }catch(e){
     console.error(e);
     toast('เกิดข้อผิดพลาด: '+(e.message||''),'e');
@@ -1847,7 +1984,7 @@ async function deletePost(ri){
   try{
     await postData('deletePost', { email: S.user.email, rowIdx: ri });
     toast('ลบสำเร็จ','s');
-    await loadData(S.user.email,S.user.name,S.user.pic);
+    await refreshPosts({force:true,silent:true});
   }catch{toast('เกิดข้อผิดพลาด','e');}
 }
 function openEditCmt(ri,cTime){
@@ -1867,7 +2004,7 @@ async function saveEditCmt(){
       text: t
     });
     closeModal('ec-modal');toast('แก้ไขสำเร็จ','s');
-    await loadData(S.user.email,S.user.name,S.user.pic);
+    await refreshPosts({force:true,silent:true});
     const cm=D('cmts-'+editTarget.rowIdx);if(cm)cm.style.display='block';
   }catch{toast('เกิดข้อผิดพลาด','e');}
   finally{btn.disabled=false;btn.textContent='บันทึก';}
@@ -1881,7 +2018,7 @@ async function deleteCmt(ri,cTime){
       commentTime: cTime
     });
     toast('ลบสำเร็จ','s');
-    await loadData(S.user.email,S.user.name,S.user.pic);
+    await refreshPosts({force:true,silent:true});
     const cm=D('cmts-'+ri);if(cm)cm.style.display='block';
   }catch{toast('เกิดข้อผิดพลาด','e');}
 }
@@ -1900,6 +2037,7 @@ window.addEventListener('resize',checkBP);checkBP();
     const th=localStorage.getItem('kms_theme');
     if(th==='light'){isDark=true;toggleDark();}
   }catch{}
+  restoreBlogCache();
   const saved=(()=>{try{return localStorage.getItem(SESS_KEY);}catch{return null;}})();
   if(saved){
     try{
