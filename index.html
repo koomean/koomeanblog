@@ -2,9 +2,11 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title id="web-title">Koo Mean Space</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&display=swap" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 <script src="https://accounts.google.com/gsi/client" async defer></script>
@@ -353,6 +355,31 @@ textarea.si{min-height:85px;resize:none;line-height:1.5}
   .tag-filter-btn span{display:none}
   .tag-filter-btn{padding:7px 10px}
   .lp-img{width:90px;min-height:90px}
+}
+
+.rw,
+.sb-user-card,
+.acc-card,
+.creator{
+  content-visibility:auto;
+  contain-intrinsic-size:220px;
+}
+
+.feed-main{
+  contain:layout style;
+}
+
+@media(max-width:700px){
+  .feed-hdr,
+  .mob-nav,
+  .compose-modal,
+  .overlay,
+  .rw,
+  .modal,
+  .set-drawer{
+    backdrop-filter:none !important;
+    -webkit-backdrop-filter:none !important;
+  }
 }
 
 /* =========================
@@ -1636,6 +1663,7 @@ let toastTid;
 let pollTid=null;
 let postsRefreshing=false;
 let lastPostsSig='';
+let lpObserver=null;
 
 const D=id=>document.getElementById(id);
 const isMob=()=>window.innerWidth<1024;
@@ -1682,7 +1710,15 @@ function fileToBase64(file) {
 }
 
 function toast(msg,type='',icon=''){clearTimeout(toastTid);const t=D('toast');t.className='toast'+(type?' '+type:'');t.innerHTML=(icon?`<i class="${icon}"></i>`:'')+msg;requestAnimationFrame(()=>requestAnimationFrame(()=>t.classList.add('show')));toastTid=setTimeout(()=>t.classList.remove('show'),3200);}
-function loadImg(imgEl,src,fbEl,init='KM'){if(!src){if(fbEl){fbEl.style.display='flex';fbEl.textContent=init;}return;}const i=new Image();i.onload=()=>{imgEl.src=src;imgEl.classList.add('vis');if(fbEl)fbEl.style.display='none';};i.onerror=()=>{if(fbEl){fbEl.style.display='flex';fbEl.textContent=init;}};i.src=src;}
+function loadImg(imgEl,src,fbEl,init='KM'){
+  if(!src){if(fbEl){fbEl.style.display='flex';fbEl.textContent=init;}return;}
+  if(imgEl&&imgEl.dataset.src===src)return;
+  if(imgEl)imgEl.dataset.src=src;
+  const i=new Image();
+  i.onload=()=>{imgEl.src=src;imgEl.classList.add('vis');if(fbEl)fbEl.style.display='none';};
+  i.onerror=()=>{if(fbEl){fbEl.style.display='flex';fbEl.textContent=init;}};
+  i.src=src;
+}
 
 function postsSig(posts){
   return JSON.stringify((posts||[]).map(p=>[
@@ -1783,6 +1819,28 @@ function renderLPCard(url,id,data){
     ${data.img ? `<img src="${esc(data.img)}" class="lp-img" onerror="this.style.display='none'" loading="lazy" referrerpolicy="no-referrer">` : ''}
   </a>`;
   c.style.display='flex';
+}
+
+function queueLP(url,id){
+  const el=D(id);
+  if(!el)return;
+  if(!('IntersectionObserver' in window)){
+    fetchLP(url,id);
+    return;
+  }
+  el.dataset.url=url;
+  if(!lpObserver){
+    lpObserver=new IntersectionObserver(entries=>{
+      entries.forEach(entry=>{
+        if(!entry.isIntersecting)return;
+        const target=entry.target;
+        lpObserver.unobserve(target);
+        const u=target.dataset.url;
+        if(u)fetchLP(u,target.id);
+      });
+    },{root:D('feed-main')||null,rootMargin:'420px 0px',threshold:0.01});
+  }
+  lpObserver.observe(el);
 }
 
 function openModal(id){D(id).classList.add('open');}
@@ -2475,6 +2533,7 @@ function renderFeed(){
           </div></div>
       </div></article>`;
   });
+  if(lpObserver)lpObserver.disconnect();
   feed.innerHTML=html;
 
   document.querySelectorAll('.cmt-inp').forEach(inp=>{
@@ -2487,7 +2546,7 @@ function renderFeed(){
   lpQ.forEach(q=>{
     const k=q.id+'|'+q.url;
     if(seen.has(k))return;seen.add(k);
-    fetchLP(q.url,q.id);
+    queueLP(q.url,q.id);
   });
 }
 
