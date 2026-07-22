@@ -3324,7 +3324,7 @@ document.addEventListener('click',e=>{
 /* =========================================================
    NEW: Articles / Documents (เก็บใน Google Drive)
 ========================================================= */
-function articleIcon(t){return t==='pdf'?'fas fa-file-pdf':t==='html'?'fas fa-code':t==='image'?'fas fa-image':t==='office'?'fas fa-file-lines':t==='link'?'fas fa-arrow-up-right-from-square':'fas fa-file';}
+function articleIcon(t){return t==='pdf'?'fas fa-file-pdf':t==='html'?'fas fa-window-maximize':t==='image'?'fas fa-image':t==='office'?'fas fa-file-lines':t==='link'?'fas fa-arrow-up-right-from-square':'fas fa-file';}
 function articleIconColor(t){return t==='pdf'?'#ff5d7a':t==='html'?'#5ea2ff':t==='image'?'#2ad68a':t==='office'?'#f6b21a':'#8b6dff';}
 function articleTypeLabel(t){return t==='pdf'?'PDF':t==='html'?'หน้าเว็บ HTML':t==='image'?'รูปภาพ':t==='office'?'เอกสาร Office':t==='link'?'ลิงก์ภายนอก':'ไฟล์';}
 
@@ -3384,7 +3384,9 @@ async function openArticle(rowIdx){
       const ifr=document.createElement('iframe');
       ifr.className='av-frame';
       ifr.setAttribute('sandbox','allow-scripts allow-popups allow-forms allow-modals');
-      ifr.srcdoc=d.content||'<p style="font-family:sans-serif;padding:20px">ไฟล์ว่าง</p>';
+      // แทรก <base> + ตัวดักคลิกลิงก์ #หัวข้อ ให้เลื่อนภายใน iframe (กันไม่ให้เด้งกลับหน้าแรกของบล็อก)
+      const inj='<base href="about:srcdoc"><scr'+'ipt>(function(){document.addEventListener("click",function(e){var t=e.target;while(t&&t.tagName!=="A")t=t.parentElement;if(!t)return;var h=t.getAttribute("href")||"";if(h.charAt(0)==="#"){e.preventDefault();var id=decodeURIComponent(h.slice(1));if(!id){window.scrollTo({top:0,behavior:"smooth"});return;}var el=document.getElementById(id)||document.getElementsByName(id)[0];if(el)el.scrollIntoView({behavior:"smooth",block:"start"});}},true);})();</scr'+'ipt>';
+      ifr.srcdoc=inj+(d.content||'<p style="font-family:sans-serif;padding:20px">ไฟล์ว่าง</p>');
       body.innerHTML='';body.appendChild(ifr);
     }catch(e){
       body.innerHTML='<div class="status"><div class="status-ico">⚠️</div>เปิดไฟล์ HTML ไม่สำเร็จ</div>';
