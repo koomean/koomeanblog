@@ -1646,6 +1646,7 @@ const LP_CACHE_KEY='kms_link_preview_cache_v1';
 const LP_CACHE_MAX_AGE=24*60*60*1000;
 const POST_POLL_MS=25000;
 const TIMEOUT=13000;
+const CLIENT_UA=(navigator.userAgent||'').slice(0,300);
 
 const S={
   user:null,
@@ -1672,9 +1673,11 @@ function getRole(){return ((S.user||{}).role||'').toString().trim().toLowerCase(
 function canPost(){const r=getRole();return r.includes('admin')||r.includes('blog');}
 function isAdmin(){return getRole().includes('admin');}
 
-function esc(s){if(s==null)return'';const p=document.createElement('span');p.textContent=String(s);return p.innerHTML;}
+function esc(s){if(s==null)return'';return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function fmt(ts){if(!ts)return'';const d=new Date(ts),now=new Date(),diff=now-d;if(isNaN(diff))return'';if(diff<60000)return'เมื่อกี้';if(diff<3600000)return`${Math.floor(diff/60000)} นาทีที่แล้ว`;if(diff<86400000)return`${Math.floor(diff/3600000)} ชม.ที่แล้ว`;return d.toLocaleDateString('th-TH',{day:'numeric',month:'short'})+' '+d.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'});}
 function decodeJwt(t){try{return JSON.parse(decodeURIComponent(atob(t.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')).split('').map(c=>'%'+('00'+c.charCodeAt(0).toString(16)).slice(-2)).join('')));}catch{return null;}}
+// Google ID token อายุ ~1 ชม. — เช็คก่อน restore session
+function isTokenExpired(t){const p=decodeJwt(t);if(!p||!p.exp)return true;return (p.exp*1000)<=Date.now();}
 async function apiFetch(url,opts={}){const c=new AbortController(),tid=setTimeout(()=>c.abort(),TIMEOUT);try{const r=await fetch(url,{cache:'no-store',...opts,signal:c.signal});clearTimeout(tid);return r;}catch(e){clearTimeout(tid);throw e;}}
 function apiUrl(params={}){
   const q=new URLSearchParams(params);
@@ -1688,6 +1691,7 @@ async function postData(action, params = {}) {
   const fd = new URLSearchParams();
   fd.append('action', action);
   fd.append('idToken', S.idToken);
+  fd.append('ua', CLIENT_UA);
   for (const k in params) fd.append(k, params[k]);
   const r = await apiFetch(API_URL, {
     method: 'POST',
@@ -1709,7 +1713,7 @@ function fileToBase64(file) {
   });
 }
 
-function toast(msg,type='',icon=''){clearTimeout(toastTid);const t=D('toast');t.className='toast'+(type?' '+type:'');t.innerHTML=(icon?`<i class="${icon}"></i>`:'')+msg;requestAnimationFrame(()=>requestAnimationFrame(()=>t.classList.add('show')));toastTid=setTimeout(()=>t.classList.remove('show'),3200);}
+function toast(msg,type='',icon=''){clearTimeout(toastTid);const t=D('toast');t.className='toast'+(type?' '+type:'');t.innerHTML=(icon?`<i class="${icon}"></i>`:'')+esc(msg);requestAnimationFrame(()=>requestAnimationFrame(()=>t.classList.add('show')));toastTid=setTimeout(()=>t.classList.remove('show'),3200);}
 function loadImg(imgEl,src,fbEl,init='KM'){
   if(!src){if(fbEl){fbEl.style.display='flex';fbEl.textContent=init;}return;}
   if(imgEl&&imgEl.dataset.src===src)return;
@@ -1746,7 +1750,7 @@ function applySpaceProfile(sp){
   D('prof-handle').textContent=S.profile.handle||'@koomean';
   D('prof-bio').textContent=S.profile.bio;
   D('rw-bio').textContent=S.profile.bio||'';
-  if(sp.coverUrl)D('prof-cover').style.backgroundImage=`url(${sp.coverUrl})`;
+  if(sp.coverUrl)D('prof-cover').style.backgroundImage=`url("${String(sp.coverUrl).replace(/["'()\\]/g,'')}")`;
   const init=(S.profile.name||'KM').substring(0,2).toUpperCase();
   D('av-fb').textContent=init;
   loadImg(D('av-img'),S.profile.imageUrl,D('av-fb'),init);
@@ -2194,7 +2198,7 @@ function doRegister(){
 async function loadData(email='',name='',pic='',note=null, isFreshLogin=false){
   try{
     let url=API_URL;
-    let queryParams = [`action=${note!==null?'register':'all'}`];
+    let queryParams = [`action=${note!==null?'register':'all'}`, `ua=${encodeURIComponent(CLIENT_UA)}`];
     if(S.idToken) queryParams.push(`idToken=${encodeURIComponent(S.idToken)}`);
     if(email){
       queryParams.push(`email=${encodeURIComponent(email)}`);
@@ -2269,7 +2273,7 @@ async function refreshPosts(opts={}){
   if(document.hidden&&!opts.force)return false;
   postsRefreshing=true;
   try{
-    const params={action:'postsOnly'};
+    const params={action:'postsOnly',ua:CLIENT_UA};
     if(S.idToken)params.idToken=S.idToken;
     const res=await apiFetch(apiUrl(params));
     if(!res.ok)throw new Error('HTTP '+res.status);
@@ -2980,10 +2984,17 @@ window.addEventListener('resize',checkBP);checkBP();
   if(saved){
     try{
       const u=JSON.parse(saved);
-      S.user=u;
-      S.idToken=u.idToken; // โหลด Token เก่ากลับมา
-      applyUserUI();
-      loadData(u.email,u.name,u.pic, null, false);
+      if(u.idToken && isTokenExpired(u.idToken)){
+        // token หมดอายุแล้ว → เคลียร์ทิ้ง เข้าแบบ public
+        try{localStorage.removeItem(SESS_KEY);}catch{}
+        toast('เซสชันหมดอายุ กรุณาล็อกอินใหม่','','fas fa-clock');
+        loadData();
+      }else{
+        S.user=u;
+        S.idToken=u.idToken; // โหลด Token เก่ากลับมา
+        applyUserUI();
+        loadData(u.email,u.name,u.pic, null, false);
+      }
     }catch{
       try{localStorage.removeItem(SESS_KEY);}catch{}
       loadData();
