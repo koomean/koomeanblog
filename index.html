@@ -1260,6 +1260,63 @@ a:focus-visible{
   }
 }
 
+/* =========================================================
+   NEW: X-premium polish + features (lightbox, bookmark,
+   scroll-top, emoji, double-tap like, saved)
+========================================================= */
+
+/* --- Action bar: X-style colored hover circles --- */
+.post-acts{gap:6px}
+.post-acts .act{border-radius:999px;transition:color .18s var(--ease),background .18s var(--ease),transform .12s}
+.post-acts .act:active{transform:scale(.9)}
+.act[onclick^="toggleLike"]:hover{color:var(--like);background:rgba(240,69,106,.12)}
+.act[onclick^="toggleCmts"]:hover{color:var(--accent);background:rgba(94,162,255,.12)}
+.act[onclick^="sharePost"]:hover{color:var(--ok);background:rgba(42,214,138,.12)}
+.act-bm:hover{color:var(--accent);background:rgba(94,162,255,.12)}
+.act-bm.saved{color:var(--accent)}
+.act-bm.saved i{filter:drop-shadow(0 0 6px rgba(94,162,255,.5))}
+
+/* --- Post media clickable --- */
+.post-media{cursor:zoom-in;transition:filter .2s}
+.post-media:hover{filter:brightness(1.04)}
+.post{position:relative}
+
+/* --- Double-tap heart burst --- */
+.heart-burst{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:5}
+.heart-burst i{color:var(--like);font-size:5rem;filter:drop-shadow(0 6px 20px rgba(240,69,106,.55));animation:heartPop .8s var(--ease) forwards}
+@keyframes heartPop{0%{opacity:0;transform:scale(.3)}18%{opacity:1;transform:scale(1.15)}32%{transform:scale(.95)}45%{transform:scale(1.05)}100%{opacity:0;transform:scale(1.3) translateY(-14px)}}
+
+/* --- Verified glow polish --- */
+.verified{box-shadow:0 0 0 2px rgba(6,8,13,.6),0 4px 14px rgba(94,162,255,.4)}
+
+/* --- Sidebar 'saved' active state uses existing .sb-item.active --- */
+
+/* --- Lightbox --- */
+.lightbox{position:fixed;inset:0;z-index:120;background:rgba(3,5,10,.95);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:24px;animation:ovF .2s}
+.lightbox.open{display:flex}
+.lb-img{max-width:96vw;max-height:92vh;object-fit:contain;border-radius:12px;box-shadow:0 30px 90px rgba(0,0,0,.7);cursor:zoom-in;transition:transform .18s var(--ease);will-change:transform;user-select:none;-webkit-user-drag:none}
+.lb-img.zoomed{cursor:grab}
+.lb-close{position:absolute;top:18px;right:18px;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);color:#fff;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s,transform .2s;z-index:2}
+.lb-close:hover{background:rgba(255,255,255,.2);transform:rotate(90deg)}
+
+/* --- Scroll to top --- */
+.scroll-top-btn{position:fixed;right:24px;bottom:24px;width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;font-size:.95rem;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 30px rgba(94,162,255,.4);z-index:55;opacity:0;transform:translateY(20px) scale(.8);pointer-events:none;transition:opacity .3s var(--ease),transform .3s var(--ease)}
+.scroll-top-btn.show{opacity:1;transform:none;pointer-events:auto}
+.scroll-top-btn:hover{transform:translateY(-3px)}
+@media(max-width:1023px){.scroll-top-btn{bottom:calc(var(--mob-nav) + 18px);right:16px;width:42px;height:42px}}
+
+/* --- Emoji picker --- */
+.emoji-panel{position:fixed;z-index:90;width:min(300px,92vw);max-height:240px;overflow-y:auto;background:linear-gradient(180deg,rgba(20,29,45,.98),rgba(11,17,28,.98));border:1px solid var(--borderH);border-radius:16px;box-shadow:var(--shL);padding:10px;display:none;grid-template-columns:repeat(8,1fr);gap:2px;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.emoji-panel.open{display:grid;animation:fadeD .18s var(--ease)}
+.emoji-item{background:transparent;border:none;cursor:pointer;font-size:1.25rem;line-height:1;padding:6px;border-radius:9px;transition:background .15s,transform .1s}
+.emoji-item:hover{background:rgba(255,255,255,.08);transform:scale(1.2)}
+@media(max-width:600px){.emoji-panel{grid-template-columns:repeat(7,1fr)}}
+
+/* --- reduced motion --- */
+@media(prefers-reduced-motion:reduce){
+  .heart-burst i{animation-duration:.4s}
+  .scroll-top-btn,.post-acts .act,.lb-img{transition:none}
+}
 </style>
 </head>
 <body>
@@ -1274,6 +1331,9 @@ a:focus-visible{
     <nav class="sb-nav">
       <button class="sb-item active" id="sbn-home" onclick="navTo('home')">
         <i class="fas fa-house"></i><span>หน้าหลัก</span>
+      </button>
+      <button class="sb-item" id="sbn-saved" onclick="navTo('saved')">
+        <i class="fas fa-bookmark"></i><span>บันทึกไว้</span>
       </button>
       <button class="sb-item" id="sbn-settings" onclick="openSettings()">
         <i class="fas fa-gear"></i><span>ตั้งค่า</span>
@@ -1351,6 +1411,7 @@ a:focus-visible{
               <label for="file-in" class="tool-btn" title="แนบรูป"><i class="far fa-image"></i><span>รูปภาพ</span></label>
               <button type="button" class="tool-btn" id="btn-link" onclick="toggleField('link')"><i class="fas fa-link"></i><span>ลิงก์</span></button>
               <button type="button" class="tool-btn" id="btn-hashtag" onclick="toggleField('hashtag')"><i class="fas fa-hashtag"></i><span>แท็ก</span></button>
+              <button type="button" class="tool-btn" onclick="toggleEmoji(event,'post-ta')"><i class="far fa-face-smile"></i><span>อิโมจิ</span></button>
             </div>
             <div id="img-prev-wrap" class="img-prev-wrap" style="display:none">
               <img id="img-prev" class="img-prev" alt="">
@@ -1421,6 +1482,7 @@ a:focus-visible{
   <button class="mnav-btn active" id="mnav-home" onclick="navTo('home')"><i class="fas fa-house"></i><span>หน้าหลัก</span></button>
   <button class="mnav-btn" id="mnav-search" onclick="openMobSearch()"><i class="fas fa-magnifying-glass"></i><span>ค้นหา</span></button>
   <button class="mnav-fab hidden" id="mnav-fab" onclick="openCompose()" title="สร้างโพสต์"><i class="fas fa-plus"></i></button>
+  <button class="mnav-btn" id="mnav-saved" onclick="navTo('saved')"><i class="fas fa-bookmark"></i><span>บันทึก</span></button>
   <button class="mnav-btn" id="mnav-settings" onclick="openSettings()"><i class="fas fa-gear"></i><span>ตั้งค่า</span></button>
 </nav>
 
@@ -1461,6 +1523,7 @@ a:focus-visible{
           <label for="file-in-mob" class="tool-btn"><i class="far fa-image"></i><span>รูปภาพ</span></label>
           <button type="button" class="tool-btn" id="btn-link-mob" onclick="toggleField('link',null,true)"><i class="fas fa-link"></i><span>ลิงก์</span></button>
           <button type="button" class="tool-btn" id="btn-hashtag-mob" onclick="toggleField('hashtag',null,true)"><i class="fas fa-hashtag"></i><span>แท็ก</span></button>
+          <button type="button" class="tool-btn" onclick="toggleEmoji(event,'post-ta-mob')"><i class="far fa-face-smile"></i><span>อิโมจิ</span></button>
         </div>
         <div id="img-prev-wrap-mob" class="img-prev-wrap" style="display:none">
           <img id="img-prev-mob" class="img-prev" alt="">
@@ -1635,6 +1698,18 @@ a:focus-visible{
   </div>
 </div>
 
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lb-close" onclick="event.stopPropagation();closeLightbox()"><i class="fas fa-times"></i></button>
+  <img class="lb-img" id="lb-img" alt="" draggable="false">
+</div>
+
+<!-- Scroll to top -->
+<button class="scroll-top-btn" id="scroll-top-btn" onclick="scrollFeedTop()" title="ขึ้นบนสุด" aria-label="ขึ้นบนสุด"><i class="fas fa-arrow-up"></i></button>
+
+<!-- Emoji picker -->
+<div class="emoji-panel" id="emoji-panel"></div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -1657,7 +1732,8 @@ const S={
   selFile:null,
   selFileMob:null,
   selFileEdit:null,
-  activeTag:null
+  activeTag:null,
+  savedView:false
 };
 let editTarget={};
 let toastTid;
@@ -1895,6 +1971,8 @@ function filterByTag(tag){
   const norm=normalizeTag(tag);
   if(!norm){clearTagFilter();return;}
   S.activeTag=norm;
+  if(S.savedView){S.savedView=false;D('feed-hdr-title').textContent=S.profile.webTitle||'Timeline';}
+  setMN('home');setSBN('home');
   closeMobSearch();closeSettings();
   renderTagFilterBar();
   renderFeed();
@@ -2147,13 +2225,22 @@ function toggleDark(){
   try{localStorage.setItem('kms_theme',isDark?'dark':'light');}catch{}
 }
 
-function setMN(n){['home','search','settings'].forEach(k=>D('mnav-'+k)?.classList.toggle('active',k===n));}
-function setSBN(n){['home','settings'].forEach(k=>D('sbn-'+k)?.classList.toggle('active',k===n));}
+function setMN(n){['home','search','saved','settings'].forEach(k=>D('mnav-'+k)?.classList.toggle('active',k===n));}
+function setSBN(n){['home','saved','settings'].forEach(k=>D('sbn-'+k)?.classList.toggle('active',k===n));}
 function navTo(n){
   if(n==='home'){
     closeMobSearch();closeSettings();closeCompose();
     setMN('home');setSBN('home');
+    if(S.savedView){S.savedView=false;D('feed-hdr-title').textContent=S.profile.webTitle||'Timeline';renderFeed();}
     if(S.activeTag)clearTagFilter();
+    const fm=D('feed-main');if(fm)fm.scrollTo({top:0,behavior:'smooth'});
+  }else if(n==='saved'){
+    closeMobSearch();closeSettings();closeCompose();
+    if(S.activeTag){S.activeTag=null;renderTagFilterBar();}
+    S.savedView=true;
+    setMN('saved');setSBN('saved');
+    D('feed-hdr-title').textContent='บันทึกไว้';
+    renderFeed();
     const fm=D('feed-main');if(fm)fm.scrollTo({top:0,behavior:'smooth'});
   }
 }
@@ -2344,6 +2431,7 @@ function applyUserUI(){
     if(fabEl)fabEl.classList.remove('hidden');
     if(isAdmin())D('admin-grp').style.display='';
     else D('admin-grp').style.display='none';
+    if(!draftRestored){draftRestored=true;restoreDraft();}
   }else{
     if(creatorEl)creatorEl.classList.remove('show');
     D('admin-grp').style.display='none';
@@ -2354,13 +2442,25 @@ function applyUserUI(){
 /* =========== Content rendering =========== */
 function processContent(text,rowIdx,postLink){
   if(!text&&!postLink)return{html:'',media:'',targetLink:null};
-  let h=esc((text||'').trim());
+  const raw=(text||'').trim();
   const urlRx=/(https?:\/\/[^\s<]+)/g;
-  const urls=[...((text||'').match(urlRx)||[])];
+  const urls=[...(raw.match(urlRx)||[])];
   if(postLink&&!urls.includes(postLink))urls.unshift(postLink);
 
-  h=h.replace(urlRx,u=>`<a href="${esc(u)}" target="_blank" class="post-link" rel="noopener">${esc(u)}</a>`);
-  h=h.replace(/#([\wก-๙]+)/g,`<span class="post-link" style="cursor:pointer" onclick="filterByTag('$1')">#$1</span>`);
+  // Tokenize ข้อความดิบ: escape เฉพาะ text ธรรมดา แล้วสร้างลิงก์/แท็กจากข้อความดิบ
+  // (กัน regex ไปจับ HTML entity เช่น &#39; ที่เกิดจากการ escape → ทำให้ apostrophe เพี้ยน)
+  let h='', last=0, mm;
+  const tokenRx=/(https?:\/\/[^\s<]+)|#([\wก-๙]+)/g;
+  while((mm=tokenRx.exec(raw))!==null){
+    h+=esc(raw.slice(last,mm.index));
+    if(mm[1]){
+      h+=`<a href="${esc(mm[1])}" target="_blank" class="post-link" rel="noopener">${esc(mm[1])}</a>`;
+    }else{
+      h+=`<span class="post-link" style="cursor:pointer" onclick="filterByTag('${esc(mm[2])}')">#${esc(mm[2])}</span>`;
+    }
+    last=tokenRx.lastIndex;
+  }
+  h+=esc(raw.slice(last));
 
   let media='',tLink=null,ytId=null;
   for(const u of urls){
@@ -2432,19 +2532,21 @@ function renderFeed(){
   if(tagsHtml&&D('rw-trends')){D('rw-trends').style.display='block';D('trend-desktop').innerHTML=tagsHtml;}
   else if(D('rw-trends')){D('rw-trends').style.display='none';}
 
-  const postsToShow=S.activeTag
-    ? S.posts.filter(p=>postMatchesTag(p,S.activeTag))
-    : S.posts;
+  const postsToShow=S.savedView
+    ? S.posts.filter(isSaved)
+    : (S.activeTag ? S.posts.filter(p=>postMatchesTag(p,S.activeTag)) : S.posts);
 
   if(!postsToShow.length){
-    const emptyMsg=S.activeTag
+    const emptyMsg=S.savedView
+      ? '<div class="sec-label">🔖 บันทึกไว้</div><div class="status"><div class="status-ico">🔖</div>ยังไม่มีโพสต์ที่บันทึกไว้<br><span style="font-size:.8rem;color:var(--txt3);margin-top:4px">กดไอคอน 🔖 ที่โพสต์เพื่อบันทึกไว้อ่านทีหลัง</span></div>'
+      : S.activeTag
       ? `<div class="sec-label">#${esc(S.activeTag)}</div><div class="status"><div class="status-ico">🔍</div>ไม่พบโพสต์ในแท็ก #${esc(S.activeTag)}<br><button class="tag-filter-btn" style="margin-top:12px" onclick="clearTagFilter()">ดูทั้งหมด</button></div>`
       : '<div class="sec-label">Timeline</div><div class="status"><div class="status-ico">💬</div>ยังไม่มีโพสต์</div>';
     feed.innerHTML=emptyMsg;
     return;
   }
 
-  const label=S.activeTag?`#${esc(S.activeTag)} · ${postsToShow.length} โพสต์`:'Timeline';
+  const label=S.savedView?`🔖 บันทึกไว้ · ${postsToShow.length} โพสต์`:(S.activeTag?`#${esc(S.activeTag)} · ${postsToShow.length} โพสต์`:'Timeline');
   let html=`<div class="sec-label">${label}</div>`;
   const lpQ=[];
   
@@ -2510,7 +2612,7 @@ function renderFeed(){
         </div></div>`;
     });
 
-    html+=`<article class="post" id="post-${p.rowIdx}" style="animation-delay:${Math.min(i,8)*.04}s">
+    html+=`<article class="post" id="post-${p.rowIdx}" ondblclick="dblLike(event,${p.rowIdx})" style="animation-delay:${Math.min(i,8)*.04}s">
       <div class="post-av-w">
         <div class="post-av-fb">${pInit}</div>
         <img class="post-av" src="${pAvSrc}" onload="this.classList.add('vis');var fb=this.previousElementSibling;if(fb)fb.style.display='none'" onerror="this.style.display='none';var fb=this.previousElementSibling;if(fb)fb.style.display='flex'" alt="" loading="lazy" referrerpolicy="no-referrer">
@@ -2524,10 +2626,11 @@ function renderFeed(){
         <div class="post-txt">${ptxt}</div>
         ${tagsHtml2}
         ${media}
-        ${p.mediaUrl?`<img src="${esc(p.mediaUrl)}" class="post-media" onerror="this.style.display='none'" loading="lazy">`:''}
+        ${p.mediaUrl?`<img src="${esc(p.mediaUrl)}" class="post-media" onclick="openLightbox(this.src)" onerror="this.style.display='none'" loading="lazy">`:''}
         <div class="post-acts">
           <button class="act${liked?' liked':''}" onclick="toggleLike(${p.rowIdx})"><i class="${liked?'fas':'far'} fa-heart"></i>${likes.length||''}</button>
           <button class="act" onclick="toggleCmts(${p.rowIdx})"><i class="far fa-comment"></i>${cmts.length||''}</button>
+          <button class="act act-bm${isSaved(p)?' saved':''}" onclick="toggleSave(${p.rowIdx},this)" title="บันทึกโพสต์"><i class="${isSaved(p)?'fas':'far'} fa-bookmark"></i></button>
           <button class="act" onclick="sharePost(${p.rowIdx})" title="คัดลอกลิงก์โพสต์"><i class="fas fa-share"></i></button>
         </div>
         <div class="cmts" id="cmts-${p.rowIdx}">${chtml}
@@ -2611,7 +2714,11 @@ function updateCharCount(isMobile){
     this.style.height='auto';
     this.style.height=Math.min(this.scrollHeight,260)+'px';
     updateCharCount(id.endsWith('-mob'));
+    saveDraft();
   });
+});
+['link-in','link-in-mob','hashtag-in','hashtag-in-mob'].forEach(id=>{
+  const el=D(id);if(el)el.addEventListener('input',saveDraft);
 });
 
 function toggleField(field,force=null,isMobile=null){
@@ -2807,6 +2914,7 @@ async function submitPost(isMobile=false){
       ['btn-link','btn-link-mob','btn-hashtag','btn-hashtag-mob'].forEach(id=>{const e=D(id);if(e)e.classList.remove('active');});
       updateCharCount(false);updateCharCount(true);
       removeImg(false);removeImg(true);
+      clearDraft();
       closeCompose();
       toast('โพสต์สำเร็จ!','s','fas fa-check-circle');
       await refreshPosts({force:true,silent:true,announce:true});
@@ -2967,11 +3075,144 @@ async function deleteCmt(ri,cTime){
 
 /* =========== Keyboard shortcuts / responsive =========== */
 document.addEventListener('keydown',e=>{
-  if(e.key==='Escape'){closeMobSearch();closeSettings();closeCompose();document.querySelectorAll('.overlay.open').forEach(o=>o.classList.remove('open'));}
+  if(e.key==='Escape'){closeLightbox();closeMobSearch();closeSettings();closeCompose();document.querySelectorAll('.overlay.open').forEach(o=>o.classList.remove('open'));const ep=D('emoji-panel');if(ep)ep.classList.remove('open');}
   if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();isMob()?openMobSearch():D('rw-srch').focus();}
 });
 function checkBP(){const mob=isMob();const ml=D('mob-logo');if(ml)ml.style.display=mob?'flex':'none';}
 window.addEventListener('resize',checkBP);checkBP();
+
+/* =========================================================
+   NEW FEATURES: Bookmarks / Lightbox / Scroll-top /
+   Double-tap like / Draft / Emoji
+========================================================= */
+const SAVED_KEY='kms_saved_v1';
+const DRAFT_KEY='kms_draft_v1';
+
+/* ---- Bookmarks / Saved ---- */
+function loadSaved(){try{return new Set(JSON.parse(localStorage.getItem(SAVED_KEY)||'[]'));}catch{return new Set();}}
+let savedSet=loadSaved();
+function persistSaved(){try{localStorage.setItem(SAVED_KEY,JSON.stringify([...savedSet]));}catch{}}
+function postStableId(p){return (String(p.email||'')+'|'+String(p.timestamp||p.rowIdx||'')).toLowerCase();}
+function isSaved(p){return savedSet.has(postStableId(p));}
+function toggleSave(ri,btn){
+  const p=S.posts.find(x=>x.rowIdx===ri);if(!p)return;
+  const id=postStableId(p);
+  const on=!savedSet.has(id);
+  if(on){savedSet.add(id);toast('บันทึกโพสต์แล้ว','s','fas fa-bookmark');}
+  else{savedSet.delete(id);toast('เอาออกจากที่บันทึกแล้ว','','fas fa-bookmark');}
+  persistSaved();
+  if(btn){btn.classList.toggle('saved',on);const ic=btn.querySelector('i');if(ic)ic.className=(on?'fas':'far')+' fa-bookmark';}
+  if(S.savedView)renderFeed();
+}
+
+/* ---- Lightbox ---- */
+let lbScale=1,lbX=0,lbY=0,lbDown=false,lbMoved=false,lbSX=0,lbSY=0;
+function lbApply(){const img=D('lb-img');if(img)img.style.transform=`translate(${lbX}px,${lbY}px) scale(${lbScale})`;}
+function openLightbox(src){
+  if(!src)return;
+  const lb=D('lightbox'),img=D('lb-img');if(!lb||!img)return;
+  img.src=src;lbScale=1;lbX=0;lbY=0;lbApply();img.classList.remove('zoomed');
+  lb.classList.add('open');document.body.style.overflow='hidden';
+}
+function closeLightbox(){const lb=D('lightbox');if(lb&&lb.classList.contains('open')){lb.classList.remove('open');document.body.style.overflow='';const img=D('lb-img');if(img)img.src='';}}
+(function(){
+  const img=D('lb-img');if(!img)return;
+  img.addEventListener('click',e=>{
+    e.stopPropagation();
+    if(lbMoved){lbMoved=false;return;}          // เพิ่งลากมา อย่าเพิ่งซูม
+    lbScale=lbScale>1?1:2.2;
+    if(lbScale===1){lbX=0;lbY=0;}
+    lbApply();img.classList.toggle('zoomed',lbScale>1);
+  });
+  img.addEventListener('pointerdown',e=>{if(lbScale<=1)return;lbDown=true;lbMoved=false;lbSX=e.clientX-lbX;lbSY=e.clientY-lbY;try{img.setPointerCapture(e.pointerId);}catch{}});
+  img.addEventListener('pointermove',e=>{if(!lbDown)return;lbX=e.clientX-lbSX;lbY=e.clientY-lbSY;lbMoved=true;lbApply();});
+  img.addEventListener('pointerup',()=>{lbDown=false;});
+})();
+
+/* ---- Scroll to top ---- */
+(function(){
+  const fm=D('feed-main');if(!fm)return;
+  fm.addEventListener('scroll',()=>{const b=D('scroll-top-btn');if(b)b.classList.toggle('show',fm.scrollTop>600);},{passive:true});
+})();
+function scrollFeedTop(){const fm=D('feed-main');if(fm)fm.scrollTo({top:0,behavior:'smooth'});}
+
+/* ---- Double-tap to like (heart burst) ---- */
+function dblLike(e,ri){
+  if(e.target.closest('a,button,input,textarea,.drop-menu'))return;
+  if(!S.user){openModal('login-modal');return;}
+  const p=S.posts.find(x=>x.rowIdx===ri);if(!p)return;
+  const art=D('post-'+ri);
+  if(art){const h=document.createElement('div');h.className='heart-burst';h.innerHTML='<i class="fas fa-heart"></i>';art.appendChild(h);setTimeout(()=>h.remove(),800);}
+  if(!Array.isArray(p.likes))p.likes=[];
+  if(!p.likes.includes(S.user.email)){
+    p.likes.push(S.user.email);
+    lastPostsSig=postsSig(S.posts);
+    saveBlogCache();
+    const btn=art?art.querySelector('.post-acts .act'):null;
+    if(btn){btn.classList.add('liked');btn.innerHTML='<i class="fas fa-heart"></i>'+(p.likes.length||'');}
+    postData('toggleLike',{email:S.user.email,rowIdx:ri}).catch(()=>{});
+  }
+}
+
+/* ---- Draft autosave ---- */
+let draftRestored=false,draftTid;
+function saveDraft(){
+  clearTimeout(draftTid);
+  draftTid=setTimeout(()=>{
+    try{
+      const content=(D('post-ta')?.value||D('post-ta-mob')?.value||'').trim();
+      const link=(D('link-in')?.value||D('link-in-mob')?.value||'').trim();
+      const tags=(D('hashtag-in')?.value||D('hashtag-in-mob')?.value||'').trim();
+      if(content||link||tags)localStorage.setItem(DRAFT_KEY,JSON.stringify({content,link,tags}));
+      else localStorage.removeItem(DRAFT_KEY);
+    }catch{}
+  },400);
+}
+function restoreDraft(){
+  try{
+    const d=JSON.parse(localStorage.getItem(DRAFT_KEY)||'null');if(!d)return;
+    if(d.content){['post-ta','post-ta-mob'].forEach(id=>{const e=D(id);if(e){e.value=d.content;e.style.height='auto';e.style.height=Math.min(e.scrollHeight,260)+'px';}});}
+    if(d.link){['link-in','link-in-mob'].forEach(id=>{const e=D(id);if(e)e.value=d.link;});toggleField('link',true,false);toggleField('link',true,true);}
+    if(d.tags){['hashtag-in','hashtag-in-mob'].forEach(id=>{const e=D(id);if(e)e.value=d.tags;});toggleField('hashtag',true,false);toggleField('hashtag',true,true);}
+    updateCharCount(false);updateCharCount(true);
+    if(d.content||d.link||d.tags)toast('กู้ร่างที่เขียนค้างไว้','','fas fa-clock-rotate-left');
+  }catch{}
+}
+function clearDraft(){try{localStorage.removeItem(DRAFT_KEY);}catch{}clearTimeout(draftTid);}
+
+/* ---- Emoji picker ---- */
+const EMOJIS=['😀','😄','😁','😂','🤣','😊','😍','😘','😎','🤩','🥳','🤔','😉','😌','😴','😭','😅','😇','🙂','🙃','😜','😝','🤗','🤭','😏','😬','🙄','😮','😱','😤','😢','🥺','😐','😴','🤤','😋','🤪','👍','👎','👏','🙏','💪','🔥','✨','⭐','🎉','❤️','🧡','💛','💚','💙','💜','🖤','💯','✅','⚡','🌟','🌈','🎯','🚀','📌','💡','👀','🤝','☕','🍜','🎵','📷','😻'];
+let emojiTarget='post-ta';
+function toggleEmoji(e,targetId){
+  e.stopPropagation();
+  emojiTarget=targetId;
+  const panel=D('emoji-panel');if(!panel)return;
+  if(!panel.dataset.built){
+    panel.innerHTML=EMOJIS.map(em=>`<button type="button" class="emoji-item" onclick="insertEmoji('${em}')">${em}</button>`).join('');
+    panel.dataset.built='1';
+  }
+  const willOpen=!panel.classList.contains('open');
+  panel.classList.toggle('open',willOpen);
+  if(willOpen){
+    const r=e.currentTarget.getBoundingClientRect();
+    const pw=Math.min(300,window.innerWidth*0.92);
+    let left=Math.max(8,Math.min(r.left,window.innerWidth-pw-8));
+    let top=r.bottom+8;
+    if(top+250>window.innerHeight)top=Math.max(8,r.top-250);
+    panel.style.left=left+'px';panel.style.top=top+'px';
+  }
+}
+function insertEmoji(em){
+  const ta=D(emojiTarget);if(!ta)return;
+  const s=ta.selectionStart??ta.value.length,en=ta.selectionEnd??ta.value.length;
+  ta.value=ta.value.slice(0,s)+em+ta.value.slice(en);
+  ta.focus();ta.selectionStart=ta.selectionEnd=s+em.length;
+  ta.dispatchEvent(new Event('input'));
+}
+document.addEventListener('click',e=>{
+  const panel=D('emoji-panel');
+  if(panel&&panel.classList.contains('open')&&!e.target.closest('#emoji-panel'))panel.classList.remove('open');
+});
 
 /* =========== Boot =========== */
 (function(){
