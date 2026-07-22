@@ -1908,6 +1908,15 @@ function apiUrl(params={}){
   q.set('_', Date.now().toString());
   return API_URL+'?'+q.toString();
 }
+// อ่านข้อมูลผ่าน POST (ซ่อน idToken ออกจาก URL) — backend doPost ส่งต่อ read-action ให้ doGet
+function apiRead(action, extra){
+  const fd=new URLSearchParams();
+  fd.append('action', action);
+  fd.append('ua', CLIENT_UA);
+  if(S.idToken) fd.append('idToken', S.idToken);
+  if(extra) for(const k in extra) fd.append(k, extra[k]);
+  return apiFetch(API_URL, {method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:fd});
+}
 
 // ฟังก์ชัน POST ส่ง Data พร้อม JWT Token ไป Backend V3.0
 async function postData(action, params = {}) {
@@ -2478,19 +2487,9 @@ function doRegister(){
 /* =========== Load data =========== */
 async function loadData(email='',name='',pic='',note=null, isFreshLogin=false){
   try{
-    let url=API_URL;
-    let queryParams = [`action=${note!==null?'register':'all'}`, `ua=${encodeURIComponent(CLIENT_UA)}`];
-    if(S.idToken) queryParams.push(`idToken=${encodeURIComponent(S.idToken)}`);
-    if(email){
-      queryParams.push(`email=${encodeURIComponent(email)}`);
-      queryParams.push(`name=${encodeURIComponent(name)}`);
-      if(note!==null){
-        queryParams.push(`note=${encodeURIComponent(note)}`);
-      }
-    }
-    queryParams.push(`_=${Date.now()}`);
-    if(queryParams.length > 0) url += '?' + queryParams.join('&');
-    const res=await apiFetch(url);
+    const extra={};
+    if(email){ extra.email=email; extra.name=name; if(note!==null)extra.note=note; }
+    const res=await apiRead(note!==null?'register':'all', extra);
     if(!res.ok)throw new Error('HTTP '+res.status);
     const data=await res.json();
 
@@ -2557,9 +2556,7 @@ async function refreshPosts(opts={}){
   if(inCooldown())return false;
   postsRefreshing=true;
   try{
-    const params={action:'postsOnly',ua:CLIENT_UA};
-    if(S.idToken)params.idToken=S.idToken;
-    const res=await apiFetch(apiUrl(params));
+    const res=await apiRead('postsOnly');
     if(!res.ok)throw new Error('HTTP '+res.status);
     const data=await res.json();
     if(data.authError&&!opts.silent){
@@ -3451,7 +3448,7 @@ async function loadArticles(){
   const feed=D('feed');if(!feed)return;
   feed.innerHTML='<div class="art-head"><div class="sec-label" style="padding:0">📚 บทความ & เอกสาร</div></div><div class="status"><div class="loader-a"></div>กำลังโหลด...</div>';
   try{
-    const res=await apiFetch(apiUrl(readParams({action:'listArticles'})));
+    const res=await apiRead('listArticles');
     const data=await res.json();
     if(data&&data.code===429){noteRateLimited();throw new Error('rate');}
     S.articles=Array.isArray(data.articles)?data.articles:[];
@@ -3548,7 +3545,7 @@ async function openArticleViewer(a){
     let content=a.content;
     if(content==null){
       try{
-        const res=await apiFetch(apiUrl(readParams({action:'articleContent',id:a.fileId})));
+        const res=await apiRead('articleContent',{id:a.fileId});
         const d=await res.json();
         if(!d.success)throw new Error(d.message||'');
         content=d.content||'';
