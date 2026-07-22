@@ -1314,6 +1314,51 @@ a:focus-visible{
 .emoji-item:hover{background:rgba(255,255,255,.08);transform:scale(1.2)}
 @media(max-width:600px){.emoji-panel{grid-template-columns:repeat(7,1fr)}}
 
+/* --- Articles / Documents --- */
+.art-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 18px 12px}
+.art-upload-btn{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;border-radius:999px;padding:8px 16px;font-size:.82rem;font-weight:700;cursor:pointer;font-family:var(--font);display:flex;align-items:center;gap:6px;box-shadow:0 8px 20px rgba(94,162,255,.28);flex-shrink:0;transition:transform .2s}
+.art-upload-btn:hover{transform:translateY(-1px)}
+.art-card{display:flex;align-items:center;gap:13px;margin:0 14px 12px;padding:14px 16px;border-radius:18px;background:linear-gradient(180deg,rgba(19,27,42,.84),rgba(11,17,28,.92));border:1px solid rgba(255,255,255,.06);cursor:pointer;transition:transform .18s var(--ease),border-color .18s,box-shadow .18s;animation:fadeUp .35s var(--ease) both}
+.art-card:hover{transform:translateY(-2px);border-color:rgba(94,162,255,.3);box-shadow:0 16px 34px rgba(0,0,0,.3)}
+.art-ic{width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
+.art-body{flex:1;min-width:0}
+.art-title{font-weight:700;font-size:.95rem;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.art-desc{font-size:.8rem;color:var(--txt2);margin-top:2px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.art-meta{display:flex;align-items:center;gap:7px;margin-top:6px;font-size:.72rem;color:var(--txt3);flex-wrap:wrap}
+.art-badge{background:rgba(94,162,255,.12);color:#9dc0ff;border:1px solid rgba(94,162,255,.2);padding:2px 8px;border-radius:99px;font-weight:700}
+.art-del{background:transparent;border:none;color:var(--txt3);cursor:pointer;width:34px;height:34px;border-radius:50%;flex-shrink:0;transition:all .2s;font-size:.85rem}
+.art-del:hover{color:var(--err);background:rgba(255,93,122,.1)}
+.loader-a{width:26px;height:26px;border:3px solid rgba(255,255,255,.1);border-top-color:var(--accent);border-radius:50%;animation:spinA .8s linear infinite;margin:0 auto 8px}
+@keyframes spinA{to{transform:rotate(360deg)}}
+
+/* --- Article viewer (fullscreen) --- */
+.article-viewer{position:fixed;inset:0;z-index:110;background:#06080d;display:none;flex-direction:column;animation:ovF .2s}
+.article-viewer.open{display:flex}
+.av-hdr{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--border);background:rgba(10,14,22,.92);flex-shrink:0}
+.av-title{flex:1;font-weight:800;font-family:var(--display);font-size:1rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.av-close{width:38px;height:38px;border-radius:50%;background:var(--s2);border:1px solid var(--border);color:var(--txt);cursor:pointer;font-size:1rem;flex-shrink:0;transition:all .2s;display:flex;align-items:center;justify-content:center}
+.av-close:hover{background:var(--s3);transform:rotate(90deg)}
+.av-body{flex:1;overflow:auto;display:flex;flex-direction:column;min-height:0}
+.av-frame{flex:1;width:100%;border:none;background:#fff;min-height:0}
+.av-link{margin:auto;text-align:center;padding:44px 24px;display:flex;flex-direction:column;align-items:center;gap:16px;color:var(--txt2)}
+.av-link i{font-size:2.4rem;color:var(--accent)}
+.av-link p{font-size:1rem;font-weight:700;color:var(--txt);word-break:break-word}
+.av-link a{padding:11px 26px;border-radius:12px;text-decoration:none}
+
+/* --- Article upload modal --- */
+.au-drop{display:flex;align-items:center;gap:11px;padding:16px;border:1.5px dashed rgba(255,255,255,.18);border-radius:14px;cursor:pointer;color:var(--txt2);font-size:.85rem;transition:all .2s;margin-bottom:8px}
+.au-drop:hover{border-color:var(--accent);background:rgba(94,162,255,.05);color:var(--txt)}
+.au-drop i{font-size:1.3rem;color:var(--accent);flex-shrink:0}
+.au-drop span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.au-or{text-align:center;color:var(--txt3);font-size:.75rem;margin:8px 0}
+
+/* --- Mobile bottom-nav with more items --- */
+@media(max-width:1023px){
+  .mnav-btn{padding:6px 6px}
+  .mnav-btn span{font-size:.55rem}
+  .mnav-btn i{font-size:1rem}
+}
+
 /* --- Settings drawer: บังคับทึบแสง (เดิมโปร่งเห็นทะลุบนมือถือ) --- */
 .set-drawer{background:linear-gradient(180deg,#0d1220,#080b12) !important;backdrop-filter:none !important;-webkit-backdrop-filter:none !important}
 .set-sub{background:#0a0e17 !important}
@@ -1338,6 +1383,9 @@ a:focus-visible{
     <nav class="sb-nav">
       <button class="sb-item active" id="sbn-home" onclick="navTo('home')">
         <i class="fas fa-house"></i><span>หน้าหลัก</span>
+      </button>
+      <button class="sb-item" id="sbn-articles" onclick="navTo('articles')">
+        <i class="fas fa-book-open"></i><span>บทความ</span>
       </button>
       <button class="sb-item" id="sbn-saved" onclick="navTo('saved')">
         <i class="fas fa-bookmark"></i><span>บันทึกไว้</span>
@@ -1489,6 +1537,7 @@ a:focus-visible{
   <button class="mnav-btn active" id="mnav-home" onclick="navTo('home')"><i class="fas fa-house"></i><span>หน้าหลัก</span></button>
   <button class="mnav-btn" id="mnav-search" onclick="openMobSearch()"><i class="fas fa-magnifying-glass"></i><span>ค้นหา</span></button>
   <button class="mnav-fab hidden" id="mnav-fab" onclick="openCompose()" title="สร้างโพสต์"><i class="fas fa-plus"></i></button>
+  <button class="mnav-btn" id="mnav-articles" onclick="navTo('articles')"><i class="fas fa-book-open"></i><span>บทความ</span></button>
   <button class="mnav-btn" id="mnav-saved" onclick="navTo('saved')"><i class="fas fa-bookmark"></i><span>บันทึก</span></button>
   <button class="mnav-btn" id="mnav-settings" onclick="openSettings()"><i class="fas fa-gear"></i><span>ตั้งค่า</span></button>
 </nav>
@@ -1705,6 +1754,30 @@ a:focus-visible{
   </div>
 </div>
 
+<!-- Article viewer -->
+<div class="article-viewer" id="article-viewer">
+  <div class="av-hdr">
+    <div class="av-title" id="av-title">บทความ</div>
+    <button class="av-close" onclick="closeArticleViewer()" aria-label="ปิด"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="av-body" id="av-body"></div>
+</div>
+
+<!-- Article upload (admin) -->
+<div class="overlay" id="article-upload-modal">
+  <div class="modal wide" style="text-align:left;max-width:520px">
+    <div class="m-title" style="margin-bottom:6px">อัปโหลดบทความ</div>
+    <div class="m-sub" style="margin-bottom:16px">เก็บไฟล์ไว้ใน Google Drive · เฉพาะ Admin</div>
+    <div class="sf" style="margin-bottom:10px"><label class="sl">ชื่อบทความ</label><input class="si" id="au-title" placeholder="เช่น คู่มือการใช้งาน"></div>
+    <div class="sf" style="margin-bottom:10px"><label class="sl">คำอธิบาย (ไม่บังคับ)</label><textarea class="si" id="au-desc" placeholder="อธิบายสั้นๆ..."></textarea></div>
+    <label for="au-file" class="au-drop"><i class="fas fa-cloud-arrow-up"></i><span id="au-filename">เลือกไฟล์ (PDF, HTML, รูป, Word/PPT/Excel)</span></label>
+    <input type="file" id="au-file" accept=".pdf,.html,.htm,image/*,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.csv" style="display:none">
+    <div class="au-or">— หรือ —</div>
+    <div class="sf" style="margin-bottom:14px"><label class="sl">ลิงก์เว็บภายนอก (URL)</label><input class="si" id="au-url" placeholder="https://..."></div>
+    <div class="m-acts"><button class="btn-g" onclick="closeArticleUpload()">ยกเลิก</button><button class="btn-p" id="au-submit" onclick="submitArticleUpload()">อัปโหลด</button></div>
+  </div>
+</div>
+
 <!-- Lightbox -->
 <div class="lightbox" id="lightbox" onclick="closeLightbox()">
   <button class="lb-close" onclick="event.stopPropagation();closeLightbox()"><i class="fas fa-times"></i></button>
@@ -1740,7 +1813,9 @@ const S={
   selFileMob:null,
   selFileEdit:null,
   activeTag:null,
-  savedView:false
+  savedView:false,
+  articlesView:false,
+  articles:[]
 };
 let editTarget={};
 let toastTid;
@@ -2242,24 +2317,38 @@ function toggleDark(){
   try{localStorage.setItem('kms_theme',isDark?'dark':'light');}catch{}
 }
 
-function setMN(n){['home','search','saved','settings'].forEach(k=>D('mnav-'+k)?.classList.toggle('active',k===n));}
-function setSBN(n){['home','saved','settings'].forEach(k=>D('sbn-'+k)?.classList.toggle('active',k===n));}
+function setMN(n){['home','search','articles','saved','settings'].forEach(k=>D('mnav-'+k)?.classList.toggle('active',k===n));}
+function setSBN(n){['home','articles','saved','settings'].forEach(k=>D('sbn-'+k)?.classList.toggle('active',k===n));}
 function navTo(n){
-  if(n==='home'){
-    closeMobSearch();closeSettings();closeCompose();
-    setMN('home');setSBN('home');
-    if(S.savedView){S.savedView=false;D('feed-hdr-title').textContent=S.profile.webTitle||'Timeline';renderFeed();}
-    if(S.activeTag)clearTagFilter();
-    const fm=D('feed-main');if(fm)fm.scrollTo({top:0,behavior:'smooth'});
-  }else if(n==='saved'){
-    closeMobSearch();closeSettings();closeCompose();
+  closeMobSearch();closeSettings();closeCompose();
+  const fm=D('feed-main');
+  const cr=D('creator');
+  if(n==='articles'){
+    if(S.activeTag){S.activeTag=null;renderTagFilterBar();}
+    S.savedView=false;S.articlesView=true;
+    setMN('articles');setSBN('articles');
+    D('feed-hdr-title').textContent='บทความ';
+    if(cr)cr.style.display='none';
+    D('tag-filter-bar').style.display='none';
+    loadArticles();
+    if(fm)fm.scrollTo({top:0,behavior:'smooth'});
+    return;
+  }
+  if(cr)cr.style.display='';           // ออกจากโหมดบทความ → คืนช่องเขียนโพสต์
+  S.articlesView=false;
+  if(n==='saved'){
     if(S.activeTag){S.activeTag=null;renderTagFilterBar();}
     S.savedView=true;
     setMN('saved');setSBN('saved');
     D('feed-hdr-title').textContent='บันทึกไว้';
     renderFeed();
-    const fm=D('feed-main');if(fm)fm.scrollTo({top:0,behavior:'smooth'});
+  }else{
+    S.savedView=false;
+    setMN('home');setSBN('home');
+    if(S.activeTag){clearTagFilter();}
+    else{D('feed-hdr-title').textContent=S.profile.webTitle||'Timeline';renderFeed();}
   }
+  if(fm)fm.scrollTo({top:0,behavior:'smooth'});
 }
 
 /* =========== Auth =========== */
@@ -2542,6 +2631,7 @@ function sharePost(ri){
 }
 
 function renderFeed(){
+  if(S.articlesView)return;   // อยู่โหมดบทความ อย่าให้ auto-refresh เขียนทับ
   const sk=D('sk-posts');if(sk)sk.remove();
   const feed=D('feed');
 
@@ -3092,7 +3182,7 @@ async function deleteCmt(ri,cTime){
 
 /* =========== Keyboard shortcuts / responsive =========== */
 document.addEventListener('keydown',e=>{
-  if(e.key==='Escape'){closeLightbox();closeMobSearch();closeSettings();closeCompose();document.querySelectorAll('.overlay.open').forEach(o=>o.classList.remove('open'));const ep=D('emoji-panel');if(ep)ep.classList.remove('open');}
+  if(e.key==='Escape'){closeLightbox();closeArticleViewer();closeMobSearch();closeSettings();closeCompose();document.querySelectorAll('.overlay.open').forEach(o=>o.classList.remove('open'));const ep=D('emoji-panel');if(ep)ep.classList.remove('open');}
   if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();isMob()?openMobSearch():D('rw-srch').focus();}
 });
 function checkBP(){const mob=isMob();const ml=D('mob-logo');if(ml)ml.style.display=mob?'flex':'none';}
@@ -3230,6 +3320,145 @@ document.addEventListener('click',e=>{
   const panel=D('emoji-panel');
   if(panel&&panel.classList.contains('open')&&!e.target.closest('#emoji-panel'))panel.classList.remove('open');
 });
+
+/* =========================================================
+   NEW: Articles / Documents (เก็บใน Google Drive)
+========================================================= */
+function articleIcon(t){return t==='pdf'?'fas fa-file-pdf':t==='html'?'fas fa-code':t==='image'?'fas fa-image':t==='office'?'fas fa-file-lines':t==='link'?'fas fa-arrow-up-right-from-square':'fas fa-file';}
+function articleIconColor(t){return t==='pdf'?'#ff5d7a':t==='html'?'#5ea2ff':t==='image'?'#2ad68a':t==='office'?'#f6b21a':'#8b6dff';}
+function articleTypeLabel(t){return t==='pdf'?'PDF':t==='html'?'หน้าเว็บ HTML':t==='image'?'รูปภาพ':t==='office'?'เอกสาร Office':t==='link'?'ลิงก์ภายนอก':'ไฟล์';}
+
+async function loadArticles(){
+  const feed=D('feed');if(!feed)return;
+  feed.innerHTML='<div class="art-head"><div class="sec-label" style="padding:0">📚 บทความ & เอกสาร</div></div><div class="status"><div class="loader-a"></div>กำลังโหลด...</div>';
+  try{
+    const res=await apiFetch(apiUrl({action:'listArticles',ua:CLIENT_UA}));
+    const data=await res.json();
+    S.articles=Array.isArray(data.articles)?data.articles:[];
+    renderArticlesList();
+  }catch(e){
+    feed.innerHTML='<div class="art-head"><div class="sec-label" style="padding:0">📚 บทความ</div></div><div class="err-banner"><i class="fas fa-exclamation-circle"></i><span>โหลดบทความไม่สำเร็จ</span><button class="retry-btn" onclick="loadArticles()">ลองใหม่</button></div>';
+  }
+}
+
+function renderArticlesList(){
+  if(!S.articlesView)return;
+  const feed=D('feed');if(!feed)return;
+  const admin=isAdmin();
+  let h='<div class="art-head"><div class="sec-label" style="padding:0">📚 บทความ & เอกสาร</div>';
+  if(admin)h+='<button class="art-upload-btn" onclick="openArticleUpload()"><i class="fas fa-plus"></i> อัปโหลด</button>';
+  h+='</div>';
+  if(!S.articles.length){
+    h+='<div class="status"><div class="status-ico">📄</div>ยังไม่มีบทความ'+(admin?'<br><span style="font-size:.8rem;color:var(--txt3)">กด “อัปโหลด” เพื่อเพิ่มบทความแรก</span>':'')+'</div>';
+    feed.innerHTML=h;return;
+  }
+  S.articles.forEach((a,i)=>{
+    h+=`<div class="art-card" style="animation-delay:${Math.min(i,8)*.04}s" onclick="openArticle(${a.rowIdx})">
+      <div class="art-ic" style="color:${articleIconColor(a.type)};background:${articleIconColor(a.type)}1f"><i class="${articleIcon(a.type)}"></i></div>
+      <div class="art-body">
+        <div class="art-title">${esc(a.title)}</div>
+        ${a.desc?`<div class="art-desc">${esc(a.desc)}</div>`:''}
+        <div class="art-meta"><span class="art-badge">${esc(articleTypeLabel(a.type))}</span>${a.date?`<span>· ${esc(fmt(a.date))}</span>`:''}${a.by?`<span>· ${esc(String(a.by).split('@')[0])}</span>`:''}</div>
+      </div>
+      ${admin?`<button class="art-del" onclick="event.stopPropagation();deleteArticle(${a.rowIdx})" title="ลบบทความ"><i class="fas fa-trash-alt"></i></button>`:''}
+    </div>`;
+  });
+  feed.innerHTML=h;
+}
+
+async function openArticle(rowIdx){
+  const a=S.articles.find(x=>x.rowIdx===rowIdx);if(!a)return;
+  const modal=D('article-viewer'),body=D('av-body');
+  D('av-title').textContent=a.title||'บทความ';
+  body.innerHTML='<div class="status"><div class="loader-a"></div>กำลังเปิด...</div>';
+  modal.classList.add('open');document.body.style.overflow='hidden';
+  if(a.type==='link'){
+    body.innerHTML=`<div class="av-link"><i class="fas fa-arrow-up-right-from-square"></i><p>${esc(a.title)}</p><a class="btn-p" href="${esc(a.url)}" target="_blank" rel="noopener">เปิดเว็บไซต์</a></div>`;
+    return;
+  }
+  if(a.type==='html'){
+    try{
+      const res=await apiFetch(apiUrl({action:'articleContent',id:a.fileId,ua:CLIENT_UA}));
+      const d=await res.json();
+      if(!d.success)throw new Error(d.message||'');
+      const ifr=document.createElement('iframe');
+      ifr.className='av-frame';
+      ifr.setAttribute('sandbox','allow-scripts allow-popups allow-forms allow-modals');
+      ifr.srcdoc=d.content||'<p style="font-family:sans-serif;padding:20px">ไฟล์ว่าง</p>';
+      body.innerHTML='';body.appendChild(ifr);
+    }catch(e){
+      body.innerHTML='<div class="status"><div class="status-ico">⚠️</div>เปิดไฟล์ HTML ไม่สำเร็จ</div>';
+    }
+    return;
+  }
+  // pdf / image / office → Google Drive preview
+  const ifr=document.createElement('iframe');
+  ifr.className='av-frame';ifr.src=a.url;ifr.allow='autoplay';
+  body.innerHTML='';body.appendChild(ifr);
+}
+function closeArticleViewer(){const m=D('article-viewer');if(m&&m.classList.contains('open')){m.classList.remove('open');document.body.style.overflow='';D('av-body').innerHTML='';}}
+
+/* ---- Admin: upload / delete ---- */
+let artUploadFile=null;
+function openArticleUpload(){
+  if(!isAdmin())return toast('เฉพาะ Admin','e');
+  D('au-title').value='';D('au-desc').value='';D('au-url').value='';D('au-file').value='';
+  artUploadFile=null;D('au-filename').textContent='เลือกไฟล์ (PDF, HTML, รูป, Word/PPT/Excel)';
+  D('article-upload-modal').classList.add('open');
+}
+function closeArticleUpload(){D('article-upload-modal').classList.remove('open');}
+function detectArticleType(file){
+  const n=(file.name||'').toLowerCase(),t=file.type||'';
+  if(t==='application/pdf'||n.endsWith('.pdf'))return 'pdf';
+  if(t==='text/html'||n.endsWith('.html')||n.endsWith('.htm'))return 'html';
+  if(t.startsWith('image/'))return 'image';
+  return 'office';
+}
+D('au-file').addEventListener('change',function(){
+  const f=this.files[0];
+  if(!f){artUploadFile=null;D('au-filename').textContent='เลือกไฟล์ (PDF, HTML, รูป, Word/PPT/Excel)';return;}
+  artUploadFile=f;D('au-filename').textContent=f.name+'  ('+fmtBytes(f.size)+')';
+  if(!D('au-title').value.trim())D('au-title').value=f.name.replace(/\.[^.]+$/,'');
+});
+async function submitArticleUpload(){
+  if(!isAdmin())return toast('เฉพาะ Admin','e');
+  const title=D('au-title').value.trim();
+  const desc=D('au-desc').value.trim();
+  const url=D('au-url').value.trim();
+  if(!title)return toast('กรุณาใส่ชื่อบทความ','e');
+  const btn=D('au-submit'),old=btn.textContent;btn.disabled=true;
+  try{
+    if(url){
+      if(!/^https?:\/\//i.test(url)){toast('ลิงก์ต้องขึ้นต้น http:// หรือ https://','e');return;}
+      btn.textContent='กำลังบันทึก...';
+      const d=await postData('uploadArticle',{title,description:desc,type:'link',url});
+      if(!d.success)throw new Error(d.message||'');
+    }else{
+      if(!artUploadFile){toast('เลือกไฟล์ หรือใส่ลิงก์','e');return;}
+      if(artUploadFile.size>21*1024*1024){toast('ไฟล์ใหญ่เกิน 21MB','e');return;}
+      const type=detectArticleType(artUploadFile);
+      btn.textContent='กำลังอัปโหลด...';
+      const b64=await fileToBase64(artUploadFile);
+      const d=await postData('uploadArticle',{title,description:desc,type,mime:artUploadFile.type||'application/octet-stream',filename:artUploadFile.name,fileBase64:b64});
+      if(!d.success)throw new Error(d.message||'');
+    }
+    toast('อัปโหลดบทความสำเร็จ','s','fas fa-check');
+    closeArticleUpload();
+    loadArticles();
+  }catch(e){
+    toast('อัปโหลดไม่สำเร็จ: '+(e.message||'ลองใหม่'),'e');
+  }finally{btn.disabled=false;btn.textContent=old;}
+}
+async function deleteArticle(rowIdx){
+  if(!isAdmin())return;
+  if(!confirm('ลบบทความนี้? (ไฟล์ใน Drive จะถูกย้ายไปถังขยะ)'))return;
+  try{
+    const d=await postData('deleteArticle',{rowIdx});
+    if(!d.success)throw new Error(d.message||'');
+    toast('ลบบทความแล้ว','s');
+    loadArticles();
+  }catch(e){toast('ลบไม่สำเร็จ','e');}
+}
 
 /* =========== Boot =========== */
 (function(){
