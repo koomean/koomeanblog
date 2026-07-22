@@ -1850,7 +1850,7 @@ a:focus-visible{
 <script>
 const API_URL='https://koomean-proxy.meanchannel52.workers.dev';
 // ผ่าน Cloudflare Worker (กัน flood) → Worker ส่งต่อไป Apps Script
-// ตัวตรง (เผื่อย้อนกลับ): https://script.google.com/macros/s/AKfycbwBYhFTW68AfN4cYUJYS1DG7vw-Ocykx5kslSUQIeJJlfu0oeBIdi9xAhVmorVWQ4q7rg/exec
+// (URL Apps Script จริงเก็บไว้ใน Environment Variable "UPSTREAM" ของ Worker — ไม่ควรใส่ในหน้าเว็บ เพราะจะ bypass Cloudflare ได้)
 const SESS_KEY='kms_v3';
 const BLOG_CACHE_KEY='kms_blog_cache_v4';
 const BLOG_CACHE_MAX_AGE=5*60*1000;
