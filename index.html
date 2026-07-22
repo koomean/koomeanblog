@@ -621,7 +621,9 @@ a:focus-visible{
   background:
     radial-gradient(circle at 20% 20%, rgba(94,162,255,.28), transparent 30%),
     radial-gradient(circle at 85% 15%, rgba(139,109,255,.22), transparent 26%),
-    linear-gradient(135deg, #0b1830 0%, #08101d 45%, #06080d 100%) !important;
+    linear-gradient(135deg, #0b1830 0%, #08101d 45%, #06080d 100%);
+  background-size:cover;
+  background-position:center;
 }
 
 .prof-cover::before{
@@ -1312,6 +1314,11 @@ a:focus-visible{
 .emoji-item:hover{background:rgba(255,255,255,.08);transform:scale(1.2)}
 @media(max-width:600px){.emoji-panel{grid-template-columns:repeat(7,1fr)}}
 
+/* --- Settings drawer: บังคับทึบแสง (เดิมโปร่งเห็นทะลุบนมือถือ) --- */
+.set-drawer{background:linear-gradient(180deg,#0d1220,#080b12) !important;backdrop-filter:none !important;-webkit-backdrop-filter:none !important}
+.set-sub{background:#0a0e17 !important}
+.set-hdr,.set-sub-hdr{background:rgba(255,255,255,.03)}
+
 /* --- reduced motion --- */
 @media(prefers-reduced-motion:reduce){
   .heart-burst i{animation-duration:.4s}
@@ -1826,7 +1833,17 @@ function applySpaceProfile(sp){
   D('prof-handle').textContent=S.profile.handle||'@koomean';
   D('prof-bio').textContent=S.profile.bio;
   D('rw-bio').textContent=S.profile.bio||'';
-  if(sp.coverUrl)D('prof-cover').style.backgroundImage=`url("${String(sp.coverUrl).replace(/["'()\\]/g,'')}")`;
+  const pc=D('prof-cover');
+  if(pc){
+    if(sp.coverUrl){
+      const safeCover=String(sp.coverUrl).replace(/["'()\\]/g,'');
+      pc.style.backgroundImage=`linear-gradient(180deg, rgba(6,8,13,.10), rgba(6,8,13,.60)), url("${safeCover}")`;
+      pc.style.backgroundSize='cover';
+      pc.style.backgroundPosition='center';
+    }else{
+      pc.style.backgroundImage='';
+    }
+  }
   const init=(S.profile.name||'KM').substring(0,2).toUpperCase();
   D('av-fb').textContent=init;
   loadImg(D('av-img'),S.profile.imageUrl,D('av-fb'),init);
