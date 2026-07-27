@@ -71,10 +71,10 @@
 
 # 👨‍💻 AUTHOR
 **koomean**
-> "Built with Gemini and Claude, driven by M4 Power."
+> "Built with ChatGPT 5.6 Sol and Claude Fable 5, driven by M5 Power."
 
 **Personal Gears:**
-- 💻 **Macbook Air M4** (Development Machine)
+- 💻 **Macbook Air M5** (Development Machine)
 - 📱 **iPhone 14 Pro** (Testing Device)
 - 🗄️ **Synology DS423+** (Home Data Storage)
 
