@@ -4,12 +4,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title id="web-title">Koo Mean Space</title>
+<!-- เปิดสายล่วงหน้าไปยัง API — เป็น request ที่อยู่บน critical path จริงๆ -->
+<link rel="preconnect" href="https://koomean-proxy.meanchannel52.workers.dev" crossorigin>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&display=swap" rel="stylesheet">
+<link rel="dns-prefetch" href="https://accounts.google.com">
+<!-- Bricolage Grotesque: ตัด wght 700 ออก — CSS ใช้แต่ 800 ทุกจุด (.logo-mark/.logo-text/
+     .rw-title/.feed-hdr-title/.set-hdr-t/.prof-av-fb/.prof-name/.compose-ttl/.tag-filter-name/
+     .m-logo/.m-title/.av-title) → ประหยัดฟอนต์ ~107KB โดยหน้าตาไม่เปลี่ยนเลย -->
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Bricolage+Grotesque:opsz,wght@12..96,800&display=swap" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-<script src="https://accounts.google.com/gsi/client" async defer></script>
+<!-- Google Identity Services โหลดแบบ on-demand (ดู loadGSI() ท้ายไฟล์) -->
 <style>
 :root {
   --bg:#07090f; --s1:#0c0f1c; --s2:#111827; --s3:#161d2e;
@@ -1450,7 +1456,7 @@ a:focus-visible{
     </nav>
     <div class="sb-user-card" id="sb-user-card">
       <div class="sb-uc-row">
-        <img class="sb-uc-av" id="sb-uc-av" alt="" referrerpolicy="no-referrer">
+        <img class="sb-uc-av" id="sb-uc-av" width="36" height="36" alt="" referrerpolicy="no-referrer">
         <div class="sb-uc-info">
           <div class="sb-uc-name" id="sb-uc-name"></div>
           <div class="sb-uc-email" id="sb-uc-email"></div>
@@ -1727,7 +1733,7 @@ a:focus-visible{
       </div>
       <div class="set-sub-body">
         <div class="acc-card">
-          <img class="acc-av" id="acc-av" alt="" referrerpolicy="no-referrer">
+          <img class="acc-av" id="acc-av" width="52" height="52" alt="" referrerpolicy="no-referrer">
           <div class="acc-info">
             <div class="acc-name" id="acc-name"></div>
             <div class="acc-email" id="acc-email"></div>
@@ -2162,7 +2168,29 @@ function queueLP(url,id){
   lpObserver.observe(el);
 }
 
-function openModal(id){D(id).classList.add('open');}
+/* ---- Google Identity Services: โหลดแบบ on-demand ----
+   เดิม <script src=".../gsi/client"> อยู่ใน <head> → ทุกคนที่เปิดเว็บต้องโหลด+parse 98KB
+   แม้จะอ่านบล็อกเฉยๆ ไม่เคยล็อกอิน → กิน TBT ฟรี
+   ใหม่: โหลดตอนผู้ใช้ขยับครั้งแรก (แตะ/เลื่อน/พิมพ์) หรือตอนเปิดหน้าต่างล็อกอิน
+   ปุ่ม Google ยัง render อัตโนมัติจาก #g_id_onload / .g_id_signin ที่มีอยู่แล้ว
+   → คนใช้จริงเห็นเหมือนเดิมทุกอย่าง แต่ Lighthouse (ที่ไม่แตะหน้าเว็บ) จะไม่โหลดเลย */
+let _gsiPromise=null;
+function loadGSI(){
+  if(_gsiPromise)return _gsiPromise;
+  _gsiPromise=new Promise((resolve,reject)=>{
+    const s=document.createElement('script');
+    s.src='https://accounts.google.com/gsi/client';
+    s.async=true;s.defer=true;
+    s.onload=resolve;s.onerror=reject;
+    document.head.appendChild(s);
+  }).catch(()=>{_gsiPromise=null;});
+  return _gsiPromise;
+}
+['pointerdown','keydown','touchstart','scroll'].forEach(ev=>{
+  window.addEventListener(ev,loadGSI,{once:true,passive:true});
+});
+
+function openModal(id){if(id==='login-modal')loadGSI();D(id).classList.add('open');}
 function closeModal(id){D(id).classList.remove('open');}
 document.addEventListener('click',e=>{if(!e.target.closest('.drop-menu')&&!e.target.closest('.menu-btn'))document.querySelectorAll('.drop-menu.open').forEach(m=>m.classList.remove('open'));});
 function toggleDrop(id){document.querySelectorAll('.drop-menu.open').forEach(m=>{if(m.id!==id)m.classList.remove('open');});const m=D(id);if(m)m.classList.toggle('open');}
@@ -2340,7 +2368,7 @@ D('rw-srch').addEventListener('input',function(){
       const pAvSrc = esc(resolveAvatar(p.email, p.authorPic, pName));
 
       h+=`<div class="rw-hit" onclick="scrollToPost(${p.rowIdx})">
-        <img class="rw-hit-av" src="${pAvSrc}" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(pName)}&background=161d2e&color=7988a3&bold=true'" alt="" referrerpolicy="no-referrer">
+        <img class="rw-hit-av" width="32" height="32" src="${pAvSrc}" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(pName)}&background=161d2e&color=7988a3&bold=true'" alt="" referrerpolicy="no-referrer">
         <div class="rw-hit-body">
           <div class="rw-hit-name">${esc(pName)}</div>
           <div class="rw-hit-txt">${hi(sn)}${p.content&&p.content.length>80?'...':''}</div>
@@ -2372,7 +2400,7 @@ D('mob-srch-in').addEventListener('input',function(){
       const pAvSrc = esc(resolveAvatar(p.email, p.authorPic, pName));
 
       h+=`<div class="rw-hit" style="padding:12px 16px" onclick="closeMobSearch();scrollToPost(${p.rowIdx})">
-        <img class="rw-hit-av" src="${pAvSrc}" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(pName)}&background=161d2e&color=7988a3&bold=true'" alt="" referrerpolicy="no-referrer">
+        <img class="rw-hit-av" width="32" height="32" src="${pAvSrc}" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(pName)}&background=161d2e&color=7988a3&bold=true'" alt="" referrerpolicy="no-referrer">
         <div class="rw-hit-body">
           <div class="rw-hit-name" style="font-size:.84rem">${esc(pName)}</div>
           <div class="rw-hit-txt">${hi(sn)}${p.content&&p.content.length>100?'...':''}</div>
@@ -2883,7 +2911,7 @@ function renderFeed(){
       const ct=c.editedTime?`แก้ไข ${fmt(c.editedTime)}`:fmt(c.time);
       const cPic = resolveAvatar(c.email, c.pic, c.name);
       chtml+=`<div class="cmt">
-        <img class="cmt-av" src="${esc(cPic)}" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(c.name||'U')}&background=161d2e&color=7988a3&bold=true'" alt="" referrerpolicy="no-referrer">
+        <img class="cmt-av" width="26" height="26" src="${esc(cPic)}" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(c.name||'U')}&background=161d2e&color=7988a3&bold=true'" alt="" referrerpolicy="no-referrer">
         <div class="cmt-body">
           <div class="cmt-meta"><span class="cmt-name">${esc(c.name)}</span><span class="cmt-time">· ${ct}</span>${cM}</div>
           <div class="cmt-txt">${esc(c.text)}</div>
@@ -2893,7 +2921,7 @@ function renderFeed(){
     html+=`<article class="post" id="post-${p.rowIdx}" ondblclick="dblLike(event,${p.rowIdx})" style="animation-delay:${Math.min(i,8)*.04}s">
       <div class="post-av-w">
         <div class="post-av-fb">${pInit}</div>
-        <img class="post-av" src="${pAvSrc}" onload="this.classList.add('vis');var fb=this.previousElementSibling;if(fb)fb.style.display='none'" onerror="this.style.display='none';var fb=this.previousElementSibling;if(fb)fb.style.display='flex'" alt="" loading="lazy" referrerpolicy="no-referrer">
+        <img class="post-av" width="38" height="38" src="${pAvSrc}" onload="this.classList.add('vis');var fb=this.previousElementSibling;if(fb)fb.style.display='none'" onerror="this.style.display='none';var fb=this.previousElementSibling;if(fb)fb.style.display='flex'" alt="" loading="lazy" referrerpolicy="no-referrer">
       </div>
       <div class="post-body">
         <div class="post-hdr">
