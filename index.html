@@ -156,6 +156,21 @@ textarea.si{min-height:85px;resize:none;line-height:1.5}
 .save-btn{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;border-radius:10px;padding:11px;font-weight:700;font-size:.9rem;cursor:pointer;transition:all .2s;margin-top:4px}
 .save-btn:hover{box-shadow:0 4px 20px rgba(75,143,255,.4)}.save-btn:disabled{opacity:.5;cursor:not-allowed}
 
+/* R2 usage guard (admin only) */
+.r2-quota{margin:0 12px 14px;padding:14px;border:1px solid var(--border);border-radius:14px;background:var(--s2)}
+.r2-quota.locked{border-color:rgba(255,78,106,.55);background:rgba(255,78,106,.07)}
+.r2-q-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}
+.r2-q-title{font-size:.82rem;font-weight:800}
+.r2-q-state{font-size:.68rem;font-weight:800;color:var(--ok)}
+.r2-quota.locked .r2-q-state{color:var(--err)}
+.r2-q-row{margin-top:10px}
+.r2-q-label{display:flex;justify-content:space-between;gap:8px;font-size:.7rem;color:var(--txt2);margin-bottom:5px}
+.r2-q-track{height:7px;border-radius:99px;background:rgba(255,255,255,.1);overflow:hidden}
+.r2-q-fill{display:block;width:0;height:100%;background:linear-gradient(90deg,var(--accent),#2ad68a);border-radius:inherit;transition:width .25s}
+.r2-q-fill.warn{background:linear-gradient(90deg,#f6b21a,#ff5d7a)}
+.r2-q-fill.danger{background:#ff4e6a}
+.r2-q-note{font-size:.66rem;color:var(--txt3);line-height:1.5;margin-top:10px}
+
 /* Account info card */
 .acc-card{background:var(--s2);border:1px solid var(--border);border-radius:var(--rs);padding:14px;display:flex;align-items:center;gap:12px;margin-bottom:10px}
 .acc-av{width:52px;height:52px;border-radius:50%;object-fit:cover;flex-shrink:0;background:var(--s3)}
@@ -1677,6 +1692,13 @@ a:focus-visible{
           <div class="set-info"><div class="set-name">แก้ไขโปรไฟล์</div><div class="set-desc">ชื่อ, Bio, รูปภาพ, ปกหน้า</div></div>
           <i class="fas fa-chevron-right set-arr"></i>
         </button>
+        <div class="r2-quota" id="r2-quota-card" aria-live="polite">
+          <div class="r2-q-head"><div class="r2-q-title"><i class="fas fa-database" style="color:var(--accent);margin-right:5px"></i>โควตา Cloudflare R2</div><div class="r2-q-state" id="r2-q-state">กำลังโหลด…</div></div>
+          <div class="r2-q-row"><div class="r2-q-label"><span>พื้นที่เก็บไฟล์</span><span id="r2-q-storage-text">—</span></div><div class="r2-q-track"><i class="r2-q-fill" id="r2-q-storage-bar"></i></div></div>
+          <div class="r2-q-row"><div class="r2-q-label"><span>เขียนไฟล์ (Class A)</span><span id="r2-q-a-text">—</span></div><div class="r2-q-track"><i class="r2-q-fill" id="r2-q-a-bar"></i></div></div>
+          <div class="r2-q-row"><div class="r2-q-label"><span>อ่านไฟล์ (Class B)</span><span id="r2-q-b-text">—</span></div><div class="r2-q-track"><i class="r2-q-fill" id="r2-q-b-bar"></i></div></div>
+          <div class="r2-q-note" id="r2-q-note">จำกัดการใช้ไว้ที่ 80% ของโควต้าฟรีเพื่อสำรอง 20% · รีเซ็ตรอบบิลวันที่ 11</div>
+        </div>
         <div class="set-div"></div>
       </div>
       <div class="set-gl">การแสดงผล</div>
@@ -1924,6 +1946,7 @@ const S={
 };
 let editTarget={};
 let toastTid;
+let r2QuotaPollTid=null;
 let pollTid=null;
 let postsRefreshing=false;
 let lastPostsSig='';
@@ -1955,6 +1978,35 @@ function apiRead(action, extra){
   if(S.idToken) fd.append('idToken', S.idToken);
   if(extra) for(const k in extra) fd.append(k, extra[k]);
   return apiFetch(API_URL, {method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:fd});
+}
+
+function fmtCount(n){return Number(n||0).toLocaleString('en-US');}
+function fmtStorage(bytes){const b=Number(bytes||0);return b>=1e9?(b/1e9).toFixed(2)+' GB':b>=1e6?(b/1e6).toFixed(1)+' MB':b>=1e3?(b/1e3).toFixed(0)+' KB':b+' B';}
+function setR2Meter(id,textId,used,free,format){
+  const pct=Math.max(0,Math.min(100,Number(used||0)/Math.max(1,Number(free||1))*100));
+  const bar=D(id),label=D(textId);if(!bar||!label)return;
+  bar.style.width=pct.toFixed(2)+'%';bar.classList.toggle('warn',pct>=70&&pct<80);bar.classList.toggle('danger',pct>=80);
+  label.textContent=`${format(used)} / ${format(free)} · ${Math.max(0,100-pct).toFixed(0)}% เหลือ`;
+}
+async function loadR2Quota(){
+  if(!isAdmin()||!S.idToken)return;
+  const card=D('r2-quota-card');if(!card)return;
+  try{
+    const res=await apiRead('r2Quota');const data=await res.json();
+    if(!res.ok||!data.success||!data.quota)throw new Error(data.message||'โหลดโควตาไม่สำเร็จ');
+    const q=data.quota;
+    setR2Meter('r2-q-storage-bar','r2-q-storage-text',q.used.storageBytes,q.free.storageBytes,fmtStorage);
+    setR2Meter('r2-q-a-bar','r2-q-a-text',q.used.classA,q.free.classA,fmtCount);
+    setR2Meter('r2-q-b-bar','r2-q-b-text',q.used.classB,q.free.classB,fmtCount);
+    card.classList.toggle('locked',!!q.locked);
+    const reset=new Date(q.resetAt),date=Number.isNaN(reset.getTime())?'รอบถัดไป':reset.toLocaleDateString('th-TH',{day:'numeric',month:'short'});
+    D('r2-q-state').textContent=q.locked?`หยุดใช้ · รีเซ็ต ${date}`:`พร้อมใช้ · รีเซ็ต ${date}`;
+    D('r2-q-note').textContent=q.locked?`ถึงขีดจำกัดสำรอง 20% แล้ว Worker หยุดเรียก R2 จนถึงรอบบิลวันที่ ${date}`:`หยุดอัตโนมัติเมื่อใช้ถึง 80% ของโควต้าฟรี · รีเซ็ตวันที่ ${date} · พื้นที่เก็บเป็นยอดปัจจุบันแบบเผื่อความปลอดภัย`;
+  }catch(e){
+    D('r2-q-state').textContent='โหลดไม่สำเร็จ';
+    D('r2-q-note').textContent=e.message||'ตรวจสอบการเชื่อมต่อกับ Worker';
+  }
+  if(!r2QuotaPollTid)r2QuotaPollTid=setInterval(()=>{if(isAdmin()&&D('set-panel')?.classList.contains('open'))loadR2Quota();},60000);
 }
 
 // ส่งข้อมูลพร้อม Google ID token ไปยัง Cloudflare Worker + D1
@@ -2417,7 +2469,7 @@ function scrollToPost(ri){
 }
 
 /* =========== Settings =========== */
-function openSettings(){D('set-panel').classList.add('open');setMN('settings');}
+function openSettings(){D('set-panel').classList.add('open');setMN('settings');if(isAdmin())loadR2Quota();}
 function closeSettings(){D('set-panel').classList.remove('open');closeSub();if(!D('mob-srch').classList.contains('open'))setMN('home');}
 function openSub(n){D('sub-'+n).classList.add('open');if(n==='profile-edit')prefillEdit();if(n==='account')prefillAccount();}
 function closeSub(){document.querySelectorAll('.set-sub.open').forEach(s=>s.classList.remove('open'));}
