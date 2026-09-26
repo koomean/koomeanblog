@@ -1862,7 +1862,7 @@ a:focus-visible{
 <!-- Article upload (admin) -->
 <div class="overlay" id="article-upload-modal">
   <div class="modal wide" style="text-align:left;max-width:540px">
-    <div class="m-title" id="au-modal-title" style="margin-bottom:6px">อัปโหลดบทความ</div>
+    <div class="m-title" id="au-modal-title" style="margin-bottom:6px">อัปโหลดบทความ</div><div class="sub" style="margin-bottom:12px">ไฟล์บทความจะจัดเก็บใน Google Drive และข้อมูลรายการ/สิทธิ์เก็บใน D1 · อัปโหลดครั้งแรกจะขอสิทธิ์ Drive</div>
     <div class="m-sub" style="margin-bottom:14px">จัดเก็บไฟล์ผ่าน Cloudflare · เฉพาะ Admin</div>
     <div class="au-scroll">
       <div class="sf" style="margin-bottom:10px"><label class="sl">ชื่อบทความ</label><input class="si" id="au-title" placeholder="เช่น คู่มือการใช้งาน"></div>
@@ -1965,6 +1965,16 @@ function fmt(ts){if(!ts)return'';const d=new Date(ts),now=new Date(),diff=now-d;
 function decodeJwt(t){try{return JSON.parse(decodeURIComponent(atob(t.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')).split('').map(c=>'%'+('00'+c.charCodeAt(0).toString(16)).slice(-2)).join('')));}catch{return null;}}
 // Google ID token อายุ ~1 ชม. — เช็คก่อน restore session
 function isTokenExpired(t){const p=decodeJwt(t);if(!p||!p.exp)return true;return (p.exp*1000)<=Date.now();}
+let driveAccessToken='',driveAccessTokenExpiresAt=0;
+async function getDriveAccessToken(){
+  if(driveAccessToken&&driveAccessTokenExpiresAt>Date.now()+60000)return driveAccessToken;
+  await loadGSI();
+  if(!window.google?.accounts?.oauth2)throw new Error('Google Drive authorization is unavailable');
+  return new Promise((resolve,reject)=>{
+    const client=google.accounts.oauth2.initTokenClient({client_id:'906677442222-kmjgsmta70n24aoaq7osm9c1l7g1fb89.apps.googleusercontent.com',scope:'openid email https://www.googleapis.com/auth/drive.file',include_granted_scopes:true,callback:response=>{if(response.error)return reject(new Error('อนุญาต Google Drive ไม่สำเร็จ: '+response.error));driveAccessToken=response.access_token||'';driveAccessTokenExpiresAt=Date.now()+Math.max(60,Number(response.expires_in||3600)-60)*1000;resolve(driveAccessToken)}});
+    client.requestAccessToken({prompt:''});
+  });
+}
 async function apiFetch(url,opts={}){const c=new AbortController(),tid=setTimeout(()=>c.abort(),TIMEOUT);try{const r=await fetch(url,{cache:'no-store',...opts,signal:c.signal});clearTimeout(tid);return r;}catch(e){clearTimeout(tid);throw e;}}
 function apiUrl(params={}){
   const q=new URLSearchParams(params);
@@ -2033,17 +2043,12 @@ async function postData(action, params = {}) {
 function postDataProgress(action, params = {}, onProgress, timeoutMs = 300000) {
   if (!S.idToken) return Promise.reject(new Error("Authentication required"));
   if (inCooldown()) return Promise.reject(new Error('ระบบกำลังพักชั่วคราว กรุณารอสักครู่'));
-  const fd = new URLSearchParams();
-  fd.append('action', action);
-  fd.append('idToken', S.idToken);
-  fd.append('ua', CLIENT_UA);
-  for (const k in params) fd.append(k, params[k]);
-  const body = fd.toString();
+  const body = JSON.stringify({action,idToken:S.idToken,ua:CLIENT_UA,...params});
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
     xhr.open('POST', API_URL, true);
     xhr.timeout = timeoutMs;
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.setRequestHeader('Content-Type', 'application/json');
     if (xhr.upload && onProgress) {
       xhr.upload.onprogress = e => { if (e.lengthComputable) onProgress(e.loaded / e.total, e.loaded, e.total); };
       xhr.upload.onload = () => onProgress(1, 1, 1);
@@ -3994,11 +3999,13 @@ async function submitArticleUpload(){
         const type=detectArticleType(artUploadFile);
         btn.textContent='กำลังอัปโหลด...';
         setUploadProgress(0,'กำลังอ่านไฟล์...');
-        // 0–15% = อ่านไฟล์เป็น base64, 15–97% = ส่งขึ้นเซิร์ฟเวอร์, 97–100% = รอ Drive บันทึก
+        // ไฟล์บทความเก็บใน Google Drive; ข้อมูล metadata และสิทธิ์เก็บใน D1
+        const driveAccessToken=await getDriveAccessToken();
+        setUploadProgress(3,'กำลังเชื่อมต่อ Google Drive...');
         const b64=await fileToBase64(artUploadFile,f=>setUploadProgress(f*15,'กำลังอ่านไฟล์...'));
         setUploadProgress(15,'กำลังอัปโหลด '+fmtBytes(artUploadFile.size)+'...');
         const d=await postDataProgress('uploadArticle',
-          {title,description:desc,type,mime:artUploadFile.type||'application/octet-stream',filename:artUploadFile.name,fileBase64:b64,tags,group,password},
+          {title,description:desc,type,mime:artUploadFile.type||'application/octet-stream',filename:artUploadFile.name,fileBase64:b64,driveAccessToken,tags,group,password},
           f=>setUploadProgress(15+f*82, f>=1?'กำลังบันทึกไฟล์...':'กำลังอัปโหลด '+fmtBytes(artUploadFile.size)+'...'));
         if(!d.success)throw new Error(d.message||'');
       }
@@ -4035,9 +4042,10 @@ async function moveArticle(rowIdx,dir){
 }
 async function deleteArticle(rowIdx){
   if(!isAdmin())return;
-  if(!confirm('ลบบทความนี้? (ไฟล์ใน Drive จะถูกย้ายไปถังขยะ)'))return;
+  if(!confirm('ลบบทความนี้? ไฟล์ใน Google Drive จะถูกย้ายไปถังขยะ'))return;
   try{
-    const d=await postData('deleteArticle',{rowIdx});
+    const driveAccessToken=await getDriveAccessToken();
+    const d=await postData('deleteArticle',{rowIdx,driveAccessToken});
     if(!d.success)throw new Error(d.message||'');
     toast('ลบบทความแล้ว','s');
     loadArticles();
@@ -4081,3 +4089,5 @@ async function deleteArticle(rowIdx){
   }catch(e){}
 })();
 </script>
+</body>
+</html>
