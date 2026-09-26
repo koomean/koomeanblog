@@ -18,7 +18,7 @@
 <a id="overview"></a>
 ## 🌟 ภาพรวม
 
-หน้าเว็บคือ [`index koomeanblog.html`](index%20koomeanblog.html) เป็น HTML/CSS/JavaScript ในไฟล์เดียว จึงไม่ต้อง build ก่อนนำไปวางบน static hosting
+หน้าเว็บคือ [`https://blog.koomean.com/`](index%20koomeanblog.html) เป็น HTML/CSS/JavaScript ในไฟล์เดียว จึงไม่ต้อง build ก่อนนำไปวางบน static hosting
 
 ```mermaid
 flowchart LR
