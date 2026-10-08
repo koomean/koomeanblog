@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title id="web-title">Koo Mean Space</title>
+<title id="web-title">Koo Mean Blog</title>
 <!-- เปิดสายล่วงหน้าไปยัง API — เป็น request ที่อยู่บน critical path จริงๆ -->
 <link rel="preconnect" href="https://koomean-proxy.meanchannel52.workers.dev" crossorigin>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1943,7 +1943,7 @@ function noteRateLimited(){
 const S={
   user:null,
   idToken:null, // เก็บ Google JWT
-  profile:{webTitle:'Space',name:'',handle:'@koomean',bio:'',imageUrl:'',coverUrl:''},
+  profile:{webTitle:'Koo Mean Blog',name:'',handle:'@koomean',bio:'',imageUrl:'',coverUrl:''},
   posts:[],
   pendingJwt:null,
   selFile:null,
@@ -2113,7 +2113,7 @@ function postsSig(posts){
 function applySpaceProfile(sp){
   if(!sp)return;
   S.profile={
-    webTitle:sp.webTitle||'Space',
+    webTitle:sp.webTitle||'Koo Mean Blog',
     name:sp.name||'Koo Mean',
     handle:sp.handle||'@koomean',
     bio:sp.bio||'',
@@ -2343,7 +2343,7 @@ function shareTagLink(){
   };
   if(navigator.share&&isMob()){
     navigator.share({
-      title:'#'+S.activeTag+' · '+(S.profile.webTitle||'Koo Mean Space'),
+      title:'#'+S.activeTag+' · '+(S.profile.webTitle||'Koo Mean Blog'),
       text:'ดูโพสต์ในหมวด #'+S.activeTag,
       url:url
     }).catch(()=>{
