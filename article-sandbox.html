@@ -1,0 +1,12 @@
+<!doctype html><html lang="th"><head><meta charset="utf-8"><meta name="referrer" content="no-referrer"><meta http-equiv="Content-Security-Policy" content="default-src https: data: blob:; script-src 'unsafe-inline' https:; style-src 'unsafe-inline' https:; object-src 'none'; base-uri 'none'; form-action 'none'"><title>บทความ HTML</title></head><body><script>
+// This document always runs inside an opaque-origin sandbox (no allow-same-origin).
+// Only the embedding Blog may supply content; credentials are never sent here.
+if(window.parent!==window)window.addEventListener('message',function receive(event){
+ if(event.source!==parent||event.origin!=='https://blog.koomean.com'||event.data?.type!=='blog-article'||typeof event.data.content!=='string'||event.data.content.length>2*1024*1024)return;
+ window.removeEventListener('message',receive);
+ const policy=document.querySelector('meta[http-equiv="Content-Security-Policy"]').outerHTML;
+ const content=event.data.content;
+ document.open();document.write('<!doctype html><html><head><meta charset="utf-8"><meta name="referrer" content="no-referrer">'+policy+'</head><body>'+content+'</body></html>');document.close();
+ document.addEventListener('keydown',event=>{if(event.key==='Escape')parent.postMessage({type:'blog-article-close'},'https://blog.koomean.com')});
+});
+</script></body></html>

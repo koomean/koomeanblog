@@ -1,0 +1,26 @@
+[
+  {
+    "kind": "avatar",
+    "file": "media-9707e31627a255de.webp",
+    "beforeBytes": 347040,
+    "afterBytes": 9260,
+    "originalWidth": 1800,
+    "originalHeight": 1800
+  },
+  {
+    "kind": "cover",
+    "file": "media-c34486913565949c.webp",
+    "beforeBytes": 67754,
+    "afterBytes": 9520,
+    "originalWidth": 1800,
+    "originalHeight": 1350
+  },
+  {
+    "kind": "post",
+    "file": "media-5d17635a62e1dc9d.webp",
+    "beforeBytes": 3382424,
+    "afterBytes": 159676,
+    "originalWidth": 3263,
+    "originalHeight": 2447
+  }
+]

@@ -1,0 +1,17 @@
+{
+  "https://koomean-proxy.meanchannel52.workers.dev/?action=profileImage&site=blog&kind=avatar&v=2026-09-26T11%3A49%3A20.719Z": {
+    "src": "assets/media-9707e31627a255de.webp",
+    "width": 256,
+    "height": 256
+  },
+  "https://koomean-proxy.meanchannel52.workers.dev/?action=profileImage&site=blog&kind=background&v=2026-09-26T11%3A49%3A33.257Z": {
+    "src": "assets/media-c34486913565949c.webp",
+    "width": 1600,
+    "height": 1200
+  },
+  "https://koomean-proxy.meanchannel52.workers.dev/assets/blog%2F7f7de7b7-1de1-4a28-862c-093bf25f1220-post-image": {
+    "src": "assets/media-5d17635a62e1dc9d.webp",
+    "width": 1600,
+    "height": 1200
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "name": "koomean-blog",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "verify": "node scripts/verify-blog.mjs",
+    "test": "node --test tests/security.test.mjs",
+    "test:browser": "node tests/browser.mjs"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.1",
+    "playwright": "^1.62.1"
+  }
+}
