@@ -1,4 +1,5 @@
 import fs from 'node:fs';import path from 'node:path';import assert from 'node:assert/strict';import {chromium} from 'playwright';
+const watchdog=setTimeout(()=>{console.error('Browser regression exceeded 90 seconds');process.exit(1)},90000);watchdog.unref();
 const output=process.env.BLOG_TEST_OUTPUT||'/tmp/koomean-blog-tests';fs.mkdirSync(output,{recursive:true});
 const browser=await chromium.launch({headless:true,...(process.env.BLOG_CHROME_PATH?{executablePath:process.env.BLOG_CHROME_PATH}:{})});
 const page=await browser.newPage({viewport:{width:1440,height:960}}),errors=[],violations=[],calls=[],requests=[];let count=0;

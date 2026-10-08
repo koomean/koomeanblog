@@ -20,7 +20,14 @@ jobs:
       - run: npm ci --ignore-scripts
       - run: npm run build
       - run: npm test
-      - run: npx playwright install --with-deps chromium
+      - name: Prepare browser for regression checks
+        timeout-minutes: 5
+        run: |
+          if command -v google-chrome >/dev/null 2>&1; then
+            printf 'BLOG_CHROME_PATH=%s\n' "$(command -v google-chrome)" >> "$GITHUB_ENV"
+          else
+            npx playwright install --with-deps chromium
+          fi
       - run: npm run test:browser
       - name: Verify Blog content and domain
         run: node scripts/verify-blog.mjs
