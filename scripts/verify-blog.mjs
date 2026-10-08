@@ -1,5 +1,9 @@
 import fs from 'node:fs';import assert from 'node:assert/strict';import {pathToFileURL} from 'node:url';
-export function verifyBlog(html,js=''){
+export function verifyBlog(html,js='',options={}){
+ // Cloudflare may add its own probe after Pages serves our verified artifact.
+ // Its execution remains blocked by CSP. Never relax checks on generated files.
+ if(options.live)html=html.replace(/<script>([\s\S]*?)<\/script>/g,(tag,body)=>body.startsWith('(function(){function c(){var b=a.contentDocument')&&body.includes('/cdn-cgi/challenge-platform/scripts/jsd/main.js')?'':tag);
+
  for(const marker of ['id="feed"','id="article-viewer"','id="article-upload-modal"'])assert.ok(html.includes(marker),'Missing Blog identity: '+marker);
  assert.ok(!html.includes('id="search-input"'),'SITE must never be deployed as Blog');
  assert.ok(html.includes('script-src-attr \'none\''),'Inline event handlers must stay disabled');
@@ -16,5 +20,5 @@ export async function verifyLocal(){
  assert.ok(fs.existsSync('article-sandbox.html'));console.log('PASS Blog identity, domain, CSP and release assets');
 }
 if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href){
- if(process.argv[2]?.startsWith('https://')){const url=new URL(process.argv[2]);assert.equal(url.hostname,'blog.koomean.com');const r=await fetch(url,{redirect:'error',signal:AbortSignal.timeout(20000)});assert.equal(r.status,200);verifyBlog(await r.text());console.log('PASS live Blog identity and CSP');}else await verifyLocal();
+ if(process.argv[2]?.startsWith('https://')){const url=new URL(process.argv[2]);assert.equal(url.hostname,'blog.koomean.com');const r=await fetch(url,{redirect:'error',signal:AbortSignal.timeout(20000)});assert.equal(r.status,200);verifyBlog(await r.text(),'',{live:true});console.log('PASS live Blog identity and CSP');}else await verifyLocal();
 }

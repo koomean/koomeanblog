@@ -5,6 +5,13 @@ const hash=s=>createHash('sha256').update(s).digest('hex').slice(0,16);
 let html=fs.readFileSync('src/index.html','utf8');
 html=html.replace('/* BUILD_MEDIA_MAP */{}',fs.readFileSync('src/media-map.json','utf8').trim());
 const scripts=[],styles=[fs.readFileSync('src/vendor.css','utf8')];
+const cover=JSON.parse(fs.readFileSync('media-optimization.json','utf8')).find(item=>item.kind==='cover');
+if(cover){
+ const coverPath='assets/'+cover.file;
+ html=html.replace('<div class="prof-cover" id="prof-cover">',`<div class="prof-cover" id="prof-cover" style="background-image:linear-gradient(180deg,rgba(6,8,13,.10),rgba(6,8,13,.60)),url('${coverPath}');background-size:cover;background-position:center">`);
+ html=html.replace('</head>','<link rel="preload" as="image" fetchpriority="high" href="'+coverPath+'">\n</head>');
+}
+
 html=html.replace(/<style>([\s\S]*?)<\/style>/g,(_,css)=>{styles.push(css);return ''});
 html=html.replace(/<script>([\s\S]*?)<\/script>/g,(_,js)=>{scripts.push(js);return ''});
 html=html.replace(/<link[^>]+href="https:\/\/(?:fonts.googleapis.com|cdnjs.cloudflare.com)[^"]+"[^>]*>/g,'');
