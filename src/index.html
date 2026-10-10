@@ -1487,14 +1487,17 @@ html[data-theme="light"] .post-media{box-shadow:none}
 html[data-theme="light"] .post:hover{box-shadow:0 6px 18px #25344b12}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 
+
+.koo-theme-select{min-height:36px;max-width:132px;padding:6px 9px;border:1px solid var(--borderH);border-radius:8px;background:var(--s2);color:var(--txt);font:inherit;font-size:12px;color-scheme:inherit}
 </style>
+<script>/* BUILD_THEME */</script>
 </head>
 <body>
 <a class="skip-link" href="#feed-main">ข้ามไปยังเนื้อหา</a>
 
 <div id="global-maintenance-overlay" class="km-maintenance" hidden tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="global-maintenance-title" aria-describedby="global-maintenance-note" data-app="Koo Mean Blog" data-note-th="เรากำลังดูแลพื้นที่แบ่งปันเรื่องราว แล้วกลับมาอ่านเรื่องใหม่ด้วยกันอีกครั้ง" data-note-en="We’re looking after our stories and articles. Come back for another good read soon.">
   <div class="maintenance-shell">
-    <header class="maintenance-header"><div class="maintenance-brand"><span class="maintenance-brand-symbol"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 .5l3-3a5 5 0 0 0-7-7l-2 2M14 11a5 5 0 0 0-7-.5l-3 3a5 5 0 0 0 7 7l2-2"/></svg></span><div><span class="maintenance-brand-name">Koo Mean</span><span class="maintenance-brand-app">Blog</span></div></div><span class="maintenance-state" data-maintenance="state"></span></header>
+    <header class="maintenance-header"><div class="maintenance-brand"><span class="maintenance-brand-symbol"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 .5l3-3a5 5 0 0 0-7-7l-2 2M14 11a5 5 0 0 0-7-.5l-3 3a5 5 0 0 0 7 7l2-2"/></svg></span><div><span class="maintenance-brand-name">Koo Mean</span><span class="maintenance-brand-app">Blog</span></div></div><div class="maintenance-header-actions"><span class="maintenance-state" data-maintenance="state"></span><select class="koo-theme-select" data-koo-theme aria-label="ธีมการแสดงผล"><option value="auto">ตามระบบ</option><option value="light">สว่าง</option><option value="dark">มืด</option></select></div></header>
     <section class="maintenance-content"><span class="maintenance-symbol"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6v15M3 3h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5v16h-5a4 4 0 0 0-4 2 4 4 0 0 0-4-2H3z"/></svg></span><h1 id="global-maintenance-title" class="maintenance-title" data-maintenance="title"></h1><p id="global-maintenance-note" class="maintenance-note" data-maintenance="note"></p>
       <div class="maintenance-clock"><span class="maintenance-label" data-maintenance="label"></span><span class="maintenance-days" data-maintenance="days" hidden></span><strong id="global-maintenance-countdown" class="maintenance-countdown" data-maintenance="countdown" aria-live="off">—</strong><p class="maintenance-deadline" data-maintenance="deadline"></p></div>
       <p class="maintenance-foot" data-maintenance="foot"></p><button type="button" class="maintenance-refresh" data-maintenance="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5M6.1 7a7 7 0 0 1 11.6-2L20 8M4 16l2.3 3A7 7 0 0 0 18 17"/></svg><span data-maintenance="refresh"></span></button>
@@ -1760,8 +1763,8 @@ html[data-theme="light"] .post:hover{box-shadow:0 6px 18px #25344b12}
       <div class="set-gl">การแสดงผล</div>
       <div class="set-row" style="cursor:default" data-stop="true">
         <div class="set-icon" style="background:rgba(34,209,122,.1);color:var(--ok)"><i aria-hidden="true" class="fas fa-moon"></i></div>
-        <div class="set-info"><div class="set-name">โหมดมืด</div><div class="set-desc">สลับธีมสว่าง/มืด</div></div>
-        <button class="tog on" id="dark-tog" data-click="toggleDark" aria-label="สลับธีมสว่างและมืด"></button>
+        <div class="set-info"><div class="set-name">ธีมการแสดงผล</div><div class="set-desc">เลือกธีมสว่าง มืด หรือตามระบบ</div></div>
+        <select class="koo-theme-select" data-koo-theme aria-label="ธีมการแสดงผล"><option value="auto">ตามระบบ</option><option value="light">สว่าง</option><option value="dark">มืด</option></select>
       </div>
       <div class="set-div"></div>
       <div class="set-gl">เกี่ยวกับ</div>
@@ -2611,8 +2614,8 @@ async function saveAccountName() {
 }
 
 let isDark=true;
-function toggleDark(){
-  isDark=!isDark;D('dark-tog').classList.toggle('on',isDark);
+function applyBlogTheme(){
+  isDark=window.KooTheme.theme==='dark';
   const r=document.documentElement.style;
   r.setProperty('--bg',isDark?'#07090f':'#f0f2f7');
   r.setProperty('--s1',isDark?'#0c0f1c':'#ffffff');
@@ -2624,8 +2627,10 @@ function toggleDark(){
   r.setProperty('--txt2',isDark?'#7988a3':'#475569');
   r.setProperty('--txt3',isDark?'#8495b0':'#64748b');
   document.documentElement.dataset.theme=isDark?'dark':'light';document.documentElement.style.colorScheme=isDark?'dark':'light';
-  try{localStorage.setItem('kms_theme',isDark?'dark':'light');}catch{}
+  document.querySelector('meta[name="theme-color"]').content=isDark?'#07090f':'#f0f2f7';
 }
+function toggleDark(){window.KooTheme.set(isDark?'light':'dark');}
+window.addEventListener('koo-theme-change',applyBlogTheme);
 
 function setMN(n){['home','search','articles','saved','settings'].forEach(k=>D('mnav-'+k)?.classList.toggle('active',k===n));}
 function setSBN(n){['home','articles','saved','settings'].forEach(k=>D('sbn-'+k)?.classList.toggle('active',k===n));}
@@ -4178,10 +4183,7 @@ document.addEventListener('keydown',e=>{if(e.key!=='Tab'||!focusedDialog)return;
 
 /* =========== Boot =========== */
 (function(){
-  try{
-    const th=localStorage.getItem('kms_theme');
-    if(th==='light'){isDark=true;toggleDark();}
-  }catch{}
+  applyBlogTheme();
   restoreBlogCache();
   loadData();
 

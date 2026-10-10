@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import {createHash} from 'node:crypto';
 import {transform} from 'esbuild';
 const hash=s=>createHash('sha256').update(s).digest('hex').slice(0,16);
-let html=fs.readFileSync('src/index.html','utf8').replace('/* BUILD_MAINTENANCE */',fs.readFileSync('src/maintenance.js','utf8'));
+let html=fs.readFileSync('src/index.html','utf8').replace('/* BUILD_THEME */',fs.readFileSync('src/theme.js','utf8')).replace('/* BUILD_MAINTENANCE */',fs.readFileSync('src/maintenance.js','utf8'));
 html=html.replace('/* BUILD_MEDIA_MAP */{}',fs.readFileSync('src/media-map.json','utf8').trim());
 const scripts=[],styles=[fs.readFileSync('src/vendor.css','utf8'),fs.readFileSync('src/maintenance.css','utf8')];
 const cover=JSON.parse(fs.readFileSync('media-optimization.json','utf8')).find(item=>item.kind==='cover');

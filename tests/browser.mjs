@@ -2,7 +2,7 @@ import fs from 'node:fs';import path from 'node:path';import assert from 'node:a
 const watchdog=setTimeout(()=>{console.error('Browser regression exceeded 90 seconds');process.exit(1)},90000);watchdog.unref();
 const output=process.env.BLOG_TEST_OUTPUT||'/tmp/koomean-blog-tests';fs.mkdirSync(output,{recursive:true});
 const browser=await chromium.launch({headless:true,...(process.env.BLOG_CHROME_PATH?{executablePath:process.env.BLOG_CHROME_PATH}:{})});
-const page=await browser.newPage({viewport:{width:1440,height:960}}),errors=[],violations=[],calls=[],requests=[];let count=0;
+const page=await browser.newPage({viewport:{width:1440,height:960},colorScheme:'dark'}),errors=[],violations=[],calls=[],requests=[];let count=0;
 page.setDefaultTimeout(15000);
 const check=(v,msg)=>{assert.ok(v,msg);console.log('PASS '+msg);count++};
 const malicious="x');window.__xss=1;//";
