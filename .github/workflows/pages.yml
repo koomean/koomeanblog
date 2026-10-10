@@ -37,6 +37,7 @@ jobs:
           cp index.html article-sandbox.html CNAME _site/
           cp -R assets _site/assets
           cp -R images _site/images
+          cp -R licenses _site/licenses
       - uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4
         with:
           path: _site
