@@ -41,3 +41,10 @@ test('hidden tabs stop polling and cannot issue manual requests',async()=>{
 test('normal startup leaves the website visible and does not reload',async()=>{
   const x=await setup();assert.equal(x.overlay.hidden,true);assert.equal(x.content.inert,false);assert.equal(x.reloads,0);assert.ok([...x.timeouts.values()].some(x=>x.ms===60000));
 });
+
+test('countdown inherits the website theme without a theme selector',()=>{
+ const html=fs.readFileSync('index.html','utf8');
+ const header=html.match(/<header class="maintenance-header">[\s\S]*?<\/header>/)[0];
+ assert.doesNotMatch(header,/<select|data-koo-theme/);
+ assert.match(html,/data-koo-theme/);
+});
