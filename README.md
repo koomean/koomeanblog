@@ -135,3 +135,9 @@ A push to `main` builds, checks Blog identity and `CNAME`, runs browser/security
 - Rollback: revert the release commit and let the guarded Pages workflow republish. No database restoration or Worker rollback is needed.
 
 See [the audit](AUDIT-2026-10-08.md) for findings, measurements and remaining limits. The earlier single-file setup instructions above describe the previous source layout.
+
+## Security/performance release (2026-10-25)
+
+The visual UI is unchanged. Drive consent, article passwords, HTML viewer results and upload progress are scoped to the initiating session/request. Closed or superseded operations cannot write into a new account's state. Hidden comment avatars load on demand; the first post image has eager/high priority; shared article startup avoids duplicate list reads. A forced refresh after an article mutation always requests fresh data. External preview rate limits no longer throttle the Blog API.
+
+`npm test` includes deterministic auth/request races. Run `npm run test:performance` after building; `BLOG_BROWSER=webkit` selects WebKit for browser/performance checks. Install that matching Playwright browser before use. CI runs the Chromium browser and performance behavior checks before publishing. See [the October 25 audit](AUDIT-2026-10-25.md) for measurements, evidence and testing limits.

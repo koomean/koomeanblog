@@ -1,7 +1,8 @@
-import fs from 'node:fs';import path from 'node:path';import assert from 'node:assert/strict';import {chromium} from 'playwright';
+import fs from 'node:fs';import path from 'node:path';import assert from 'node:assert/strict';import {chromium,webkit} from 'playwright';
 const watchdog=setTimeout(()=>{console.error('Browser regression exceeded 90 seconds');process.exit(1)},90000);watchdog.unref();
 const output=process.env.BLOG_TEST_OUTPUT||'/tmp/koomean-blog-tests';fs.mkdirSync(output,{recursive:true});
-const browser=await chromium.launch({headless:true,...(process.env.BLOG_CHROME_PATH?{executablePath:process.env.BLOG_CHROME_PATH}:{})});
+const engine=process.env.BLOG_BROWSER==='webkit'?'webkit':'chromium';
+const browser=await (engine==='webkit'?webkit:chromium).launch({headless:true,...(engine==='chromium'&&process.env.BLOG_CHROME_PATH?{executablePath:process.env.BLOG_CHROME_PATH}:{})});
 const page=await browser.newPage({viewport:{width:1440,height:960},colorScheme:'dark'}),errors=[],violations=[],calls=[],requests=[];let count=0;
 page.setDefaultTimeout(15000);
 const check=(v,msg)=>{assert.ok(v,msg);console.log('PASS '+msg);count++};
@@ -74,5 +75,5 @@ try{
  violations.push(...await page.evaluate(()=>window.__cspViolations||[]));check(errors.length===0,'no JavaScript runtime errors: '+errors.join('; '));check(violations.length===0,'no unexpected CSP violations: '+violations.join('; '));
  await page.evaluate(()=>{const script=document.createElement('script');script.textContent='window.__inlineExecuted=true';document.head.appendChild(script);const button=document.createElement('button');button.setAttribute('onclick','window.__handlerExecuted=true');document.body.appendChild(button);button.click();button.remove();script.remove()});
  check(await page.evaluate(()=>!window.__inlineExecuted&&!window.__handlerExecuted),'CSP blocks injected inline script and event handlers');
- fs.writeFileSync(output+'/browser-results.json',JSON.stringify({checks:count,errors,violations,apiActions:calls,requests:requests.length},null,2));console.log('All '+count+' browser checks passed');
+ fs.writeFileSync(output+'/browser-results.json',JSON.stringify({engine,checks:count,errors,violations,apiActions:calls,requests:requests.length},null,2));console.log('All '+count+' browser checks passed');
 }catch(error){console.error('Browser failure state',await page.evaluate(()=>({active:document.activeElement?.tagName,viewer:document.querySelector('#article-viewer')?.className,password:document.querySelector('#apw-modal')?.className,frame:document.querySelector('#av-body iframe')?.outerHTML})));for(const frame of page.frames().slice(1)){try{console.error('Article failure state',await frame.evaluate(()=>({ready:document.readyState,active:document.activeElement?.outerHTML,counter:document.querySelector('#counter')?.textContent,handler:typeof document.querySelector('#counter')?.onclick})));}catch{}}console.error('Browser errors',errors);throw error;}finally{await browser.close()}

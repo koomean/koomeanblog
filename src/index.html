@@ -2033,16 +2033,21 @@ function decodeJwt(t){try{return JSON.parse(decodeURIComponent(atob(t.split('.')
 // Google ID token อายุ ~1 ชม. — เช็คก่อน restore session
 function isTokenExpired(t){const p=decodeJwt(t);if(!p||!p.exp)return true;return (p.exp*1000)<=Date.now();}
 let driveAccessToken='',driveAccessTokenExpiresAt=0;
+function isCurrentAuth(epoch,idToken){return epoch===authEpoch&&idToken===S.idToken;}
+function assertCurrentAuth(epoch,idToken){if(!idToken||!isCurrentAuth(epoch,idToken))throw new Error('บัญชีเปลี่ยนแล้ว กรุณาลองใหม่');}
 async function getDriveAccessToken(){
+  const epoch=authEpoch,idToken=S.idToken;
+  assertCurrentAuth(epoch,idToken);
   if(driveAccessToken&&driveAccessTokenExpiresAt>Date.now()+60000)return driveAccessToken;
   await loadGSI();
+  assertCurrentAuth(epoch,idToken);
   if(!window.google?.accounts?.oauth2)throw new Error('Google Drive authorization is unavailable');
   return new Promise((resolve,reject)=>{
-    const client=google.accounts.oauth2.initTokenClient({client_id:'906677442222-kmjgsmta70n24aoaq7osm9c1l7g1fb89.apps.googleusercontent.com',scope:'openid email https://www.googleapis.com/auth/drive.file',include_granted_scopes:true,callback:response=>{if(response.error)return reject(new Error('อนุญาต Google Drive ไม่สำเร็จ: '+response.error));driveAccessToken=response.access_token||'';driveAccessTokenExpiresAt=Date.now()+Math.max(60,Number(response.expires_in||3600)-60)*1000;resolve(driveAccessToken)}});
+    const client=google.accounts.oauth2.initTokenClient({client_id:'906677442222-kmjgsmta70n24aoaq7osm9c1l7g1fb89.apps.googleusercontent.com',scope:'openid email https://www.googleapis.com/auth/drive.file',include_granted_scopes:true,callback:response=>{try{assertCurrentAuth(epoch,idToken);}catch(error){return reject(error);}if(response.error)return reject(new Error('อนุญาต Google Drive ไม่สำเร็จ: '+response.error));driveAccessToken=response.access_token||'';driveAccessTokenExpiresAt=Date.now()+Math.max(60,Number(response.expires_in||3600)-60)*1000;resolve(driveAccessToken)}});
     client.requestAccessToken({prompt:''});
   });
 }
-async function apiFetch(url,opts={}){const c=new AbortController(),tid=setTimeout(()=>c.abort(),TIMEOUT);try{const r=await fetch(url,{cache:'no-store',...opts,signal:c.signal});clearTimeout(tid);if(r.status===429)noteRateLimited(Number(r.headers.get('Retry-After'))||60);return r;}catch(e){clearTimeout(tid);throw e;}}
+async function apiFetch(url,opts={}){const c=new AbortController(),tid=setTimeout(()=>c.abort(),TIMEOUT);try{const r=await fetch(url,{cache:'no-store',...opts,signal:c.signal});clearTimeout(tid);if(r.status===429&&new URL(url).origin===new URL(API_URL).origin)noteRateLimited(Number(r.headers.get('Retry-After'))||60);return r;}catch(e){clearTimeout(tid);throw e;}}
 function apiUrl(params={}){
   const q=new URLSearchParams(params);
   q.set('_', Date.now().toString());
@@ -2672,7 +2677,8 @@ function onAuthClick(){if(!S.user)openModal('login-modal');else if(confirm('อ�
 function signOut(silent = false){
   authEpoch++;S.user=null; S.pendingJwt=null; S.idToken=null;
   driveAccessToken='';driveAccessTokenExpiresAt=0;
-  closeArticleViewer();
+  closeArticleViewer();closeArticlePassword();
+  closeArticleUpload();setUploadProgress(-1);D('au-submit').disabled=false;
   S.posts=S.posts.map(p=>({...p,isMine:false,likedByMe:false,comments:(p.comments||[]).map(c=>({...c,isMine:false}))}));
   S.articles=[]; S.allRoles=[];   // สิทธิ์เปลี่ยน → ล้างบทความที่โหลดไว้ตอนล็อกอิน
   try{localStorage.removeItem(SESS_KEY);}catch{}
@@ -2694,6 +2700,8 @@ function handleCredentialResponse(res){
   const p=decodeJwt(res.credential);if(!p)return;
   closeModal('login-modal');
   authEpoch++;S.pendingJwt=p; S.idToken=res.credential;
+  driveAccessToken='';driveAccessTokenExpiresAt=0;
+  closeArticleUpload();setUploadProgress(-1);D('au-submit').disabled=false;
   toast('กำลังตรวจสอบ...','','fas fa-circle-notch fa-spin');
   loadData(p.email,p.name,p.picture, null, true);
 }
@@ -2755,7 +2763,7 @@ async function loadData(email='',name='',pic='',note=null, isFreshLogin=false){
     }
 
     // สิทธิ์อาจเปลี่ยน (เพิ่งล็อกอิน/เปลี่ยนบัญชี) → ทิ้งบทความที่โหลดไว้ตอนยังไม่มีสิทธิ์
-    S.articles=[];
+    if(S.idToken)S.articles=[];
     // เก็บ role ทั้งหมดในระบบไว้ให้ตัวเลือก "สิทธิ์เข้าถึง" ตอนอัปโหลด (admin เท่านั้นที่ได้ allUsers)
     if(Array.isArray(data.allUsers)){
       const rs=new Set();
@@ -2779,7 +2787,8 @@ async function loadData(email='',name='',pic='',note=null, isFreshLogin=false){
     startAutoRefresh();
 
     // ถ้ากำลังดูหน้าบทความอยู่ ให้โหลดใหม่ด้วยสิทธิ์ล่าสุดทันที (ไม่ต้องสลับหน้าไปกลับ)
-    if(S.articlesView)loadArticles();
+    // Public article navigation already owns its initial list request.
+    if(S.articlesView&&S.idToken)loadArticles({force:true});
 
     setTimeout(()=>{
       const params=new URLSearchParams(window.location.search);
@@ -3060,7 +3069,7 @@ function renderFeed(){
       const ct=c.editedTime?`แก้ไข ${fmt(c.editedTime)}`:fmt(c.time);
       const cPic = resolveAvatar(c.email, c.pic, c.name, c.isMine);
       chtml+=`<div class="cmt">
-        <img class="cmt-av" width="26" height="26" src="${esc(cPic)}" data-img-error="hide" alt="" referrerpolicy="no-referrer">
+        <img class="cmt-av" loading="lazy" decoding="async" width="26" height="26" src="${esc(cPic)}" data-img-error="hide" alt="" referrerpolicy="no-referrer">
         <div class="cmt-body">
           <div class="cmt-meta"><span class="cmt-name">${esc(c.name)}</span><span class="cmt-time">· ${ct}</span>${cM}</div>
           <div class="cmt-txt">${esc(c.text)}</div>
@@ -3081,7 +3090,7 @@ function renderFeed(){
         <div class="post-txt">${ptxt}</div>
         ${tagsHtml2}
         ${media}
-        ${p.mediaUrl?`<img ${imageDimensions(p.mediaUrl)} alt="รูปภาพประกอบโพสต์" decoding="async" src="${esc(imageUrl(p.mediaUrl))}" class="post-media" data-click="openLightbox" data-a0="${esc(safeHttpUrl(p.mediaUrl))}" data-t0="string" data-img-error="hide" loading="lazy">`:''}
+        ${p.mediaUrl?`<img ${imageDimensions(p.mediaUrl)} alt="รูปภาพประกอบโพสต์" decoding="async" src="${esc(imageUrl(p.mediaUrl))}" class="post-media" data-click="openLightbox" data-a0="${esc(safeHttpUrl(p.mediaUrl))}" data-t0="string" data-img-error="hide" loading="${i===0?'eager':'lazy'}" fetchpriority="${i===0?'high':'auto'}">`:''}
         <div class="post-acts">
           <button class="act${liked?' liked':''}" data-click="toggleLike" data-a0="${p.rowIdx}" data-t0="number" aria-label="ถูกใจโพสต์"><i aria-hidden="true" class="${liked?'fas':'far'} fa-heart"></i>${likesCount||''}</button>
           <button class="act" data-click="toggleCmts" data-a0="${p.rowIdx}" data-t0="number" aria-label="ความคิดเห็น"><i aria-hidden="true" class="far fa-comment"></i>${cmts.length||''}</button>
@@ -3569,7 +3578,7 @@ async function deleteCmt(ri,cTime){
 
 /* =========== Keyboard shortcuts / responsive =========== */
 document.addEventListener('keydown',e=>{
-  if(e.key==='Escape'){closeLightbox();closeArticleViewer();closeMobSearch();closeSettings();closeCompose();document.querySelectorAll('.overlay.open').forEach(o=>o.classList.remove('open'));const ep=D('emoji-panel');if(ep)ep.classList.remove('open');}
+  if(e.key==='Escape'){closeLightbox();closeArticleViewer();closeArticlePassword();closeMobSearch();closeSettings();closeCompose();document.querySelectorAll('.overlay.open').forEach(o=>o.classList.remove('open'));const ep=D('emoji-panel');if(ep)ep.classList.remove('open');}
   if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();isMob()?openMobSearch():D('rw-srch').focus();}
 });
 function checkBP(){const mob=isMob();const ml=D('mob-logo');if(ml)ml.style.display=mob?'flex':'none';}
@@ -3721,22 +3730,32 @@ let articleQuery='', artSD,articleLoadId=0;
 // ลิงก์แชร์ ?article=<rowIdx> — เก็บไว้เปิดหลังโหลดรายการบทความเสร็จ
 let pendingArticleOpen=0, pendingArticleWarned=false;
 
-async function loadArticles(){
-  const epoch=authEpoch;const requestId=++articleLoadId;
+let articleLoadTask=null;
+async function loadArticles(opts={}){
+  const epoch=authEpoch;
+  if(!opts.force&&articleLoadTask?.epoch===epoch)return articleLoadTask.promise;
+  const requestId=++articleLoadId;
   const feed=D('feed');if(!feed)return;
   feed.innerHTML='<div class="art-head"><div class="sec-label" style="padding:0">📚 บทความ & เอกสาร</div></div><div class="status"><div class="loader-a"></div>กำลังโหลด...</div>';
-  try{
-    const res=await apiRead('listArticles');
-    const data=await res.json();
-    if(epoch!==authEpoch||requestId!==articleLoadId||!S.articlesView)return;
-    if(!res.ok)throw new Error('HTTP '+res.status);
-    if(data&&data.code===429){noteRateLimited();throw new Error('rate');}
-    S.articles=Array.isArray(data.articles)?data.articles:[];
-    renderArticlesList();
-    openPendingArticle();
-  }catch(e){
-    feed.innerHTML='<div class="art-head"><div class="sec-label" style="padding:0">📚 บทความ</div></div><div class="err-banner"><i aria-hidden="true" class="fas fa-exclamation-circle"></i><span>โหลดบทความไม่สำเร็จ</span><button class="retry-btn" data-click="loadArticles">ลองใหม่</button></div>';
-  }
+  const promise=(async()=>{
+    try{
+      const res=await apiRead('listArticles');
+      const data=await res.json();
+      if(epoch!==authEpoch||requestId!==articleLoadId||!S.articlesView)return;
+      if(!res.ok)throw new Error('HTTP '+res.status);
+      if(data&&data.code===429){noteRateLimited();throw new Error('rate');}
+      S.articles=Array.isArray(data.articles)?data.articles:[];
+      renderArticlesList();
+      openPendingArticle();
+    }catch(e){
+      if(epoch!==authEpoch||requestId!==articleLoadId||!S.articlesView)return;
+      feed.innerHTML='<div class="art-head"><div class="sec-label" style="padding:0">📚 บทความ</div></div><div class="err-banner"><i aria-hidden="true" class="fas fa-exclamation-circle"></i><span>โหลดบทความไม่สำเร็จ</span><button class="retry-btn" data-click="loadArticles">ลองใหม่</button></div>';
+    }finally{
+      if(articleLoadTask?.requestId===requestId)articleLoadTask=null;
+    }
+  })();
+  articleLoadTask={epoch,requestId,promise};
+  return promise;
 }
 
 // เปิดบทความจากลิงก์แชร์ — ถ้ายังไม่มีสิทธิ์ จะคงค่าไว้ให้เปิดอัตโนมัติหลังล็อกอิน
@@ -3826,8 +3845,11 @@ function openArticle(rowIdx){
   openArticleViewer(a);
 }
 
+let articleViewerRequestId=0;
 async function openArticleViewer(a){
+  const epoch=authEpoch,idToken=S.idToken,requestId=++articleViewerRequestId;
   const modal=D('article-viewer'),body=D('av-body');
+  const current=()=>isCurrentAuth(epoch,idToken)&&requestId===articleViewerRequestId&&modal.classList.contains('open')&&body.dataset.article===String(a.rowIdx);
   D('av-title').textContent=a.title||'บทความ';
   body.dataset.article=String(a.rowIdx);
   const sh=D('av-share');if(sh)sh.dataset.row=a.rowIdx;
@@ -3846,9 +3868,9 @@ async function openArticleViewer(a){
         const d=await res.json();
         if(!d.success)throw new Error(d.message||'');
         content=d.content||'';
-      }catch(e){ body.innerHTML='<div class="status"><div class="status-ico">⚠️</div>เปิดไฟล์ HTML ไม่สำเร็จ</div>'; return; }
+      }catch(e){ if(current())body.innerHTML='<div class="status"><div class="status-ico">⚠️</div>เปิดไฟล์ HTML ไม่สำเร็จ</div>'; return; }
     }
-    if(!modal.classList.contains('open')||body.dataset.article!==String(a.rowIdx))return;
+    if(!current())return;
     const ifr=document.createElement('iframe');
     ifr.className='av-frame';ifr.title=a.title||'บทความ HTML';
     ifr.setAttribute('sandbox','allow-scripts allow-popups');ifr.referrerPolicy='no-referrer';
@@ -3863,7 +3885,7 @@ async function openArticleViewer(a){
   body.innerHTML='';body.appendChild(ifr);
 }
 window.addEventListener('message',event=>{if(event.origin==='null'&&event.source===D('av-body')?.querySelector('iframe')?.contentWindow&&event.data?.type==='blog-article-close')closeArticleViewer();});
-function closeArticleViewer(){const m=D('article-viewer');if(m&&m.classList.contains('open')){m.classList.remove('open');document.body.style.overflow='';D('av-body').innerHTML='';}}
+function closeArticleViewer(){articleViewerRequestId++;const m=D('article-viewer');if(m&&m.classList.contains('open')){m.classList.remove('open');document.body.style.overflow='';D('av-body').innerHTML='';}}
 
 /* ---- copy helper + share + view tracking ---- */
 function copyText(s){
@@ -3895,23 +3917,29 @@ function trackArticleView(rowIdx){
 }
 
 /* ---- password unlock ---- */
+let articlePasswordRequestId=0;
 function promptArticlePassword(rowIdx){
+  articlePasswordRequestId++;
+  const btn=D('apw-submit');btn.disabled=false;btn.textContent='ปลดล็อก';
   D('apw-row').value=rowIdx;D('apw-input').value='';
   D('apw-modal').classList.add('open');
   setTimeout(()=>D('apw-input').focus(),100);
 }
-function closeArticlePassword(){D('apw-modal').classList.remove('open');}
+function closeArticlePassword(){articlePasswordRequestId++;D('apw-modal').classList.remove('open');D('apw-input').value='';const btn=D('apw-submit');btn.disabled=false;btn.textContent='ปลดล็อก';}
 async function submitArticlePassword(){
   const rowIdx=parseInt(D('apw-row').value,10);
   const pw=D('apw-input').value.trim();
   if(!pw)return toast('กรุณาใส่รหัสผ่าน','e');
+  const epoch=authEpoch,idToken=S.idToken,requestId=++articlePasswordRequestId;
+  const current=()=>isCurrentAuth(epoch,idToken)&&requestId===articlePasswordRequestId&&D('apw-modal').classList.contains('open')&&parseInt(D('apw-row').value,10)===rowIdx;
   const btn=D('apw-submit'),old=btn.textContent;btn.disabled=true;btn.textContent='กำลังตรวจสอบ...';
   try{
     const fd=new URLSearchParams();
     fd.append('action','unlockArticleByPassword');fd.append('rowIdx',rowIdx);fd.append('password',pw);fd.append('ua',CLIENT_UA);
     const res=await apiFetch(API_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:fd});
     const d=await res.json();
-    if(!d.success)throw new Error(d.message||'รหัสผ่านไม่ถูกต้อง');
+    if(!current())return;
+    if(!res.ok||!d.success)throw new Error(d.message||'รหัสผ่านไม่ถูกต้อง');
     const merged=Object.assign({},d.article,{locked:false});
     if(d.content!=null)merged.content=d.content;
     const idx=S.articles.findIndex(x=>x.rowIdx===rowIdx);
@@ -3919,8 +3947,8 @@ async function submitArticlePassword(){
     closeArticlePassword();
     renderArticleItems();
     openArticleViewer(merged);
-  }catch(e){toast(e.message||'ปลดล็อกไม่สำเร็จ','e','fas fa-lock');}
-  finally{btn.disabled=false;btn.textContent=old;}
+  }catch(e){if(current())toast(e.message||'ปลดล็อกไม่สำเร็จ','e','fas fa-lock');}
+  finally{if(requestId===articlePasswordRequestId){btn.disabled=false;btn.textContent=old;}}
 }
 
 /* ---- Admin: upload / edit / move / delete ---- */
@@ -4057,6 +4085,8 @@ async function verifyArticleSaved(title,rowIdx){
 
 async function submitArticleUpload(){
   if(!isAdmin())return toast('เฉพาะ Admin','e');
+  const epoch=authEpoch,idToken=S.idToken;
+  const updateProgress=(pct,label)=>{if(isCurrentAuth(epoch,idToken))setUploadProgress(pct,label);};
   const title=D('au-title').value.trim();
   const desc=D('au-desc').value.trim();
   const tags=D('au-tags').value.trim();
@@ -4069,79 +4099,89 @@ async function submitArticleUpload(){
   try{
     if(editing){
       btn.textContent='กำลังบันทึก...';
-      setUploadProgress(5,'กำลังบันทึกการแก้ไข...');
+      updateProgress(5,'กำลังบันทึกการแก้ไข...');
       const params={rowIdx:editing,title,description:desc,tags,group};
       if(D('au-clearpw')&&D('au-clearpw').checked)params.clearPassword='1';
       else if(password.trim())params.password=password;
-      const d=await postDataProgress('updateArticle',params,f=>setUploadProgress(5+f*90),120000);
+      const d=await postDataProgress('updateArticle',params,f=>updateProgress(5+f*90),120000);
+      if(!isCurrentAuth(epoch,idToken))return;
       if(!d.success)throw new Error(d.message||'');
-      setUploadProgress(100,'บันทึกแล้ว');
+      updateProgress(100,'บันทึกแล้ว');
       toast('บันทึกบทความแล้ว','s','fas fa-check');
     }else{
       const url=D('au-url').value.trim();
       if(url){
         if(!/^https?:\/\//i.test(url)){toast('ลิงก์ต้องขึ้นต้น http:// หรือ https://','e');return;}
         btn.textContent='กำลังบันทึก...';
-        setUploadProgress(5,'กำลังบันทึกลิงก์...');
-        const d=await postDataProgress('uploadArticle',{title,description:desc,type:'link',url,tags,group,password},f=>setUploadProgress(5+f*90),120000);
+        updateProgress(5,'กำลังบันทึกลิงก์...');
+        const d=await postDataProgress('uploadArticle',{title,description:desc,type:'link',url,tags,group,password},f=>updateProgress(5+f*90),120000);
+        if(!isCurrentAuth(epoch,idToken))return;
         if(!d.success)throw new Error(d.message||'');
       }else{
         if(!artUploadFile){toast('เลือกไฟล์ หรือใส่ลิงก์','e');return;}
         if(artUploadFile.size>21*1024*1024){toast('ไฟล์ใหญ่เกิน 21MB','e');return;}
         const type=detectArticleType(artUploadFile);
         btn.textContent='กำลังอัปโหลด...';
-        setUploadProgress(0,'กำลังอ่านไฟล์...');
+        updateProgress(0,'กำลังอ่านไฟล์...');
         // ไฟล์บทความเก็บใน Google Drive; ข้อมูล metadata และสิทธิ์เก็บใน D1
         const driveAccessToken=await getDriveAccessToken();
-        setUploadProgress(3,'กำลังเชื่อมต่อ Google Drive...');
-        const b64=await fileToBase64(artUploadFile,f=>setUploadProgress(f*15,'กำลังอ่านไฟล์...'));
-        setUploadProgress(15,'กำลังอัปโหลด '+fmtBytes(artUploadFile.size)+'...');
+        assertCurrentAuth(epoch,idToken);
+        updateProgress(3,'กำลังเชื่อมต่อ Google Drive...');
+        const b64=await fileToBase64(artUploadFile,f=>updateProgress(f*15,'กำลังอ่านไฟล์...'));
+        assertCurrentAuth(epoch,idToken);
+        updateProgress(15,'กำลังอัปโหลด '+fmtBytes(artUploadFile.size)+'...');
         const d=await postDataProgress('uploadArticle',
           {title,description:desc,type,mime:artUploadFile.type||'application/octet-stream',filename:artUploadFile.name,fileBase64:b64,driveAccessToken,tags,group,password},
-          f=>setUploadProgress(15+f*82, f>=1?'กำลังบันทึกไฟล์...':'กำลังอัปโหลด '+fmtBytes(artUploadFile.size)+'...'));
+          f=>updateProgress(15+f*82, f>=1?'กำลังบันทึกไฟล์...':'กำลังอัปโหลด '+fmtBytes(artUploadFile.size)+'...'));
+        if(!isCurrentAuth(epoch,idToken))return;
         if(!d.success)throw new Error(d.message||'');
       }
-      setUploadProgress(100,'เสร็จสิ้น');
+      updateProgress(100,'เสร็จสิ้น');
       toast('อัปโหลดบทความสำเร็จ','s','fas fa-check');
     }
     closeArticleUpload();
-    setUploadProgress(-1);
-    loadArticles();
+    updateProgress(-1);
+    loadArticles({force:true});
   }catch(e){
+    if(!isCurrentAuth(epoch,idToken))return;
     // อาจ "สำเร็จจริง แต่ตอบกลับไม่ถึง" → เช็คกับเซิร์ฟเวอร์ก่อนค่อยฟ้องผู้ใช้
-    setUploadProgress(99,'กำลังตรวจสอบผลลัพธ์...');
+    updateProgress(99,'กำลังตรวจสอบผลลัพธ์...');
     btn.textContent='กำลังตรวจสอบ...';
     const ok=await verifyArticleSaved(title, editing||0);
+    if(!isCurrentAuth(epoch,idToken))return;
     if(ok){
-      setUploadProgress(100,'เสร็จสิ้น');
+      updateProgress(100,'เสร็จสิ้น');
       toast(editing?'บันทึกบทความแล้ว':'อัปโหลดบทความสำเร็จ','s','fas fa-check');
       closeArticleUpload();
-      setUploadProgress(-1);
-      loadArticles();
+      updateProgress(-1);
+      loadArticles({force:true});
     }else{
-      setUploadProgress(-1);
+      updateProgress(-1);
       toast((editing?'บันทึกไม่สำเร็จ: ':'อัปโหลดไม่สำเร็จ: ')+(e.message||'ลองใหม่'),'e');
     }
-  }finally{btn.disabled=false;btn.textContent=old;}
+  }finally{if(isCurrentAuth(epoch,idToken)){btn.disabled=false;btn.textContent=old;}}
 }
 async function moveArticle(rowIdx,dir){
   if(!isAdmin())return;
   try{
     const d=await postData('moveArticle',{rowIdx,dir});
     if(!d.success)throw new Error(d.message||'');
-    loadArticles();
+    loadArticles({force:true});
   }catch(e){toast('จัดลำดับไม่สำเร็จ','e');}
 }
 async function deleteArticle(rowIdx){
   if(!isAdmin())return;
+  const epoch=authEpoch,idToken=S.idToken;
   if(!confirm('ลบบทความนี้? ไฟล์ใน Google Drive จะถูกย้ายไปถังขยะ'))return;
   try{
     const driveAccessToken=await getDriveAccessToken();
+    assertCurrentAuth(epoch,idToken);
     const d=await postData('deleteArticle',{rowIdx,driveAccessToken});
+    if(!isCurrentAuth(epoch,idToken))return;
     if(!d.success)throw new Error(d.message||'');
     toast('ลบบทความแล้ว','s');
-    loadArticles();
-  }catch(e){toast('ลบไม่สำเร็จ','e');}
+    loadArticles({force:true});
+  }catch(e){if(isCurrentAuth(epoch,idToken))toast('ลบไม่สำเร็จ','e');}
 }
 
 

@@ -24,6 +24,7 @@ jobs:
         timeout-minutes: 5
         run: npx playwright install --with-deps chromium
       - run: npm run test:browser
+      - run: npm run test:performance
       - name: Verify Blog content and domain
         run: node scripts/verify-blog.mjs
       - name: Package only website files
