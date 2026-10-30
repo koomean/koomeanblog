@@ -16,12 +16,13 @@ await page.addInitScript(()=>{document.addEventListener('securitypolicyviolation
 await page.route('https://blog.koomean.com/**',route=>{
  const pathname=decodeURIComponent(new URL(route.request().url()).pathname),file=path.resolve('.'+pathname.replace(/\/$/,'/index.html'));
  if(!file.startsWith(process.cwd()+'/'))return route.abort();
- const ext=path.extname(file);return fs.existsSync(file)?route.fulfill({contentType:ext==='.js'?'application/javascript':ext==='.css'?'text/css':ext==='.woff2'?'font/woff2':'text/html',body:fs.readFileSync(file)}):route.fulfill({status:404,body:'not found'});
+ const ext=path.extname(file);return fs.existsSync(file)?route.fulfill({contentType:ext==='.js'?'application/javascript':ext==='.css'?'text/css':ext==='.woff2'?'font/woff2':'text/html',...(ext==='.html'?{headers:{'Content-Security-Policy':"frame-ancestors 'none'",'X-Frame-Options':'DENY'}}:{}),body:fs.readFileSync(file)}):route.fulfill({status:404,body:'not found'});
 });
 await page.route('https://media.example.invalid/**',r=>r.fulfill({contentType:'image/svg+xml',body:'<svg xmlns="http://www.w3.org/2000/svg" width="900" height="500"><rect width="900" height="500" fill="#192d4d"/><circle cx="580" cy="170" r="130" fill="#5ea2ff"/><path d="M0 500L350 160 700 500" fill="#47508c"/></svg>'}));
 await page.route('https://ui-avatars.com/**',r=>r.fulfill({status:404,body:''}));
 await page.route('https://accounts.google.com/**',r=>r.fulfill({contentType:'application/javascript',body:''}));
 await page.route('https://koomean-proxy.meanchannel52.workers.dev/**',async r=>{
+ if(new URL(r.request().url()).pathname==='/blog-article-sandbox.html')return r.fulfill({contentType:'text/html',headers:{'Content-Security-Policy':'frame-ancestors https://blog.koomean.com; sandbox allow-scripts allow-popups'},body:fs.readFileSync('article-sandbox.html')});
  const request=r.request(),p=new URLSearchParams(request.postData()||'');let a=p.get('action');if(request.headers()['content-type']?.includes('json'))a=JSON.parse(request.postData()).action;
  calls.push(a);const result={success:true};
  if(a==='maintenanceStatus')result.maintenance={active:false};

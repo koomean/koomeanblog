@@ -28,9 +28,10 @@ async function harness(root) {
     const url=new URL(r.request().url()),name=url.pathname==='/'?'index.html':decodeURIComponent(url.pathname.slice(1)),file=path.resolve(root,name);
     if(!file.startsWith(path.resolve(root)+path.sep)||!fs.existsSync(file))return r.fulfill({status:404,body:''});
     const type=file.endsWith('.js')?'application/javascript':file.endsWith('.css')?'text/css':file.endsWith('.woff2')?'font/woff2':file.endsWith('.webp')?'image/webp':'text/html';
-    return r.fulfill({body:fs.readFileSync(file),contentType:type});
+    return r.fulfill({body:fs.readFileSync(file),contentType:type,...(type==='text/html'?{headers:{'Content-Security-Policy':"frame-ancestors 'none'",'X-Frame-Options':'DENY'}}:{})});
   });
   await page.route(api+'/**',async r=>{
+    if(new URL(r.request().url()).pathname==='/blog-article-sandbox.html')return r.fulfill({contentType:'text/html',headers:{'Content-Security-Policy':'frame-ancestors https://blog.koomean.com; sandbox allow-scripts allow-popups'},body:fs.readFileSync(path.join(root,'article-sandbox.html'))});
     const action=new URLSearchParams(r.request().postData()||'').get('action');actions.push(action);
     if(action==='all') {await new Promise(resolve=>setTimeout(resolve,400));return r.fulfill({json:{spaceProfile:{name:'Koo Mean',webTitle:'Koo Mean Blog',handle:'@koomean',bio:'พื้นที่แบ่งปันเรื่องราวและความคิด'},posts}})}
     if(action==='listArticles') {await new Promise(resolve=>setTimeout(resolve,30));return r.fulfill({json:{success:true,articles}})}

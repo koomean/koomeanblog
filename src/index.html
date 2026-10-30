@@ -3875,7 +3875,7 @@ async function openArticleViewer(a){
     ifr.className='av-frame';ifr.title=a.title||'บทความ HTML';
     ifr.setAttribute('sandbox','allow-scripts allow-popups');ifr.referrerPolicy='no-referrer';
     ifr.addEventListener('load',()=>ifr.contentWindow.postMessage({type:'blog-article',content:content||'<p>ไฟล์ว่าง</p>'},'*'),{once:true});
-    ifr.src='article-sandbox.html';body.replaceChildren(ifr);
+    ifr.src=API_URL+'/blog-article-sandbox.html';body.replaceChildren(ifr);
     return;
   }
   // pdf / image / office → Google Drive preview

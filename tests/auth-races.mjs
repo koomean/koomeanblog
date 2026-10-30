@@ -101,7 +101,7 @@ function viewerHarness(){
  const responses=[],body={dataset:{},frames:[],html:''};Object.defineProperty(body,'innerHTML',{get(){return this.html},set(value){this.html=value;this.frames=[]}});body.replaceChildren=(...frames)=>{body.html='';body.frames=frames};
  const classes=new Set(),nodes={'av-body':body,'av-title':{textContent:''},'av-share':{dataset:{}},'article-viewer':{classList:{contains:name=>classes.has(name),add:name=>classes.add(name),remove:name=>classes.delete(name)}}};
  const document={body:{style:{}},createElement:()=>({setAttribute(){},addEventListener(){},contentWindow:{postMessage(){}}})};
- const ctx=vm.createContext({D:id=>nodes[id],String,Error,document,window:{addEventListener(){}},esc:value=>value,safeHttpUrl:value=>value,trackArticleView(){},apiRead:()=>{const response=deferred();responses.push(response);return response.promise}});
+ const ctx=vm.createContext({API_URL:'https://koomean-proxy.meanchannel52.workers.dev',D:id=>nodes[id],String,Error,document,window:{addEventListener(){}},esc:value=>value,safeHttpUrl:value=>value,trackArticleView(){},apiRead:()=>{const response=deferred();responses.push(response);return response.promise}});
  vm.runInContext("let authEpoch=1;const S={idToken:'synthetic-account-a'};"+authHelpers+part('async function openArticleViewer(a){','/* ---- copy helper').replace('async function openArticleViewer(a){','let articleViewerRequestId=0;async function openArticleViewer(a){'),ctx);
  return{ctx,body,open:(title='Original')=>vm.runInContext("openArticleViewer({type:'html',rowIdx:7,fileId:'article:7',title:"+JSON.stringify(title)+"})",ctx),close:()=>vm.runInContext('closeArticleViewer()',ctx),respond:(i,success=true)=>responses[i].resolve({json:async()=>({success,content:'synthetic article'})})};
 }
@@ -119,7 +119,7 @@ test('a delayed HTML response is discarded when authentication changes',async()=
 });
 
 test('current HTML requests retain the opaque-origin article sandbox',async()=>{
- const h=viewerHarness(),pending=h.open();h.respond(0);await pending;assert.equal(h.body.frames[0]?.title,'Original');assert.equal(h.body.frames[0]?.src,'article-sandbox.html');
+ const h=viewerHarness(),pending=h.open();h.respond(0);await pending;assert.equal(h.body.frames[0]?.title,'Original');assert.equal(h.body.frames[0]?.src,'https://koomean-proxy.meanchannel52.workers.dev/blog-article-sandbox.html');
 });
 
 
