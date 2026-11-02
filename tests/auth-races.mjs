@@ -102,7 +102,7 @@ function viewerHarness(){
  const classes=new Set(),nodes={'av-body':body,'av-title':{textContent:''},'av-share':{dataset:{}},'article-viewer':{classList:{contains:name=>classes.has(name),add:name=>classes.add(name),remove:name=>classes.delete(name)}}};
  const document={body:{style:{}},createElement:()=>({setAttribute(){},addEventListener(){},contentWindow:{postMessage(){}}})};
  const ctx=vm.createContext({API_URL:'https://koomean-proxy.meanchannel52.workers.dev',D:id=>nodes[id],String,Error,document,window:{addEventListener(){}},esc:value=>value,safeHttpUrl:value=>value,trackArticleView(){},apiRead:()=>{const response=deferred();responses.push(response);return response.promise}});
- vm.runInContext("let authEpoch=1;const S={idToken:'synthetic-account-a'};"+authHelpers+part('async function openArticleViewer(a){','/* ---- copy helper').replace('async function openArticleViewer(a){','let articleViewerRequestId=0;async function openArticleViewer(a){'),ctx);
+ vm.runInContext("let authEpoch=1;const blogRouting=false;function parseBlogRoute(){return {articleId:null}};const S={idToken:'synthetic-account-a'};"+authHelpers+part('async function openArticleViewer(a){','/* ---- copy helper').replace('async function openArticleViewer(a){','let articleViewerRequestId=0;async function openArticleViewer(a){'),ctx);
  return{ctx,body,open:(title='Original')=>vm.runInContext("openArticleViewer({type:'html',rowIdx:7,fileId:'article:7',title:"+JSON.stringify(title)+"})",ctx),close:()=>vm.runInContext('closeArticleViewer()',ctx),respond:(i,success=true)=>responses[i].resolve({json:async()=>({success,content:'synthetic article'})})};
 }
 

@@ -42,7 +42,12 @@ export async function verifyLocal(){
  const html=fs.readFileSync('index.html','utf8'),manifest=JSON.parse(fs.readFileSync('build-manifest.json','utf8'));
  verifyBlog(html,fs.readFileSync('assets/'+manifest.js.file,'utf8'));
  for(const file of [manifest.js.file,manifest.css.file])assert.ok(html.includes('assets/'+file));
- assert.ok(fs.existsSync('article-sandbox.html'));console.log('PASS Blog identity, domain, CSP and release assets');
+ for(const route of ['article','saved','settings','search']){
+  const page=fs.readFileSync(route+'.html','utf8');verifyBlog(page);assert.ok(page.includes('href="https://blog.koomean.com/'+route+'"'));assert.ok(page.includes('href="/assets/'+manifest.css.file+'"'));assert.ok(page.includes('src="/assets/'+manifest.js.file+'"'));
+ }
+ for(const file of [...(manifest.previousAssets||[]),manifest.notFound.themeFile]){assert.match(file,/^(app|blog|theme)-[a-f0-9]+\.(js|css)$/);assert.ok(fs.existsSync('assets/'+file));}
+ const missing=fs.readFileSync('404.html','utf8');assert.ok(missing.includes('Page not found')&&missing.includes('id="page-not-found"'));assert.ok(missing.includes('name="robots" content="noindex,follow"'));assert.ok(!missing.includes('http-equiv="refresh"'));assert.ok(missing.includes('href="/article"'));assert.ok(!/(?:src|href)="assets\//.test(missing));
+ assert.ok(fs.existsSync('article-sandbox.html'));console.log('PASS Blog identity, domain, CSP, clean route pages, 404 and release assets');
 }
 if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href){
  if(process.argv[2]?.startsWith('https://')){
@@ -54,6 +59,10 @@ if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href){
   const sandbox=await fetch('https://koomean-proxy.meanchannel52.workers.dev/blog-article-sandbox.html',{redirect:'error',signal:AbortSignal.timeout(20000)});assert.equal(sandbox.status,200,'API article sandbox must be published');
   assert.ok(sandbox.headers.get('content-type')?.startsWith('text/html'),'API article loader must be HTML');
   verifyFrameHeaders(sandbox.headers,{sandbox:true});
-  console.log('PASS live Blog identity, anti-framing headers and isolated API article loader');
+  for(const path of ['/article','/saved','/settings','/search']){
+   const page=await fetch(new URL(path,url),{redirect:'error',signal:AbortSignal.timeout(20000)});assert.equal(page.status,200,path+' must be a published page');const body=await page.text();verifyBlog(body,'',{live:true});assert.ok(body.includes('id="page-not-found"'));assert.ok(body.includes('href="/article"'));verifyFrameHeaders(page.headers);
+  }
+  const absent=await fetch(new URL('/__koomean_missing_page_'+Date.now(),url),{redirect:'error',signal:AbortSignal.timeout(20000)});assert.equal(absent.status,404);const errorPage=await absent.text();assert.ok(errorPage.includes('Page not found')&&errorPage.includes('Koo Mean Blog'));assert.ok(errorPage.includes('id="page-not-found"'));assert.ok(errorPage.includes('href="/assets/'));verifyFrameHeaders(absent.headers);
+  console.log('PASS live Blog identity, clean routes, real HTTP 404, anti-framing headers and isolated API article loader');
  }else await verifyLocal();
 }

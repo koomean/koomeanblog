@@ -24,13 +24,14 @@ jobs:
         timeout-minutes: 5
         run: npx playwright install --with-deps chromium
       - run: npm run test:browser
+      - run: npm run test:routing
       - run: npm run test:performance
       - name: Verify Blog content and domain
         run: node scripts/verify-blog.mjs
       - name: Package only website files
         run: |
           mkdir _site
-          cp index.html article-sandbox.html CNAME _site/
+          cp index.html article.html saved.html settings.html search.html 404.html article-sandbox.html CNAME _site/
           cp -R assets _site/assets
           cp -R images _site/images
           cp -R licenses _site/licenses

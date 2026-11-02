@@ -7,7 +7,8 @@
     "verify": "node scripts/verify-blog.mjs",
     "test": "node --test tests/security.test.mjs tests/maintenance.test.mjs tests/auth-races.mjs tests/api.test.mjs tests/article-framing.test.mjs",
     "test:browser": "node tests/browser.mjs",
-    "test:performance": "node tests/performance.mjs"
+    "test:performance": "node tests/performance.mjs",
+    "test:routing": "node tests/routing.mjs"
   },
   "devDependencies": {
     "esbuild": "0.28.1",

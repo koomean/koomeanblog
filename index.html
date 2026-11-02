@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'none'; object-src 'none'; script-src 'self' https://accounts.google.com/gsi/; script-src-attr 'none'; style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style; font-src 'self'; img-src 'self' https: data: blob:; media-src 'self' https: blob:; connect-src 'self' https://koomean-proxy.meanchannel52.workers.dev https://accounts.google.com/gsi/ https://api.microlink.io https://api.dub.co; frame-src 'self' https://accounts.google.com/gsi/ https://www.youtube-nocookie.com https://koomean-proxy.meanchannel52.workers.dev https://drive.google.com; form-action 'none'; upgrade-insecure-requests">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="index,follow">
 <meta name="blog-api-identity" content="apiRead('listArticles');apiRead('postsOnly')">
 <meta name="theme-color" content="#06080d">
 <meta name="referrer" content="strict-origin-when-cross-origin">
@@ -11,10 +12,10 @@
 <link rel="canonical" href="https://blog.koomean.com/">
 <title id="web-title">Koo Mean Blog</title>
 <link rel="preconnect" href="https://koomean-proxy.meanchannel52.workers.dev" crossorigin>
-<link rel="preload" as="image" fetchpriority="high" href="assets/media-c34486913565949c.webp">
-<link rel="preload" href="assets/jakarta-cd8db90cd950.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/blog-b346e0ae774c5ed6.css">
-<script src="assets/app-65ce64e10f0740ba.js" defer></script>
+<link rel="preload" as="image" fetchpriority="high" href="/assets/media-c34486913565949c.webp">
+<link rel="preload" href="/assets/jakarta-cd8db90cd950.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/blog-754488771d7df9b8.css">
+<script src="/assets/app-6d92a3198a1e7519.js" defer></script>
 </head>
 <body>
 <a class="skip-link" href="#feed-main">ข้ามไปยังเนื้อหา</a>
@@ -29,23 +30,23 @@
 </div>
 <div class="root">
   <aside class="sidebar-left">
-    <a class="sb-logo" href="#">
+    <a class="sb-logo" href="/" data-click="navTo" data-a0="home" data-t0="string">
       <div class="logo-mark">KM</div>
       <div class="logo-text" id="sb-title">Space</div>
     </a>
     <nav class="sb-nav">
-      <button class="sb-item active" id="sbn-home" data-click="navTo" data-a0="home" data-t0="string">
+      <a href="/" class="sb-item active" id="sbn-home" data-click="navTo" data-a0="home" data-t0="string">
         <i aria-hidden="true" class="fas fa-house"></i><span>หน้าหลัก</span>
-      </button>
-      <button class="sb-item" id="sbn-articles" data-click="navTo" data-a0="articles" data-t0="string">
+      </a>
+      <a href="/article" class="sb-item" id="sbn-articles" data-click="navTo" data-a0="articles" data-t0="string">
         <i aria-hidden="true" class="fas fa-book-open"></i><span>บทความ</span>
-      </button>
-      <button class="sb-item" id="sbn-saved" data-click="navTo" data-a0="saved" data-t0="string">
+      </a>
+      <a href="/saved" class="sb-item" id="sbn-saved" data-click="navTo" data-a0="saved" data-t0="string">
         <i aria-hidden="true" class="fas fa-bookmark"></i><span>บันทึกไว้</span>
-      </button>
-      <button class="sb-item" id="sbn-settings" data-click="openSettings">
+      </a>
+      <a href="/settings" class="sb-item" id="sbn-settings" data-click="openSettings">
         <i aria-hidden="true" class="fas fa-gear"></i><span>ตั้งค่า</span>
-      </button>
+      </a>
     </nav>
     <div class="sb-user-card" id="sb-user-card">
       <div class="sb-uc-row">
@@ -67,8 +68,13 @@
       <button class="auth-pill" id="auth-btn" data-click="onAuthClick">Sign In</button>
     </div>
     <div class="feed-main" id="feed-main" tabindex="-1" role="main" aria-label="โพสต์และบทความ">
+      <section id="page-not-found" class="not-found" hidden tabindex="-1" aria-labelledby="not-found-title">
+        <p class="not-found-code" aria-hidden="true">404</p><h2 id="not-found-title">Page not found</h2>
+        <p id="not-found-description">ไม่พบหน้าที่คุณกำลังหา ลิงก์อาจไม่ถูกต้อง หรือเนื้อหาถูกย้ายแล้ว</p>
+        <nav class="not-found-actions" aria-label="กลับไปยังเนื้อหา"><a class="not-found-primary" href="/" data-click="navTo" data-a0="home" data-t0="string">กลับหน้าหลัก</a><a href="/article" data-click="navTo" data-a0="articles" data-t0="string">ดูบทความทั้งหมด</a></nav>
+      </section>
       <section id="prof-section" style="border-bottom:1px solid var(--border)">
-        <div class="prof-cover" id="prof-cover" style="background-image:linear-gradient(180deg,rgba(6,8,13,.10),rgba(6,8,13,.60)),url('assets/media-c34486913565949c.webp');background-size:cover;background-position:center"><div class="cover-fade"></div></div>
+        <div class="prof-cover" id="prof-cover" style="background-image:linear-gradient(180deg,rgba(6,8,13,.10),rgba(6,8,13,.60)),url('/assets/media-c34486913565949c.webp');background-size:cover;background-position:center"><div class="cover-fade"></div></div>
         <div class="prof-body">
           <div class="prof-av-ring">
             <div class="prof-av-inner">
@@ -174,12 +180,12 @@
   </aside>
 </div>
 <nav class="mob-nav" id="mob-nav">
-  <button class="mnav-btn active" id="mnav-home" data-click="navTo" data-a0="home" data-t0="string"><i aria-hidden="true" class="fas fa-house"></i><span>หน้าหลัก</span></button>
-  <button class="mnav-btn" id="mnav-search" data-click="openMobSearch"><i aria-hidden="true" class="fas fa-magnifying-glass"></i><span>ค้นหา</span></button>
+  <a href="/" class="mnav-btn active" id="mnav-home" data-click="navTo" data-a0="home" data-t0="string"><i aria-hidden="true" class="fas fa-house"></i><span>หน้าหลัก</span></a>
+  <a href="/search" class="mnav-btn" id="mnav-search" data-click="openMobSearch"><i aria-hidden="true" class="fas fa-magnifying-glass"></i><span>ค้นหา</span></a>
   <button class="mnav-fab hidden" id="mnav-fab" data-click="openCompose" title="สร้างโพสต์" aria-label="สร้างโพสต์"><i aria-hidden="true" class="fas fa-plus"></i></button>
-  <button class="mnav-btn" id="mnav-articles" data-click="navTo" data-a0="articles" data-t0="string"><i aria-hidden="true" class="fas fa-book-open"></i><span>บทความ</span></button>
-  <button class="mnav-btn" id="mnav-saved" data-click="navTo" data-a0="saved" data-t0="string"><i aria-hidden="true" class="fas fa-bookmark"></i><span>บันทึก</span></button>
-  <button class="mnav-btn" id="mnav-settings" data-click="openSettings"><i aria-hidden="true" class="fas fa-gear"></i><span>ตั้งค่า</span></button>
+  <a href="/article" class="mnav-btn" id="mnav-articles" data-click="navTo" data-a0="articles" data-t0="string"><i aria-hidden="true" class="fas fa-book-open"></i><span>บทความ</span></a>
+  <a href="/saved" class="mnav-btn" id="mnav-saved" data-click="navTo" data-a0="saved" data-t0="string"><i aria-hidden="true" class="fas fa-bookmark"></i><span>บันทึก</span></a>
+  <a href="/settings" class="mnav-btn" id="mnav-settings" data-click="openSettings"><i aria-hidden="true" class="fas fa-gear"></i><span>ตั้งค่า</span></a>
 </nav>
 <div class="mob-srch-overlay" id="mob-srch">
   <div class="mob-srch-hdr">

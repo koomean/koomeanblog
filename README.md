@@ -141,3 +141,25 @@ See [the audit](AUDIT-2026-10-08.md) for findings, measurements and remaining li
 The visual UI is unchanged. Drive consent, article passwords, HTML viewer results and upload progress are scoped to the initiating session/request. Closed or superseded operations cannot write into a new account's state. Hidden comment avatars load on demand; the first post image has eager/high priority; shared article startup avoids duplicate list reads. A forced refresh after an article mutation always requests fresh data. External preview rate limits no longer throttle the Blog API.
 
 `npm test` includes deterministic auth/request races. Run `npm run test:performance` after building; `BLOG_BROWSER=webkit` selects WebKit for browser/performance checks. Install that matching Playwright browser before use. CI runs the Chromium browser and performance behavior checks before publishing. See [the October 25 audit](AUDIT-2026-10-25.md) for measurements, evidence and testing limits.
+
+## URL ของแต่ละหน้าและหน้า 404
+
+เมนูใช้ URL จริงและรองรับเปิดลิงก์ตรง รีเฟรช และปุ่มย้อนกลับ/ไปข้างหน้า:
+
+| หน้า | URL |
+|---|---|
+| หน้าหลัก / โพสต์ | `/` |
+| บทความ | `/article` |
+| บันทึกไว้ | `/saved` |
+| ตั้งค่า | `/settings` |
+| ค้นหา | `/search` |
+
+ลิงก์บทความใช้ `/article?article=<rowIdx>`; ลิงก์เดิม `/?article=<rowIdx>` ยังเปิดได้และเปลี่ยนเป็น URL ใหม่นี้ โพสต์ `/?post=<rowIdx>` และตัวกรอง `/?tag=<tag>` ยังคงใช้ได้ URL ไม่มี Google token, รหัสผ่าน หรือ Drive access token
+
+แก้ source ที่ `src/index.html`, `src/routing.js`, `src/404.html`, `src/not-found.css` แล้วรัน `npm run build` เพื่อสร้างหน้าและ assets ทุกครั้ง `article.html`, `saved.html`, `settings.html`, `search.html` และ `404.html` เป็นไฟล์ deploy ที่ build สร้าง จึงต้องเก็บไว้ใน artifact ของ GitHub Pages ไม่ใช่ไฟล์ชั่วคราวที่ลบทิ้งได้เอง ไฟล์ assets ที่มี hash รุ่นก่อนเก็บหนึ่งรุ่นเพื่อให้ HTML ที่ยังอยู่ใน cache โหลดต่อได้
+
+GitHub Pages ให้บริการ alias เช่น `article.html` ที่ URL `/article` โดยไม่เปลี่ยน DNS หรือเพิ่ม Worker route ส่วน path ที่ไม่มีอยู่จะคืน `404.html` พร้อม HTTP 404 จริง ดู [GitHub Docs](https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-custom-404-page-for-your-github-pages-site)
+
+รายการโพสต์/บทความที่ไม่มีตาม query จะแสดง Page not found หลังโหลดรายการจาก API สำเร็จเท่านั้น; กรณี API ล้มเหลวจะแสดงปุ่มลองใหม่ และบทความที่จำกัดสิทธิ์หรือใช้รหัสผ่านยังใช้ขั้นตอนยืนยันเดิม Query เหล่านี้อยู่บน static shell ที่ตอบ HTTP 200; การแสดง 404 ของรายการจึงเป็นสถานะใน UI ส่วน path ที่ไม่มีจริงตอบ HTTP 404 จากโฮสต์
+
+ตรวจเส้นทางด้วย `npm run test:routing` ควบคู่กับ `npm test`, `npm run test:browser`, `npm run test:performance`, `npm run verify` Workflow ตรวจทั้งหมดก่อนเผยแพร่และแพ็กเฉพาะไฟล์เว็บไซต์ที่กำหนดไว้

@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="index,follow">
 <meta name="blog-api-identity" content="apiRead('listArticles');apiRead('postsOnly')">
 <meta name="theme-color" content="#06080d">
 <meta name="referrer" content="strict-origin-when-cross-origin">
@@ -1510,23 +1511,23 @@ html[data-theme="light"] .post:hover{box-shadow:0 6px 18px #25344b12}
 <div class="root">
 
   <aside class="sidebar-left">
-    <a class="sb-logo" href="#">
+    <a class="sb-logo" href="/" data-click="navTo" data-a0="home" data-t0="string">
       <div class="logo-mark">KM</div>
       <div class="logo-text" id="sb-title">Space</div>
     </a>
     <nav class="sb-nav">
-      <button class="sb-item active" id="sbn-home" data-click="navTo" data-a0="home" data-t0="string">
+      <a href="/" class="sb-item active" id="sbn-home" data-click="navTo" data-a0="home" data-t0="string">
         <i aria-hidden="true" class="fas fa-house"></i><span>หน้าหลัก</span>
-      </button>
-      <button class="sb-item" id="sbn-articles" data-click="navTo" data-a0="articles" data-t0="string">
+      </a>
+      <a href="/article" class="sb-item" id="sbn-articles" data-click="navTo" data-a0="articles" data-t0="string">
         <i aria-hidden="true" class="fas fa-book-open"></i><span>บทความ</span>
-      </button>
-      <button class="sb-item" id="sbn-saved" data-click="navTo" data-a0="saved" data-t0="string">
+      </a>
+      <a href="/saved" class="sb-item" id="sbn-saved" data-click="navTo" data-a0="saved" data-t0="string">
         <i aria-hidden="true" class="fas fa-bookmark"></i><span>บันทึกไว้</span>
-      </button>
-      <button class="sb-item" id="sbn-settings" data-click="openSettings">
+      </a>
+      <a href="/settings" class="sb-item" id="sbn-settings" data-click="openSettings">
         <i aria-hidden="true" class="fas fa-gear"></i><span>ตั้งค่า</span>
-      </button>
+      </a>
     </nav>
     <div class="sb-user-card" id="sb-user-card">
       <div class="sb-uc-row">
@@ -1550,6 +1551,11 @@ html[data-theme="light"] .post:hover{box-shadow:0 6px 18px #25344b12}
     </div>
 
     <div class="feed-main" id="feed-main" tabindex="-1" role="main" aria-label="โพสต์และบทความ">
+      <section id="page-not-found" class="not-found" hidden tabindex="-1" aria-labelledby="not-found-title">
+        <p class="not-found-code" aria-hidden="true">404</p><h2 id="not-found-title">Page not found</h2>
+        <p id="not-found-description">ไม่พบหน้าที่คุณกำลังหา ลิงก์อาจไม่ถูกต้อง หรือเนื้อหาถูกย้ายแล้ว</p>
+        <nav class="not-found-actions" aria-label="กลับไปยังเนื้อหา"><a class="not-found-primary" href="/" data-click="navTo" data-a0="home" data-t0="string">กลับหน้าหลัก</a><a href="/article" data-click="navTo" data-a0="articles" data-t0="string">ดูบทความทั้งหมด</a></nav>
+      </section>
       <section id="prof-section" style="border-bottom:1px solid var(--border)">
         <div class="prof-cover" id="prof-cover"><div class="cover-fade"></div></div>
         <div class="prof-body">
@@ -1668,12 +1674,12 @@ html[data-theme="light"] .post:hover{box-shadow:0 6px 18px #25344b12}
 </div>
 
 <nav class="mob-nav" id="mob-nav">
-  <button class="mnav-btn active" id="mnav-home" data-click="navTo" data-a0="home" data-t0="string"><i aria-hidden="true" class="fas fa-house"></i><span>หน้าหลัก</span></button>
-  <button class="mnav-btn" id="mnav-search" data-click="openMobSearch"><i aria-hidden="true" class="fas fa-magnifying-glass"></i><span>ค้นหา</span></button>
+  <a href="/" class="mnav-btn active" id="mnav-home" data-click="navTo" data-a0="home" data-t0="string"><i aria-hidden="true" class="fas fa-house"></i><span>หน้าหลัก</span></a>
+  <a href="/search" class="mnav-btn" id="mnav-search" data-click="openMobSearch"><i aria-hidden="true" class="fas fa-magnifying-glass"></i><span>ค้นหา</span></a>
   <button class="mnav-fab hidden" id="mnav-fab" data-click="openCompose" title="สร้างโพสต์" aria-label="สร้างโพสต์"><i aria-hidden="true" class="fas fa-plus"></i></button>
-  <button class="mnav-btn" id="mnav-articles" data-click="navTo" data-a0="articles" data-t0="string"><i aria-hidden="true" class="fas fa-book-open"></i><span>บทความ</span></button>
-  <button class="mnav-btn" id="mnav-saved" data-click="navTo" data-a0="saved" data-t0="string"><i aria-hidden="true" class="fas fa-bookmark"></i><span>บันทึก</span></button>
-  <button class="mnav-btn" id="mnav-settings" data-click="openSettings"><i aria-hidden="true" class="fas fa-gear"></i><span>ตั้งค่า</span></button>
+  <a href="/article" class="mnav-btn" id="mnav-articles" data-click="navTo" data-a0="articles" data-t0="string"><i aria-hidden="true" class="fas fa-book-open"></i><span>บทความ</span></a>
+  <a href="/saved" class="mnav-btn" id="mnav-saved" data-click="navTo" data-a0="saved" data-t0="string"><i aria-hidden="true" class="fas fa-bookmark"></i><span>บันทึก</span></a>
+  <a href="/settings" class="mnav-btn" id="mnav-settings" data-click="openSettings"><i aria-hidden="true" class="fas fa-gear"></i><span>ตั้งค่า</span></a>
 </nav>
 
 <div class="mob-srch-overlay" id="mob-srch">
@@ -2001,6 +2007,7 @@ const S={
   selFileMob:null,
   selFileEdit:null,
   activeTag:null,
+  notFound:false,
   savedView:false,
   articlesView:false,
   articles:[],
@@ -2025,7 +2032,7 @@ function isAdmin(){return splitRoles(getRole()).includes('admin');}
 
 function esc(s){if(s==null)return'';return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 const MEDIA_ASSETS=/* BUILD_MEDIA_MAP */{};
-function imageUrl(value){const url=safeHttpUrl(value);return url&&MEDIA_ASSETS[url]?new URL(MEDIA_ASSETS[url].src,location.href).href:url;}
+function imageUrl(value){const url=safeHttpUrl(value);return url&&MEDIA_ASSETS[url]?new URL('/'+MEDIA_ASSETS[url].src.replace(/^\//,''),location.origin).href:url;}
 function imageDimensions(value){const info=MEDIA_ASSETS[safeHttpUrl(value)];return info?'width="'+info.width+'" height="'+info.height+'"':'';}
 function safeHttpUrl(value){try{const u=new URL(String(value||''));return /^https?:$/.test(u.protocol)&&!u.username&&!u.password?u.href:'';}catch{return '';}}
 function fmt(ts){if(!ts)return'';const d=new Date(ts),now=new Date(),diff=now-d;if(isNaN(diff))return'';if(diff<60000)return'เมื่อกี้';if(diff<3600000)return`${Math.floor(diff/60000)} นาทีที่แล้ว`;if(diff<86400000)return`${Math.floor(diff/3600000)} ชม.ที่แล้ว`;return d.toLocaleDateString('th-TH',{day:'numeric',month:'short'})+' '+d.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'});}
@@ -2361,19 +2368,7 @@ function normalizeTag(t){return String(t||'').trim().replace(/^#+/,'').toLowerCa
 function filterByTag(tag){
   const norm=normalizeTag(tag);
   if(!norm){clearTagFilter();return;}
-  S.activeTag=norm;
-  if(S.savedView){S.savedView=false;D('feed-hdr-title').textContent=S.profile.webTitle||'Timeline';}
-  setMN('home');setSBN('home');
-  closeMobSearch();closeSettings();
-  renderTagFilterBar();
-  renderFeed();
-  try{
-    const url=new URL(window.location.href);
-    url.searchParams.set('tag',norm);
-    url.searchParams.delete('post');
-    window.history.replaceState({},'',url.toString());
-  }catch{}
-  const fm=D('feed-main');if(fm)fm.scrollTo({top:0,behavior:'smooth'});
+  navigateBlog('/?tag='+encodeURIComponent(norm));
 }
 
 function clearTagFilter(){
@@ -2383,13 +2378,13 @@ function clearTagFilter(){
   try{
     const url=new URL(window.location.href);
     url.searchParams.delete('tag');
-    window.history.replaceState({},'',url.toString());
+    if(!blogRouting&&parseBlogRoute().view==='home')history.replaceState(history.state,'',url.pathname+url.search+url.hash);
   }catch{}
 }
 
 function shareTagLink(){
   if(!S.activeTag)return;
-  const url=window.location.href.split('?')[0]+'?tag='+encodeURIComponent(S.activeTag);
+  const url=location.origin+'/?tag='+encodeURIComponent(S.activeTag);
   const copy=s=>{
     if(navigator.clipboard&&navigator.clipboard.writeText){
       return navigator.clipboard.writeText(s);
@@ -2504,8 +2499,8 @@ D('rw-srch').addEventListener('input',function(){
 });
 
 let mobSD;
-function openMobSearch(){D('mob-srch').classList.add('open');setMN('search');D('mob-srch-body').innerHTML=getEmptySearchHtml();setTimeout(()=>D('mob-srch-in').focus(),300);}
-function closeMobSearch(){D('mob-srch').classList.remove('open');D('mob-srch-in').value='';D('mob-srch-body').innerHTML=getEmptySearchHtml();setMN('home');}
+function openMobSearch(){if(!blogRouting)return navigateBlog('/search',{overlay:true});D('mob-srch').classList.add('open');setMN('search');D('mob-srch-body').innerHTML=getEmptySearchHtml();setTimeout(()=>D('mob-srch-in').focus(),300);}
+function closeMobSearch(){const wasOpen=D('mob-srch').classList.contains('open');D('mob-srch').classList.remove('open');D('mob-srch-in').value='';D('mob-srch-body').innerHTML=getEmptySearchHtml();setMN('home');if(wasOpen&&!blogRouting&&parseBlogRoute().view==='search')closeBlogOverlay();}
 D('mob-srch-in').addEventListener('input',function(){
   clearTimeout(mobSD);const q=this.value.trim();
   if(!q){D('mob-srch-body').innerHTML=getEmptySearchHtml();return;}
@@ -2536,6 +2531,7 @@ D('mob-srch-in').addEventListener('input',function(){
 });
 
 function scrollToPost(ri){
+  if(!blogRouting&&(parseBlogRoute().view!=='home'||parseBlogRoute().postId!==ri)){navigateBlog('/?post='+ri);return;}
   const el=D('post-'+ri);if(!el)return;
   el.scrollIntoView({behavior:'smooth',block:'center'});
   el.style.background='rgba(75,143,255,.08)';
@@ -2543,8 +2539,8 @@ function scrollToPost(ri){
 }
 
 /* =========== Settings =========== */
-function openSettings(){D('set-panel').classList.add('open');setMN('settings');if(isAdmin())loadR2Quota();}
-function closeSettings(){D('set-panel').classList.remove('open');closeSub();if(!D('mob-srch').classList.contains('open'))setMN('home');}
+function openSettings(){if(!blogRouting)return navigateBlog('/settings',{overlay:true});D('set-panel').classList.add('open');setMN('settings');if(isAdmin())loadR2Quota();}
+function closeSettings(){const wasOpen=D('set-panel').classList.contains('open');D('set-panel').classList.remove('open');closeSub();if(!D('mob-srch').classList.contains('open'))setMN('home');if(wasOpen&&!blogRouting&&parseBlogRoute().view==='settings')closeBlogOverlay();}
 function openSub(n){D('sub-'+n).classList.add('open');if(n==='profile-edit')prefillEdit();if(n==='account')prefillAccount();}
 function closeSub(){document.querySelectorAll('.set-sub.open').forEach(s=>s.classList.remove('open'));}
 
@@ -2640,6 +2636,7 @@ window.addEventListener('koo-theme-change',applyBlogTheme);
 function setMN(n){['home','search','articles','saved','settings'].forEach(k=>D('mnav-'+k)?.classList.toggle('active',k===n));}
 function setSBN(n){['home','articles','saved','settings'].forEach(k=>D('sbn-'+k)?.classList.toggle('active',k===n));}
 function navTo(n){
+  if(!blogRouting)return navigateBlog(BLOG_PATHS[n]||'/404');
   closeMobSearch();closeSettings();closeCompose();
   const fm=D('feed-main');
   const cr=D('creator');
@@ -2782,7 +2779,10 @@ async function loadData(email='',name='',pic='',note=null, isFreshLogin=false){
       }
     }catch{}
 
+    blogPostsReady=true;
     renderFeed();
+    resolveBlogPost();
+    updateBlogMetadata();
     saveBlogCache();
     startAutoRefresh();
 
@@ -2793,7 +2793,7 @@ async function loadData(email='',name='',pic='',note=null, isFreshLogin=false){
     setTimeout(()=>{
       const params=new URLSearchParams(window.location.search);
       const target=params.get('post');
-      if(target)scrollToPost(parseInt(target));
+      if(target&&parseBlogRoute().view==='home'&&!S.notFound)scrollToPost(Number(target));
     },600);
 
   }catch(err){
@@ -2976,7 +2976,7 @@ async function fetchLPNow(url,id){
 }
 
 function sharePost(ri){
-  const url=window.location.href.split('?')[0]+'?post='+ri;
+  const url=location.origin+'/?post='+ri;
   if(navigator.clipboard&&navigator.clipboard.writeText){
     navigator.clipboard.writeText(url).then(()=>toast('คัดลอกลิงก์แชร์แล้ว','s','fas fa-link')).catch(()=>toast('คัดลอกไม่สำเร็จ','e'));
   }else{
@@ -2987,7 +2987,7 @@ function sharePost(ri){
 }
 
 function renderFeed(){
-  if(S.articlesView)return;   // อยู่โหมดบทความ อย่าให้ auto-refresh เขียนทับ
+  if(S.notFound||S.articlesView)return;   // อยู่โหมดบทความ อย่าให้ auto-refresh เขียนทับ
   const sk=D('sk-posts');if(sk)sk.remove();
   const feed=D('feed');
 
@@ -3765,10 +3765,11 @@ function openPendingArticle(){
   const a=S.articles.find(x=>x.rowIdx===want);
   if(a&&(!a.locked||a.hasPassword)){
     pendingArticleOpen=0;pendingArticleWarned=false;
-    try{const u=new URL(location.href);u.searchParams.delete('article');history.replaceState(null,'',u.pathname+u.search+u.hash);}catch(e){}
+    // Keep the article in the URL so reloads and copied links reopen the same item.
     openArticle(want);
     return;
   }
+  if(!a){pendingArticleOpen=0;showBlogNotFound('article');return;}
   if(!pendingArticleWarned){
     pendingArticleWarned=true;
     toast(a?'บทความนี้ต้องมีสิทธิ์เข้าถึง — ลองล็อกอิน':'ไม่พบบทความที่แชร์มา','e','fas fa-lock');
@@ -3784,6 +3785,7 @@ function articleMatchesQuery(a,q){
 
 function renderArticlesList(){
   if(!S.articlesView)return;
+  hideBlogNotFound();
   const feed=D('feed');if(!feed)return;
   let h='<div class="art-head"><div class="sec-label" style="padding:0">📚 บทความ & เอกสาร</div>';
   if(isAdmin())h+='<button class="art-upload-btn" data-click="openArticleUpload"><i aria-hidden="true" class="fas fa-plus"></i> อัปโหลด</button>';
@@ -3837,7 +3839,8 @@ function renderArticleItems(){
 }
 
 function openArticle(rowIdx){
-  const a=S.articles.find(x=>x.rowIdx===rowIdx);if(!a)return;
+  const a=S.articles.find(x=>x.rowIdx===rowIdx);if(!a){showBlogNotFound('article');return;}
+  rememberArticleRoute(rowIdx);
   if(a.locked){
     if(a.hasPassword){ promptArticlePassword(rowIdx); return; }
     toast('คุณไม่มีสิทธิ์เข้าถึงบทความนี้','e','fas fa-lock'); return;
@@ -3885,7 +3888,7 @@ async function openArticleViewer(a){
   body.innerHTML='';body.appendChild(ifr);
 }
 window.addEventListener('message',event=>{if(event.origin==='null'&&event.source===D('av-body')?.querySelector('iframe')?.contentWindow&&event.data?.type==='blog-article-close')closeArticleViewer();});
-function closeArticleViewer(){articleViewerRequestId++;const m=D('article-viewer');if(m&&m.classList.contains('open')){m.classList.remove('open');document.body.style.overflow='';D('av-body').innerHTML='';}}
+function closeArticleViewer(){articleViewerRequestId++;const m=D('article-viewer');if(m&&m.classList.contains('open')){m.classList.remove('open');document.body.style.overflow='';D('av-body').innerHTML='';if(!blogRouting&&parseBlogRoute().articleId)navigateBlog('/article',{replace:true});}}
 
 /* ---- copy helper + share + view tracking ---- */
 function copyText(s){
@@ -3894,7 +3897,7 @@ function copyText(s){
 }
 function shareArticle(){
   const row=D('av-share').dataset.row;if(!row)return;
-  const url=location.origin+location.pathname+'?article='+row;
+  const url=location.origin+'/article?article='+row;
   const title=(D('av-title')?.textContent||'บทความ').trim();
   if(navigator.share){
     navigator.share({title,url})
@@ -4191,7 +4194,8 @@ function dispatchBlogAction(event,kind){
  const el=event.target.closest('[data-'+kind+'],[data-stop]');if(!el)return;
  if(el.dataset.stop)event.stopPropagation();
  const name=el.getAttribute('data-'+kind);if(!Object.hasOwn(BLOG_ACTIONS,name))return;
- if(el.dataset.closeSearch)closeMobSearch();
+ if(el.matches('a[href]')){if(event.metaKey||event.ctrlKey||event.shiftKey||event.altKey||event.button>0)return;event.preventDefault();}
+ if(el.dataset.closeSearch&&name!=='scrollToPost')closeMobSearch();
  const args=[];for(let n=0;el.hasAttribute('data-t'+n);n++){
   const value=el.getAttribute('data-a'+n),type=el.getAttribute('data-t'+n);
   args.push(type==='number'?Number(value):type==='true'?true:type==='false'?false:type==='null'?null:type==='this'?el:type==='this.src'?el.src:type==='event'?event:value);
@@ -4221,17 +4225,15 @@ function syncDialogFocus(){
 const dialogObserver=new MutationObserver(syncDialogFocus);dialogIds.forEach(id=>{if(D(id))dialogObserver.observe(D(id),{attributes:true,attributeFilter:['class']})});
 document.addEventListener('keydown',e=>{if(e.key!=='Tab'||!focusedDialog)return;const list=dialogFocusables(focusedDialog),first=list[0],last=list.at(-1);if(!first){e.preventDefault();focusedDialog.focus();return;}if(e.shiftKey&&(document.activeElement===first||!focusedDialog.contains(document.activeElement))){e.preventDefault();last.focus();}else if(!e.shiftKey&&(document.activeElement===last||!focusedDialog.contains(document.activeElement))){e.preventDefault();first.focus();}});
 
+/* BUILD_ROUTING */
+
 /* =========== Boot =========== */
 (function(){
   applyBlogTheme();
   restoreBlogCache();
   loadData();
 
-  // ลิงก์แชร์บทความ (?article=...) → เข้าหน้าบทความให้เลยแล้วเปิดบทความนั้น
-  try{
-    const want=parseInt(new URLSearchParams(location.search).get('article')||'',10);
-    if(want){pendingArticleOpen=want;navTo('articles');}
-  }catch(e){}
+  applyBlogRoute();
 })();
 </script>
 </body>
