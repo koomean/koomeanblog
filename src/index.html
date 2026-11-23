@@ -1492,6 +1492,7 @@ html[data-theme="light"] .post:hover{box-shadow:0 6px 18px #25344b12}
 .koo-theme-select{min-height:36px;max-width:132px;padding:6px 9px;border:1px solid var(--borderH);border-radius:8px;background:var(--s2);color:var(--txt);font:inherit;font-size:12px;color-scheme:inherit}
 </style>
 <script>/* BUILD_THEME */</script>
+<script>/* BUILD_PREFERENCES */</script>
 </head>
 <body>
 <a class="skip-link" href="#feed-main">ข้ามไปยังเนื้อหา</a>
@@ -1663,7 +1664,7 @@ html[data-theme="light"] .post:hover{box-shadow:0 6px 18px #25344b12}
       <div class="rw-about-pad">
         <p id="rw-bio"></p>
         <div class="rw-links">
-          <div class="rw-link" data-click="openExternal" data-a0="https://koomean.github.io/koomean/" data-t0="string" data-a1="_blank" data-t1="string" role="button" tabindex="0"><i aria-hidden="true" class="fas fa-globe"></i>เว็บไซต์</div>
+          <div class="rw-link" data-click="openExternal" data-a0="https://koomean.com/" data-t0="string" data-a1="_blank" data-t1="string" role="button" tabindex="0"><i aria-hidden="true" class="fas fa-globe"></i>เว็บไซต์</div>
           <div class="rw-link" data-click="openExternal" data-a0="https://youtube.com/@koomean" data-t0="string" data-a1="_blank" data-t1="string" role="button" tabindex="0"><i aria-hidden="true" class="fab fa-youtube"></i>YouTube</div>
         </div>
         <div style="margin-top:12px;font-size:.71rem;color:var(--txt3)">Koo Mean Space v3.0 · @koomean</div>
@@ -1734,73 +1735,138 @@ html[data-theme="light"] .post:hover{box-shadow:0 6px 18px #25344b12}
   </div>
 </div>
 
-<div class="set-panel" id="set-panel">
-  <div class="set-bd" data-click="closeSettings" role="button" tabindex="0"></div>
+<div class="set-panel" id="set-panel" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+  <div class="set-bd" data-click="closeSettings" aria-hidden="true"></div>
   <div class="set-drawer">
-    <div class="set-hdr">
-      <div class="logo-mark">KM</div>
-      <div class="set-hdr-t">ตั้งค่า</div>
-      <button class="set-close" data-click="closeSettings"><i aria-hidden="true" class="fas fa-times"></i></button>
-    </div>
-    <div class="set-body">
-      <div class="set-gl">บัญชี</div>
-      <button class="set-row" id="set-acc-row" data-click="onSetAccountClick">
-        <div class="set-icon" style="background:rgba(75,143,255,.12);color:var(--accent)"><i aria-hidden="true" class="fas fa-user"></i></div>
-        <div class="set-info"><div class="set-name" id="set-ln">Sign In</div><div class="set-desc" id="set-ld">เข้าสู่ระบบเพื่อใช้งาน</div></div>
-        <i aria-hidden="true" class="fas fa-chevron-right set-arr"></i>
-      </button>
-      <div class="set-div"></div>
-      <div id="admin-grp" style="display:none">
-        <div class="set-gl">จัดการ Space</div>
-        <button class="set-row" data-click="openSub" data-a0="profile-edit" data-t0="string">
-          <div class="set-icon" style="background:rgba(108,92,231,.12);color:var(--accent2)"><i aria-hidden="true" class="fas fa-id-card"></i></div>
-          <div class="set-info"><div class="set-name">แก้ไขโปรไฟล์</div><div class="set-desc">ชื่อ, Bio, รูปภาพ, ปกหน้า</div></div>
-          <i aria-hidden="true" class="fas fa-chevron-right set-arr"></i>
-        </button>
-        <div class="r2-quota" id="r2-quota-card" aria-live="polite">
-          <div class="r2-q-head"><div class="r2-q-title"><i aria-hidden="true" class="fas fa-database" style="color:var(--accent);margin-right:5px"></i>โควตา Cloudflare R2</div><div class="r2-q-state" id="r2-q-state">กำลังโหลด…</div></div>
-          <div class="r2-q-row"><div class="r2-q-label"><span>พื้นที่เก็บไฟล์</span><span id="r2-q-storage-text">—</span></div><div class="r2-q-track"><i aria-hidden="true" class="r2-q-fill" id="r2-q-storage-bar"></i></div></div>
-          <div class="r2-q-row"><div class="r2-q-label"><span>เขียนไฟล์ (Class A)</span><span id="r2-q-a-text">—</span></div><div class="r2-q-track"><i aria-hidden="true" class="r2-q-fill" id="r2-q-a-bar"></i></div></div>
-          <div class="r2-q-row"><div class="r2-q-label"><span>อ่านไฟล์ (Class B)</span><span id="r2-q-b-text">—</span></div><div class="r2-q-track"><i aria-hidden="true" class="r2-q-fill" id="r2-q-b-bar"></i></div></div>
-          <div class="r2-q-note" id="r2-q-note">จำกัดการใช้ไว้ที่ 80% ของโควต้าฟรีเพื่อสำรอง 20% · รีเซ็ตรอบบิลวันที่ 11</div>
-        </div>
-        <div class="set-div"></div>
-      </div>
-      <div class="set-gl">การแสดงผล</div>
-      <div class="set-row" style="cursor:default" data-stop="true">
-        <div class="set-icon" style="background:rgba(34,209,122,.1);color:var(--ok)"><i aria-hidden="true" class="fas fa-moon"></i></div>
-        <div class="set-info"><div class="set-name">ธีมการแสดงผล</div><div class="set-desc">เลือกธีมสว่าง มืด หรือตามระบบ</div></div>
-        <select class="koo-theme-select" data-koo-theme aria-label="ธีมการแสดงผล"><option value="auto">ตามระบบ</option><option value="light">สว่าง</option><option value="dark">มืด</option></select>
-      </div>
-      <div class="set-div"></div>
-      <div class="set-gl">เกี่ยวกับ</div>
-      <div class="set-row" style="cursor:default">
-        <div class="set-icon" style="background:rgba(245,158,11,.1);color:var(--warn)"><i aria-hidden="true" class="fas fa-circle-info"></i></div>
-        <div class="set-info"><div class="set-name" id="set-app-name">Koo Mean Space</div><div class="set-desc">v3.0 · by @koomean</div></div>
-      </div>
-      <button class="set-row" data-click="openExternal" data-a0="https://koomean.github.io/koomean/" data-t0="string" data-a1="_blank" data-t1="string">
-        <div class="set-icon" style="background:rgba(255,255,255,.05);color:var(--txt2)"><i aria-hidden="true" class="fas fa-globe"></i></div>
-        <div class="set-info"><div class="set-name">เว็บไซต์</div><div class="set-desc">koomean.github.io/koomean</div></div>
-        <i aria-hidden="true" class="fas fa-arrow-up-right-from-square set-arr"></i>
-      </button>
-      <button class="set-row" data-click="openExternal" data-a0="https://youtube.com/@koomean" data-t0="string" data-a1="_blank" data-t1="string">
-        <div class="set-icon" style="background:rgba(255,78,106,.1);color:var(--err)"><i aria-hidden="true" class="fab fa-youtube"></i></div>
-        <div class="set-info"><div class="set-name">YouTube</div><div class="set-desc">@koomean</div></div>
-        <i aria-hidden="true" class="fas fa-arrow-up-right-from-square set-arr"></i>
-      </button>
-      <div class="set-div"></div>
-      <div id="so-grp" style="display:none">
-        <button class="set-row del" data-click="signOut">
-          <div class="set-icon" style="background:rgba(255,78,106,.1);color:var(--err)"><i aria-hidden="true" class="fas fa-right-from-bracket"></i></div>
-          <div class="set-info"><div class="set-name">ออกจากระบบ</div><div class="set-desc" id="so-email"></div></div>
-        </button>
+    <div class="settings-main" id="set-main">
+      <header class="set-hdr">
+        <h2 class="set-hdr-t" id="settings-title">ตั้งค่า</h2>
+        <button type="button" class="set-close" data-click="closeSettings" aria-label="ปิดหน้าตั้งค่า"><i aria-hidden="true" class="fas fa-times"></i></button>
+      </header>
+      <div class="set-body">
+        <section class="settings-section" aria-labelledby="settings-appearance-title">
+          <h3 class="set-gl" id="settings-appearance-title">การแสดงผลและการอ่าน</h3>
+          <figure class="settings-preview">
+            <figcaption class="settings-preview-caption">ตัวอย่างการอ่าน</figcaption>
+            <h4 class="settings-preview-title">บันทึกระหว่างทาง</h4>
+            <p class="settings-preview-text">บางเรื่องเริ่มจากความสงสัย พอได้ลองทำจริงก็มีเรื่องใหม่ให้จดไว้กลับมาอ่าน</p>
+            <span class="settings-preview-tag">#บันทึก</span>
+          </figure>
+          <div class="settings-fields">
+            <div class="settings-field">
+              <label for="settings-theme">ธีมการแสดงผล</label>
+              <select id="settings-theme" class="koo-theme-select" data-koo-theme>
+                <option value="auto">ตามระบบ</option>
+                <option value="light">สว่าง</option>
+                <option value="dark">มืด</option>
+              </select>
+            </div>
+            <div class="settings-field">
+              <label for="settings-size">ขนาดตัวอักษร</label>
+              <select id="settings-size" data-blog-preference="textSize">
+                <option value="default">ปกติ</option>
+                <option value="large">ใหญ่</option>
+                <option value="extra">ใหญ่มาก</option>
+              </select>
+            </div>
+            <div class="settings-field">
+              <label for="settings-density">ระยะห่างของเนื้อหา</label>
+              <select id="settings-density" data-blog-preference="density">
+                <option value="comfortable">สบายตา</option>
+                <option value="compact">กระชับ</option>
+              </select>
+            </div>
+            <div class="settings-field">
+              <label for="settings-motion">การเคลื่อนไหว</label>
+              <select id="settings-motion" data-blog-preference="motion">
+                <option value="system">ตามระบบ</option>
+                <option value="reduce">ลดการเคลื่อนไหว</option>
+              </select>
+            </div>
+          </div>
+          <fieldset class="settings-colors">
+            <legend>สีเน้น</legend>
+            <div class="settings-swatches">
+              <label class="settings-swatch settings-swatch-blue">
+                <input type="radio" name="blog-accent" data-blog-preference="accent" value="blue" aria-label="น้ำเงิน" checked>
+                <span>น้ำเงิน</span>
+              </label>
+              <label class="settings-swatch settings-swatch-violet">
+                <input type="radio" name="blog-accent" data-blog-preference="accent" value="violet" aria-label="ม่วง">
+                <span>ม่วง</span>
+              </label>
+              <label class="settings-swatch settings-swatch-teal">
+                <input type="radio" name="blog-accent" data-blog-preference="accent" value="teal" aria-label="เขียวอมฟ้า">
+                <span>เขียวอมฟ้า</span>
+              </label>
+              <label class="settings-swatch settings-swatch-rose">
+                <input type="radio" name="blog-accent" data-blog-preference="accent" value="rose" aria-label="ชมพู">
+                <span>ชมพู</span>
+              </label>
+            </div>
+          </fieldset>
+          <div class="settings-preference-actions">
+            <p class="settings-note">การตั้งค่าเหล่านี้จะบันทึกไว้ในเบราว์เซอร์นี้</p>
+            <button type="button" class="settings-reset" id="settings-reset">คืนค่าเริ่มต้น</button>
+          </div>
+          <p class="settings-status" id="settings-status" role="status"></p>
+        </section>
+
+        <section class="settings-section" aria-labelledby="settings-account-heading">
+          <h3 class="set-gl" id="settings-account-heading">บัญชี</h3>
+          <button type="button" class="set-row" id="set-acc-row" data-click="onSetAccountClick">
+            <span class="set-icon"><i aria-hidden="true" class="fas fa-user"></i></span>
+            <span class="set-info"><span class="set-name" id="set-ln">Sign In</span><span class="set-desc" id="set-ld">เข้าสู่ระบบเพื่อใช้งาน</span></span>
+            <i aria-hidden="true" class="fas fa-chevron-right set-arr"></i>
+          </button>
+          <div id="so-grp" style="display:none">
+            <button type="button" class="set-row del" data-click="signOut">
+              <span class="set-icon"><i aria-hidden="true" class="fas fa-right-from-bracket"></i></span>
+              <span class="set-info"><span class="set-name">ออกจากระบบ</span><span class="set-desc" id="so-email"></span></span>
+            </button>
+          </div>
+        </section>
+
+        <section class="settings-section" id="admin-grp" aria-labelledby="settings-admin-heading" style="display:none">
+          <h3 class="set-gl" id="settings-admin-heading">จัดการ Space</h3>
+          <button type="button" class="set-row" data-click="openSub" data-a0="profile-edit" data-t0="string">
+            <span class="set-icon"><i aria-hidden="true" class="fas fa-id-card"></i></span>
+            <span class="set-info"><span class="set-name">แก้ไขโปรไฟล์</span><span class="set-desc">ชื่อ คำแนะนำตัว รูปโปรไฟล์ และรูปปก</span></span>
+            <i aria-hidden="true" class="fas fa-chevron-right set-arr"></i>
+          </button>
+          <div class="r2-quota" id="r2-quota-card" aria-live="polite">
+            <div class="r2-q-head"><div class="r2-q-title"><i aria-hidden="true" class="fas fa-database" style="color:var(--accent);margin-right:5px"></i>โควตา Cloudflare R2</div><div class="r2-q-state" id="r2-q-state">กำลังโหลด…</div></div>
+            <div class="r2-q-row"><div class="r2-q-label"><span>พื้นที่เก็บไฟล์</span><span id="r2-q-storage-text">—</span></div><div class="r2-q-track"><i aria-hidden="true" class="r2-q-fill" id="r2-q-storage-bar"></i></div></div>
+            <div class="r2-q-row"><div class="r2-q-label"><span>เขียนไฟล์ (Class A)</span><span id="r2-q-a-text">—</span></div><div class="r2-q-track"><i aria-hidden="true" class="r2-q-fill" id="r2-q-a-bar"></i></div></div>
+            <div class="r2-q-row"><div class="r2-q-label"><span>อ่านไฟล์ (Class B)</span><span id="r2-q-b-text">—</span></div><div class="r2-q-track"><i aria-hidden="true" class="r2-q-fill" id="r2-q-b-bar"></i></div></div>
+            <div class="r2-q-note" id="r2-q-note">จำกัดการใช้ไว้ที่ 80% ของโควต้าฟรีเพื่อสำรอง 20% · รีเซ็ตรอบบิลวันที่ 11</div>
+          </div>
+        </section>
+
+        <section class="settings-section" aria-labelledby="settings-about-heading">
+          <h3 class="set-gl" id="settings-about-heading">เกี่ยวกับ</h3>
+          <div class="set-row settings-info-row">
+            <span class="set-icon"><i aria-hidden="true" class="fas fa-circle-info"></i></span>
+            <span class="set-info"><span class="set-name" id="set-app-name">Koo Mean Space</span><span class="set-desc">v3.0 · by @koomean</span></span>
+          </div>
+          <a class="set-row" href="https://koomean.com/" target="_blank" rel="noopener noreferrer" data-click="openExternal" data-a0="https://koomean.com/" data-t0="string">
+            <span class="set-icon"><i aria-hidden="true" class="fas fa-globe"></i></span>
+            <span class="set-info"><span class="set-name">เว็บไซต์</span><span class="set-desc">koomean.com</span></span>
+            <i aria-hidden="true" class="fas fa-arrow-up-right-from-square set-arr"></i>
+          </a>
+          <a class="set-row" href="https://youtube.com/@koomean" target="_blank" rel="noopener noreferrer" data-click="openExternal" data-a0="https://youtube.com/@koomean" data-t0="string">
+            <span class="set-icon"><i aria-hidden="true" class="fab fa-youtube"></i></span>
+            <span class="set-info"><span class="set-name">YouTube</span><span class="set-desc">@koomean</span></span>
+            <i aria-hidden="true" class="fas fa-arrow-up-right-from-square set-arr"></i>
+          </a>
+        </section>
       </div>
     </div>
 
     <div class="set-sub" id="sub-profile-edit">
       <div class="set-sub-hdr">
-        <button class="back-btn" data-click="closeSub" aria-label="ย้อนกลับ"><i aria-hidden="true" class="fas fa-chevron-left"></i></button>
-        <div class="set-sub-t">แก้ไขโปรไฟล์ Space</div>
+        <button type="button" class="back-btn" data-click="closeSub" aria-label="ย้อนกลับ"><i aria-hidden="true" class="fas fa-chevron-left"></i></button>
+        <h2 class="set-sub-t" id="settings-profile-title">แก้ไขโปรไฟล์ Space</h2>
       </div>
       <div class="set-sub-body">
         <div class="sf"><label class="sl" for="si-title">ชื่อเว็บไซต์</label><input class="si" id="si-title" type="text" placeholder="Koo Mean Space" aria-label="Koo Mean Space"></div>
@@ -1815,8 +1881,8 @@ html[data-theme="light"] .post:hover{box-shadow:0 6px 18px #25344b12}
 
     <div class="set-sub" id="sub-account">
       <div class="set-sub-hdr">
-        <button class="back-btn" data-click="closeSub" aria-label="ย้อนกลับ"><i aria-hidden="true" class="fas fa-chevron-left"></i></button>
-        <div class="set-sub-t">ข้อมูลบัญชี</div>
+        <button type="button" class="back-btn" data-click="closeSub" aria-label="ย้อนกลับ"><i aria-hidden="true" class="fas fa-chevron-left"></i></button>
+        <h2 class="set-sub-t" id="settings-account-title">ข้อมูลบัญชี</h2>
       </div>
       <div class="set-sub-body">
         <div class="acc-card">
@@ -2533,16 +2599,35 @@ D('mob-srch-in').addEventListener('input',function(){
 function scrollToPost(ri){
   if(!blogRouting&&(parseBlogRoute().view!=='home'||parseBlogRoute().postId!==ri)){navigateBlog('/?post='+ri);return;}
   const el=D('post-'+ri);if(!el)return;
-  el.scrollIntoView({behavior:'smooth',block:'center'});
-  el.style.background='rgba(75,143,255,.08)';
+  el.scrollIntoView({behavior:blogScrollBehavior(),block:'center'});
+  el.style.background='var(--glow)';
   setTimeout(()=>el.style.background='',1800);
 }
 
 /* =========== Settings =========== */
 function openSettings(){if(!blogRouting)return navigateBlog('/settings',{overlay:true});D('set-panel').classList.add('open');setMN('settings');if(isAdmin())loadR2Quota();}
 function closeSettings(){const wasOpen=D('set-panel').classList.contains('open');D('set-panel').classList.remove('open');closeSub();if(!D('mob-srch').classList.contains('open'))setMN('home');if(wasOpen&&!blogRouting&&parseBlogRoute().view==='settings')closeBlogOverlay();}
-function openSub(n){D('sub-'+n).classList.add('open');if(n==='profile-edit')prefillEdit();if(n==='account')prefillAccount();}
-function closeSub(){document.querySelectorAll('.set-sub.open').forEach(s=>s.classList.remove('open'));}
+let settingsSubTrigger = null;
+function openSub(name) {
+  const sub = D('sub-'+name);
+  if (!sub || !D('set-panel').classList.contains('open')) return;
+  settingsSubTrigger = document.activeElement;
+  if (name === 'profile-edit') prefillEdit();
+  if (name === 'account') prefillAccount();
+  D('set-main').inert = true;
+  D('set-panel').setAttribute('aria-labelledby', name === 'account' ? 'settings-account-title' : 'settings-profile-title');
+  sub.classList.add('open');
+  sub.querySelector('.back-btn').focus({preventScroll:true});
+}
+function closeSub() {
+  const sub = D('set-panel').querySelector('.set-sub.open');
+  if (!sub) return;
+  sub.classList.remove('open');
+  D('set-panel').setAttribute('aria-labelledby','settings-title');
+  D('set-main').inert = false;
+  if (D('set-panel').classList.contains('open')) settingsSubTrigger?.focus({preventScroll:true});
+  settingsSubTrigger = null;
+}
 
 function onSetAccountClick(){
   if(!S.user){closeSettings();openModal('login-modal');return;}
@@ -2553,7 +2638,7 @@ function prefillAccount(){
   if(!S.user)return;
   const r=getRole();const rLabel=r?r.charAt(0).toUpperCase()+r.slice(1):'User';
   D('acc-av').src=S.user.pic||'https://ui-avatars.com/api/?name='+encodeURIComponent(S.user.name||'U')+'&background=161d2e&color=7988a3';
-  D('acc-av').onerror=function(){this.src='https://ui-avatars.com/api/?name='+encodeURIComponent(S.user.name||'U')+'&background=161d2e&color=7988a3';};
+  D('acc-av').onerror=function(){this.onerror=null;this.src='https://ui-avatars.com/api/?name='+encodeURIComponent(S.user?.name||'U')+'&background=161d2e&color=7988a3';};
   D('acc-name').textContent=S.user.name||'';
   D('acc-email').textContent=S.user.email||'';
   const rb=D('acc-role');rb.textContent=rLabel;rb.className='acc-role '+(r.includes('admin')?'admin':(r.includes('blog')?'blog':''));
@@ -2614,23 +2699,10 @@ async function saveAccountName() {
   }
 }
 
-let isDark=true;
 function applyBlogTheme(){
-  isDark=window.KooTheme.theme==='dark';
-  const r=document.documentElement.style;
-  r.setProperty('--bg',isDark?'#07090f':'#f0f2f7');
-  r.setProperty('--s1',isDark?'#0c0f1c':'#ffffff');
-  r.setProperty('--s2',isDark?'#111827':'#f8fafc');
-  r.setProperty('--s3',isDark?'#161d2e':'#edf2f7');
-  r.setProperty('--border',isDark?'rgba(255,255,255,0.07)':'rgba(0,0,0,0.08)');
-  r.setProperty('--borderH',isDark?'rgba(255,255,255,0.13)':'rgba(0,0,0,0.14)');
-  r.setProperty('--txt',isDark?'#dde3f0':'#0f172a');
-  r.setProperty('--txt2',isDark?'#7988a3':'#475569');
-  r.setProperty('--txt3',isDark?'#8495b0':'#64748b');
-  document.documentElement.dataset.theme=isDark?'dark':'light';document.documentElement.style.colorScheme=isDark?'dark':'light';
-  document.querySelector('meta[name="theme-color"]').content=isDark?'#07090f':'#f0f2f7';
+  document.querySelector('meta[name="theme-color"]').content=getComputedStyle(document.documentElement).getPropertyValue('--bg').trim();
 }
-function toggleDark(){window.KooTheme.set(isDark?'light':'dark');}
+function toggleDark(){window.KooTheme.set(window.KooTheme.theme==='dark'?'light':'dark');}
 window.addEventListener('koo-theme-change',applyBlogTheme);
 
 function setMN(n){['home','search','articles','saved','settings'].forEach(k=>D('mnav-'+k)?.classList.toggle('active',k===n));}
@@ -2648,7 +2720,7 @@ function navTo(n){
     if(cr)cr.style.display='none';
     D('tag-filter-bar').style.display='none';
     loadArticles();
-    if(fm)fm.scrollTo({top:0,behavior:'smooth'});
+    if(fm)fm.scrollTo({top:0,behavior:blogScrollBehavior()});
     return;
   }
   if(cr)cr.style.display='';           // ออกจากโหมดบทความ → คืนช่องเขียนโพสต์
@@ -2665,7 +2737,7 @@ function navTo(n){
     if(S.activeTag){clearTagFilter();}
     else{D('feed-hdr-title').textContent=S.profile.webTitle||'Timeline';renderFeed();}
   }
-  if(fm)fm.scrollTo({top:0,behavior:'smooth'});
+  if(fm)fm.scrollTo({top:0,behavior:blogScrollBehavior()});
 }
 
 /* =========== Auth =========== */
@@ -3578,6 +3650,7 @@ async function deleteCmt(ri,cTime){
 
 /* =========== Keyboard shortcuts / responsive =========== */
 document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'&&focusedDialog===D('set-panel')&&D('set-panel').querySelector('.set-sub.open')){closeSub();return;}
   if(e.key==='Escape'){closeLightbox();closeArticleViewer();closeArticlePassword();closeMobSearch();closeSettings();closeCompose();document.querySelectorAll('.overlay.open').forEach(o=>o.classList.remove('open'));const ep=D('emoji-panel');if(ep)ep.classList.remove('open');}
   if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();isMob()?openMobSearch():D('rw-srch').focus();}
 });
@@ -3637,7 +3710,7 @@ function closeLightbox(){const lb=D('lightbox');if(lb&&lb.classList.contains('op
   const fm=D('feed-main');if(!fm)return;
   fm.addEventListener('scroll',()=>{const b=D('scroll-top-btn');if(b)b.classList.toggle('show',fm.scrollTop>600);},{passive:true});
 })();
-function scrollFeedTop(){const fm=D('feed-main');if(fm)fm.scrollTo({top:0,behavior:'smooth'});}
+function scrollFeedTop(){const fm=D('feed-main');if(fm)fm.scrollTo({top:0,behavior:blogScrollBehavior()});}
 
 /* ---- Double-tap to like (heart burst) ---- */
 function dblLike(e,ri){
@@ -3776,7 +3849,7 @@ function openPendingArticle(){
   }
 }
 
-function searchArticleTag(t){articleQuery=t;const si=D('art-srch');if(si)si.value=t;renderArticleItems();const fm=D('feed-main');if(fm)fm.scrollTo({top:0,behavior:'smooth'});}
+function searchArticleTag(t){articleQuery=t;const si=D('art-srch');if(si)si.value=t;renderArticleItems();const fm=D('feed-main');if(fm)fm.scrollTo({top:0,behavior:blogScrollBehavior()});}
 function articleMatchesQuery(a,q){
   if(!q)return true;
   const hay=((a.locked?'':(a.title||''))+' '+((a.tags||[]).join(' '))).toLowerCase();
@@ -4215,11 +4288,11 @@ document.addEventListener('error',e=>{const img=e.target;if(!img.matches?.('[dat
 
 const dialogIds=['login-modal','reg-modal','ep-modal','ec-modal','apw-modal','article-upload-modal','article-viewer','compose-modal','mob-srch','set-panel','lightbox'];
 let focusedDialog=null,returnFocus=null;
-function dialogFocusables(el){return [...el.querySelectorAll('button:not(:disabled),a[href],input:not(:disabled):not([type="hidden"]),textarea:not(:disabled),iframe,[tabindex="0"]')].filter(n=>n.getClientRects().length&&getComputedStyle(n).visibility!=='hidden')}
+function dialogFocusables(el){return [...el.querySelectorAll('button:not(:disabled),a[href],input:not(:disabled):not([type="hidden"]),select:not(:disabled),textarea:not(:disabled),iframe,[tabindex="0"]')].filter(n=>!n.closest('[inert]')&&n.getClientRects().length&&getComputedStyle(n).visibility!=='hidden')}
 function syncDialogFocus(){
  const next=dialogIds.map(D).filter(el=>el?.classList.contains('open')).sort((a,b)=>Number(getComputedStyle(b).zIndex)-Number(getComputedStyle(a).zIndex))[0]||null;
  if(next===focusedDialog)return;
- if(next){if(!focusedDialog)returnFocus=document.activeElement;focusedDialog=next;next.setAttribute('role','dialog');next.setAttribute('aria-modal','true');next.setAttribute('aria-label',next.querySelector('.m-title,.av-title,.set-hdr-t')?.textContent||'หน้าต่าง Blog');next.tabIndex=-1;(dialogFocusables(next)[0]||next).focus({preventScroll:true});}
+ if(next){if(!focusedDialog)returnFocus=document.activeElement;focusedDialog=next;next.setAttribute('role','dialog');next.setAttribute('aria-modal','true');if(!next.hasAttribute('aria-labelledby'))next.setAttribute('aria-label',next.querySelector('.m-title,.av-title,.set-hdr-t')?.textContent||'หน้าต่าง Blog');next.tabIndex=-1;(dialogFocusables(next)[0]||next).focus({preventScroll:true});}
  else{focusedDialog=null;returnFocus?.isConnected&&returnFocus.focus({preventScroll:true});returnFocus=null;}
 }
 const dialogObserver=new MutationObserver(syncDialogFocus);dialogIds.forEach(id=>{if(D(id))dialogObserver.observe(D(id),{attributes:true,attributeFilter:['class']})});

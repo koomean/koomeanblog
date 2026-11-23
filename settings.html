@@ -14,8 +14,8 @@
 <link rel="preconnect" href="https://koomean-proxy.meanchannel52.workers.dev" crossorigin>
 <link rel="preload" as="image" fetchpriority="high" href="/assets/media-c34486913565949c.webp">
 <link rel="preload" href="/assets/jakarta-cd8db90cd950.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/blog-754488771d7df9b8.css">
-<script src="/assets/app-6d92a3198a1e7519.js" defer></script>
+<link rel="stylesheet" href="/assets/blog-6c5decc390dc5cde.css">
+<script src="/assets/app-c92b4334c4c19b8e.js" defer></script>
 </head>
 <body>
 <a class="skip-link" href="#feed-main">ข้ามไปยังเนื้อหา</a>
@@ -171,7 +171,7 @@
       <div class="rw-about-pad">
         <p id="rw-bio"></p>
         <div class="rw-links">
-          <div class="rw-link" data-click="openExternal" data-a0="https://koomean.github.io/koomean/" data-t0="string" data-a1="_blank" data-t1="string" role="button" tabindex="0"><i aria-hidden="true" class="fas fa-globe"></i>เว็บไซต์</div>
+          <div class="rw-link" data-click="openExternal" data-a0="https://koomean.com/" data-t0="string" data-a1="_blank" data-t1="string" role="button" tabindex="0"><i aria-hidden="true" class="fas fa-globe"></i>เว็บไซต์</div>
           <div class="rw-link" data-click="openExternal" data-a0="https://youtube.com/@koomean" data-t0="string" data-a1="_blank" data-t1="string" role="button" tabindex="0"><i aria-hidden="true" class="fab fa-youtube"></i>YouTube</div>
         </div>
         <div style="margin-top:12px;font-size:.71rem;color:var(--txt3)">Koo Mean Space v3.0 · @koomean</div>
@@ -235,72 +235,134 @@
     </div>
   </div>
 </div>
-<div class="set-panel" id="set-panel">
-  <div class="set-bd" data-click="closeSettings" role="button" tabindex="0"></div>
+<div class="set-panel" id="set-panel" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+  <div class="set-bd" data-click="closeSettings" aria-hidden="true"></div>
   <div class="set-drawer">
-    <div class="set-hdr">
-      <div class="logo-mark">KM</div>
-      <div class="set-hdr-t">ตั้งค่า</div>
-      <button class="set-close" data-click="closeSettings"><i aria-hidden="true" class="fas fa-times"></i></button>
-    </div>
-    <div class="set-body">
-      <div class="set-gl">บัญชี</div>
-      <button class="set-row" id="set-acc-row" data-click="onSetAccountClick">
-        <div class="set-icon" style="background:rgba(75,143,255,.12);color:var(--accent)"><i aria-hidden="true" class="fas fa-user"></i></div>
-        <div class="set-info"><div class="set-name" id="set-ln">Sign In</div><div class="set-desc" id="set-ld">เข้าสู่ระบบเพื่อใช้งาน</div></div>
-        <i aria-hidden="true" class="fas fa-chevron-right set-arr"></i>
-      </button>
-      <div class="set-div"></div>
-      <div id="admin-grp" style="display:none">
-        <div class="set-gl">จัดการ Space</div>
-        <button class="set-row" data-click="openSub" data-a0="profile-edit" data-t0="string">
-          <div class="set-icon" style="background:rgba(108,92,231,.12);color:var(--accent2)"><i aria-hidden="true" class="fas fa-id-card"></i></div>
-          <div class="set-info"><div class="set-name">แก้ไขโปรไฟล์</div><div class="set-desc">ชื่อ, Bio, รูปภาพ, ปกหน้า</div></div>
-          <i aria-hidden="true" class="fas fa-chevron-right set-arr"></i>
-        </button>
-        <div class="r2-quota" id="r2-quota-card" aria-live="polite">
-          <div class="r2-q-head"><div class="r2-q-title"><i aria-hidden="true" class="fas fa-database" style="color:var(--accent);margin-right:5px"></i>โควตา Cloudflare R2</div><div class="r2-q-state" id="r2-q-state">กำลังโหลด…</div></div>
-          <div class="r2-q-row"><div class="r2-q-label"><span>พื้นที่เก็บไฟล์</span><span id="r2-q-storage-text">—</span></div><div class="r2-q-track"><i aria-hidden="true" class="r2-q-fill" id="r2-q-storage-bar"></i></div></div>
-          <div class="r2-q-row"><div class="r2-q-label"><span>เขียนไฟล์ (Class A)</span><span id="r2-q-a-text">—</span></div><div class="r2-q-track"><i aria-hidden="true" class="r2-q-fill" id="r2-q-a-bar"></i></div></div>
-          <div class="r2-q-row"><div class="r2-q-label"><span>อ่านไฟล์ (Class B)</span><span id="r2-q-b-text">—</span></div><div class="r2-q-track"><i aria-hidden="true" class="r2-q-fill" id="r2-q-b-bar"></i></div></div>
-          <div class="r2-q-note" id="r2-q-note">จำกัดการใช้ไว้ที่ 80% ของโควต้าฟรีเพื่อสำรอง 20% · รีเซ็ตรอบบิลวันที่ 11</div>
-        </div>
-        <div class="set-div"></div>
-      </div>
-      <div class="set-gl">การแสดงผล</div>
-      <div class="set-row" style="cursor:default" data-stop="true">
-        <div class="set-icon" style="background:rgba(34,209,122,.1);color:var(--ok)"><i aria-hidden="true" class="fas fa-moon"></i></div>
-        <div class="set-info"><div class="set-name">ธีมการแสดงผล</div><div class="set-desc">เลือกธีมสว่าง มืด หรือตามระบบ</div></div>
-        <select class="koo-theme-select" data-koo-theme aria-label="ธีมการแสดงผล"><option value="auto">ตามระบบ</option><option value="light">สว่าง</option><option value="dark">มืด</option></select>
-      </div>
-      <div class="set-div"></div>
-      <div class="set-gl">เกี่ยวกับ</div>
-      <div class="set-row" style="cursor:default">
-        <div class="set-icon" style="background:rgba(245,158,11,.1);color:var(--warn)"><i aria-hidden="true" class="fas fa-circle-info"></i></div>
-        <div class="set-info"><div class="set-name" id="set-app-name">Koo Mean Space</div><div class="set-desc">v3.0 · by @koomean</div></div>
-      </div>
-      <button class="set-row" data-click="openExternal" data-a0="https://koomean.github.io/koomean/" data-t0="string" data-a1="_blank" data-t1="string">
-        <div class="set-icon" style="background:rgba(255,255,255,.05);color:var(--txt2)"><i aria-hidden="true" class="fas fa-globe"></i></div>
-        <div class="set-info"><div class="set-name">เว็บไซต์</div><div class="set-desc">https://koomean.com/</div></div>
-        <i aria-hidden="true" class="fas fa-arrow-up-right-from-square set-arr"></i>
-      </button>
-      <button class="set-row" data-click="openExternal" data-a0="https://youtube.com/@koomean" data-t0="string" data-a1="_blank" data-t1="string">
-        <div class="set-icon" style="background:rgba(255,78,106,.1);color:var(--err)"><i aria-hidden="true" class="fab fa-youtube"></i></div>
-        <div class="set-info"><div class="set-name">YouTube</div><div class="set-desc">@koomean</div></div>
-        <i aria-hidden="true" class="fas fa-arrow-up-right-from-square set-arr"></i>
-      </button>
-      <div class="set-div"></div>
-      <div id="so-grp" style="display:none">
-        <button class="set-row del" data-click="signOut">
-          <div class="set-icon" style="background:rgba(255,78,106,.1);color:var(--err)"><i aria-hidden="true" class="fas fa-right-from-bracket"></i></div>
-          <div class="set-info"><div class="set-name">ออกจากระบบ</div><div class="set-desc" id="so-email"></div></div>
-        </button>
+    <div class="settings-main" id="set-main">
+      <header class="set-hdr">
+        <h2 class="set-hdr-t" id="settings-title">ตั้งค่า</h2>
+        <button type="button" class="set-close" data-click="closeSettings" aria-label="ปิดหน้าตั้งค่า"><i aria-hidden="true" class="fas fa-times"></i></button>
+      </header>
+      <div class="set-body">
+        <section class="settings-section" aria-labelledby="settings-appearance-title">
+          <h3 class="set-gl" id="settings-appearance-title">การแสดงผลและการอ่าน</h3>
+          <figure class="settings-preview">
+            <figcaption class="settings-preview-caption">ตัวอย่างการอ่าน</figcaption>
+            <h4 class="settings-preview-title">บันทึกระหว่างทาง</h4>
+            <p class="settings-preview-text">บางเรื่องเริ่มจากความสงสัย พอได้ลองทำจริงก็มีเรื่องใหม่ให้จดไว้กลับมาอ่าน</p>
+            <span class="settings-preview-tag">#บันทึก</span>
+          </figure>
+          <div class="settings-fields">
+            <div class="settings-field">
+              <label for="settings-theme">ธีมการแสดงผล</label>
+              <select id="settings-theme" class="koo-theme-select" data-koo-theme>
+                <option value="auto">ตามระบบ</option>
+                <option value="light">สว่าง</option>
+                <option value="dark">มืด</option>
+              </select>
+            </div>
+            <div class="settings-field">
+              <label for="settings-size">ขนาดตัวอักษร</label>
+              <select id="settings-size" data-blog-preference="textSize">
+                <option value="default">ปกติ</option>
+                <option value="large">ใหญ่</option>
+                <option value="extra">ใหญ่มาก</option>
+              </select>
+            </div>
+            <div class="settings-field">
+              <label for="settings-density">ระยะห่างของเนื้อหา</label>
+              <select id="settings-density" data-blog-preference="density">
+                <option value="comfortable">สบายตา</option>
+                <option value="compact">กระชับ</option>
+              </select>
+            </div>
+            <div class="settings-field">
+              <label for="settings-motion">การเคลื่อนไหว</label>
+              <select id="settings-motion" data-blog-preference="motion">
+                <option value="system">ตามระบบ</option>
+                <option value="reduce">ลดการเคลื่อนไหว</option>
+              </select>
+            </div>
+          </div>
+          <fieldset class="settings-colors">
+            <legend>สีเน้น</legend>
+            <div class="settings-swatches">
+              <label class="settings-swatch settings-swatch-blue">
+                <input type="radio" name="blog-accent" data-blog-preference="accent" value="blue" aria-label="น้ำเงิน" checked>
+                <span>น้ำเงิน</span>
+              </label>
+              <label class="settings-swatch settings-swatch-violet">
+                <input type="radio" name="blog-accent" data-blog-preference="accent" value="violet" aria-label="ม่วง">
+                <span>ม่วง</span>
+              </label>
+              <label class="settings-swatch settings-swatch-teal">
+                <input type="radio" name="blog-accent" data-blog-preference="accent" value="teal" aria-label="เขียวอมฟ้า">
+                <span>เขียวอมฟ้า</span>
+              </label>
+              <label class="settings-swatch settings-swatch-rose">
+                <input type="radio" name="blog-accent" data-blog-preference="accent" value="rose" aria-label="ชมพู">
+                <span>ชมพู</span>
+              </label>
+            </div>
+          </fieldset>
+          <div class="settings-preference-actions">
+            <p class="settings-note">การตั้งค่าเหล่านี้จะบันทึกไว้ในเบราว์เซอร์นี้</p>
+            <button type="button" class="settings-reset" id="settings-reset">คืนค่าเริ่มต้น</button>
+          </div>
+          <p class="settings-status" id="settings-status" role="status"></p>
+        </section>
+        <section class="settings-section" aria-labelledby="settings-account-heading">
+          <h3 class="set-gl" id="settings-account-heading">บัญชี</h3>
+          <button type="button" class="set-row" id="set-acc-row" data-click="onSetAccountClick">
+            <span class="set-icon"><i aria-hidden="true" class="fas fa-user"></i></span>
+            <span class="set-info"><span class="set-name" id="set-ln">Sign In</span><span class="set-desc" id="set-ld">เข้าสู่ระบบเพื่อใช้งาน</span></span>
+            <i aria-hidden="true" class="fas fa-chevron-right set-arr"></i>
+          </button>
+          <div id="so-grp" style="display:none">
+            <button type="button" class="set-row del" data-click="signOut">
+              <span class="set-icon"><i aria-hidden="true" class="fas fa-right-from-bracket"></i></span>
+              <span class="set-info"><span class="set-name">ออกจากระบบ</span><span class="set-desc" id="so-email"></span></span>
+            </button>
+          </div>
+        </section>
+        <section class="settings-section" id="admin-grp" aria-labelledby="settings-admin-heading" style="display:none">
+          <h3 class="set-gl" id="settings-admin-heading">จัดการ Space</h3>
+          <button type="button" class="set-row" data-click="openSub" data-a0="profile-edit" data-t0="string">
+            <span class="set-icon"><i aria-hidden="true" class="fas fa-id-card"></i></span>
+            <span class="set-info"><span class="set-name">แก้ไขโปรไฟล์</span><span class="set-desc">ชื่อ คำแนะนำตัว รูปโปรไฟล์ และรูปปก</span></span>
+            <i aria-hidden="true" class="fas fa-chevron-right set-arr"></i>
+          </button>
+          <div class="r2-quota" id="r2-quota-card" aria-live="polite">
+            <div class="r2-q-head"><div class="r2-q-title"><i aria-hidden="true" class="fas fa-database" style="color:var(--accent);margin-right:5px"></i>โควตา Cloudflare R2</div><div class="r2-q-state" id="r2-q-state">กำลังโหลด…</div></div>
+            <div class="r2-q-row"><div class="r2-q-label"><span>พื้นที่เก็บไฟล์</span><span id="r2-q-storage-text">—</span></div><div class="r2-q-track"><i aria-hidden="true" class="r2-q-fill" id="r2-q-storage-bar"></i></div></div>
+            <div class="r2-q-row"><div class="r2-q-label"><span>เขียนไฟล์ (Class A)</span><span id="r2-q-a-text">—</span></div><div class="r2-q-track"><i aria-hidden="true" class="r2-q-fill" id="r2-q-a-bar"></i></div></div>
+            <div class="r2-q-row"><div class="r2-q-label"><span>อ่านไฟล์ (Class B)</span><span id="r2-q-b-text">—</span></div><div class="r2-q-track"><i aria-hidden="true" class="r2-q-fill" id="r2-q-b-bar"></i></div></div>
+            <div class="r2-q-note" id="r2-q-note">จำกัดการใช้ไว้ที่ 80% ของโควต้าฟรีเพื่อสำรอง 20% · รีเซ็ตรอบบิลวันที่ 11</div>
+          </div>
+        </section>
+        <section class="settings-section" aria-labelledby="settings-about-heading">
+          <h3 class="set-gl" id="settings-about-heading">เกี่ยวกับ</h3>
+          <div class="set-row settings-info-row">
+            <span class="set-icon"><i aria-hidden="true" class="fas fa-circle-info"></i></span>
+            <span class="set-info"><span class="set-name" id="set-app-name">Koo Mean Space</span><span class="set-desc">v3.0 · by @koomean</span></span>
+          </div>
+          <a class="set-row" href="https://koomean.com/" target="_blank" rel="noopener noreferrer" data-click="openExternal" data-a0="https://koomean.com/" data-t0="string">
+            <span class="set-icon"><i aria-hidden="true" class="fas fa-globe"></i></span>
+            <span class="set-info"><span class="set-name">เว็บไซต์</span><span class="set-desc">koomean.com</span></span>
+            <i aria-hidden="true" class="fas fa-arrow-up-right-from-square set-arr"></i>
+          </a>
+          <a class="set-row" href="https://youtube.com/@koomean" target="_blank" rel="noopener noreferrer" data-click="openExternal" data-a0="https://youtube.com/@koomean" data-t0="string">
+            <span class="set-icon"><i aria-hidden="true" class="fab fa-youtube"></i></span>
+            <span class="set-info"><span class="set-name">YouTube</span><span class="set-desc">@koomean</span></span>
+            <i aria-hidden="true" class="fas fa-arrow-up-right-from-square set-arr"></i>
+          </a>
+        </section>
       </div>
     </div>
     <div class="set-sub" id="sub-profile-edit">
       <div class="set-sub-hdr">
-        <button class="back-btn" data-click="closeSub" aria-label="ย้อนกลับ"><i aria-hidden="true" class="fas fa-chevron-left"></i></button>
-        <div class="set-sub-t">แก้ไขโปรไฟล์ Space</div>
+        <button type="button" class="back-btn" data-click="closeSub" aria-label="ย้อนกลับ"><i aria-hidden="true" class="fas fa-chevron-left"></i></button>
+        <h2 class="set-sub-t" id="settings-profile-title">แก้ไขโปรไฟล์ Space</h2>
       </div>
       <div class="set-sub-body">
         <div class="sf"><label class="sl" for="si-title">ชื่อเว็บไซต์</label><input class="si" id="si-title" type="text" placeholder="Koo Mean Space" aria-label="Koo Mean Space"></div>
@@ -314,8 +376,8 @@
     </div>
     <div class="set-sub" id="sub-account">
       <div class="set-sub-hdr">
-        <button class="back-btn" data-click="closeSub" aria-label="ย้อนกลับ"><i aria-hidden="true" class="fas fa-chevron-left"></i></button>
-        <div class="set-sub-t">ข้อมูลบัญชี</div>
+        <button type="button" class="back-btn" data-click="closeSub" aria-label="ย้อนกลับ"><i aria-hidden="true" class="fas fa-chevron-left"></i></button>
+        <h2 class="set-sub-t" id="settings-account-title">ข้อมูลบัญชี</h2>
       </div>
       <div class="set-sub-body">
         <div class="acc-card">

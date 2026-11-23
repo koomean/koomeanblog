@@ -28,6 +28,7 @@
     set(value, persist = true) {
       if (!valid(value)) return;
       preference = value;
+      let savedPreference = true;
       if (persist) {
         try {
           if (json) {
@@ -36,9 +37,10 @@
             if (!saved || typeof saved !== 'object' || Array.isArray(saved)) saved = {};
             localStorage.setItem(key, JSON.stringify({ ...saved, theme: value }));
           } else localStorage.setItem(key, value);
-        } catch { /* Keep the selected theme for this visit when storage is unavailable. */ }
+        } catch { savedPreference = false; }
       }
       apply();
+      return savedPreference;
     }
   };
   document.addEventListener('change', event => {

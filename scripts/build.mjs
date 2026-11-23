@@ -6,6 +6,7 @@ let released;
 try{released=JSON.parse(execFileSync('git',['show','HEAD:build-manifest.json'],{encoding:'utf8',stdio:['ignore','pipe','ignore']}))}catch{try{released=JSON.parse(fs.readFileSync('build-manifest.json','utf8'))}catch{}}
 const hash=s=>createHash('sha256').update(s).digest('hex').slice(0,16);
 let html=fs.readFileSync('src/index.html','utf8').replace('/* BUILD_THEME */',fs.readFileSync('src/theme.js','utf8')).replace('/* BUILD_MAINTENANCE */',fs.readFileSync('src/maintenance.js','utf8')).replace('/* BUILD_ROUTING */',fs.readFileSync('src/routing.js','utf8'));
+html=html.replace('/* BUILD_PREFERENCES */',fs.readFileSync('src/preferences.js','utf8'));
 html=html.replace('/* BUILD_MEDIA_MAP */{}',fs.readFileSync('src/media-map.json','utf8').trim());
 const scripts=[],styles=[fs.readFileSync('src/vendor.css','utf8'),fs.readFileSync('src/maintenance.css','utf8'),fs.readFileSync('src/not-found.css','utf8')];
 const cover=JSON.parse(fs.readFileSync('media-optimization.json','utf8')).find(item=>item.kind==='cover');
@@ -16,6 +17,7 @@ if(cover){
 }
 
 html=html.replace(/<style>([\s\S]*?)<\/style>/g,(_,css)=>{styles.push(css);return ''});
+for(const file of ['site-design.css','preferences.css','settings.css'])styles.push(fs.readFileSync('src/'+file,'utf8'));
 html=html.replace(/<script>([\s\S]*?)<\/script>/g,(_,js)=>{scripts.push(js);return ''});
 html=html.replace(/<link[^>]+href="https:\/\/(?:fonts.googleapis.com|cdnjs.cloudflare.com)[^"]+"[^>]*>/g,'');
 html=html.replace(/<link rel="(?:preconnect|dns-prefetch)" href="https:\/\/(?:fonts.googleapis.com|fonts.gstatic.com|cdnjs.cloudflare.com|accounts.google.com)"[^>]*>/g,'');

@@ -1,0 +1,57 @@
+:root {
+  --reading-scale: 1;
+}
+
+html[data-text-size="large"] { --reading-scale: 1.14; }
+html[data-text-size="extra"] { --reading-scale: 1.28; }
+
+html[data-accent="violet"] {
+  --accent: #ceb6ff;
+  --accent2: #e0caff;
+  --accent-fill: #6947a9;
+}
+html[data-theme="light"][data-accent="violet"] {
+  --accent: #6136a0;
+  --accent2: #744ab0;
+  --accent-fill: #6136a0;
+}
+html[data-accent="teal"] {
+  --accent: #78d9c6;
+  --accent2: #a0e7db;
+  --accent-fill: #176c63;
+}
+html[data-theme="light"][data-accent="teal"] {
+  --accent: #11675b;
+  --accent2: #2e736a;
+  --accent-fill: #11675b;
+}
+html[data-accent="rose"] {
+  --accent: #ffabc5;
+  --accent2: #ffc6d5;
+  --accent-fill: #934360;
+}
+html[data-theme="light"][data-accent="rose"] {
+  --accent: #933153;
+  --accent2: #a34360;
+  --accent-fill: #933153;
+}
+html[data-accent] {
+  --glow: color-mix(in srgb, var(--accent) 14%, transparent);
+  --glow-strong: color-mix(in srgb, var(--accent) 25%, transparent);
+}
+
+html[data-density="compact"] .post,
+html[data-density="compact"] .art-card {
+  padding-block: 10px;
+  margin-block-end: 8px;
+}
+html[data-density="compact"] .post-acts { margin-block-start: 4px; }
+
+html[data-motion="reduce"],
+html[data-motion="reduce"] *,
+html[data-motion="reduce"] *::before,
+html[data-motion="reduce"] *::after {
+  animation: none !important;
+  transition: none !important;
+  scroll-behavior: auto !important;
+}
