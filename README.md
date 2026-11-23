@@ -2,119 +2,88 @@
 
 # ✦ Koo Mean Blog
 
-### พื้นที่แบ่งปันโพสต์และจัดการคลังบทความ
+### พื้นที่แบ่งปันโพสต์และอ่านบทความ · v4.0.0
 
-![Frontend](https://img.shields.io/badge/Frontend-Single%20HTML-2563eb?style=flat-square)
+![Frontend](https://img.shields.io/badge/Frontend-HTML%20%2F%20CSS%20%2F%20JS-2563eb?style=flat-square)
+![Hosting](https://img.shields.io/badge/Hosting-GitHub%20Pages-24292f?style=flat-square)
 ![API](https://img.shields.io/badge/API-Cloudflare%20Workers-f38020?style=flat-square)
 ![Database](https://img.shields.io/badge/Database-D1-7c3aed?style=flat-square)
 ![Media](https://img.shields.io/badge/Media-R2-0f766e?style=flat-square)
 
-[ภาพรวม](#overview) · [ฟีเจอร์](#features) · [การทำงาน](#flow) · [ติดตั้ง](#setup) · [พัฒนา](#developer)
+[เปิด Blog](https://blog.koomean.com/) · [การตั้งค่า](#settings) · [ฟีเจอร์](#features) · [เส้นทาง](#routes) · [พัฒนา](#developer)
 
 </div>
 
-> เว็บนี้รวมฟีดโพสต์กับคลังบทความไว้ในหน้าเดียว ข้อมูลและสิทธิ์จัดการผ่าน Cloudflare Worker ส่วนไฟล์แต่ละประเภทเก็บในบริการที่เหมาะกับงาน
-
 <a id="overview"></a>
-## 🌟 ภาพรวม
 
-หน้าเว็บคือ [`https://blog.koomean.com/`](index%20koomeanblog.html) เป็น HTML/CSS/JavaScript ในไฟล์เดียว จึงไม่ต้อง build ก่อนนำไปวางบน static hosting
+ฟีดโพสต์และคลังบทความอยู่ที่ [blog.koomean.com](https://blog.koomean.com/) รุ่น 4.0.0 ปรับหน้าอ่านและหน้าตั้งค่าสำหรับเดสก์ท็อปและมือถือ ตัวอักษรไทยใช้ Noto Sans Thai ส่วนข้อความและหัวข้อภาษาละตินใช้ Plus Jakarta Sans และ Bricolage Grotesque เว็บให้บริการไฟล์ฟอนต์จากโดเมน Blog โดยตรง
 
-```mermaid
-flowchart LR
-    U[ผู้เข้าชม] --> WEB[หน้า Koo Mean Blog]
-    WEB -->|อ่านและแก้ข้อมูล| W[Cloudflare Worker]
-    W --> D1[(D1: โพสต์ บทความ metadata และ role)]
-    WEB -->|อัปโหลดสื่อโพสต์| W
-    W --> R2[(R2: รูปและสื่อโพสต์)]
-    WEB -->|อนุญาตอัปโหลดเอกสาร| GD[Google Drive]
-    W -->|เก็บ metadata และสิทธิ์| D1
-```
+<a id="settings"></a>
+## ⚙️ การแสดงผลและการอ่าน
 
-Worker config อยู่ที่ [`../CloudFlare/wrangler.portal.jsonc`](../CloudFlare/wrangler.portal.jsonc) และใช้ `koomean-d1-worker.js` เป็น entry point ตาม config ใน repository ส่วน `koomeanproxy.txt` เป็นโค้ด proxy รุ่นเก่า ไม่ใช่ตัวที่ config นี้เลือกใช้
+หน้า [ตั้งค่า](https://blog.koomean.com/settings) จัดกลุ่มการแสดงผล บัญชี และข้อมูลเว็บไซต์ เดสก์ท็อปจัดกลุ่มการตั้งค่าเป็นสองคอลัมน์ ส่วนมือถือเรียงเป็นคอลัมน์เดียว ตัวอย่างการอ่านแสดงธีม สีเน้น ขนาดตัวอักษร และระยะห่างที่เลือกทันที
+
+- **ธีม** · ตามระบบ สว่าง หรือมืด
+- **สีเน้น** · น้ำเงิน ม่วง เขียวอมฟ้า หรือชมพู
+- **ขนาดตัวอักษร** · ปกติ ใหญ่ หรือใหญ่มาก
+- **ระยะห่าง** · สบายตาหรือกระชับ
+- **การเคลื่อนไหว** · ตามระบบหรือลดการเคลื่อนไหว
+
+ปรับค่าได้ด้วยตัวเลือกมาตรฐานของเบราว์เซอร์และใช้คีย์บอร์ดได้ ผู้เข้าชมตั้งค่าได้ก่อนเข้าสู่ระบบ ค่าจะเก็บไว้ในเบราว์เซอร์นี้ ปุ่ม **คืนค่าเริ่มต้น** คืนค่าการแสดงผลและธีม โดยเก็บโพสต์ที่บันทึกและแบบร่างไว้
 
 <a id="features"></a>
 ## ✨ ฟีเจอร์
 
 | ส่วน | ทำอะไรได้ |
 |---|---|
-| **📝 โพสต์** | อ่านฟีด สร้าง/แก้ไข/ลบตามสิทธิ์ กด Like แสดงความคิดเห็น และแชร์โพสต์ |
-| **🔎 ค้นพบเนื้อหา** | ค้นหาและกรองด้วย hashtag เปิดลิงก์ไปยังโพสต์หรือแท็กที่แชร์มา |
-| **📚 คลังบทความ** | ค้นหาบทความตามชื่อ/แท็ก เปิดลิงก์หรือไฟล์ และจำกัดการเข้าถึงด้วย Group/role หรือรหัสผ่าน |
-| **🖼️ สื่อ** | อัปโหลดรูป/สื่อของโพสต์ผ่าน Worker ไป R2 พร้อมสถานะการอัปโหลด |
-| **👤 บัญชีและโปรไฟล์** | เข้าสู่ระบบด้วย Google และแสดงโปรไฟล์ของเว็บไซต์ |
-| **🎨 รูปโปรไฟล์/พื้นหลัง** | แสดงรูป Blog ที่ผู้ดูแลจัดการผ่าน Admin Dashboard และเก็บผ่าน D1 |
-| **💾 บันทึกส่วนตัว** | เก็บ draft, saved posts และค่าหน้าตาบางอย่างไว้ใน browser ของผู้ใช้ |
-| **📊 โควตา R2** | ผู้ดูแลดูปริมาณใช้และสถานะการหยุดใช้งานตาม safe limit ได้จากหน้า Settings |
+| **📝 โพสต์** | อ่านฟีด สร้าง แก้ไข และลบตามสิทธิ์ กดถูกใจ แสดงความคิดเห็น และแชร์โพสต์ |
+| **🔎 ค้นหา** | ค้นหาโพสต์ กรองด้วยแฮชแท็ก และเปิดโพสต์หรือแท็กจากลิงก์ที่แชร์ |
+| **📚 คลังบทความ** | ค้นหาตามชื่อหรือแท็ก เปิดลิงก์และไฟล์ รวมถึงบทความ HTML แบบโต้ตอบ บทความบางรายการจำกัดตามกลุ่ม สิทธิ์ หรือรหัสผ่าน |
+| **🖼️ สื่อ** | อัปโหลดรูปและสื่อของโพสต์ไปยัง Cloudflare R2 พร้อมแสดงสถานะการอัปโหลด |
+| **👤 บัญชีและโปรไฟล์** | เข้าสู่ระบบด้วย Google และแก้ไขชื่อที่แสดง ผู้ดูแลจัดการชื่อเว็บ คำแนะนำตัว รูปโปรไฟล์ และรูปปกได้ |
+| **💾 บันทึกส่วนตัว** | เก็บแบบร่าง โพสต์ที่บันทึก และการตั้งค่าการอ่านไว้ในเบราว์เซอร์ |
+| **📊 โควตา R2** | ผู้ดูแลดูการใช้พื้นที่ จำนวนคำขออ่านและเขียน และสถานะโควตาจากหน้าตั้งค่า |
+
+<a id="routes"></a>
+## 🔗 เส้นทางและหน้า 404
+
+แต่ละหน้ารองรับลิงก์ตรง การรีเฟรช และปุ่มย้อนกลับหรือไปข้างหน้าของเบราว์เซอร์
+
+| หน้า | URL |
+|---|---|
+| หน้าหลัก / โพสต์ | `/` |
+| คลังบทความ | `/article` |
+| บันทึกไว้ | `/saved` |
+| ตั้งค่า | `/settings` |
+| ค้นหา | `/search` |
+
+ลิงก์บทความใช้ `/article?article=<rowIdx>` ส่วนลิงก์เดิม `/?article=<rowIdx>` จะเปลี่ยนเป็นเส้นทางนี้ ลิงก์โพสต์ `/?post=<rowIdx>` และลิงก์แท็ก `/?tag=<tag>` ยังใช้ได้ URL ใช้ระบุหน้า รายการ หรือตัวกรอง ส่วนข้อมูลยืนยันตัวตนและรหัสผ่านส่งผ่านคำขอ API
+
+GitHub Pages ให้บริการไฟล์อย่าง `article.html` ที่ `/article` เมื่อเปิดเส้นทางที่ไม่มีอยู่ โฮสต์จะคืน `404.html` พร้อมสถานะ HTTP 404 หากเส้นทางมีอยู่แต่รายการที่ระบุใน query หายไป หน้าเว็บจะแสดงว่าไม่พบรายการหลังจากโหลดข้อมูลสำเร็จ เมื่อ API ขัดข้อง หน้าเว็บจะแสดงปุ่มให้ลองใหม่
 
 <a id="flow"></a>
-## ⚙️ ระบบทำงานอย่างไร
+## 🗄️ ข้อมูลและสิทธิ์
 
-1. หน้าเว็บส่งคำขอแบบ `POST` ไปยัง Worker เพื่อโหลดหรือเปลี่ยนข้อมูล
-2. Worker ตรวจ Google ID token และ role เมื่อ action ต้องใช้ตัวตนหรือสิทธิ์
-3. Worker อ่าน/เขียนข้อมูลโพสต์และ metadata บทความใน D1
-4. สื่อโพสต์ส่งผ่าน Worker ไปเก็บใน R2
-5. ไฟล์บทความที่เป็นเอกสารส่งไป Google Drive หลังผู้ดูแลให้สิทธิ์ Drive ที่หน้าเว็บร้องขอ
-
-### 🗄️ ที่เก็บข้อมูล
+GitHub Pages ให้บริการไฟล์หน้าเว็บ ส่วน Cloudflare Worker รับคำขอ `POST` และตรวจ Google ID token กับสิทธิ์ของผู้ใช้สำหรับคำขอที่ต้องยืนยันตัวตน
 
 | ข้อมูล | ที่เก็บ |
 |---|---|
-| โพสต์, ผู้ใช้/role, โปรไฟล์, metadata และสิทธิ์บทความ | Cloudflare D1 |
-| รูปโปรไฟล์และพื้นหลังของเว็บ | D1 (`site_profile_images`) |
-| รูปหรือสื่อที่แนบกับโพสต์ | Cloudflare R2 (`BLOG_ASSETS`) |
-| ไฟล์บทความที่อัปโหลดเป็นเอกสาร | Google Drive |
-| Draft, saved posts, theme และ cache บางส่วน | Browser storage ของผู้ใช้ |
+| โพสต์ บัญชีผู้ใช้ สิทธิ์ โปรไฟล์ และข้อมูลกำกับบทความ | Cloudflare D1 |
+| รูปโปรไฟล์และรูปปกของเว็บ | Cloudflare D1 (`site_profile_images`) |
+| รูปและสื่อที่แนบกับโพสต์ | Cloudflare R2 (`BLOG_ASSETS`) |
+| ไฟล์บทความที่อัปโหลด | Google Drive หลังผู้ดูแลอนุญาตสิทธิ์ Drive |
+| แบบร่าง โพสต์ที่บันทึก การตั้งค่าการอ่าน และแคชฟีดสาธารณะ | พื้นที่จัดเก็บของเบราว์เซอร์ |
 
-<a id="setup"></a>
-## 🚀 เริ่มต้นใช้งาน
+Google ID token และ Drive access token อยู่ในหน่วยความจำของแท็บ เมื่อโหลดหน้าใหม่ต้องเข้าสู่ระบบอีกครั้ง CSP ของ Blog บล็อกสคริปต์และ event handler แบบ inline บทความ HTML แบบโต้ตอบใช้ `/blog-article-sandbox.html` จากโดเมน Worker ใน iframe ที่แยก origin และใช้ `sandbox` ตัว Worker จำกัดหน้าที่ฝัง iframe ได้ให้เหลือโดเมน Blog ส่วน [article-sandbox.html](article-sandbox.html) เป็นไฟล์ต้นฉบับของ shell ที่ใช้เทียบกับสำเนาใน Worker
 
-### ☁️ เตรียมระบบหลังบ้าน
-
-ตรวจ config ว่ามี D1 binding `DB`, R2 binding `BLOG_ASSETS`, database/bucket ถูกต้อง และ `ALLOWED_ORIGINS` มี origin ที่ใช้เผยแพร่เว็บ หาก schema ยังไม่พร้อม ให้นำ migration ที่เกี่ยวข้องไปใช้ก่อน
-
-จากโฟลเดอร์ `CloudFlare` deploy Worker:
-
-```bash
-npx wrangler deploy --config wrangler.portal.jsonc
-```
-
-### 🌐 เผยแพร่หน้าเว็บ
-
-1. นำ `index koomeanblog.html` ขึ้น HTTPS static hosting เช่น GitHub Pages หรือ Cloudflare Pages
-2. ตรวจ `API_URL` ในไฟล์ให้ตรงกับ Worker ที่ต้องการใช้
-3. เพิ่ม origin ของเว็บไซต์ใน Google OAuth Client → **Authorized JavaScript origins**
-4. เพิ่ม origin เดียวกันใน `ALLOWED_ORIGINS` ของ Worker
-5. ทดสอบจาก URL HTTPS จริง เพราะ `file://` ไม่ได้ใช้ origin แบบเว็บ production
-
-> Origin คือ scheme + hostname (+ port ถ้ามี) เช่น `https://blog.example.com` ไม่รวม path ของไฟล์
-
-## 📦 R2 และไฟล์บทความ
-
-- `R2_QUOTA_RESET_DAY` กำหนดวันเริ่มรอบตาม config (ปัจจุบันตั้งเป็นวันที่ 11)
-- Worker ตั้ง safe limit ไว้ที่ 80% ของ allowance ที่ใช้คำนวณ และหยุดเรียก R2 เมื่อถึงขีดจำกัดจนกว่าจะเริ่มรอบใหม่
-- Guard นี้เป็นการควบคุมในแอป ไม่ใช่การตั้งเพดานบิลของ Cloudflare โดยตรง
-- อัปโหลดเอกสารบทความต้องอนุญาต Google Drive scope ที่หน้าเว็บร้องขอ; บทความแบบ URL เก็บ metadata/URL ใน D1
+Worker หยุดการใช้ R2 เมื่อถึงขีดจำกัดที่ 80% ของโควตาฟรีที่ใช้คำนวณ รอบปัจจุบันเริ่มใหม่วันที่ 11 ตาม `R2_QUOTA_RESET_DAY` กลไกนี้ควบคุมการเรียก R2 ภายในแอป ส่วนยอดเรียกเก็บเงินขึ้นอยู่กับ Cloudflare
 
 <a id="developer"></a>
-## 🧑‍💻 สำหรับผู้พัฒนา
+## 🧑‍💻 พัฒนาและเผยแพร่
 
-- แก้ UI ใน `index koomeanblog.html`
-- แก้ API, authorization หรือ schema integration ใน [`../CloudFlare/koomean-d1-worker.js`](../CloudFlare/koomean-d1-worker.js)
-- แก้ bindings, cron และ origins ใน [`../CloudFlare/wrangler.portal.jsonc`](../CloudFlare/wrangler.portal.jsonc)
-- หลังเพิ่มโดเมน ให้อัปเดต OAuth origins และ Worker CORS ให้สอดคล้องกัน
-- ทดสอบอย่างน้อยทั้งบัญชีทั่วไปและ admin, สิทธิ์บทความ, การอัปโหลด R2 และ Drive
+ต้นฉบับอยู่ใน [`src/`](src/) โดย [`src/index.html`](src/index.html) เป็นหน้าแอป [`src/routing.js`](src/routing.js) จัดการเส้นทาง และ [`src/404.html`](src/404.html) เป็นหน้า 404 แก้การตั้งค่าการอ่านใน [`src/preferences.js`](src/preferences.js), [`src/preferences.css`](src/preferences.css) และ [`src/settings.css`](src/settings.css)
 
-## 🔐 ความปลอดภัยและขอบเขต
-
-- การซ่อนปุ่มใน browser ไม่ใช่การควบคุมสิทธิ์; Worker เป็นผู้ตรวจสิทธิ์จริง
-- อย่า commit client secret, service-account key หรือ access token ลง repository
-- Google OAuth Client ID เป็น public identifier สำหรับ frontend ไม่ใช่ secret
-- เอกสารนี้อิง source/config ใน repository ไม่ได้ยืนยันว่า production deploy ใช้ revision เดียวกัน
-
-## Release workflow (2026-10-08)
-
-The maintained source is now **`src/index.html`**. `index.html` and content-hashed `assets/app-*.js` / `assets/blog-*.css` are generated by `npm run build`; do not edit them directly. The frontend is still vanilla HTML, CSS and JavaScript with the original layout. GitHub Pages publishes only the generated website, never source, tests or dependencies.
+ใช้ Node.js 22 ตาม GitHub Actions และรันจากรากของ repository
 
 ```sh
 npm ci --ignore-scripts
@@ -122,44 +91,31 @@ npm run build
 npm test
 npx playwright install chromium
 npm run test:browser
+npm run test:routing
+npm run test:performance
 npm run verify
 ```
 
-A push to `main` builds, checks Blog identity and `CNAME`, runs browser/security checks, and publishes **only `koomean/koomeanblog` → `blog.koomean.com`**. Worker/DNS/other frontend deployments are outside this workflow.
+`npm run build` สร้าง `index.html`, `article.html`, `saved.html`, `settings.html`, `search.html`, `404.html` และไฟล์ JavaScript/CSS ที่มี hash ใน `assets/` โดยเก็บ assets จากรุ่นก่อนหนึ่งชุดเพื่อให้ HTML ที่ยังอยู่ในแคชโหลดได้ แก้ต้นฉบับใน `src/` แล้วรัน build เพื่ออัปเดตไฟล์เหล่านี้
 
-- ID and Drive access tokens remain in tab memory. Reloading the page requires sign-in again. Drafts, bookmarks, theme and sanitized public feed cache remain local.
-- The Blog CSP blocks inline scripts/event handlers. Interactive HTML articles use the static `/blog-article-sandbox.html` shell on `koomean-proxy.meanchannel52.workers.dev` inside an opaque-origin iframe. The API response permits only the Blog as an ancestor and also enforces the sandbox. The Blog Pages host prohibits framing, including its legacy `article-sandbox.html` path. Never add `allow-same-origin` to the HTML sandbox. `article-sandbox.html` remains the canonical shell body; the Worker regression check requires its embedded copy to match.
-- Public image optimizations are matched to the exact source URL in `src/media-map.json`. New/version-changed URLs fall back to their original source. Lightbox uses the full-resolution original. No original is overwritten.
-- Local font/icon subsets retain the original design and upstream licenses. If adding a new icon, include its CSS mapping and glyph in the appropriate subset.
-- Optional public-media maintenance requires Sharp: run `BLOG_SHARP_PATH=/path/to/sharp node scripts/optimize-public-media.mjs`, review `media-optimization.json`, then rebuild. It fetches only public Blog API/profile/post media and never writes to D1/R2.
-- Rollback: revert the release commit and let the guarded Pages workflow republish. No database restoration or Worker rollback is needed.
+เมื่อ push ไปที่ `main` [GitHub Actions](.github/workflows/pages.yml) จะ build รันชุดทดสอบ Chromium และตรวจ `CNAME` ก่อนเผยแพร่ไฟล์เว็บไปที่ [blog.koomean.com](https://blog.koomean.com/) การย้อนเวอร์ชันทำได้ด้วยการ revert commit แล้วให้ workflow เผยแพร่ใหม่ งาน deploy Worker และ DNS จัดการแยกจาก GitHub Pages
 
-See [the audit](AUDIT-2026-10-08.md) for findings, measurements and remaining limits. The earlier single-file setup instructions above describe the previous source layout.
+หากต้องทดสอบบน WebKit ให้ติดตั้งด้วย `npx playwright install webkit` แล้วตั้ง `BLOG_BROWSER=webkit` สำหรับ `test:browser`, `test:routing` หรือ `test:performance`
 
-## Security/performance release (2026-10-25)
+<a id="setup"></a>
 
-The visual UI is unchanged. Drive consent, article passwords, HTML viewer results and upload progress are scoped to the initiating session/request. Closed or superseded operations cannot write into a new account's state. Hidden comment avatars load on demand; the first post image has eager/high priority; shared article startup avoids duplicate list reads. A forced refresh after an article mutation always requests fresh data. External preview rate limits no longer throttle the Blog API.
+### ☁️ ตั้งค่าระบบหลังบ้าน
 
-`npm test` includes deterministic auth/request races. Run `npm run test:performance` after building; `BLOG_BROWSER=webkit` selects WebKit for browser/performance checks. Install that matching Playwright browser before use. CI runs the Chromium browser and performance behavior checks before publishing. See [the October 25 audit](AUDIT-2026-10-25.md) for measurements, evidence and testing limits.
+ใน workspace หลัก Worker อยู่ในโฟลเดอร์ `CloudFlare` โดยใช้ `wrangler.portal.jsonc` และ `koomean-d1-worker.js` ก่อน deploy ให้ตรวจ D1 binding `DB`, R2 binding `BLOG_ASSETS` และ migration ของฐานข้อมูล หากเปลี่ยนโดเมนเว็บ ให้ปรับ `API_URL` และ CSP ของหน้าเว็บให้ตรงกับ Worker ที่เลือก เพิ่ม origin ของเว็บใน `ALLOWED_ORIGINS` และใน **Authorized JavaScript origins** ของ Google OAuth Client แล้วทดสอบผ่าน HTTPS
 
-## URL ของแต่ละหน้าและหน้า 404
+```sh
+npx wrangler deploy --config wrangler.portal.jsonc
+```
 
-เมนูใช้ URL จริงและรองรับเปิดลิงก์ตรง รีเฟรช และปุ่มย้อนกลับ/ไปข้างหน้า:
+### 🖼️ ดูแล assets
 
-| หน้า | URL |
-|---|---|
-| หน้าหลัก / โพสต์ | `/` |
-| บทความ | `/article` |
-| บันทึกไว้ | `/saved` |
-| ตั้งค่า | `/settings` |
-| ค้นหา | `/search` |
+- รูปสาธารณะที่ปรับขนาดแล้วอ้างอิง URL ต้นฉบับแบบตรงกันใน [`src/media-map.json`](src/media-map.json) หาก URL เปลี่ยน หน้าเว็บจะใช้รูปจากแหล่งเดิม และตัวดูรูปจะแสดงต้นฉบับเต็มความละเอียด
+- หากต้องสร้างไฟล์รูปที่ปรับขนาดอีกครั้ง ให้ติดตั้ง Sharp และรัน `BLOG_SHARP_PATH=/path/to/sharp node scripts/optimize-public-media.mjs` จากนั้นตรวจ [`media-optimization.json`](media-optimization.json) และ build ใหม่ สคริปต์อ่านเฉพาะสื่อสาธารณะ
+- ฟอนต์และไอคอนใช้ไฟล์ที่โฮสต์กับเว็บ ตรวจเงื่อนไขการใช้งานได้ใน [`licenses/`](licenses/) เมื่อเพิ่มไอคอน ให้ตรวจ CSS mapping และ glyph ของไฟล์ subset ด้วย
 
-ลิงก์บทความใช้ `/article?article=<rowIdx>`; ลิงก์เดิม `/?article=<rowIdx>` ยังเปิดได้และเปลี่ยนเป็น URL ใหม่นี้ โพสต์ `/?post=<rowIdx>` และตัวกรอง `/?tag=<tag>` ยังคงใช้ได้ URL ไม่มี Google token, รหัสผ่าน หรือ Drive access token
-
-แก้ source ที่ `src/index.html`, `src/routing.js`, `src/404.html`, `src/not-found.css` แล้วรัน `npm run build` เพื่อสร้างหน้าและ assets ทุกครั้ง `article.html`, `saved.html`, `settings.html`, `search.html` และ `404.html` เป็นไฟล์ deploy ที่ build สร้าง จึงต้องเก็บไว้ใน artifact ของ GitHub Pages ไม่ใช่ไฟล์ชั่วคราวที่ลบทิ้งได้เอง ไฟล์ assets ที่มี hash รุ่นก่อนเก็บหนึ่งรุ่นเพื่อให้ HTML ที่ยังอยู่ใน cache โหลดต่อได้
-
-GitHub Pages ให้บริการ alias เช่น `article.html` ที่ URL `/article` โดยไม่เปลี่ยน DNS หรือเพิ่ม Worker route ส่วน path ที่ไม่มีอยู่จะคืน `404.html` พร้อม HTTP 404 จริง ดู [GitHub Docs](https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-custom-404-page-for-your-github-pages-site)
-
-รายการโพสต์/บทความที่ไม่มีตาม query จะแสดง Page not found หลังโหลดรายการจาก API สำเร็จเท่านั้น; กรณี API ล้มเหลวจะแสดงปุ่มลองใหม่ และบทความที่จำกัดสิทธิ์หรือใช้รหัสผ่านยังใช้ขั้นตอนยืนยันเดิม Query เหล่านี้อยู่บน static shell ที่ตอบ HTTP 200; การแสดง 404 ของรายการจึงเป็นสถานะใน UI ส่วน path ที่ไม่มีจริงตอบ HTTP 404 จากโฮสต์
-
-ตรวจเส้นทางด้วย `npm run test:routing` ควบคู่กับ `npm test`, `npm run test:browser`, `npm run test:performance`, `npm run verify` Workflow ตรวจทั้งหมดก่อนเผยแพร่และแพ็กเฉพาะไฟล์เว็บไซต์ที่กำหนดไว้
+ผลตรวจและบันทึกการปรับปรุงก่อนหน้าอยู่ใน [รายงาน 8 ต.ค. 2026](AUDIT-2026-10-08.md) และ [รายงาน 25 ต.ค. 2026](AUDIT-2026-10-25.md) หากพบช่องโหว่ให้ดูวิธีแจ้งใน [`SECURITY.md`](SECURITY.md)

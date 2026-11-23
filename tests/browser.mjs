@@ -38,6 +38,12 @@ await page.route('https://koomean-proxy.meanchannel52.workers.dev/**',async r=>{
 });
 try{
  await page.goto('https://blog.koomean.com/');await page.waitForSelector('#post-2');await page.evaluate(()=>document.fonts.ready);
+ check(await page.evaluate(async()=>{
+   const faces=await document.fonts.load('600 16px "Noto Sans Thai"','ข้อความภาษาไทย');
+   return faces.some(face=>face.family.replaceAll('"','')==='Noto Sans Thai')&&
+     getComputedStyle(document.querySelector('.post-txt')).fontFamily.includes('Plus Jakarta Sans')&&
+     getComputedStyle(document.querySelector('.feed-hdr-title')).fontFamily.includes('Bricolage Grotesque');
+ }),'Thai uses the bundled Noto face and Latin keeps the existing text and heading families');
  check(await page.evaluate(()=>!localStorage.getItem('kms_v3')),'legacy JWT removed from persistent storage');
  await page.locator('.post-tag').first().click();check(await page.evaluate(()=>!window.__xss),'malicious hashtag is inert data when clicked');
  await page.evaluate(()=>{clearTagFilter();S.posts[0].hashtags=['technology'];renderFeed()});
@@ -95,6 +101,8 @@ try{
  const textSize=settings.locator('select[data-blog-preference="textSize"]');
  const density=settings.locator('select[data-blog-preference="density"]');
  const motion=settings.locator('select[data-blog-preference="motion"]');
+ check((await settings.locator('#settings-version').textContent())?.includes('4.0.0')&&
+   (await settings.locator('#settings-whats-new').textContent())?.includes('Noto Sans Thai'),'About shows version 4.0.0 and its release notes');
  check(await accents.count()===4,'settings offer four accent colors without signing in');
  check(!await settings.locator('#admin-grp').isVisible(),'R2 and profile administration are hidden from anonymous readers');
  const measureAppearance=()=>page.evaluate(()=>{

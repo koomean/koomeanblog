@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://koomean-proxy.meanchannel52.workers.dev" crossorigin>
 <link rel="preload" as="image" fetchpriority="high" href="/assets/media-c34486913565949c.webp">
 <link rel="preload" href="/assets/jakarta-cd8db90cd950.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/blog-6c5decc390dc5cde.css">
+<link rel="stylesheet" href="/assets/blog-da3c0268f0d41962.css">
 <script src="/assets/app-c92b4334c4c19b8e.js" defer></script>
 </head>
 <body>
@@ -174,7 +174,7 @@
           <div class="rw-link" data-click="openExternal" data-a0="https://koomean.com/" data-t0="string" data-a1="_blank" data-t1="string" role="button" tabindex="0"><i aria-hidden="true" class="fas fa-globe"></i>เว็บไซต์</div>
           <div class="rw-link" data-click="openExternal" data-a0="https://youtube.com/@koomean" data-t0="string" data-a1="_blank" data-t1="string" role="button" tabindex="0"><i aria-hidden="true" class="fab fa-youtube"></i>YouTube</div>
         </div>
-        <div style="margin-top:12px;font-size:.71rem;color:var(--txt3)">Koo Mean Space v3.0 · @koomean</div>
+        <div style="margin-top:12px;font-size:.71rem;color:var(--txt3)">Koo Mean Blog v4.0.0 · @koomean</div>
       </div>
     </div>
   </aside>
@@ -246,70 +246,76 @@
       <div class="set-body">
         <section class="settings-section" aria-labelledby="settings-appearance-title">
           <h3 class="set-gl" id="settings-appearance-title">การแสดงผลและการอ่าน</h3>
-          <figure class="settings-preview">
-            <figcaption class="settings-preview-caption">ตัวอย่างการอ่าน</figcaption>
-            <h4 class="settings-preview-title">บันทึกระหว่างทาง</h4>
-            <p class="settings-preview-text">บางเรื่องเริ่มจากความสงสัย พอได้ลองทำจริงก็มีเรื่องใหม่ให้จดไว้กลับมาอ่าน</p>
-            <span class="settings-preview-tag">#บันทึก</span>
-          </figure>
-          <div class="settings-fields">
-            <div class="settings-field">
-              <label for="settings-theme">ธีมการแสดงผล</label>
-              <select id="settings-theme" class="koo-theme-select" data-koo-theme>
-                <option value="auto">ตามระบบ</option>
-                <option value="light">สว่าง</option>
-                <option value="dark">มืด</option>
-              </select>
-            </div>
-            <div class="settings-field">
-              <label for="settings-size">ขนาดตัวอักษร</label>
-              <select id="settings-size" data-blog-preference="textSize">
-                <option value="default">ปกติ</option>
-                <option value="large">ใหญ่</option>
-                <option value="extra">ใหญ่มาก</option>
-              </select>
-            </div>
-            <div class="settings-field">
-              <label for="settings-density">ระยะห่างของเนื้อหา</label>
-              <select id="settings-density" data-blog-preference="density">
-                <option value="comfortable">สบายตา</option>
-                <option value="compact">กระชับ</option>
-              </select>
-            </div>
-            <div class="settings-field">
-              <label for="settings-motion">การเคลื่อนไหว</label>
-              <select id="settings-motion" data-blog-preference="motion">
-                <option value="system">ตามระบบ</option>
-                <option value="reduce">ลดการเคลื่อนไหว</option>
-              </select>
+          <div class="settings-appearance">
+            <figure class="settings-preview">
+              <figcaption class="settings-preview-caption">ตัวอย่างการอ่าน</figcaption>
+              <div class="settings-preview-sample">
+                <h4 class="settings-preview-title">บันทึกระหว่างทาง</h4>
+                <p class="settings-preview-text">เรื่องเล่าจากสิ่งที่ลองทำ บันทึกวิธีคิดและบทเรียนไว้กลับมาอ่าน</p>
+                <span class="settings-preview-tag">#บันทึก</span>
+              </div>
+            </figure>
+            <div class="settings-controls">
+              <div class="settings-fields">
+                <div class="settings-field">
+                  <label for="settings-theme">ธีมการแสดงผล</label>
+                  <select id="settings-theme" class="koo-theme-select" data-koo-theme>
+                    <option value="auto">ตามระบบ</option>
+                    <option value="light">สว่าง</option>
+                    <option value="dark">มืด</option>
+                  </select>
+                </div>
+                <div class="settings-field">
+                  <label for="settings-size">ขนาดตัวอักษร</label>
+                  <select id="settings-size" data-blog-preference="textSize">
+                    <option value="default">ปกติ</option>
+                    <option value="large">ใหญ่</option>
+                    <option value="extra">ใหญ่มาก</option>
+                  </select>
+                </div>
+                <div class="settings-field">
+                  <label for="settings-density">ระยะห่างของเนื้อหา</label>
+                  <select id="settings-density" data-blog-preference="density">
+                    <option value="comfortable">สบายตา</option>
+                    <option value="compact">กระชับ</option>
+                  </select>
+                </div>
+                <div class="settings-field">
+                  <label for="settings-motion">การเคลื่อนไหว</label>
+                  <select id="settings-motion" data-blog-preference="motion">
+                    <option value="system">ตามระบบ</option>
+                    <option value="reduce">ลดการเคลื่อนไหว</option>
+                  </select>
+                </div>
+              </div>
+              <fieldset class="settings-colors">
+                <legend>สีเน้น</legend>
+                <div class="settings-swatches">
+                  <label class="settings-swatch settings-swatch-blue">
+                    <input type="radio" name="blog-accent" data-blog-preference="accent" value="blue" aria-label="น้ำเงิน" checked>
+                    <span>น้ำเงิน</span>
+                  </label>
+                  <label class="settings-swatch settings-swatch-violet">
+                    <input type="radio" name="blog-accent" data-blog-preference="accent" value="violet" aria-label="ม่วง">
+                    <span>ม่วง</span>
+                  </label>
+                  <label class="settings-swatch settings-swatch-teal">
+                    <input type="radio" name="blog-accent" data-blog-preference="accent" value="teal" aria-label="เขียวอมฟ้า">
+                    <span>เขียวอมฟ้า</span>
+                  </label>
+                  <label class="settings-swatch settings-swatch-rose">
+                    <input type="radio" name="blog-accent" data-blog-preference="accent" value="rose" aria-label="ชมพู">
+                    <span>ชมพู</span>
+                  </label>
+                </div>
+              </fieldset>
+              <div class="settings-preference-actions">
+                <p class="settings-note">บันทึกการตั้งค่าในเบราว์เซอร์นี้</p>
+                <button type="button" class="settings-reset" id="settings-reset">คืนค่าเริ่มต้น</button>
+              </div>
+              <p class="settings-status" id="settings-status" role="status"></p>
             </div>
           </div>
-          <fieldset class="settings-colors">
-            <legend>สีเน้น</legend>
-            <div class="settings-swatches">
-              <label class="settings-swatch settings-swatch-blue">
-                <input type="radio" name="blog-accent" data-blog-preference="accent" value="blue" aria-label="น้ำเงิน" checked>
-                <span>น้ำเงิน</span>
-              </label>
-              <label class="settings-swatch settings-swatch-violet">
-                <input type="radio" name="blog-accent" data-blog-preference="accent" value="violet" aria-label="ม่วง">
-                <span>ม่วง</span>
-              </label>
-              <label class="settings-swatch settings-swatch-teal">
-                <input type="radio" name="blog-accent" data-blog-preference="accent" value="teal" aria-label="เขียวอมฟ้า">
-                <span>เขียวอมฟ้า</span>
-              </label>
-              <label class="settings-swatch settings-swatch-rose">
-                <input type="radio" name="blog-accent" data-blog-preference="accent" value="rose" aria-label="ชมพู">
-                <span>ชมพู</span>
-              </label>
-            </div>
-          </fieldset>
-          <div class="settings-preference-actions">
-            <p class="settings-note">การตั้งค่าเหล่านี้จะบันทึกไว้ในเบราว์เซอร์นี้</p>
-            <button type="button" class="settings-reset" id="settings-reset">คืนค่าเริ่มต้น</button>
-          </div>
-          <p class="settings-status" id="settings-status" role="status"></p>
         </section>
         <section class="settings-section" aria-labelledby="settings-account-heading">
           <h3 class="set-gl" id="settings-account-heading">บัญชี</h3>
@@ -342,20 +348,29 @@
         </section>
         <section class="settings-section" aria-labelledby="settings-about-heading">
           <h3 class="set-gl" id="settings-about-heading">เกี่ยวกับ</h3>
-          <div class="set-row settings-info-row">
-            <span class="set-icon"><i aria-hidden="true" class="fas fa-circle-info"></i></span>
-            <span class="set-info"><span class="set-name" id="set-app-name">Koo Mean Space</span><span class="set-desc">v3.0 · by @koomean</span></span>
+          <div class="settings-release">
+            <div class="settings-release-header">
+              <h4 id="set-app-name">Koo Mean Blog</h4>
+              <span class="settings-version" id="settings-version">เวอร์ชัน 4.0.0</span>
+            </div>
+            <ul class="settings-release-changes" id="settings-whats-new">
+              <li>ปรับหน้าตั้งค่าใหม่ พร้อมตัวอย่างการอ่านที่เปลี่ยนตามค่าที่เลือก</li>
+              <li>ปรับธีม สีเน้น ขนาดตัวอักษร ระยะห่าง และการเคลื่อนไหวได้ ค่าที่เลือกจะบันทึกไว้ในเบราว์เซอร์นี้</li>
+              <li>ใช้ Noto Sans Thai สำหรับข้อความภาษาไทยทั่วทั้งบล็อก</li>
+            </ul>
           </div>
-          <a class="set-row" href="https://koomean.com/" target="_blank" rel="noopener noreferrer" data-click="openExternal" data-a0="https://koomean.com/" data-t0="string">
-            <span class="set-icon"><i aria-hidden="true" class="fas fa-globe"></i></span>
-            <span class="set-info"><span class="set-name">เว็บไซต์</span><span class="set-desc">koomean.com</span></span>
-            <i aria-hidden="true" class="fas fa-arrow-up-right-from-square set-arr"></i>
-          </a>
-          <a class="set-row" href="https://youtube.com/@koomean" target="_blank" rel="noopener noreferrer" data-click="openExternal" data-a0="https://youtube.com/@koomean" data-t0="string">
-            <span class="set-icon"><i aria-hidden="true" class="fab fa-youtube"></i></span>
-            <span class="set-info"><span class="set-name">YouTube</span><span class="set-desc">@koomean</span></span>
-            <i aria-hidden="true" class="fas fa-arrow-up-right-from-square set-arr"></i>
-          </a>
+          <div class="settings-about-links">
+            <a class="set-row" href="https://koomean.com/" target="_blank" rel="noopener noreferrer" data-click="openExternal" data-a0="https://koomean.com/" data-t0="string">
+              <span class="set-icon"><i aria-hidden="true" class="fas fa-globe"></i></span>
+              <span class="set-info"><span class="set-name">เว็บไซต์</span><span class="set-desc">koomean.com</span></span>
+              <i aria-hidden="true" class="fas fa-arrow-up-right-from-square set-arr"></i>
+            </a>
+            <a class="set-row" href="https://youtube.com/@koomean" target="_blank" rel="noopener noreferrer" data-click="openExternal" data-a0="https://youtube.com/@koomean" data-t0="string">
+              <span class="set-icon"><i aria-hidden="true" class="fab fa-youtube"></i></span>
+              <span class="set-info"><span class="set-name">YouTube</span><span class="set-desc">@koomean</span></span>
+              <i aria-hidden="true" class="fas fa-arrow-up-right-from-square set-arr"></i>
+            </a>
+          </div>
         </section>
       </div>
     </div>
