@@ -1492,10 +1492,11 @@ html[data-theme="light"] .post:hover{box-shadow:0 6px 18px #25344b12}
 .koo-theme-select{min-height:36px;max-width:132px;padding:6px 9px;border:1px solid var(--borderH);border-radius:8px;background:var(--s2);color:var(--txt);font:inherit;font-size:12px;color-scheme:inherit}
 </style>
 <script>/* BUILD_THEME */</script>
+<script>/* BUILD_LOCALIZATION */</script>
 <script>/* BUILD_PREFERENCES */</script>
 </head>
 <body>
-<a class="skip-link" href="#feed-main">ข้ามไปยังเนื้อหา</a>
+<a class="skip-link" href="#feed-main" data-l10n="Skip to content">ข้ามไปยังเนื้อหา</a>
 
 <div id="global-maintenance-overlay" class="km-maintenance" hidden tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="global-maintenance-title" aria-describedby="global-maintenance-note" data-app="Koo Mean Blog" data-note-th="เรากำลังดูแลพื้นที่แบ่งปันเรื่องราว แล้วกลับมาอ่านเรื่องใหม่ด้วยกันอีกครั้ง" data-note-en="We’re looking after our stories and articles. Come back for another good read soon.">
   <div class="maintenance-shell">
@@ -1516,18 +1517,18 @@ html[data-theme="light"] .post:hover{box-shadow:0 6px 18px #25344b12}
       <div class="logo-mark">KM</div>
       <div class="logo-text" id="sb-title">Space</div>
     </a>
-    <nav class="sb-nav">
+    <nav class="sb-nav" aria-label="การนำทางหลัก" data-l10n-aria-label="Main navigation">
       <a href="/" class="sb-item active" id="sbn-home" data-click="navTo" data-a0="home" data-t0="string">
-        <i aria-hidden="true" class="fas fa-house"></i><span>หน้าหลัก</span>
+        <i aria-hidden="true" class="fas fa-house"></i><span data-l10n="Home">หน้าหลัก</span>
       </a>
       <a href="/article" class="sb-item" id="sbn-articles" data-click="navTo" data-a0="articles" data-t0="string">
-        <i aria-hidden="true" class="fas fa-book-open"></i><span>บทความ</span>
+        <i aria-hidden="true" class="fas fa-book-open"></i><span data-l10n="Articles">บทความ</span>
       </a>
       <a href="/saved" class="sb-item" id="sbn-saved" data-click="navTo" data-a0="saved" data-t0="string">
-        <i aria-hidden="true" class="fas fa-bookmark"></i><span>บันทึกไว้</span>
+        <i aria-hidden="true" class="fas fa-bookmark"></i><span data-l10n="Saved">บันทึกไว้</span>
       </a>
       <a href="/settings" class="sb-item" id="sbn-settings" data-click="openSettings">
-        <i aria-hidden="true" class="fas fa-gear"></i><span>ตั้งค่า</span>
+        <i aria-hidden="true" class="fas fa-gear"></i><span data-l10n="Settings">ตั้งค่า</span>
       </a>
     </nav>
     <div class="sb-user-card" id="sb-user-card">
@@ -1538,7 +1539,7 @@ html[data-theme="light"] .post:hover{box-shadow:0 6px 18px #25344b12}
           <div class="sb-uc-email" id="sb-uc-email"></div>
         </div>
       </div>
-      <button class="sb-so-btn" data-click="signOut"><i aria-hidden="true" class="fas fa-right-from-bracket"></i> ออกจากระบบ</button>
+      <button class="sb-so-btn" data-click="signOut"><i aria-hidden="true" class="fas fa-right-from-bracket"></i> <span data-l10n="Sign out">ออกจากระบบ</span></button>
     </div>
   </aside>
 
@@ -1551,11 +1552,11 @@ html[data-theme="light"] .post:hover{box-shadow:0 6px 18px #25344b12}
       <button class="auth-pill" id="auth-btn" data-click="onAuthClick">Sign In</button>
     </div>
 
-    <div class="feed-main" id="feed-main" tabindex="-1" role="main" aria-label="โพสต์และบทความ">
+    <div class="feed-main" id="feed-main" tabindex="-1" role="main" aria-label="โพสต์และบทความ" data-l10n-aria-label="Posts and articles">
       <section id="page-not-found" class="not-found" hidden tabindex="-1" aria-labelledby="not-found-title">
-        <p class="not-found-code" aria-hidden="true">404</p><h2 id="not-found-title">Page not found</h2>
-        <p id="not-found-description">ไม่พบหน้าที่คุณกำลังหา ลิงก์อาจไม่ถูกต้อง หรือเนื้อหาถูกย้ายแล้ว</p>
-        <nav class="not-found-actions" aria-label="กลับไปยังเนื้อหา"><a class="not-found-primary" href="/" data-click="navTo" data-a0="home" data-t0="string">กลับหน้าหลัก</a><a href="/article" data-click="navTo" data-a0="articles" data-t0="string">ดูบทความทั้งหมด</a></nav>
+        <p class="not-found-code" aria-hidden="true">404</p><h2 id="not-found-title" data-l10n="Page not found">ไม่พบหน้านี้</h2>
+        <p id="not-found-description" data-l10n="The page you’re looking for could not be found. The link may be incorrect or the page may have moved.">ไม่พบหน้าที่คุณกำลังหา ลิงก์อาจไม่ถูกต้อง หรือเนื้อหาถูกย้ายแล้ว</p>
+        <nav class="not-found-actions" aria-label="กลับไปยังเนื้อหา" data-l10n-aria-label="Browse content"><a class="not-found-primary" href="/" data-click="navTo" data-a0="home" data-t0="string" data-l10n="Back to home">กลับหน้าหลัก</a><a href="/article" data-click="navTo" data-a0="articles" data-t0="string" data-l10n="Browse all articles">ดูบทความทั้งหมด</a></nav>
       </section>
       <section id="prof-section" style="border-bottom:1px solid var(--border)">
         <div class="prof-cover" id="prof-cover"><div class="cover-fade"></div></div>
@@ -1577,7 +1578,7 @@ html[data-theme="light"] .post:hover{box-shadow:0 6px 18px #25344b12}
               <span class="sk" style="width:60%;height:12px;display:block;margin-top:6px"></span>
             </div>
             <div class="prof-stats" id="prof-stats" style="display:none">
-              <span class="stat-n" id="stat-posts">0</span><span class="stat-l">โพสต์</span>
+              <span class="stat-n" id="stat-posts">0</span><span class="stat-l" data-l10n="Posts">โพสต์</span>
             </div>
           </div>
         </div>
@@ -1587,31 +1588,31 @@ html[data-theme="light"] .post:hover{box-shadow:0 6px 18px #25344b12}
         <div class="cr-row">
           <div class="cr-av-ring"><img class="cr-av" id="cr-av" alt="" referrerpolicy="no-referrer"></div>
           <div class="cr-body">
-            <textarea id="post-ta" class="cr-ta" placeholder="คุณกำลังคิดอะไรอยู่..." maxlength="500" aria-label="คุณกำลังคิดอะไรอยู่..."></textarea>
+            <textarea id="post-ta" class="cr-ta" placeholder="คุณกำลังคิดอะไรอยู่..." maxlength="500" aria-label="คุณกำลังคิดอะไรอยู่..." data-l10n-aria-label="What are you thinking about?" data-l10n-placeholder="What are you thinking about?"></textarea>
 
             <div class="cr-extras">
               <div class="cr-extra-field" id="field-link">
                 <i aria-hidden="true" class="fas fa-link"></i>
-                <input type="url" class="cr-extra-input" id="link-in" placeholder="วางลิงก์ (URL) ที่นี่..." aria-label="วางลิงก์ (URL) ที่นี่...">
-                <button class="cr-extra-close" data-click="toggleField" data-a0="link" data-t0="string" data-a1="" data-t1="false" aria-label="เปิดหรือปิดช่องเพิ่มเติม"><i aria-hidden="true" class="fas fa-times"></i></button>
+                <input type="url" class="cr-extra-input" id="link-in" placeholder="วางลิงก์ (URL) ที่นี่..." aria-label="วางลิงก์ (URL) ที่นี่..." data-l10n-aria-label="Paste a URL here…" data-l10n-placeholder="Paste a URL here…">
+                <button class="cr-extra-close" data-click="toggleField" data-a0="link" data-t0="string" data-a1="" data-t1="false" aria-label="ปิดช่องลิงก์" data-l10n-aria-label="Close link field"><i aria-hidden="true" class="fas fa-times"></i></button>
               </div>
               <div class="cr-extra-field" id="field-hashtag">
                 <i aria-hidden="true" class="fas fa-hashtag"></i>
-                <input type="text" class="cr-extra-input" id="hashtag-in" placeholder="แท็ก คั่นด้วยเว้นวรรค เช่น ข่าว เทคโนโลยี" aria-label="แท็ก คั่นด้วยเว้นวรรค เช่น ข่าว เทคโนโลยี">
-                <button class="cr-extra-close" data-click="toggleField" data-a0="hashtag" data-t0="string" data-a1="" data-t1="false" aria-label="เปิดหรือปิดช่องเพิ่มเติม"><i aria-hidden="true" class="fas fa-times"></i></button>
+                <input type="text" class="cr-extra-input" id="hashtag-in" placeholder="แท็ก คั่นด้วยเว้นวรรค เช่น ข่าว เทคโนโลยี" aria-label="แท็ก คั่นด้วยเว้นวรรค เช่น ข่าว เทคโนโลยี" data-l10n-aria-label="Tags separated by spaces, for example news technology" data-l10n-placeholder="Tags separated by spaces, for example news technology">
+                <button class="cr-extra-close" data-click="toggleField" data-a0="hashtag" data-t0="string" data-a1="" data-t1="false" aria-label="ปิดช่องแท็ก" data-l10n-aria-label="Close tag field"><i aria-hidden="true" class="fas fa-times"></i></button>
               </div>
             </div>
 
             <div class="cr-tools">
-              <input type="file" id="file-in" accept="image/png,image/jpeg,image/gif,image/webp" style="display:none" aria-label="file-in">
-              <label for="file-in" class="tool-btn" title="แนบรูป"><i aria-hidden="true" class="far fa-image"></i><span>รูปภาพ</span></label>
-              <button type="button" class="tool-btn" id="btn-link" data-click="toggleField" data-a0="link" data-t0="string" aria-label="เปิดหรือปิดช่องเพิ่มเติม"><i aria-hidden="true" class="fas fa-link"></i><span>ลิงก์</span></button>
-              <button type="button" class="tool-btn" id="btn-hashtag" data-click="toggleField" data-a0="hashtag" data-t0="string" aria-label="เปิดหรือปิดช่องเพิ่มเติม"><i aria-hidden="true" class="fas fa-hashtag"></i><span>แท็ก</span></button>
-              <button type="button" class="tool-btn" data-click="toggleEmoji" data-a0="" data-t0="event" data-a1="post-ta" data-t1="string" aria-label="เลือกอิโมจิ"><i aria-hidden="true" class="far fa-face-smile"></i><span>อิโมจิ</span></button>
+              <input type="file" id="file-in" accept="image/png,image/jpeg,image/gif,image/webp" style="display:none" aria-label="แนบรูป" data-l10n-aria-label="Attach image">
+              <label for="file-in" class="tool-btn" title="แนบรูป" data-l10n-title="Attach image"><i aria-hidden="true" class="far fa-image"></i><span data-l10n="Image">รูปภาพ</span></label>
+              <button type="button" class="tool-btn" id="btn-link" data-click="toggleField" data-a0="link" data-t0="string" aria-label="เปิดหรือปิดช่องลิงก์" data-l10n-aria-label="Toggle link field"><i aria-hidden="true" class="fas fa-link"></i><span data-l10n="Link">ลิงก์</span></button>
+              <button type="button" class="tool-btn" id="btn-hashtag" data-click="toggleField" data-a0="hashtag" data-t0="string" aria-label="เปิดหรือปิดช่องแท็ก" data-l10n-aria-label="Toggle tag field"><i aria-hidden="true" class="fas fa-hashtag"></i><span data-l10n="Tags">แท็ก</span></button>
+              <button type="button" class="tool-btn" data-click="toggleEmoji" data-a0="" data-t0="event" data-a1="post-ta" data-t1="string" aria-label="เลือกอิโมจิ" data-l10n-aria-label="Choose an emoji"><i aria-hidden="true" class="far fa-face-smile"></i><span data-l10n="Emoji">อิโมจิ</span></button>
             </div>
             <div id="img-prev-wrap" class="img-prev-wrap" style="display:none">
               <img id="img-prev" class="img-prev" alt="">
-              <button class="rm-img" data-click="removeImg" aria-label="นำรูปออก"><i aria-hidden="true" class="fas fa-times"></i></button>
+              <button class="rm-img" data-click="removeImg" aria-label="นำรูปออก" data-l10n-aria-label="Remove image"><i aria-hidden="true" class="fas fa-times"></i></button>
             </div>
             <div class="cr-foot">
               <span class="char-c" id="char-c">0 / 500</span>
@@ -1624,7 +1625,7 @@ html[data-theme="light"] .post:hover{box-shadow:0 6px 18px #25344b12}
       <div id="tag-filter-bar" style="display:none"></div>
 
       <div id="feed">
-        <div class="sec-label">Timeline</div>
+        <div class="sec-label" data-l10n="Timeline">ไทม์ไลน์</div>
         <div id="sk-posts">
           <div class="sk-post"><div class="sk sk-av"></div><div class="sk-lines"><span class="sk" style="width:35%;height:11px"></span><span class="sk" style="width:100%;height:11px"></span><span class="sk" style="width:70%;height:11px"></span></div></div>
           <div class="sk-post"><div class="sk sk-av"></div><div class="sk-lines"><span class="sk" style="width:50%;height:11px"></span><span class="sk" style="width:88%;height:11px"></span><span class="sk" style="width:55%;height:11px"></span></div></div>
@@ -1636,35 +1637,35 @@ html[data-theme="light"] .post:hover{box-shadow:0 6px 18px #25344b12}
 
   <aside class="sidebar-right">
     <div class="rw">
-      <div class="rw-title"><i aria-hidden="true" class="fas fa-magnifying-glass" style="color:var(--accent);margin-right:8px"></i>ค้นหาโพสต์</div>
+      <div class="rw-title"><i aria-hidden="true" class="fas fa-magnifying-glass" style="color:var(--accent);margin-right:8px"></i><span data-l10n="Search posts">ค้นหาโพสต์</span></div>
       <div class="rw-srch-pad">
         <div class="rw-sbox">
           <i aria-hidden="true" class="fas fa-magnifying-glass"></i>
-          <input class="rw-sinput" id="rw-srch" placeholder="พิมพ์เพื่อค้นหา... (Ctrl+K)" autocomplete="off" aria-label="พิมพ์เพื่อค้นหา... (Ctrl+K)">
+          <input class="rw-sinput" id="rw-srch" placeholder="พิมพ์เพื่อค้นหา... (Ctrl+K)" autocomplete="off" aria-label="พิมพ์เพื่อค้นหา... (Ctrl+K)" data-l10n-aria-label="Search posts… (Ctrl+K)" data-l10n-placeholder="Search posts… (Ctrl+K)">
         </div>
       </div>
       <div class="rw-results" id="rw-results" style="display:none"></div>
     </div>
 
     <div class="rw" id="rw-trends" style="display:none">
-      <div class="rw-title"><i aria-hidden="true" class="fas fa-fire" style="color:var(--err);margin-right:8px"></i>เทรนด์ยอดฮิต</div>
+      <div class="rw-title"><i aria-hidden="true" class="fas fa-fire" style="color:var(--err);margin-right:8px"></i><span data-l10n="Trending">เทรนด์ยอดฮิต</span></div>
       <div class="rw-results" id="trend-desktop" style="display:block;padding:4px 0"></div>
     </div>
 
     <div class="rw" id="rw-auth" style="display:none">
       <div class="rw-auth-pad">
-        <div style="font-weight:700;font-size:.9rem;margin-bottom:5px">เข้าสู่ระบบ</div>
-        <div style="font-size:.8rem;color:var(--txt2);margin-bottom:13px">เพื่อกด Like และคอมเมนต์</div>
-        <button class="rw-auth-btn" data-click="openModal" data-a0="login-modal" data-t0="string"><i aria-hidden="true" class="fab fa-google" style="margin-right:6px"></i>Sign in with Google</button>
+        <div style="font-weight:700;font-size:.9rem;margin-bottom:5px" data-l10n="Sign in">เข้าสู่ระบบ</div>
+        <div style="font-size:.8rem;color:var(--txt2);margin-bottom:13px" data-l10n="To like and comment on posts">เพื่อกด Like และคอมเมนต์</div>
+        <button class="rw-auth-btn" data-click="openModal" data-a0="login-modal" data-t0="string"><i aria-hidden="true" class="fab fa-google" style="margin-right:6px"></i><span data-l10n="Sign in with Google">เข้าสู่ระบบด้วย Google</span></button>
       </div>
     </div>
 
     <div class="rw">
-      <div class="rw-title">เกี่ยวกับ</div>
+      <div class="rw-title" data-l10n="About">เกี่ยวกับ</div>
       <div class="rw-about-pad">
         <p id="rw-bio"></p>
         <div class="rw-links">
-          <div class="rw-link" data-click="openExternal" data-a0="https://koomean.com/" data-t0="string" data-a1="_blank" data-t1="string" role="button" tabindex="0"><i aria-hidden="true" class="fas fa-globe"></i>เว็บไซต์</div>
+          <div class="rw-link" data-click="openExternal" data-a0="https://koomean.com/" data-t0="string" data-a1="_blank" data-t1="string" role="button" tabindex="0"><i aria-hidden="true" class="fas fa-globe"></i><span data-l10n="Website">เว็บไซต์</span></div>
           <div class="rw-link" data-click="openExternal" data-a0="https://youtube.com/@koomean" data-t0="string" data-a1="_blank" data-t1="string" role="button" tabindex="0"><i aria-hidden="true" class="fab fa-youtube"></i>YouTube</div>
         </div>
         <div style="margin-top:12px;font-size:.71rem;color:var(--txt3)">Koo Mean Blog v4.0.0 · @koomean</div>
@@ -1674,57 +1675,57 @@ html[data-theme="light"] .post:hover{box-shadow:0 6px 18px #25344b12}
 
 </div>
 
-<nav class="mob-nav" id="mob-nav">
-  <a href="/" class="mnav-btn active" id="mnav-home" data-click="navTo" data-a0="home" data-t0="string"><i aria-hidden="true" class="fas fa-house"></i><span>หน้าหลัก</span></a>
-  <a href="/search" class="mnav-btn" id="mnav-search" data-click="openMobSearch"><i aria-hidden="true" class="fas fa-magnifying-glass"></i><span>ค้นหา</span></a>
-  <button class="mnav-fab hidden" id="mnav-fab" data-click="openCompose" title="สร้างโพสต์" aria-label="สร้างโพสต์"><i aria-hidden="true" class="fas fa-plus"></i></button>
-  <a href="/article" class="mnav-btn" id="mnav-articles" data-click="navTo" data-a0="articles" data-t0="string"><i aria-hidden="true" class="fas fa-book-open"></i><span>บทความ</span></a>
-  <a href="/saved" class="mnav-btn" id="mnav-saved" data-click="navTo" data-a0="saved" data-t0="string"><i aria-hidden="true" class="fas fa-bookmark"></i><span>บันทึก</span></a>
-  <a href="/settings" class="mnav-btn" id="mnav-settings" data-click="openSettings"><i aria-hidden="true" class="fas fa-gear"></i><span>ตั้งค่า</span></a>
+<nav class="mob-nav" id="mob-nav" aria-label="การนำทางหลัก" data-l10n-aria-label="Main navigation">
+  <a href="/" class="mnav-btn active" id="mnav-home" data-click="navTo" data-a0="home" data-t0="string"><i aria-hidden="true" class="fas fa-house"></i><span data-l10n="Home">หน้าหลัก</span></a>
+  <a href="/search" class="mnav-btn" id="mnav-search" data-click="openMobSearch"><i aria-hidden="true" class="fas fa-magnifying-glass"></i><span data-l10n="Search">ค้นหา</span></a>
+  <button class="mnav-fab hidden" id="mnav-fab" data-click="openCompose" title="สร้างโพสต์" aria-label="สร้างโพสต์" data-l10n-aria-label="Create post" data-l10n-title="Create post"><i aria-hidden="true" class="fas fa-plus"></i></button>
+  <a href="/article" class="mnav-btn" id="mnav-articles" data-click="navTo" data-a0="articles" data-t0="string"><i aria-hidden="true" class="fas fa-book-open"></i><span data-l10n="Articles">บทความ</span></a>
+  <a href="/saved" class="mnav-btn" id="mnav-saved" data-click="navTo" data-a0="saved" data-t0="string"><i aria-hidden="true" class="fas fa-bookmark"></i><span data-l10n="Saved">บันทึก</span></a>
+  <a href="/settings" class="mnav-btn" id="mnav-settings" data-click="openSettings"><i aria-hidden="true" class="fas fa-gear"></i><span data-l10n="Settings">ตั้งค่า</span></a>
 </nav>
 
 <div class="mob-srch-overlay" id="mob-srch">
   <div class="mob-srch-hdr">
-    <div class="mob-sbox"><i aria-hidden="true" class="fas fa-magnifying-glass"></i><input class="mob-sinput" id="mob-srch-in" placeholder="ค้นหาโพสต์..." autocomplete="off" aria-label="ค้นหาโพสต์..."></div>
-    <button class="mob-srch-cancel" data-click="closeMobSearch">ยกเลิก</button>
+    <div class="mob-sbox"><i aria-hidden="true" class="fas fa-magnifying-glass"></i><input class="mob-sinput" id="mob-srch-in" placeholder="ค้นหาโพสต์..." autocomplete="off" aria-label="ค้นหาโพสต์..." data-l10n-aria-label="Search posts…" data-l10n-placeholder="Search posts…"></div>
+    <button class="mob-srch-cancel" data-click="closeMobSearch" data-l10n="Cancel">ยกเลิก</button>
   </div>
-  <div class="mob-srch-body" id="mob-srch-body"><div class="srch-empty"><i aria-hidden="true" class="fas fa-magnifying-glass-chart"></i><p>พิมพ์เพื่อค้นหาโพสต์</p></div></div>
+  <div class="mob-srch-body" id="mob-srch-body"><div class="srch-empty"><i aria-hidden="true" class="fas fa-magnifying-glass-chart"></i><p data-l10n="Type to search posts">พิมพ์เพื่อค้นหาโพสต์</p></div></div>
 </div>
 
 <div class="compose-modal" id="compose-modal">
   <div class="compose-hdr">
-    <div class="compose-ttl">สร้างโพสต์ใหม่</div>
-    <button class="compose-cancel" data-click="closeCompose" aria-label="ปิดหน้าต่างสร้างโพสต์"><i aria-hidden="true" class="fas fa-times"></i></button>
+    <div class="compose-ttl" data-l10n="New post">สร้างโพสต์ใหม่</div>
+    <button class="compose-cancel" data-click="closeCompose" aria-label="ปิดหน้าต่างสร้างโพสต์" data-l10n-aria-label="Close post composer"><i aria-hidden="true" class="fas fa-times"></i></button>
   </div>
   <div class="compose-body">
     <div class="cr-row">
       <div class="cr-av-ring"><img class="cr-av" id="cr-av-mob" alt="" referrerpolicy="no-referrer"></div>
       <div class="cr-body">
-        <textarea id="post-ta-mob" class="cr-ta" placeholder="คุณกำลังคิดอะไรอยู่..." maxlength="500" style="min-height:100px" aria-label="คุณกำลังคิดอะไรอยู่..."></textarea>
+        <textarea id="post-ta-mob" class="cr-ta" placeholder="คุณกำลังคิดอะไรอยู่..." maxlength="500" style="min-height:100px" aria-label="คุณกำลังคิดอะไรอยู่..." data-l10n-aria-label="What are you thinking about?" data-l10n-placeholder="What are you thinking about?"></textarea>
 
         <div class="cr-extras">
           <div class="cr-extra-field" id="field-link-mob">
             <i aria-hidden="true" class="fas fa-link"></i>
-            <input type="url" class="cr-extra-input" id="link-in-mob" placeholder="วางลิงก์ (URL) ที่นี่..." aria-label="วางลิงก์ (URL) ที่นี่...">
-            <button class="cr-extra-close" data-click="toggleField" data-a0="link" data-t0="string" data-a1="" data-t1="false" data-a2="" data-t2="true" aria-label="เปิดหรือปิดช่องเพิ่มเติม"><i aria-hidden="true" class="fas fa-times"></i></button>
+            <input type="url" class="cr-extra-input" id="link-in-mob" placeholder="วางลิงก์ (URL) ที่นี่..." aria-label="วางลิงก์ (URL) ที่นี่..." data-l10n-aria-label="Paste a URL here…" data-l10n-placeholder="Paste a URL here…">
+            <button class="cr-extra-close" data-click="toggleField" data-a0="link" data-t0="string" data-a1="" data-t1="false" data-a2="" data-t2="true" aria-label="ปิดช่องลิงก์" data-l10n-aria-label="Close link field"><i aria-hidden="true" class="fas fa-times"></i></button>
           </div>
           <div class="cr-extra-field" id="field-hashtag-mob">
             <i aria-hidden="true" class="fas fa-hashtag"></i>
-            <input type="text" class="cr-extra-input" id="hashtag-in-mob" placeholder="แท็ก คั่นด้วยเว้นวรรค" aria-label="แท็ก คั่นด้วยเว้นวรรค">
-            <button class="cr-extra-close" data-click="toggleField" data-a0="hashtag" data-t0="string" data-a1="" data-t1="false" data-a2="" data-t2="true" aria-label="เปิดหรือปิดช่องเพิ่มเติม"><i aria-hidden="true" class="fas fa-times"></i></button>
+            <input type="text" class="cr-extra-input" id="hashtag-in-mob" placeholder="แท็ก คั่นด้วยเว้นวรรค" aria-label="แท็ก คั่นด้วยเว้นวรรค" data-l10n-aria-label="Tags separated by spaces" data-l10n-placeholder="Tags separated by spaces">
+            <button class="cr-extra-close" data-click="toggleField" data-a0="hashtag" data-t0="string" data-a1="" data-t1="false" data-a2="" data-t2="true" aria-label="ปิดช่องแท็ก" data-l10n-aria-label="Close tag field"><i aria-hidden="true" class="fas fa-times"></i></button>
           </div>
         </div>
 
         <div class="cr-tools">
-          <input type="file" id="file-in-mob" accept="image/png,image/jpeg,image/gif,image/webp" style="display:none" aria-label="file-in-mob">
-          <label for="file-in-mob" class="tool-btn"><i aria-hidden="true" class="far fa-image"></i><span>รูปภาพ</span></label>
-          <button type="button" class="tool-btn" id="btn-link-mob" data-click="toggleField" data-a0="link" data-t0="string" data-a1="" data-t1="null" data-a2="" data-t2="true" aria-label="เปิดหรือปิดช่องเพิ่มเติม"><i aria-hidden="true" class="fas fa-link"></i><span>ลิงก์</span></button>
-          <button type="button" class="tool-btn" id="btn-hashtag-mob" data-click="toggleField" data-a0="hashtag" data-t0="string" data-a1="" data-t1="null" data-a2="" data-t2="true" aria-label="เปิดหรือปิดช่องเพิ่มเติม"><i aria-hidden="true" class="fas fa-hashtag"></i><span>แท็ก</span></button>
-          <button type="button" class="tool-btn" data-click="toggleEmoji" data-a0="" data-t0="event" data-a1="post-ta-mob" data-t1="string" aria-label="เลือกอิโมจิ"><i aria-hidden="true" class="far fa-face-smile"></i><span>อิโมจิ</span></button>
+          <input type="file" id="file-in-mob" accept="image/png,image/jpeg,image/gif,image/webp" style="display:none" aria-label="แนบรูป" data-l10n-aria-label="Attach image">
+          <label for="file-in-mob" class="tool-btn"><i aria-hidden="true" class="far fa-image"></i><span data-l10n="Image">รูปภาพ</span></label>
+          <button type="button" class="tool-btn" id="btn-link-mob" data-click="toggleField" data-a0="link" data-t0="string" data-a1="" data-t1="null" data-a2="" data-t2="true" aria-label="เปิดหรือปิดช่องลิงก์" data-l10n-aria-label="Toggle link field"><i aria-hidden="true" class="fas fa-link"></i><span data-l10n="Link">ลิงก์</span></button>
+          <button type="button" class="tool-btn" id="btn-hashtag-mob" data-click="toggleField" data-a0="hashtag" data-t0="string" data-a1="" data-t1="null" data-a2="" data-t2="true" aria-label="เปิดหรือปิดช่องแท็ก" data-l10n-aria-label="Toggle tag field"><i aria-hidden="true" class="fas fa-hashtag"></i><span data-l10n="Tags">แท็ก</span></button>
+          <button type="button" class="tool-btn" data-click="toggleEmoji" data-a0="" data-t0="event" data-a1="post-ta-mob" data-t1="string" aria-label="เลือกอิโมจิ" data-l10n-aria-label="Choose an emoji"><i aria-hidden="true" class="far fa-face-smile"></i><span data-l10n="Emoji">อิโมจิ</span></button>
         </div>
         <div id="img-prev-wrap-mob" class="img-prev-wrap" style="display:none">
           <img id="img-prev-mob" class="img-prev" alt="">
-          <button class="rm-img" data-click="removeImg" data-a0="" data-t0="true" aria-label="นำรูปออก"><i aria-hidden="true" class="fas fa-times"></i></button>
+          <button class="rm-img" data-click="removeImg" data-a0="" data-t0="true" aria-label="นำรูปออก" data-l10n-aria-label="Remove image"><i aria-hidden="true" class="fas fa-times"></i></button>
         </div>
         <div class="cr-foot">
           <span class="char-c" id="char-c-mob">0 / 500</span>
@@ -1740,78 +1741,86 @@ html[data-theme="light"] .post:hover{box-shadow:0 6px 18px #25344b12}
   <div class="set-drawer">
     <div class="settings-main" id="set-main">
       <header class="set-hdr">
-        <h2 class="set-hdr-t" id="settings-title">ตั้งค่า</h2>
-        <button type="button" class="set-close" data-click="closeSettings" aria-label="ปิดหน้าตั้งค่า"><i aria-hidden="true" class="fas fa-times"></i></button>
+        <h2 class="set-hdr-t" id="settings-title" data-l10n="Settings">ตั้งค่า</h2>
+        <button type="button" class="set-close" data-click="closeSettings" aria-label="ปิดหน้าตั้งค่า" data-l10n-aria-label="Close Settings"><i aria-hidden="true" class="fas fa-times"></i></button>
       </header>
       <div class="set-body">
         <section class="settings-section" aria-labelledby="settings-appearance-title">
-          <h3 class="set-gl" id="settings-appearance-title">การแสดงผลและการอ่าน</h3>
+          <h3 class="set-gl" id="settings-appearance-title" data-l10n="Appearance and reading">การแสดงผลและการอ่าน</h3>
           <div class="settings-appearance">
             <figure class="settings-preview">
-              <figcaption class="settings-preview-caption">ตัวอย่างการอ่าน</figcaption>
+              <figcaption class="settings-preview-caption" data-l10n="Reading preview">ตัวอย่างการอ่าน</figcaption>
               <div class="settings-preview-sample">
-                <h4 class="settings-preview-title">บันทึกระหว่างทาง</h4>
-                <p class="settings-preview-text">เรื่องเล่าจากสิ่งที่ลองทำ บันทึกวิธีคิดและบทเรียนไว้กลับมาอ่าน</p>
-                <span class="settings-preview-tag">#บันทึก</span>
+                <h4 class="settings-preview-title" data-l10n="Notes along the way">บันทึกระหว่างทาง</h4>
+                <p class="settings-preview-text" data-l10n="A record of things I’ve tried, what I learned, and what I want to remember.">เรื่องเล่าจากสิ่งที่ลองทำ บันทึกวิธีคิดและบทเรียนไว้กลับมาอ่าน</p>
+                <span class="settings-preview-tag" data-l10n="#notes">#บันทึก</span>
               </div>
             </figure>
             <div class="settings-controls">
               <div class="settings-fields">
                 <div class="settings-field">
-                  <label for="settings-theme">ธีมการแสดงผล</label>
+                  <label for="settings-language" data-l10n="Language">ภาษา</label>
+                  <select id="settings-language" data-blog-preference="language">
+                    <option value="auto" data-l10n="Device default">ตามภาษาอุปกรณ์</option>
+                    <option value="th" lang="th">ไทย</option>
+                    <option value="en" lang="en">English</option>
+                  </select>
+                </div>
+                <div class="settings-field">
+                  <label for="settings-theme" data-l10n="Theme">ธีมการแสดงผล</label>
                   <select id="settings-theme" class="koo-theme-select" data-koo-theme>
-                    <option value="auto">ตามระบบ</option>
-                    <option value="light">สว่าง</option>
-                    <option value="dark">มืด</option>
+                    <option value="auto" data-l10n="System default">ตามระบบ</option>
+                    <option value="light" data-l10n="Light">สว่าง</option>
+                    <option value="dark" data-l10n="Dark">มืด</option>
                   </select>
                 </div>
                 <div class="settings-field">
-                  <label for="settings-size">ขนาดตัวอักษร</label>
+                  <label for="settings-size" data-l10n="Text size">ขนาดตัวอักษร</label>
                   <select id="settings-size" data-blog-preference="textSize">
-                    <option value="default">ปกติ</option>
-                    <option value="large">ใหญ่</option>
-                    <option value="extra">ใหญ่มาก</option>
+                    <option value="default" data-l10n="Default">ปกติ</option>
+                    <option value="large" data-l10n="Large">ใหญ่</option>
+                    <option value="extra" data-l10n="Extra large">ใหญ่มาก</option>
                   </select>
                 </div>
                 <div class="settings-field">
-                  <label for="settings-density">ระยะห่างของเนื้อหา</label>
+                  <label for="settings-density" data-l10n="Spacing">ระยะห่างของเนื้อหา</label>
                   <select id="settings-density" data-blog-preference="density">
-                    <option value="comfortable">สบายตา</option>
-                    <option value="compact">กระชับ</option>
+                    <option value="comfortable" data-l10n="Comfortable">สบายตา</option>
+                    <option value="compact" data-l10n="Compact">กระชับ</option>
                   </select>
                 </div>
                 <div class="settings-field">
-                  <label for="settings-motion">การเคลื่อนไหว</label>
+                  <label for="settings-motion" data-l10n="Motion">การเคลื่อนไหว</label>
                   <select id="settings-motion" data-blog-preference="motion">
-                    <option value="system">ตามระบบ</option>
-                    <option value="reduce">ลดการเคลื่อนไหว</option>
+                    <option value="system" data-l10n="System default">ตามระบบ</option>
+                    <option value="reduce" data-l10n="Reduce motion">ลดการเคลื่อนไหว</option>
                   </select>
                 </div>
               </div>
               <fieldset class="settings-colors">
-                <legend>สีเน้น</legend>
+                <legend data-l10n="Accent color">สีเน้น</legend>
                 <div class="settings-swatches">
                   <label class="settings-swatch settings-swatch-blue">
-                    <input type="radio" name="blog-accent" data-blog-preference="accent" value="blue" aria-label="น้ำเงิน" checked>
-                    <span>น้ำเงิน</span>
+                    <input type="radio" name="blog-accent" data-blog-preference="accent" value="blue" aria-label="น้ำเงิน" checked data-l10n-aria-label="Blue">
+                    <span data-l10n="Blue">น้ำเงิน</span>
                   </label>
                   <label class="settings-swatch settings-swatch-violet">
-                    <input type="radio" name="blog-accent" data-blog-preference="accent" value="violet" aria-label="ม่วง">
-                    <span>ม่วง</span>
+                    <input type="radio" name="blog-accent" data-blog-preference="accent" value="violet" aria-label="ม่วง" data-l10n-aria-label="Violet">
+                    <span data-l10n="Violet">ม่วง</span>
                   </label>
                   <label class="settings-swatch settings-swatch-teal">
-                    <input type="radio" name="blog-accent" data-blog-preference="accent" value="teal" aria-label="เขียวอมฟ้า">
-                    <span>เขียวอมฟ้า</span>
+                    <input type="radio" name="blog-accent" data-blog-preference="accent" value="teal" aria-label="เขียวอมฟ้า" data-l10n-aria-label="Teal">
+                    <span data-l10n="Teal">เขียวอมฟ้า</span>
                   </label>
                   <label class="settings-swatch settings-swatch-rose">
-                    <input type="radio" name="blog-accent" data-blog-preference="accent" value="rose" aria-label="ชมพู">
-                    <span>ชมพู</span>
+                    <input type="radio" name="blog-accent" data-blog-preference="accent" value="rose" aria-label="ชมพู" data-l10n-aria-label="Rose">
+                    <span data-l10n="Rose">ชมพู</span>
                   </label>
                 </div>
               </fieldset>
               <div class="settings-preference-actions">
-                <p class="settings-note">บันทึกการตั้งค่าในเบราว์เซอร์นี้</p>
-                <button type="button" class="settings-reset" id="settings-reset">คืนค่าเริ่มต้น</button>
+                <p class="settings-note" data-l10n="Preferences are saved in this browser">บันทึกการตั้งค่าในเบราว์เซอร์นี้</p>
+                <button type="button" class="settings-reset" id="settings-reset" data-l10n="Reset defaults">คืนค่าเริ่มต้น</button>
               </div>
               <p class="settings-status" id="settings-status" role="status"></p>
             </div>
@@ -1819,7 +1828,7 @@ html[data-theme="light"] .post:hover{box-shadow:0 6px 18px #25344b12}
         </section>
 
         <section class="settings-section" aria-labelledby="settings-account-heading">
-          <h3 class="set-gl" id="settings-account-heading">บัญชี</h3>
+          <h3 class="set-gl" id="settings-account-heading" data-l10n="Account">บัญชี</h3>
           <button type="button" class="set-row" id="set-acc-row" data-click="onSetAccountClick">
             <span class="set-icon"><i aria-hidden="true" class="fas fa-user"></i></span>
             <span class="set-info"><span class="set-name" id="set-ln">Sign In</span><span class="set-desc" id="set-ld">เข้าสู่ระบบเพื่อใช้งาน</span></span>
@@ -1828,44 +1837,44 @@ html[data-theme="light"] .post:hover{box-shadow:0 6px 18px #25344b12}
           <div id="so-grp" style="display:none">
             <button type="button" class="set-row del" data-click="signOut">
               <span class="set-icon"><i aria-hidden="true" class="fas fa-right-from-bracket"></i></span>
-              <span class="set-info"><span class="set-name">ออกจากระบบ</span><span class="set-desc" id="so-email"></span></span>
+              <span class="set-info"><span class="set-name" data-l10n="Sign out">ออกจากระบบ</span><span class="set-desc" id="so-email"></span></span>
             </button>
           </div>
         </section>
 
         <section class="settings-section" id="admin-grp" aria-labelledby="settings-admin-heading" style="display:none">
-          <h3 class="set-gl" id="settings-admin-heading">จัดการ Space</h3>
+          <h3 class="set-gl" id="settings-admin-heading" data-l10n="Manage the site">จัดการ Space</h3>
           <button type="button" class="set-row" data-click="openSub" data-a0="profile-edit" data-t0="string">
             <span class="set-icon"><i aria-hidden="true" class="fas fa-id-card"></i></span>
-            <span class="set-info"><span class="set-name">แก้ไขโปรไฟล์</span><span class="set-desc">ชื่อ คำแนะนำตัว รูปโปรไฟล์ และรูปปก</span></span>
+            <span class="set-info"><span class="set-name" data-l10n="Edit profile">แก้ไขโปรไฟล์</span><span class="set-desc" data-l10n="Name, bio, profile photo and cover image">ชื่อ คำแนะนำตัว รูปโปรไฟล์ และรูปปก</span></span>
             <i aria-hidden="true" class="fas fa-chevron-right set-arr"></i>
           </button>
           <div class="r2-quota" id="r2-quota-card" aria-live="polite">
-            <div class="r2-q-head"><div class="r2-q-title"><i aria-hidden="true" class="fas fa-database" style="color:var(--accent);margin-right:5px"></i>โควตา Cloudflare R2</div><div class="r2-q-state" id="r2-q-state">กำลังโหลด…</div></div>
-            <div class="r2-q-row"><div class="r2-q-label"><span>พื้นที่เก็บไฟล์</span><span id="r2-q-storage-text">—</span></div><div class="r2-q-track"><i aria-hidden="true" class="r2-q-fill" id="r2-q-storage-bar"></i></div></div>
-            <div class="r2-q-row"><div class="r2-q-label"><span>เขียนไฟล์ (Class A)</span><span id="r2-q-a-text">—</span></div><div class="r2-q-track"><i aria-hidden="true" class="r2-q-fill" id="r2-q-a-bar"></i></div></div>
-            <div class="r2-q-row"><div class="r2-q-label"><span>อ่านไฟล์ (Class B)</span><span id="r2-q-b-text">—</span></div><div class="r2-q-track"><i aria-hidden="true" class="r2-q-fill" id="r2-q-b-bar"></i></div></div>
+            <div class="r2-q-head"><div class="r2-q-title"><i aria-hidden="true" class="fas fa-database" style="color:var(--accent);margin-right:5px"></i><span data-l10n="Cloudflare R2 quota">โควตา Cloudflare R2</span></div><div class="r2-q-state" id="r2-q-state">กำลังโหลด…</div></div>
+            <div class="r2-q-row"><div class="r2-q-label"><span data-l10n="File storage">พื้นที่เก็บไฟล์</span><span id="r2-q-storage-text">—</span></div><div class="r2-q-track"><i aria-hidden="true" class="r2-q-fill" id="r2-q-storage-bar"></i></div></div>
+            <div class="r2-q-row"><div class="r2-q-label"><span data-l10n="File writes (Class A)">เขียนไฟล์ (Class A)</span><span id="r2-q-a-text">—</span></div><div class="r2-q-track"><i aria-hidden="true" class="r2-q-fill" id="r2-q-a-bar"></i></div></div>
+            <div class="r2-q-row"><div class="r2-q-label"><span data-l10n="File reads (Class B)">อ่านไฟล์ (Class B)</span><span id="r2-q-b-text">—</span></div><div class="r2-q-track"><i aria-hidden="true" class="r2-q-fill" id="r2-q-b-bar"></i></div></div>
             <div class="r2-q-note" id="r2-q-note">จำกัดการใช้ไว้ที่ 80% ของโควต้าฟรีเพื่อสำรอง 20% · รีเซ็ตรอบบิลวันที่ 11</div>
           </div>
         </section>
 
         <section class="settings-section" aria-labelledby="settings-about-heading">
-          <h3 class="set-gl" id="settings-about-heading">เกี่ยวกับ</h3>
+          <h3 class="set-gl" id="settings-about-heading" data-l10n="About">เกี่ยวกับ</h3>
           <div class="settings-release">
             <div class="settings-release-header">
               <h4 id="set-app-name">Koo Mean Blog</h4>
-              <span class="settings-version" id="settings-version">เวอร์ชัน 4.0.0</span>
+              <span class="settings-version" id="settings-version" data-l10n="Version 4.0.0">เวอร์ชัน 4.0.0</span>
             </div>
             <ul class="settings-release-changes" id="settings-whats-new">
-              <li>ปรับหน้าตั้งค่าใหม่ พร้อมตัวอย่างการอ่านที่เปลี่ยนตามค่าที่เลือก</li>
-              <li>ปรับธีม สีเน้น ขนาดตัวอักษร ระยะห่าง และการเคลื่อนไหวได้ ค่าที่เลือกจะบันทึกไว้ในเบราว์เซอร์นี้</li>
-              <li>ใช้ Noto Sans Thai สำหรับข้อความภาษาไทยทั่วทั้งบล็อก</li>
+              <li data-l10n="Redesigned Settings with a live reading preview.">ปรับหน้าตั้งค่าใหม่ พร้อมตัวอย่างการอ่านที่เปลี่ยนตามค่าที่เลือก</li>
+              <li data-l10n="Adjust your theme, accent color, text size, spacing, and motion. Preferences are saved in this browser.">ปรับธีม สีเน้น ขนาดตัวอักษร ระยะห่าง และการเคลื่อนไหวได้ ค่าที่เลือกจะบันทึกไว้ในเบราว์เซอร์นี้</li>
+              <li data-l10n="Thai text across the blog uses Noto Sans Thai.">ใช้ Noto Sans Thai สำหรับข้อความภาษาไทยทั่วทั้งบล็อก</li>
             </ul>
           </div>
           <div class="settings-about-links">
             <a class="set-row" href="https://koomean.com/" target="_blank" rel="noopener noreferrer" data-click="openExternal" data-a0="https://koomean.com/" data-t0="string">
               <span class="set-icon"><i aria-hidden="true" class="fas fa-globe"></i></span>
-              <span class="set-info"><span class="set-name">เว็บไซต์</span><span class="set-desc">koomean.com</span></span>
+              <span class="set-info"><span class="set-name" data-l10n="Website">เว็บไซต์</span><span class="set-desc">koomean.com</span></span>
               <i aria-hidden="true" class="fas fa-arrow-up-right-from-square set-arr"></i>
             </a>
             <a class="set-row" href="https://github.com/koomean/koomeanblog" target="_blank" rel="noopener noreferrer">
@@ -1880,24 +1889,24 @@ html[data-theme="light"] .post:hover{box-shadow:0 6px 18px #25344b12}
 
     <div class="set-sub" id="sub-profile-edit">
       <div class="set-sub-hdr">
-        <button type="button" class="back-btn" data-click="closeSub" aria-label="ย้อนกลับ"><i aria-hidden="true" class="fas fa-chevron-left"></i></button>
-        <h2 class="set-sub-t" id="settings-profile-title">แก้ไขโปรไฟล์ Space</h2>
+        <button type="button" class="back-btn" data-click="closeSub" aria-label="ย้อนกลับ" data-l10n-aria-label="Back"><i aria-hidden="true" class="fas fa-chevron-left"></i></button>
+        <h2 class="set-sub-t" id="settings-profile-title" data-l10n="Edit site profile">แก้ไขโปรไฟล์ Space</h2>
       </div>
       <div class="set-sub-body">
-        <div class="sf"><label class="sl" for="si-title">ชื่อเว็บไซต์</label><input class="si" id="si-title" type="text" placeholder="Koo Mean Space" aria-label="Koo Mean Space"></div>
-        <div class="sf"><label class="sl" for="si-name">ชื่อโปรไฟล์</label><input class="si" id="si-name" type="text" placeholder="Koo Mean" aria-label="Koo Mean"></div>
-        <div class="sf"><label class="sl" for="si-handle">Handle</label><input class="si" id="si-handle" type="text" placeholder="@koomean" aria-label="@koomean"></div>
-        <div class="sf"><label class="sl" for="si-bio">Bio</label><textarea class="si" id="si-bio" placeholder="เขียนบางอย่างเกี่ยวกับตัวเอง..." aria-label="เขียนบางอย่างเกี่ยวกับตัวเอง..."></textarea></div>
-        <div class="sf"><label class="sl" for="si-img">URL รูปโปรไฟล์</label><input class="si" id="si-img" type="url" placeholder="https://..." aria-label="https://..."></div>
-        <div class="sf"><label class="sl" for="si-cover">URL รูปปกหน้า</label><input class="si" id="si-cover" type="url" placeholder="https://..." aria-label="https://..."></div>
+        <div class="sf"><label class="sl" for="si-title" data-l10n="Site name">ชื่อเว็บไซต์</label><input class="si" id="si-title" type="text" placeholder="Koo Mean Space" aria-label="ชื่อเว็บไซต์" data-l10n-aria-label="Site name"></div>
+        <div class="sf"><label class="sl" for="si-name" data-l10n="Profile name">ชื่อโปรไฟล์</label><input class="si" id="si-name" type="text" placeholder="Koo Mean" aria-label="ชื่อโปรไฟล์" data-l10n-aria-label="Profile name"></div>
+        <div class="sf"><label class="sl" for="si-handle" data-l10n="Handle">ชื่อผู้ใช้</label><input class="si" id="si-handle" type="text" placeholder="@koomean" aria-label="ชื่อผู้ใช้" data-l10n-aria-label="Handle"></div>
+        <div class="sf"><label class="sl" for="si-bio" data-l10n="Bio">คำแนะนำตัว</label><textarea class="si" id="si-bio" placeholder="เขียนบางอย่างเกี่ยวกับตัวเอง..." aria-label="คำแนะนำตัว" data-l10n-aria-label="Bio" data-l10n-placeholder="Write a short bio…"></textarea></div>
+        <div class="sf"><label class="sl" for="si-img" data-l10n="Profile photo URL">URL รูปโปรไฟล์</label><input class="si" id="si-img" type="url" placeholder="https://..." aria-label="URL รูปโปรไฟล์" data-l10n-aria-label="Profile photo URL"></div>
+        <div class="sf"><label class="sl" for="si-cover" data-l10n="Cover image URL">URL รูปปกหน้า</label><input class="si" id="si-cover" type="url" placeholder="https://..." aria-label="URL รูปปกหน้า" data-l10n-aria-label="Cover image URL"></div>
         <button class="save-btn" id="si-save" data-click="saveProfile">บันทึกการเปลี่ยนแปลง</button>
       </div>
     </div>
 
     <div class="set-sub" id="sub-account">
       <div class="set-sub-hdr">
-        <button type="button" class="back-btn" data-click="closeSub" aria-label="ย้อนกลับ"><i aria-hidden="true" class="fas fa-chevron-left"></i></button>
-        <h2 class="set-sub-t" id="settings-account-title">ข้อมูลบัญชี</h2>
+        <button type="button" class="back-btn" data-click="closeSub" aria-label="ย้อนกลับ" data-l10n-aria-label="Back"><i aria-hidden="true" class="fas fa-chevron-left"></i></button>
+        <h2 class="set-sub-t" id="settings-account-title" data-l10n="Account details">ข้อมูลบัญชี</h2>
       </div>
       <div class="set-sub-body">
         <div class="acc-card">
@@ -1908,13 +1917,13 @@ html[data-theme="light"] .post:hover{box-shadow:0 6px 18px #25344b12}
             <div class="acc-role" id="acc-role">User</div>
           </div>
         </div>
-        <div class="sf"><label class="sl" for="acc-dn">ชื่อที่แสดง</label><input class="si" id="acc-dn" type="text" aria-label="acc-dn"></div>
+        <div class="sf"><label class="sl" for="acc-dn" data-l10n="Display name">ชื่อที่แสดง</label><input class="si" id="acc-dn" type="text" aria-label="ชื่อที่แสดง" data-l10n-aria-label="Display name"></div>
         <button class="save-btn" id="btn-save-name" data-click="saveAccountName" style="margin-bottom:15px;">บันทึกชื่อ</button>
         
-        <div class="sf"><label class="sl" for="acc-em">อีเมล</label><input class="si" id="acc-em" type="email" readonly aria-label="acc-em"></div>
-        <div class="sf"><label class="sl" for="acc-rl">สิทธิ์ผู้ใช้</label><input class="si" id="acc-rl" type="text" readonly aria-label="acc-rl"></div>
-        <div class="sf"><label class="sl" for="acc-st">สถานะ</label><input class="si" id="acc-st" type="text" readonly value="Active" aria-label="acc-st"></div>
-        <button class="save-btn" style="background:rgba(255,78,106,.12);color:var(--err);box-shadow:none" data-click="signOut"><i aria-hidden="true" class="fas fa-right-from-bracket" style="margin-right:6px"></i>ออกจากระบบ</button>
+        <div class="sf"><label class="sl" for="acc-em" data-l10n="Email">อีเมล</label><input class="si" id="acc-em" type="email" readonly aria-label="อีเมล" data-l10n-aria-label="Email"></div>
+        <div class="sf"><label class="sl" for="acc-rl" data-l10n="User role">สิทธิ์ผู้ใช้</label><input class="si" id="acc-rl" type="text" readonly aria-label="สิทธิ์ผู้ใช้" data-l10n-aria-label="User role"></div>
+        <div class="sf"><label class="sl" for="acc-st" data-l10n="Status">สถานะ</label><input class="si" id="acc-st" type="text" readonly value="Active" aria-label="สถานะ" data-l10n-aria-label="Status"></div>
+        <button class="save-btn" style="background:rgba(255,78,106,.12);color:var(--err);box-shadow:none" data-click="signOut"><i aria-hidden="true" class="fas fa-right-from-bracket" style="margin-right:6px"></i><span data-l10n="Sign out">ออกจากระบบ</span></button>
       </div>
     </div>
   </div>
@@ -1922,63 +1931,63 @@ html[data-theme="light"] .post:hover{box-shadow:0 6px 18px #25344b12}
 
 <div class="overlay" id="login-modal">
   <div class="modal">
-    <div class="m-logo">KM</div><div class="m-title">Sign In</div>
-    <div class="m-sub">เข้าสู่ระบบเพื่อใช้งานเต็มรูปแบบ</div>
+    <div class="m-logo">KM</div><div class="m-title" data-l10n="Sign in">เข้าสู่ระบบ</div>
+    <div class="m-sub" data-l10n="Sign in to use all features">เข้าสู่ระบบเพื่อใช้งานเต็มรูปแบบ</div>
     <div id="g_id_onload" data-client_id="906677442222-kmjgsmta70n24aoaq7osm9c1l7g1fb89.apps.googleusercontent.com" data-callback="handleCredentialResponse" data-auto_prompt="false"></div>
     <div class="g_id_signin" data-type="standard" data-theme="outline" data-size="large"></div>
-    <button class="m-cancel" data-click="closeModal" data-a0="login-modal" data-t0="string" aria-label="ปิดหน้าต่าง">ยกเลิก</button>
+    <button class="m-cancel" data-click="closeModal" data-a0="login-modal" data-t0="string" aria-label="ปิดหน้าต่าง" data-l10n-aria-label="Close dialog" data-l10n="Cancel">ยกเลิก</button>
   </div>
 </div>
 <div class="overlay" id="reg-modal">
   <div class="modal">
     <div class="m-logo" style="background:linear-gradient(135deg,#f59e0b,#d97706)"><i aria-hidden="true" class="fas fa-hand-sparkles"></i></div>
-    <div class="m-title">ยินดีต้อนรับ!</div><div class="m-sub">แนะนำตัวสั้นๆ เพื่อให้ Admin ทราบ</div>
-    <input type="text" id="reg-note" class="m-input" placeholder="เช่น: ผมเป็นเพื่อนคุณมีนครับ" aria-label="เช่น: ผมเป็นเพื่อนคุณมีนครับ">
-    <button class="btn-reg" data-click="doRegister">ลงทะเบียน & เข้าใช้งาน</button>
-    <button class="m-cancel" data-click="closeModal" data-a0="reg-modal" data-t0="string" aria-label="ปิดหน้าต่าง">ยกเลิก</button>
+    <div class="m-title" data-l10n="Welcome!">ยินดีต้อนรับ!</div><div class="m-sub" data-l10n="Introduce yourself to the site administrator.">แนะนำตัวสั้นๆ เพื่อให้ Admin ทราบ</div>
+    <input type="text" id="reg-note" class="m-input" placeholder="เช่น: ผมเป็นเพื่อนคุณมีนครับ" aria-label="เช่น: ผมเป็นเพื่อนคุณมีนครับ" data-l10n-aria-label="Example: I’m a friend of Koo Mean." data-l10n-placeholder="Example: I’m a friend of Koo Mean.">
+    <button class="btn-reg" data-click="doRegister" data-l10n="Register and sign in">ลงทะเบียน &amp; เข้าใช้งาน</button>
+    <button class="m-cancel" data-click="closeModal" data-a0="reg-modal" data-t0="string" aria-label="ปิดหน้าต่าง" data-l10n-aria-label="Close dialog" data-l10n="Cancel">ยกเลิก</button>
   </div>
 </div>
 <div class="overlay" id="ep-modal">
   <div class="modal wide" style="padding:20px">
-    <div class="m-title" style="margin-bottom:14px;font-size:1rem;text-align:left">แก้ไขโพสต์</div>
-    <textarea class="m-ta" id="ep-ta" rows="4" placeholder="ข้อความ..." maxlength="500" style="margin-bottom:10px" aria-label="ข้อความ..."></textarea>
+    <div class="m-title" style="margin-bottom:14px;font-size:1rem;text-align:left" data-l10n="Edit post">แก้ไขโพสต์</div>
+    <textarea class="m-ta" id="ep-ta" rows="4" placeholder="ข้อความ..." maxlength="500" style="margin-bottom:10px" aria-label="ข้อความ..." data-l10n-aria-label="Post text…" data-l10n-placeholder="Post text…"></textarea>
 
     <div class="cr-extras" style="margin-bottom:10px">
       <div class="cr-extra-field" id="ep-field-link">
         <i aria-hidden="true" class="fas fa-link"></i>
-        <input type="url" class="cr-extra-input" id="ep-link-in" placeholder="วางลิงก์ (URL)..." aria-label="วางลิงก์ (URL)...">
-        <button class="cr-extra-close" data-click="toggleEditField" data-a0="link" data-t0="string" data-a1="" data-t1="false" aria-label="เปิดหรือปิดช่องเพิ่มเติม"><i aria-hidden="true" class="fas fa-times"></i></button>
+        <input type="url" class="cr-extra-input" id="ep-link-in" placeholder="วางลิงก์ (URL)..." aria-label="วางลิงก์ (URL)..." data-l10n-aria-label="Paste a URL…" data-l10n-placeholder="Paste a URL…">
+        <button class="cr-extra-close" data-click="toggleEditField" data-a0="link" data-t0="string" data-a1="" data-t1="false" aria-label="ปิดช่องลิงก์" data-l10n-aria-label="Close link field"><i aria-hidden="true" class="fas fa-times"></i></button>
       </div>
       <div class="cr-extra-field" id="ep-field-hashtag">
         <i aria-hidden="true" class="fas fa-hashtag"></i>
-        <input type="text" class="cr-extra-input" id="ep-hashtag-in" placeholder="แท็ก คั่นด้วยเว้นวรรค" aria-label="แท็ก คั่นด้วยเว้นวรรค">
-        <button class="cr-extra-close" data-click="toggleEditField" data-a0="hashtag" data-t0="string" data-a1="" data-t1="false" aria-label="เปิดหรือปิดช่องเพิ่มเติม"><i aria-hidden="true" class="fas fa-times"></i></button>
+        <input type="text" class="cr-extra-input" id="ep-hashtag-in" placeholder="แท็ก คั่นด้วยเว้นวรรค" aria-label="แท็ก คั่นด้วยเว้นวรรค" data-l10n-aria-label="Tags separated by spaces" data-l10n-placeholder="Tags separated by spaces">
+        <button class="cr-extra-close" data-click="toggleEditField" data-a0="hashtag" data-t0="string" data-a1="" data-t1="false" aria-label="ปิดช่องแท็ก" data-l10n-aria-label="Close tag field"><i aria-hidden="true" class="fas fa-times"></i></button>
       </div>
     </div>
 
     <div class="cr-tools" style="margin-bottom:8px">
-      <input type="file" id="ep-file-in" accept="image/png,image/jpeg,image/gif,image/webp" style="display:none" aria-label="ep-file-in">
-      <label for="ep-file-in" class="tool-btn"><i aria-hidden="true" class="far fa-image"></i><span>เปลี่ยนรูป</span></label>
-      <button type="button" class="tool-btn" id="ep-btn-link" data-click="toggleEditField" data-a0="link" data-t0="string" aria-label="เปิดหรือปิดช่องเพิ่มเติม"><i aria-hidden="true" class="fas fa-link"></i><span>ลิงก์</span></button>
-      <button type="button" class="tool-btn" id="ep-btn-hashtag" data-click="toggleEditField" data-a0="hashtag" data-t0="string" aria-label="เปิดหรือปิดช่องเพิ่มเติม"><i aria-hidden="true" class="fas fa-hashtag"></i><span>แท็ก</span></button>
+      <input type="file" id="ep-file-in" accept="image/png,image/jpeg,image/gif,image/webp" style="display:none" aria-label="เปลี่ยนรูป" data-l10n-aria-label="Change image">
+      <label for="ep-file-in" class="tool-btn"><i aria-hidden="true" class="far fa-image"></i><span data-l10n="Change image">เปลี่ยนรูป</span></label>
+      <button type="button" class="tool-btn" id="ep-btn-link" data-click="toggleEditField" data-a0="link" data-t0="string" aria-label="เปิดหรือปิดช่องลิงก์" data-l10n-aria-label="Toggle link field"><i aria-hidden="true" class="fas fa-link"></i><span data-l10n="Link">ลิงก์</span></button>
+      <button type="button" class="tool-btn" id="ep-btn-hashtag" data-click="toggleEditField" data-a0="hashtag" data-t0="string" aria-label="เปิดหรือปิดช่องแท็ก" data-l10n-aria-label="Toggle tag field"><i aria-hidden="true" class="fas fa-hashtag"></i><span data-l10n="Tags">แท็ก</span></button>
     </div>
 
     <div id="ep-img-prev-wrap" class="img-prev-wrap" style="display:none;margin-bottom:10px">
       <img id="ep-img-prev" class="img-prev" alt="">
-      <button class="rm-img" data-click="removeEditImg" title="ลบรูป" aria-label="ลบรูป"><i aria-hidden="true" class="fas fa-times"></i></button>
+      <button class="rm-img" data-click="removeEditImg" title="ลบรูป" aria-label="ลบรูป" data-l10n-aria-label="Remove image" data-l10n-title="Remove image"><i aria-hidden="true" class="fas fa-times"></i></button>
     </div>
 
     <div class="m-acts" style="margin-top:12px">
-      <button class="btn-g" data-click="closeModal" data-a0="ep-modal" data-t0="string" aria-label="ปิดหน้าต่าง">ยกเลิก</button>
+      <button class="btn-g" data-click="closeModal" data-a0="ep-modal" data-t0="string" aria-label="ปิดหน้าต่าง" data-l10n-aria-label="Close dialog" data-l10n="Cancel">ยกเลิก</button>
       <button class="btn-p" id="ep-save" data-click="saveEditPost">บันทึก</button>
     </div>
   </div>
 </div>
 <div class="overlay" id="ec-modal">
   <div class="modal wide">
-    <div class="m-title" style="margin-bottom:12px;font-size:.95rem">แก้ไขคอมเมนต์</div>
-    <textarea class="m-ta" id="ec-ta" rows="3" aria-label="ec-ta"></textarea>
-    <div class="m-acts"><button class="btn-g" data-click="closeModal" data-a0="ec-modal" data-t0="string" aria-label="ปิดหน้าต่าง">ยกเลิก</button><button class="btn-p" id="ec-save" data-click="saveEditCmt">บันทึก</button></div>
+    <div class="m-title" style="margin-bottom:12px;font-size:.95rem" data-l10n="Edit comment">แก้ไขคอมเมนต์</div>
+    <textarea class="m-ta" id="ec-ta" rows="3" aria-label="ข้อความคอมเมนต์" data-l10n-aria-label="Comment text"></textarea>
+    <div class="m-acts"><button class="btn-g" data-click="closeModal" data-a0="ec-modal" data-t0="string" aria-label="ปิดหน้าต่าง" data-l10n-aria-label="Close dialog" data-l10n="Cancel">ยกเลิก</button><button class="btn-p" id="ec-save" data-click="saveEditCmt">บันทึก</button></div>
   </div>
 </div>
 
@@ -1986,8 +1995,8 @@ html[data-theme="light"] .post:hover{box-shadow:0 6px 18px #25344b12}
 <div class="article-viewer" id="article-viewer">
   <div class="av-hdr">
     <div class="av-title" id="av-title">บทความ</div>
-    <button class="av-close" id="av-share" data-click="shareArticle" title="แชร์บทความ" aria-label="แชร์"><i aria-hidden="true" class="fas fa-share-nodes"></i></button>
-    <button class="av-close" data-click="closeArticleViewer" aria-label="ปิด"><i aria-hidden="true" class="fas fa-times"></i></button>
+    <button class="av-close" id="av-share" data-click="shareArticle" title="แชร์บทความ" aria-label="แชร์" data-l10n-aria-label="Share" data-l10n-title="Share article"><i aria-hidden="true" class="fas fa-share-nodes"></i></button>
+    <button class="av-close" data-click="closeArticleViewer" aria-label="ปิด" data-l10n-aria-label="Close"><i aria-hidden="true" class="fas fa-times"></i></button>
   </div>
   <div class="av-body" id="av-body"></div>
 </div>
@@ -1996,54 +2005,54 @@ html[data-theme="light"] .post:hover{box-shadow:0 6px 18px #25344b12}
 <div class="overlay" id="apw-modal">
   <div class="modal">
     <div class="m-logo" style="background:linear-gradient(135deg,#f6b21a,#f59e0b)"><i aria-hidden="true" class="fas fa-lock"></i></div>
-    <div class="m-title">บทความนี้มีรหัสผ่าน</div>
-    <div class="m-sub">ใส่รหัสผ่านเพื่อเปิดอ่าน</div>
+    <div class="m-title" data-l10n="This article is password-protected">บทความนี้มีรหัสผ่าน</div>
+    <div class="m-sub" data-l10n="Enter the password to read this article.">ใส่รหัสผ่านเพื่อเปิดอ่าน</div>
     <input type="hidden" id="apw-row">
-    <input type="password" id="apw-input" class="m-input" placeholder="รหัสผ่าน" data-enter="submitArticlePassword" aria-label="รหัสผ่าน">
+    <input type="password" id="apw-input" class="m-input" placeholder="รหัสผ่าน" data-enter="submitArticlePassword" aria-label="รหัสผ่าน" data-l10n-aria-label="Password" data-l10n-placeholder="Password">
     <button class="btn-reg" id="apw-submit" data-click="submitArticlePassword">ปลดล็อก</button>
-    <button class="m-cancel" data-click="closeArticlePassword">ยกเลิก</button>
+    <button class="m-cancel" data-click="closeArticlePassword" data-l10n="Cancel">ยกเลิก</button>
   </div>
 </div>
 
 <!-- Article upload (admin) -->
 <div class="overlay" id="article-upload-modal">
   <div class="modal wide" style="text-align:left;max-width:540px">
-    <div class="m-title" id="au-modal-title" style="margin-bottom:6px">อัปโหลดบทความ</div><div class="sub" style="margin-bottom:12px">ไฟล์บทความจะจัดเก็บใน Google Drive และข้อมูลรายการ/สิทธิ์เก็บใน D1 · อัปโหลดครั้งแรกจะขอสิทธิ์ Drive</div>
-    <div class="m-sub" style="margin-bottom:14px">จัดเก็บไฟล์ผ่าน Cloudflare · เฉพาะ Admin</div>
+    <div class="m-title" id="au-modal-title" style="margin-bottom:6px">อัปโหลดบทความ</div><div class="sub" style="margin-bottom:12px" data-l10n="Article files are stored in Google Drive. Article metadata and permissions are stored in D1. Your first upload requires Google Drive access.">ไฟล์บทความจะจัดเก็บใน Google Drive และข้อมูลรายการ/สิทธิ์เก็บใน D1 · อัปโหลดครั้งแรกจะขอสิทธิ์ Drive</div>
+    <div class="m-sub" style="margin-bottom:14px" data-l10n="File storage via Cloudflare. Administrators only.">จัดเก็บไฟล์ผ่าน Cloudflare · เฉพาะ Admin</div>
     <div class="au-scroll">
-      <div class="sf" style="margin-bottom:10px"><label class="sl" for="au-title">ชื่อบทความ</label><input class="si" id="au-title" placeholder="เช่น คู่มือการใช้งาน" aria-label="เช่น คู่มือการใช้งาน"></div>
-      <div class="sf" style="margin-bottom:10px"><label class="sl" for="au-desc">คำอธิบาย (ไม่บังคับ)</label><textarea class="si" id="au-desc" placeholder="อธิบายสั้นๆ..." aria-label="อธิบายสั้นๆ..."></textarea></div>
-      <div class="sf" style="margin-bottom:10px"><label class="sl" for="au-tags">แท็ก (คั่นด้วยเว้นวรรค)</label><input class="si" id="au-tags" placeholder="เช่น คู่มือ ประกาศ" aria-label="เช่น คู่มือ ประกาศ"></div>
+      <div class="sf" style="margin-bottom:10px"><label class="sl" for="au-title" data-l10n="Article title">ชื่อบทความ</label><input class="si" id="au-title" placeholder="เช่น คู่มือการใช้งาน" aria-label="เช่น คู่มือการใช้งาน" data-l10n-aria-label="Example: Getting started" data-l10n-placeholder="Example: Getting started"></div>
+      <div class="sf" style="margin-bottom:10px"><label class="sl" for="au-desc" data-l10n="Description (optional)">คำอธิบาย (ไม่บังคับ)</label><textarea class="si" id="au-desc" placeholder="อธิบายสั้นๆ..." aria-label="อธิบายสั้นๆ..." data-l10n-aria-label="Write a short description…" data-l10n-placeholder="Write a short description…"></textarea></div>
+      <div class="sf" style="margin-bottom:10px"><label class="sl" for="au-tags" data-l10n="Tags (separated by spaces)">แท็ก (คั่นด้วยเว้นวรรค)</label><input class="si" id="au-tags" placeholder="เช่น คู่มือ ประกาศ" aria-label="เช่น คู่มือ ประกาศ" data-l10n-aria-label="Example: guide announcement" data-l10n-placeholder="Example: guide announcement"></div>
       <div class="au-row">
-        <div class="sf" style="flex:1;min-width:0"><label class="sl">สิทธิ์เข้าถึง (Role) — แตะเพื่อเลือก</label><div class="au-roles" id="au-roles"></div><input type="hidden" id="au-access"></div>
-        <div class="sf" style="flex:1;min-width:0"><label class="sl" id="au-pw-hint">ตั้งรหัสผ่าน (ถ้าต้องการ)</label><input class="si" id="au-password" type="password" autocomplete="new-password" placeholder="อย่างน้อย 12 ตัว · เว้นว่าง = ไม่มีรหัส" aria-label="อย่างน้อย 12 ตัว · เว้นว่าง = ไม่มีรหัส"></div>
+        <div class="sf" style="flex:1;min-width:0"><label class="sl" data-l10n="Select access roles">สิทธิ์เข้าถึง (Role) — แตะเพื่อเลือก</label><div class="au-roles" id="au-roles"></div><input type="hidden" id="au-access"></div>
+        <div class="sf" style="flex:1;min-width:0"><label class="sl" id="au-pw-hint">ตั้งรหัสผ่าน (ถ้าต้องการ)</label><input class="si" id="au-password" type="password" autocomplete="new-password" placeholder="อย่างน้อย 12 ตัว · เว้นว่าง = ไม่มีรหัส" aria-label="อย่างน้อย 12 ตัว · เว้นว่าง = ไม่มีรหัส" data-l10n-aria-label="At least 12 characters. Leave blank for no password." data-l10n-placeholder="At least 12 characters. Leave blank for no password."></div>
       </div>
-      <label class="au-clearpw" id="au-clearpw-row" style="display:none"><input type="checkbox" id="au-clearpw" aria-label="au-clearpw"> ลบรหัสผ่านเดิม (เปิดโดยไม่ต้องใช้รหัส)</label>
-      <div class="au-note">เว้นทั้งสองช่อง = สาธารณะ · ใส่ Role = เฉพาะสิทธิ์นั้น · ใส่รหัส = ปลดล็อกด้วยรหัส · ใส่ทั้งคู่ = เข้าได้ทั้งสองทาง</div>
+      <label class="au-clearpw" id="au-clearpw-row" style="display:none"><input type="checkbox" id="au-clearpw" aria-label="ลบรหัสผ่านเดิม" data-l10n-aria-label="Remove the current password"> <span data-l10n="Remove the current password">ลบรหัสผ่านเดิม (เปิดโดยไม่ต้องใช้รหัส)</span></label>
+      <div class="au-note" data-l10n="Leave both fields blank for public access. Set roles, a password, or both. When both are set, readers can use either method.">เว้นทั้งสองช่อง = สาธารณะ · ใส่ Role = เฉพาะสิทธิ์นั้น · ใส่รหัส = ปลดล็อกด้วยรหัส · ใส่ทั้งคู่ = เข้าได้ทั้งสองทาง</div>
       <div id="au-file-section">
-        <div class="au-or" style="margin-top:14px">ไฟล์ที่จะอัปโหลด</div>
+        <div class="au-or" style="margin-top:14px" data-l10n="File to upload">ไฟล์ที่จะอัปโหลด</div>
         <label for="au-file" class="au-drop"><i aria-hidden="true" class="fas fa-cloud-arrow-up"></i><span id="au-filename">เลือกไฟล์ (PDF, HTML, รูป, Word/PPT/Excel)</span></label>
-        <input type="file" id="au-file" accept=".pdf,.html,.htm,image/*,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.csv" style="display:none" aria-label="au-file">
-        <div class="au-or">— หรือ —</div>
-        <div class="sf"><label class="sl" for="au-url">ลิงก์เว็บภายนอก (URL)</label><input class="si" id="au-url" placeholder="https://..." aria-label="https://..."></div>
+        <input type="file" id="au-file" accept=".pdf,.html,.htm,image/*,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.csv" style="display:none" aria-label="ไฟล์บทความ" data-l10n-aria-label="Article file">
+        <div class="au-or" data-l10n="or">— หรือ —</div>
+        <div class="sf"><label class="sl" for="au-url" data-l10n="External link (URL)">ลิงก์เว็บภายนอก (URL)</label><input class="si" id="au-url" placeholder="https://..." aria-label="ลิงก์เว็บภายนอก" data-l10n-aria-label="External link"></div>
       </div>
       <div class="au-prog" id="au-prog">
         <div class="au-prog-bar"><span class="au-prog-fill" id="au-prog-fill"></span></div>
         <div class="au-prog-txt"><span id="au-prog-label">กำลังเตรียมไฟล์...</span><span class="au-prog-pct" id="au-prog-pct">0%</span></div>
       </div>
     </div>
-    <div class="m-acts" style="margin-top:14px"><button class="btn-g" data-click="closeArticleUpload">ยกเลิก</button><button class="btn-p" id="au-submit" data-click="submitArticleUpload">อัปโหลด</button></div>
+    <div class="m-acts" style="margin-top:14px"><button class="btn-g" data-click="closeArticleUpload" data-l10n="Cancel">ยกเลิก</button><button class="btn-p" id="au-submit" data-click="submitArticleUpload">อัปโหลด</button></div>
   </div>
 </div>
 
 <!-- Lightbox -->
 <div class="lightbox" id="lightbox" data-click="closeLightbox" role="button" tabindex="0">
-  <button class="lb-close" data-stop="true" data-click="closeLightbox"><i aria-hidden="true" class="fas fa-times"></i></button>
+  <button class="lb-close" data-stop="true" data-click="closeLightbox" aria-label="ปิดรูปภาพ" data-l10n-aria-label="Close image"><i aria-hidden="true" class="fas fa-times"></i></button>
   <img class="lb-img" id="lb-img" alt="" draggable="false">
 </div>
 
 <!-- Scroll to top -->
-<button class="scroll-top-btn" id="scroll-top-btn" data-click="scrollFeedTop" title="ขึ้นบนสุด" aria-label="ขึ้นบนสุด"><i aria-hidden="true" class="fas fa-arrow-up"></i></button>
+<button class="scroll-top-btn" id="scroll-top-btn" data-click="scrollFeedTop" title="ขึ้นบนสุด" aria-label="ขึ้นบนสุด" data-l10n-aria-label="Back to top" data-l10n-title="Back to top"><i aria-hidden="true" class="fas fa-arrow-up"></i></button>
 
 <!-- Emoji picker -->
 <div class="emoji-panel" id="emoji-panel"></div>
@@ -2053,6 +2062,31 @@ html[data-theme="light"] .post:hover{box-shadow:0 6px 18px #25344b12}
 <!-- แถบแสดงความคืบหน้าการอัปโหลด (รูปในโพสต์) -->
 <div class="up-bar" id="up-bar" aria-hidden="true"><i id="up-bar-fill"></i></div>
 <div class="up-pill" id="up-pill" role="status" aria-live="polite"><i aria-hidden="true" class="fas fa-cloud-arrow-up"></i><span id="up-pill-txt">กำลังอัปโหลด</span><b id="up-pill-pct">0%</b></div>
+
+<div class="overlay" id="post-translation-modal" role="dialog" aria-modal="true" aria-labelledby="post-translation-title" aria-describedby="post-translation-note">
+  <div class="modal post-translation-dialog">
+    <h2 class="m-title" id="post-translation-title" data-l10n="Translate post">แปลโพสต์</h2>
+    <p class="m-sub" id="post-translation-note" data-l10n="Opening Google Translate sends the post text to Google in a new tab. You can change the language there.">เมื่อกดเปิด ข้อความของโพสต์จะถูกส่งไปยัง Google Translate ในแท็บใหม่ คุณสามารถเปลี่ยนภาษาได้ที่นั่น</p>
+    <label class="post-translation-label" for="post-translation-language" data-l10n="Translate into">แปลเป็น</label>
+    <select class="koo-theme-select" id="post-translation-language">
+      <option value="en" data-l10n="English">อังกฤษ</option>
+      <option value="th" data-l10n="Thai">ไทย</option>
+      <option value="zh-CN" data-l10n="Chinese (Simplified)">จีน (ตัวย่อ)</option>
+      <option value="zh-TW" data-l10n="Chinese (Traditional)">จีน (ตัวเต็ม)</option>
+      <option value="ja" data-l10n="Japanese">ญี่ปุ่น</option>
+      <option value="ko" data-l10n="Korean">เกาหลี</option>
+      <option value="vi" data-l10n="Vietnamese">เวียดนาม</option>
+      <option value="id" data-l10n="Indonesian">อินโดนีเซีย</option>
+      <option value="es" data-l10n="Spanish">สเปน</option>
+      <option value="fr" data-l10n="French">ฝรั่งเศส</option>
+      <option value="de" data-l10n="German">เยอรมัน</option>
+    </select>
+    <div class="m-acts">
+      <button type="button" class="btn-g" data-click="closePostTranslation" data-l10n="Cancel">ยกเลิก</button>
+      <button type="button" class="btn-p" data-click="translatePost"><span data-l10n="Open Google Translate">เปิด Google Translate</span> <i aria-hidden="true" class="fas fa-arrow-up-right-from-square"></i></button>
+    </div>
+  </div>
+</div>
 
 <script>
 const API_URL='https://koomean-proxy.meanchannel52.workers.dev';
@@ -2075,7 +2109,7 @@ function inCooldown(){return Date.now()<rateCooldownUntil;}
 function noteRateLimited(seconds=60){
   if(inCooldown())return;
   rateCooldownUntil=Date.now()+Math.max(5,Math.min(300,seconds))*1000;
-  toast('ระบบกำลังใช้งานหนาแน่น พักสักครู่แล้วลองใหม่','e','fas fa-hourglass-half');
+  toast(blogText('ระบบกำลังใช้งานหนาแน่น พักสักครู่แล้วลองใหม่',"The blog is busy. Try again in a moment."),'e','fas fa-hourglass-half');
 }
 
 const S={
@@ -2116,13 +2150,35 @@ const MEDIA_ASSETS=/* BUILD_MEDIA_MAP */{};
 function imageUrl(value){const url=safeHttpUrl(value);return url&&MEDIA_ASSETS[url]?new URL('/'+MEDIA_ASSETS[url].src.replace(/^\//,''),location.origin).href:url;}
 function imageDimensions(value){const info=MEDIA_ASSETS[safeHttpUrl(value)];return info?'width="'+info.width+'" height="'+info.height+'"':'';}
 function safeHttpUrl(value){try{const u=new URL(String(value||''));return /^https?:$/.test(u.protocol)&&!u.username&&!u.password?u.href:'';}catch{return '';}}
-function fmt(ts){if(!ts)return'';const d=new Date(ts),now=new Date(),diff=now-d;if(isNaN(diff))return'';if(diff<60000)return'เมื่อกี้';if(diff<3600000)return`${Math.floor(diff/60000)} นาทีที่แล้ว`;if(diff<86400000)return`${Math.floor(diff/3600000)} ชม.ที่แล้ว`;return d.toLocaleDateString('th-TH',{day:'numeric',month:'short'})+' '+d.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'});}
+const blogDateFormats = {
+  th: new Intl.DateTimeFormat('th-TH',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}),
+  en: new Intl.DateTimeFormat('en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})
+};
+const blogRelativeEnglish = new Intl.RelativeTimeFormat('en',{style:'short'});
+function fmt(ts) {
+  if (!ts) return '';
+  const date = new Date(ts), diff = Date.now()-date.getTime();
+  if (!Number.isFinite(diff)) return '';
+  if (diff<60000) return blogText('เมื่อกี้','Just now');
+  if (diff<3600000) {
+    const minutes = Math.floor(diff/60000);
+    return blogText(`${minutes} นาทีที่แล้ว`,blogRelativeEnglish.format(-minutes,'minute'));
+  }
+  if (diff<86400000) {
+    const hours = Math.floor(diff/3600000);
+    return blogText(`${hours} ชม.ที่แล้ว`,blogRelativeEnglish.format(-hours,'hour'));
+  }
+  return blogText(blogDateFormats.th,blogDateFormats.en).format(date);
+}
+function postCountLabel(count) {
+  return blogText(`${count} โพสต์`,`${count} ${count===1?'post':'posts'}`);
+}
 function decodeJwt(t){try{return JSON.parse(decodeURIComponent(atob(t.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')).split('').map(c=>'%'+('00'+c.charCodeAt(0).toString(16)).slice(-2)).join('')));}catch{return null;}}
 // Google ID token อายุ ~1 ชม. — เช็คก่อน restore session
 function isTokenExpired(t){const p=decodeJwt(t);if(!p||!p.exp)return true;return (p.exp*1000)<=Date.now();}
 let driveAccessToken='',driveAccessTokenExpiresAt=0;
 function isCurrentAuth(epoch,idToken){return epoch===authEpoch&&idToken===S.idToken;}
-function assertCurrentAuth(epoch,idToken){if(!idToken||!isCurrentAuth(epoch,idToken))throw new Error('บัญชีเปลี่ยนแล้ว กรุณาลองใหม่');}
+function assertCurrentAuth(epoch,idToken){if(!idToken||!isCurrentAuth(epoch,idToken))throw new Error(blogText('บัญชีเปลี่ยนแล้ว กรุณาลองใหม่',"Your account changed. Please try again."));}
 async function getDriveAccessToken(){
   const epoch=authEpoch,idToken=S.idToken;
   assertCurrentAuth(epoch,idToken);
@@ -2131,7 +2187,7 @@ async function getDriveAccessToken(){
   assertCurrentAuth(epoch,idToken);
   if(!window.google?.accounts?.oauth2)throw new Error('Google Drive authorization is unavailable');
   return new Promise((resolve,reject)=>{
-    const client=google.accounts.oauth2.initTokenClient({client_id:'906677442222-kmjgsmta70n24aoaq7osm9c1l7g1fb89.apps.googleusercontent.com',scope:'openid email https://www.googleapis.com/auth/drive.file',include_granted_scopes:true,callback:response=>{try{assertCurrentAuth(epoch,idToken);}catch(error){return reject(error);}if(response.error)return reject(new Error('อนุญาต Google Drive ไม่สำเร็จ: '+response.error));driveAccessToken=response.access_token||'';driveAccessTokenExpiresAt=Date.now()+Math.max(60,Number(response.expires_in||3600)-60)*1000;resolve(driveAccessToken)}});
+    const client=google.accounts.oauth2.initTokenClient({client_id:'906677442222-kmjgsmta70n24aoaq7osm9c1l7g1fb89.apps.googleusercontent.com',scope:'openid email https://www.googleapis.com/auth/drive.file',include_granted_scopes:true,callback:response=>{try{assertCurrentAuth(epoch,idToken);}catch(error){return reject(error);}if(response.error)return reject(new Error(blogText('อนุญาต Google Drive ไม่สำเร็จ: ',"Google Drive authorization failed: ")+response.error));driveAccessToken=response.access_token||'';driveAccessTokenExpiresAt=Date.now()+Math.max(60,Number(response.expires_in||3600)-60)*1000;resolve(driveAccessToken)}});
     client.requestAccessToken({prompt:''});
   });
 }
@@ -2157,25 +2213,27 @@ function setR2Meter(id,textId,used,free,format){
   const pct=Math.max(0,Math.min(100,Number(used||0)/Math.max(1,Number(free||1))*100));
   const bar=D(id),label=D(textId);if(!bar||!label)return;
   bar.style.width=pct.toFixed(2)+'%';bar.classList.toggle('warn',pct>=70&&pct<80);bar.classList.toggle('danger',pct>=80);
-  label.textContent=`${format(used)} / ${format(free)} · ${Math.max(0,100-pct).toFixed(0)}% เหลือ`;
+  label.textContent=`${format(used)} / ${format(free)} · ${Math.max(0,100-pct).toFixed(0)}% ${blogText('เหลือ','left')}`;
 }
 async function loadR2Quota(){
   if(!isAdmin()||!S.idToken)return;
   const card=D('r2-quota-card');if(!card)return;
   try{
     const res=await apiRead('r2Quota');const data=await res.json();
-    if(!res.ok||!data.success||!data.quota)throw new Error(data.message||'โหลดโควตาไม่สำเร็จ');
+    if(!res.ok||!data.success||!data.quota)throw new Error(data.message||blogText('โหลดโควตาไม่สำเร็จ',"Unable to load quota"));
     const q=data.quota;
     setR2Meter('r2-q-storage-bar','r2-q-storage-text',q.used.storageBytes,q.free.storageBytes,fmtStorage);
     setR2Meter('r2-q-a-bar','r2-q-a-text',q.used.classA,q.free.classA,fmtCount);
     setR2Meter('r2-q-b-bar','r2-q-b-text',q.used.classB,q.free.classB,fmtCount);
     card.classList.toggle('locked',!!q.locked);
-    const reset=new Date(q.resetAt),date=Number.isNaN(reset.getTime())?'รอบถัดไป':reset.toLocaleDateString('th-TH',{day:'numeric',month:'short'});
-    D('r2-q-state').textContent=q.locked?`หยุดใช้ · รีเซ็ต ${date}`:`พร้อมใช้ · รีเซ็ต ${date}`;
-    D('r2-q-note').textContent=q.locked?`ถึงขีดจำกัดสำรอง 20% แล้ว Worker หยุดเรียก R2 จนถึงรอบบิลวันที่ ${date}`:`หยุดอัตโนมัติเมื่อใช้ถึง 80% ของโควต้าฟรี · รีเซ็ตวันที่ ${date} · พื้นที่เก็บเป็นยอดปัจจุบันแบบเผื่อความปลอดภัย`;
+    const reset=new Date(q.resetAt),date=Number.isNaN(reset.getTime())?blogText('รอบถัดไป','next cycle'):reset.toLocaleDateString(blogText('th-TH','en-GB'),{day:'numeric',month:'short'});
+    D('r2-q-state').textContent=q.locked?blogText(`หยุดใช้ · รีเซ็ต ${date}`,`Paused · Resets ${date}`):blogText(`พร้อมใช้ · รีเซ็ต ${date}`,`Available · Resets ${date}`);
+    D('r2-q-note').textContent=q.locked
+      ? blogText(`ถึงขีดจำกัดสำรอง 20% แล้ว Worker หยุดเรียก R2 จนถึงรอบบิลวันที่ ${date}`,`The Worker has paused R2 requests until the quota resets on ${date}.`)
+      : blogText(`หยุดอัตโนมัติเมื่อใช้ถึง 80% ของโควต้าฟรี · รีเซ็ตวันที่ ${date} · พื้นที่เก็บเป็นยอดปัจจุบันแบบเผื่อความปลอดภัย`,`R2 requests pause at 80% of the free quota. The quota resets on ${date}. Storage includes a safety margin.`);
   }catch(e){
-    D('r2-q-state').textContent='โหลดไม่สำเร็จ';
-    D('r2-q-note').textContent=e.message||'ตรวจสอบการเชื่อมต่อกับ Worker';
+    D('r2-q-state').textContent=blogText('โหลดไม่สำเร็จ',"Unable to load");
+    D('r2-q-note').textContent=e.message||blogText('ตรวจสอบการเชื่อมต่อกับ Worker',"Check your connection to the server.");
   }
   if(!r2QuotaPollTid)r2QuotaPollTid=setInterval(()=>{if(isAdmin()&&D('set-panel')?.classList.contains('open'))loadR2Quota();},60000);
 }
@@ -2183,7 +2241,7 @@ async function loadR2Quota(){
 // ส่งข้อมูลพร้อม Google ID token ไปยัง Cloudflare Worker + D1
 async function postData(action, params = {}) {
   if (!S.idToken) throw new Error("Authentication required");
-  if (inCooldown()) throw new Error('ระบบกำลังพักชั่วคราว กรุณารอสักครู่');
+  if (inCooldown()) throw new Error(blogText('ระบบกำลังพักชั่วคราว กรุณารอสักครู่',"The service is temporarily busy. Try again shortly."));
   const fd = new URLSearchParams();
   fd.append('action', action);
   fd.append('idToken', S.idToken);
@@ -2202,7 +2260,7 @@ async function postData(action, params = {}) {
 // POST แบบมี progress (XHR) + timeout ยาว สำหรับไฟล์
 function postDataProgress(action, params = {}, onProgress, timeoutMs = 300000) {
   if (!S.idToken) return Promise.reject(new Error("Authentication required"));
-  if (inCooldown()) return Promise.reject(new Error('ระบบกำลังพักชั่วคราว กรุณารอสักครู่'));
+  if (inCooldown()) return Promise.reject(new Error(blogText('ระบบกำลังพักชั่วคราว กรุณารอสักครู่',"The service is temporarily busy. Try again shortly.")));
   const body = JSON.stringify({action,idToken:S.idToken,ua:CLIENT_UA,...params});
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
@@ -2215,13 +2273,13 @@ function postDataProgress(action, params = {}, onProgress, timeoutMs = 300000) {
     }
     xhr.onload = () => {
       let d = null;
-      try { d = JSON.parse(xhr.responseText); } catch (e) { return reject(new Error('เซิร์ฟเวอร์ตอบกลับไม่ถูกต้อง')); }
+      try { d = JSON.parse(xhr.responseText); } catch (e) { return reject(new Error(blogText('เซิร์ฟเวอร์ตอบกลับไม่ถูกต้อง',"Unexpected server response"))); }
       if (d && d.code === 429) { noteRateLimited(); return reject(new Error(d.message || 'rate limited')); }
       resolve(d);
     };
-    xhr.onerror   = () => reject(new Error('เชื่อมต่อไม่สำเร็จ'));
-    xhr.ontimeout = () => reject(new Error('หมดเวลาเชื่อมต่อ'));
-    xhr.onabort   = () => reject(new Error('ยกเลิกแล้ว'));
+    xhr.onerror   = () => reject(new Error(blogText('เชื่อมต่อไม่สำเร็จ',"Connection failed")));
+    xhr.ontimeout = () => reject(new Error(blogText('หมดเวลาเชื่อมต่อ',"The connection timed out")));
+    xhr.onabort   = () => reject(new Error(blogText('ยกเลิกแล้ว',"Canceled")));
     xhr.send(body);
   });
 }
@@ -2402,7 +2460,7 @@ function loadGSI(){
 }
 
 
-function openModal(id){if(id==='login-modal')loadGSI().catch(()=>toast('โหลด Google Sign-In ไม่สำเร็จ กรุณาลองใหม่','e')); D(id).classList.add('open');}
+function openModal(id){if(id==='login-modal')loadGSI().catch(()=>toast(blogText('โหลด Google Sign-In ไม่สำเร็จ กรุณาลองใหม่',"Could not load Google Sign-In. Please try again."),'e')); D(id).classList.add('open');}
 function closeModal(id){D(id).classList.remove('open');}
 document.addEventListener('click',e=>{if(!e.target.closest('.drop-menu')&&!e.target.closest('.menu-btn'))document.querySelectorAll('.drop-menu.open').forEach(m=>m.classList.remove('open'));});
 function toggleDrop(id){document.querySelectorAll('.drop-menu.open').forEach(m=>{if(m.id!==id)m.classList.remove('open');});const m=D(id);if(m)m.classList.toggle('open');}
@@ -2424,15 +2482,15 @@ function renderHashtagsUI(){
       <div style="font-size:1.1rem;color:var(--accent);font-weight:800;width:24px">${i+1}</div>
       <div class="rw-hit-body">
         <div class="rw-hit-name">${esc(t.tag)}</div>
-        <div class="rw-hit-txt">${t.count} โพสต์</div>
+        <div class="rw-hit-txt">${postCountLabel(t.count)}</div>
       </div></div>`;
   });
   return h;
 }
 function getEmptySearchHtml(){
   const th=renderHashtagsUI();
-  if(th)return `<div class="sec-label" style="border:none">🔥 เทรนด์ฮิต</div>${th}`;
-  return `<div class="srch-empty"><i aria-hidden="true" class="fas fa-magnifying-glass-chart"></i><p>พิมพ์เพื่อค้นหาโพสต์</p></div>`;
+  if(th)return `<div class="sec-label" style="border:none">${blogText('🔥 เทรนด์ฮิต','🔥 Trending')}</div>${th}`;
+  return `<div class="srch-empty"><i aria-hidden="true" class="fas fa-magnifying-glass-chart"></i><p>${blogText('พิมพ์เพื่อค้นหาโพสต์','Search for posts')}</p></div>`;
 }
 function searchTag(tag){
   if(isMob()){
@@ -2478,13 +2536,13 @@ function shareTagLink(){
   if(navigator.share&&isMob()){
     navigator.share({
       title:'#'+S.activeTag+' · '+(S.profile.webTitle||'Koo Mean Blog'),
-      text:'ดูโพสต์ในหมวด #'+S.activeTag,
+      text:blogText('ดูโพสต์ในหมวด #',"Browse posts tagged #")+S.activeTag,
       url:url
     }).catch(()=>{
-      copy(url).then(()=>toast('คัดลอกลิงก์แชร์แล้ว','s','fas fa-link')).catch(()=>toast('แชร์ไม่สำเร็จ','e'));
+      copy(url).then(()=>toast(blogText('คัดลอกลิงก์แชร์แล้ว',"Link copied"),'s','fas fa-link')).catch(()=>toast(blogText('แชร์ไม่สำเร็จ',"Unable to share"),'e'));
     });
   }else{
-    copy(url).then(()=>toast('คัดลอกลิงก์แท็กแล้ว','s','fas fa-link')).catch(()=>toast('คัดลอกไม่สำเร็จ','e'));
+    copy(url).then(()=>toast(blogText('คัดลอกลิงก์แท็กแล้ว',"Tag link copied"),'s','fas fa-link')).catch(()=>toast(blogText('คัดลอกไม่สำเร็จ',"Unable to copy the link"),'e'));
   }
 }
 
@@ -2496,13 +2554,13 @@ function renderTagFilterBar(){
   bar.innerHTML=`<div class="tag-filter">
     <div class="tag-filter-icon"><i aria-hidden="true" class="fas fa-hashtag"></i></div>
     <div class="tag-filter-body">
-      <div class="tag-filter-label">กำลังดูแท็ก</div>
+      <div class="tag-filter-label">${blogText('กำลังดูแท็ก','Filtering by tag')}</div>
       <div class="tag-filter-name">#${esc(S.activeTag)}</div>
-      <div class="tag-filter-count">${count} โพสต์</div>
+      <div class="tag-filter-count">${postCountLabel(count)}</div>
     </div>
     <div class="tag-filter-acts">
-      <button class="tag-filter-btn" data-click="shareTagLink" title="แชร์แท็ก" aria-label="แชร์แท็ก"><i aria-hidden="true" class="fas fa-share-nodes"></i><span>แชร์</span></button>
-      <button class="tag-filter-btn danger" data-click="clearTagFilter" title="ล้างตัวกรอง" aria-label="ล้างตัวกรอง"><i aria-hidden="true" class="fas fa-times"></i><span>ล้าง</span></button>
+      <button class="tag-filter-btn" data-click="shareTagLink" title="${blogText('แชร์แท็ก','Share tag')}" aria-label="${blogText('แชร์แท็ก','Share tag')}"><i aria-hidden="true" class="fas fa-share-nodes"></i><span>${blogText('แชร์','Share')}</span></button>
+      <button class="tag-filter-btn danger" data-click="clearTagFilter" title="${blogText('ล้างตัวกรอง','Clear filter')}" aria-label="${blogText('ล้างตัวกรอง','Clear filter')}"><i aria-hidden="true" class="fas fa-times"></i><span>${blogText('ล้าง','Clear')}</span></button>
     </div></div>`;
   bar.style.display='block';
 }
@@ -2539,7 +2597,7 @@ function sortHits(hits){
   return hits;
 }
 function sortChipsHtml(){
-  const opt=[['rel','ตรงคำค้น'],['likes','ถูกใจมากสุด'],['views','ดูมากสุด'],['recent','ล่าสุด']];
+  const opt=[['rel',blogText('ตรงคำค้น',"Relevance")],['likes',blogText('ถูกใจมากสุด',"Most liked")],['views',blogText('ดูมากสุด',"Most viewed")],['recent',blogText('ล่าสุด',"Newest")]];
   return '<div class="srch-sort">'+opt.map(o=>`<button class="${searchSort===o[0]?'active':''}" data-click="setSearchSort" data-a0="${o[0]}" data-t0="string">${o[1]}</button>`).join('')+'</div>';
 }
 function setSearchSort(s){
@@ -2560,7 +2618,7 @@ D('rw-srch').addEventListener('input',function(){
       return hay.includes(lq);
     }));
 
-    if(!hits.length){res.innerHTML='<div style="padding:12px 16px;font-size:.79rem;color:var(--txt3)">ไม่พบโพสต์</div>';res.style.display='block';return;}
+    if(!hits.length){res.innerHTML=`<div style="padding:12px 16px;font-size:.79rem;color:var(--txt3)">${blogText('ไม่พบโพสต์','No posts found')}</div>`;res.style.display='block';return;}
     let h=sortChipsHtml();hits.slice(0,8).forEach(p=>{
       const sn=(p.content||'').substring(0,80);
       const hi=t=>esc(t).replace(new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi'),m=>`<mark>${esc(m)}</mark>`);
@@ -2591,8 +2649,8 @@ D('mob-srch-in').addEventListener('input',function(){
       const hay=((p.content||'')+' '+((p.hashtags||[]).join(' '))+' '+(p.link||'')).toLowerCase();
       return hay.includes(lq);
     }));
-    if(!hits.length){D('mob-srch-body').innerHTML='<div class="srch-empty"><i aria-hidden="true" class="fas fa-face-frown"></i><p>ไม่พบโพสต์ที่ตรงกัน</p></div>';return;}
-    let h=sortChipsHtml()+`<div class="srch-tag">พบ ${hits.length} โพสต์</div>`;
+    if(!hits.length){D('mob-srch-body').innerHTML=`<div class="srch-empty"><i aria-hidden="true" class="fas fa-face-frown"></i><p>${blogText('ไม่พบโพสต์ที่ตรงกัน','No matching posts')}</p></div>`;return;}
+    let h=sortChipsHtml()+`<div class="srch-tag">${blogText(`พบ ${postCountLabel(hits.length)}`,`${postCountLabel(hits.length)} found`)}</div>`;
     hits.forEach(p=>{
       const sn=(p.content||'').substring(0,100);
       const hi=t=>esc(t).replace(new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi'),m=>`<mark>${esc(m)}</mark>`);
@@ -2651,7 +2709,9 @@ function onSetAccountClick(){
 
 function prefillAccount(){
   if(!S.user)return;
-  const r=getRole();const rLabel=r?r.charAt(0).toUpperCase()+r.slice(1):'User';
+  const r=getRole();
+  const roleNames={admin:blogText('ผู้ดูแล','Admin'),blog:blogText('ผู้เขียน','Author'),user:blogText('ผู้ใช้','User')};
+  const rLabel=splitRoles(r).map(role=>Object.hasOwn(roleNames,role)?roleNames[role]:role).join(', ')||roleNames.user;
   D('acc-av').src=S.user.pic||'https://ui-avatars.com/api/?name='+encodeURIComponent(S.user.name||'U')+'&background=161d2e&color=7988a3';
   D('acc-av').onerror=function(){this.onerror=null;this.src='https://ui-avatars.com/api/?name='+encodeURIComponent(S.user?.name||'U')+'&background=161d2e&color=7988a3';};
   D('acc-name').textContent=S.user.name||'';
@@ -2660,6 +2720,7 @@ function prefillAccount(){
   D('acc-dn').value=S.user.name||'';
   D('acc-em').value=S.user.email||'';
   D('acc-rl').value=rLabel;
+  D('acc-st').value=blogText('ใช้งานอยู่','Active');
 }
 
 function prefillEdit(){
@@ -2672,8 +2733,8 @@ function prefillEdit(){
 }
 
 async function saveProfile(){
-  if(!isAdmin())return toast('เฉพาะ Admin เท่านั้น','e');
-  const btn=D('si-save');btn.disabled=true;btn.textContent='กำลังบันทึก...';
+  if(!isAdmin())return toast(blogText('เฉพาะ Admin เท่านั้น',"This action requires an admin account."),'e');
+  const btn=D('si-save');btn.disabled=true;btn.textContent=blogText('กำลังบันทึก...',"Saving…");
   try{
     const d = await postData('updateProfile', {
       email: S.user.email,
@@ -2684,33 +2745,33 @@ async function saveProfile(){
       imageUrl: D('si-img').value.trim(),
       coverUrl: D('si-cover').value.trim()
     });
-    if(d.success){toast('บันทึกสำเร็จ','s','fas fa-check');closeSub();await loadData(S.user.email,S.user.name,S.user.pic);}
-    else toast('เกิดข้อผิดพลาด','e');
-  }catch{toast('บันทึกไม่สำเร็จ','e');}
-  finally{btn.disabled=false;btn.textContent='บันทึกการเปลี่ยนแปลง';}
+    if(d.success){toast(blogText('บันทึกสำเร็จ',"Changes saved"),'s','fas fa-check');closeSub();await loadData(S.user.email,S.user.name,S.user.pic);}
+    else toast(blogText('เกิดข้อผิดพลาด',"Something went wrong"),'e');
+  }catch{toast(blogText('บันทึกไม่สำเร็จ',"Unable to save changes"),'e');}
+  finally{btn.disabled=false;btn.textContent=blogText('บันทึกการเปลี่ยนแปลง',"Save changes");}
 }
 
 async function saveAccountName() {
   const newName = D('acc-dn').value.trim();
-  if (!newName) return toast('กรุณากรอกชื่อที่ต้องการแสดง', 'e');
+  if (!newName) return toast(blogText('กรุณากรอกชื่อที่ต้องการแสดง',"Enter a display name."), 'e');
   const btn = D('btn-save-name');
   btn.disabled = true; 
-  btn.textContent = 'กำลังบันทึก...';
+  btn.textContent = blogText('กำลังบันทึก...',"Saving…");
   try {
     const d = await postData('updateUserName', { email: S.user.email, newName: newName });
     if (d.success) {
-      toast('เปลี่ยนชื่อสำเร็จ', 's', 'fas fa-check');
+      toast(blogText('เปลี่ยนชื่อสำเร็จ',"Display name updated"), 's', 'fas fa-check');
       S.user.name = newName;
       applyUserUI();
       await loadData(S.user.email, S.user.name, S.user.pic);
     } else {
-      toast(d.message || 'เกิดข้อผิดพลาด', 'e');
+      toast(d.message || blogText('เกิดข้อผิดพลาด',"Something went wrong"), 'e');
     }
   } catch(e) {
-    toast('เชื่อมต่อล้มเหลว', 'e');
+    toast(blogText('เชื่อมต่อล้มเหลว',"Connection failed"), 'e');
   } finally {
     btn.disabled = false; 
-    btn.textContent = 'บันทึกชื่อ';
+    btn.textContent = blogText('บันทึกชื่อ',"Save name");
   }
 }
 
@@ -2731,7 +2792,7 @@ function navTo(n){
     if(S.activeTag){S.activeTag=null;renderTagFilterBar();}
     S.savedView=false;S.articlesView=true;
     setMN('articles');setSBN('articles');
-    D('feed-hdr-title').textContent='บทความ';
+    D('feed-hdr-title').textContent=blogText('บทความ',"Articles");
     if(cr)cr.style.display='none';
     D('tag-filter-bar').style.display='none';
     loadArticles();
@@ -2744,7 +2805,7 @@ function navTo(n){
     if(S.activeTag){S.activeTag=null;renderTagFilterBar();}
     S.savedView=true;
     setMN('saved');setSBN('saved');
-    D('feed-hdr-title').textContent='บันทึกไว้';
+    D('feed-hdr-title').textContent=blogText('บันทึกไว้',"Saved");
     renderFeed();
   }else{
     S.savedView=false;
@@ -2756,7 +2817,7 @@ function navTo(n){
 }
 
 /* =========== Auth =========== */
-function onAuthClick(){if(!S.user)openModal('login-modal');else if(confirm('ออกจากระบบหรือไม่?'))signOut();}
+function onAuthClick(){if(!S.user)openModal('login-modal');else if(confirm(blogText('ออกจากระบบหรือไม่?',"Sign out?")))signOut();}
 
 function signOut(silent = false){
   authEpoch++;S.user=null; S.pendingJwt=null; S.idToken=null;
@@ -2766,18 +2827,18 @@ function signOut(silent = false){
   S.posts=S.posts.map(p=>({...p,isMine:false,likedByMe:false,comments:(p.comments||[]).map(c=>({...c,isMine:false}))}));
   S.articles=[]; S.allRoles=[];   // สิทธิ์เปลี่ยน → ล้างบทความที่โหลดไว้ตอนล็อกอิน
   try{localStorage.removeItem(SESS_KEY);}catch{}
-  D('auth-btn').textContent='Sign In';D('auth-btn').className='auth-pill';
+  D('auth-btn').textContent=blogText('เข้าสู่ระบบ','Sign in');D('auth-btn').className='auth-pill';
   D('creator').classList.remove('show');
   D('admin-grp').style.display='none';
   D('so-grp').style.display='none';
   D('sb-user-card').style.display='none';
-  D('set-ln').textContent='Sign In';D('set-ld').textContent='เข้าสู่ระบบเพื่อใช้งาน';
+  D('set-ln').textContent=blogText('เข้าสู่ระบบ','Sign in');D('set-ld').textContent=blogText('เข้าสู่ระบบเพื่อใช้งาน',"Sign in to use your account");
   D('rw-auth').style.display='';
   D('mnav-fab').classList.add('hidden');
   closeSettings();closeCompose();
   renderFeed();
   if(S.articlesView)loadArticles();
-  if(!silent) toast('ออกจากระบบแล้ว','','fas fa-right-from-bracket');
+  if(!silent) toast(blogText('ออกจากระบบแล้ว',"Signed out"),'','fas fa-right-from-bracket');
 }
 
 function handleCredentialResponse(res){
@@ -2786,16 +2847,16 @@ function handleCredentialResponse(res){
   authEpoch++;S.pendingJwt=p; S.idToken=res.credential;
   driveAccessToken='';driveAccessTokenExpiresAt=0;
   closeArticleUpload();setUploadProgress(-1);D('au-submit').disabled=false;
-  toast('กำลังตรวจสอบ...','','fas fa-circle-notch fa-spin');
+  toast(blogText('กำลังตรวจสอบ...',"Verifying…"),'','fas fa-circle-notch fa-spin');
   loadData(p.email,p.name,p.picture, null, true);
 }
 
 function doRegister(){
   const note=D('reg-note').value.trim();
-  if(!note){toast('กรุณากรอกข้อมูลก่อน','e');return;}
+  if(!note){toast(blogText('กรุณากรอกข้อมูลก่อน',"Enter a short introduction."),'e');return;}
   closeModal('reg-modal');
   const p=S.pendingJwt;
-  toast('กำลังลงทะเบียน...','','fas fa-circle-notch fa-spin');
+  toast(blogText('กำลังลงทะเบียน...',"Registering…"),'','fas fa-circle-notch fa-spin');
   loadData(p.email,p.name,p.picture,note,true);
 }
 
@@ -2823,7 +2884,7 @@ async function loadData(email='',name='',pic='',note=null, isFreshLogin=false){
     if(data.authError) {
       if(isFreshLogin) {
         signOut(true);
-        toast('ยืนยันตัวตนไม่ผ่าน กรุณาลองใหม่', 'e', 'fas fa-times');
+        toast(blogText('ยืนยันตัวตนไม่ผ่าน กรุณาลองใหม่',"Unable to verify your account. Please try again."), 'e', 'fas fa-times');
       } else {
         signOut(true);
         loadData(); // reload as public
@@ -2841,7 +2902,7 @@ async function loadData(email='',name='',pic='',note=null, isFreshLogin=false){
       const rawRole=(data.user.role||'').toString();
       S.user={email:data.user.email,name,role:rawRole,pic};
       applyUserUI();
-      if(isFreshLogin) toast(isAdmin()?'เข้าสู่ระบบ Admin ✓':'เข้าสู่ระบบสำเร็จ ✓','s');
+      if(isFreshLogin) toast(isAdmin()?blogText('เข้าสู่ระบบ Admin ✓',"Signed in as admin"):blogText('เข้าสู่ระบบสำเร็จ ✓',"Signed in"),'s');
     }else if(!email){
       D('rw-auth').style.display='';
     }
@@ -2886,7 +2947,7 @@ async function loadData(email='',name='',pic='',note=null, isFreshLogin=false){
   }catch(err){
     console.error(err);
     const sk=D('sk-posts');if(sk)sk.remove();
-    D('feed').insertAdjacentHTML('beforeend',`<div class="err-banner"><i aria-hidden="true" class="fas fa-exclamation-circle"></i><span>โหลดข้อมูลไม่สำเร็จ</span><button class="retry-btn" data-click="reloadPage">ลองใหม่</button></div>`);
+    D('feed').insertAdjacentHTML('beforeend',`<div class="err-banner"><i aria-hidden="true" class="fas fa-exclamation-circle"></i><span>${blogText('โหลดข้อมูลไม่สำเร็จ','Unable to load posts')}</span><button class="retry-btn" data-click="reloadPage">${blogText('ลองใหม่','Try again')}</button></div>`);
   }
 }
 
@@ -2912,12 +2973,12 @@ async function refreshPosts(opts={}){
     if(nextSig!==lastPostsSig){
       setPosts(nextPosts);
       saveBlogCache();
-      if(opts.announce)toast('อัปเดตโพสต์ล่าสุดแล้ว','s','fas fa-rotate');
+      if(opts.announce)toast(blogText('อัปเดตโพสต์ล่าสุดแล้ว',"Posts are up to date"),'s','fas fa-rotate');
       return true;
     }
     return false;
   }catch(err){
-    if(!opts.silent)toast('อัปเดตโพสต์ไม่สำเร็จ','e','fas fa-wifi');
+    if(!opts.silent)toast(blogText('อัปเดตโพสต์ไม่สำเร็จ',"Unable to refresh posts"),'e','fas fa-wifi');
     return false;
   }finally{
     postsRefreshing=false;
@@ -2940,7 +3001,7 @@ function applyUserUI(){
   var fabEl=D('mnav-fab');
 
   if(!S.user){
-    D('auth-btn').textContent='Sign In';D('auth-btn').className='auth-pill';
+    D('auth-btn').textContent=blogText('เข้าสู่ระบบ','Sign in');D('auth-btn').className='auth-pill';
     if(creatorEl)creatorEl.classList.remove('show');
     D('admin-grp').style.display='none';
     D('so-grp').style.display='none';D('sb-user-card').style.display='none';
@@ -2948,7 +3009,7 @@ function applyUserUI(){
     D('rw-auth').style.display='';
     return;
   }
-  D('auth-btn').textContent='Sign Out';D('auth-btn').className='auth-pill out';
+  D('auth-btn').textContent=blogText('ออกจากระบบ','Sign out');D('auth-btn').className='auth-pill out';
   D('set-ln').textContent=S.user.name||'';
   D('set-ld').textContent=S.user.email||'';
   D('so-email').textContent=S.user.email||'';
@@ -3004,7 +3065,7 @@ function processContent(text,rowIdx,postLink){
     const m=u.match(/(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
     if(m){ytId=m[1];break;}else if(!tLink)tLink=u;
   }
-  if(ytId)media=`<button type="button" class="post-yt-preview" data-click="playYouTube" data-a0="${ytId}" data-t0="string" data-a1="" data-t1="this" aria-label="เล่นวิดีโอ YouTube"><img src="https://i.ytimg.com/vi/${ytId}/hqdefault.jpg" width="480" height="360" alt="" loading="lazy" decoding="async"><span aria-hidden="true">▶</span></button>`;
+  if(ytId)media=`<button type="button" class="post-yt-preview" data-click="playYouTube" data-a0="${ytId}" data-t0="string" data-a1="" data-t1="this" aria-label="${blogText('เล่นวิดีโอ YouTube',"Play YouTube video")}"><img src="https://i.ytimg.com/vi/${ytId}/hqdefault.jpg" width="480" height="360" alt="" loading="lazy" decoding="async"><span aria-hidden="true">▶</span></button>`;
   else if(tLink)media=`<div class="lp-w" id="lp-${rowIdx}"></div>`;
   return{html:h,media,targetLink:tLink};
 }
@@ -3020,7 +3081,7 @@ async function fetchLP(url,id){
  })();lpPending.set(url,task);
  try{await task}finally{lpPending.delete(url)}
 }
-function playYouTube(id,button){if(!/^[A-Za-z0-9_-]{11}$/.test(id))return;const frame=document.createElement('iframe');frame.className='post-yt';frame.title='วิดีโอ YouTube';frame.src='https://www.youtube-nocookie.com/embed/'+id+'?autoplay=1';frame.referrerPolicy='strict-origin-when-cross-origin';frame.allow='autoplay; encrypted-media; picture-in-picture';frame.allowFullscreen=true;button.replaceWith(frame);}
+function playYouTube(id,button){if(!/^[A-Za-z0-9_-]{11}$/.test(id))return;const frame=document.createElement('iframe');frame.className='post-yt';frame.title=blogText('วิดีโอ YouTube',"YouTube video");frame.src='https://www.youtube-nocookie.com/embed/'+id+'?autoplay=1';frame.referrerPolicy='strict-origin-when-cross-origin';frame.allow='autoplay; encrypted-media; picture-in-picture';frame.allowFullscreen=true;button.replaceWith(frame);}
 async function fetchLPNow(url,id){
   try{
     let title='', desc='', img='', host='';
@@ -3065,10 +3126,10 @@ async function fetchLPNow(url,id){
 function sharePost(ri){
   const url=location.origin+'/?post='+ri;
   if(navigator.clipboard&&navigator.clipboard.writeText){
-    navigator.clipboard.writeText(url).then(()=>toast('คัดลอกลิงก์แชร์แล้ว','s','fas fa-link')).catch(()=>toast('คัดลอกไม่สำเร็จ','e'));
+    navigator.clipboard.writeText(url).then(()=>toast(blogText('คัดลอกลิงก์แชร์แล้ว',"Link copied"),'s','fas fa-link')).catch(()=>toast(blogText('คัดลอกไม่สำเร็จ',"Unable to copy the link"),'e'));
   }else{
     const ta=document.createElement('textarea');ta.value=url;document.body.appendChild(ta);ta.select();
-    try{document.execCommand('copy');toast('คัดลอกลิงก์แชร์แล้ว','s','fas fa-link');}catch{toast('คัดลอกไม่สำเร็จ','e');}
+    try{document.execCommand('copy');toast(blogText('คัดลอกลิงก์แชร์แล้ว',"Link copied"),'s','fas fa-link');}catch{toast(blogText('คัดลอกไม่สำเร็จ',"Unable to copy the link"),'e');}
     document.body.removeChild(ta);
   }
 }
@@ -3088,15 +3149,16 @@ function renderFeed(){
 
   if(!postsToShow.length){
     const emptyMsg=S.savedView
-      ? '<div class="sec-label">🔖 บันทึกไว้</div><div class="status"><div class="status-ico">🔖</div>ยังไม่มีโพสต์ที่บันทึกไว้<br><span style="font-size:.8rem;color:var(--txt3);margin-top:4px">กดไอคอน 🔖 ที่โพสต์เพื่อบันทึกไว้อ่านทีหลัง</span></div>'
+      ? `<div class="sec-label">🔖 ${blogText('บันทึกไว้','Saved')}</div><div class="status"><div class="status-ico">🔖</div>${blogText('ยังไม่มีโพสต์ที่บันทึกไว้','No saved posts yet')}<br><span style="font-size:.8rem;color:var(--txt3);margin-top:4px">${blogText('กดไอคอน 🔖 ที่โพสต์เพื่อบันทึกไว้อ่านทีหลัง','Use 🔖 on a post to save it for later.')}</span></div>`
       : S.activeTag
-      ? `<div class="sec-label">#${esc(S.activeTag)}</div><div class="status"><div class="status-ico">🔍</div>ไม่พบโพสต์ในแท็ก #${esc(S.activeTag)}<br><button class="tag-filter-btn" style="margin-top:12px" data-click="clearTagFilter">ดูทั้งหมด</button></div>`
-      : '<div class="sec-label">Timeline</div><div class="status"><div class="status-ico">💬</div>ยังไม่มีโพสต์</div>';
+      ? `<div class="sec-label">#${esc(S.activeTag)}</div><div class="status"><div class="status-ico">🔍</div>${blogText('ไม่พบโพสต์ในแท็ก','No posts tagged')} #${esc(S.activeTag)}<br><button class="tag-filter-btn" style="margin-top:12px" data-click="clearTagFilter">${blogText('ดูทั้งหมด','Show all')}</button></div>`
+      : `<div class="sec-label">${blogText('ไทม์ไลน์','Timeline')}</div><div class="status"><div class="status-ico">💬</div>${blogText('ยังไม่มีโพสต์','No posts yet')}</div>`;
     feed.innerHTML=emptyMsg;
     return;
   }
 
-  const label=S.savedView?`🔖 บันทึกไว้ · ${postsToShow.length} โพสต์`:(S.activeTag?`#${esc(S.activeTag)} · ${postsToShow.length} โพสต์`:'Timeline');
+  const count=postCountLabel(postsToShow.length);
+  const label=S.savedView?`🔖 ${blogText('บันทึกไว้','Saved')} · ${count}`:(S.activeTag?`#${esc(S.activeTag)} · ${count}`:blogText('ไทม์ไลน์','Timeline'));
   let html=`<div class="sec-label">${label}</div>`;
   const lpQ=[];
   
@@ -3124,15 +3186,15 @@ function renderFeed(){
       }
     }
 
-    const ts=p.editedTime?`แก้ไข ${fmt(p.editedTime)}`:fmt(p.timestamp);
+    const ts=p.editedTime?`${blogText('แก้ไข','Edited')} ${fmt(p.editedTime)}`:fmt(p.timestamp);
 
     let menu='';
     if(isAdmin()||(S.user&&p.isMine===true)||(S.user&&S.user.email===p.email)){
       menu=`<div class="post-menu-w">
-        <button class="menu-btn" data-click="toggleDrop" data-a0="dp-${p.rowIdx}" data-t0="string" aria-label="เปิดเมนูจัดการ"><i aria-hidden="true" class="fas fa-ellipsis"></i></button>
+        <button class="menu-btn" data-click="toggleDrop" data-a0="dp-${p.rowIdx}" data-t0="string" aria-label="${blogText('เปิดเมนูจัดการ',"Open actions menu")}"><i aria-hidden="true" class="fas fa-ellipsis"></i></button>
         <div class="drop-menu" id="dp-${p.rowIdx}">
-          <button class="drop-item" data-click="openEditPost" data-a0="${p.rowIdx}" data-t0="number"><i aria-hidden="true" class="fas fa-pen"></i>แก้ไขโพสต์</button>
-          <button class="drop-item del" data-click="deletePost" data-a0="${p.rowIdx}" data-t0="number"><i aria-hidden="true" class="fas fa-trash-alt"></i>ลบโพสต์</button>
+          <button class="drop-item" data-click="openEditPost" data-a0="${p.rowIdx}" data-t0="number"><i aria-hidden="true" class="fas fa-pen"></i>${blogText('แก้ไขโพสต์',"Edit post")}</button>
+          <button class="drop-item del" data-click="deletePost" data-a0="${p.rowIdx}" data-t0="number"><i aria-hidden="true" class="fas fa-trash-alt"></i>${blogText('ลบโพสต์',"Delete post")}</button>
         </div></div>`;
     }
 
@@ -3148,12 +3210,12 @@ function renderFeed(){
     cmts.forEach(c=>{
       const canEditCmt=isAdmin()||(S.user&&c.isMine===true)||(S.user&&S.user.email===c.email);
       const cM=canEditCmt?`<div class="cmt-mw">
-        <button class="menu-btn" style="width:24px;height:24px;font-size:.72rem" data-click="toggleDrop" data-a0="dc-${p.rowIdx}-${c.time}" data-t0="string" aria-label="เปิดเมนูจัดการ"><i aria-hidden="true" class="fas fa-ellipsis"></i></button>
+        <button class="menu-btn" style="width:24px;height:24px;font-size:.72rem" data-click="toggleDrop" data-a0="dc-${p.rowIdx}-${c.time}" data-t0="string" aria-label="${blogText('เปิดเมนูจัดการ',"Open actions menu")}"><i aria-hidden="true" class="fas fa-ellipsis"></i></button>
         <div class="drop-menu" id="dc-${p.rowIdx}-${c.time}">
-          <button class="drop-item" data-click="openEditCmt" data-a0="${p.rowIdx}" data-t0="number" data-a1="${c.time}" data-t1="number"><i aria-hidden="true" class="fas fa-pen"></i>แก้ไข</button>
-          <button class="drop-item del" data-click="deleteCmt" data-a0="${p.rowIdx}" data-t0="number" data-a1="${c.time}" data-t1="number"><i aria-hidden="true" class="fas fa-trash-alt"></i>ลบ</button>
+          <button class="drop-item" data-click="openEditCmt" data-a0="${p.rowIdx}" data-t0="number" data-a1="${c.time}" data-t1="number"><i aria-hidden="true" class="fas fa-pen"></i>${blogText('แก้ไข',"Edit")}</button>
+          <button class="drop-item del" data-click="deleteCmt" data-a0="${p.rowIdx}" data-t0="number" data-a1="${c.time}" data-t1="number"><i aria-hidden="true" class="fas fa-trash-alt"></i>${blogText('ลบ',"Delete")}</button>
         </div></div>`:'';
-      const ct=c.editedTime?`แก้ไข ${fmt(c.editedTime)}`:fmt(c.time);
+      const ct=c.editedTime?`${blogText('แก้ไข','Edited')} ${fmt(c.editedTime)}`:fmt(c.time);
       const cPic = resolveAvatar(c.email, c.pic, c.name, c.isMine);
       chtml+=`<div class="cmt">
         <img class="cmt-av" loading="lazy" decoding="async" width="26" height="26" src="${esc(cPic)}" data-img-error="hide" alt="" referrerpolicy="no-referrer">
@@ -3177,18 +3239,19 @@ function renderFeed(){
         <div class="post-txt">${ptxt}</div>
         ${tagsHtml2}
         ${media}
-        ${p.mediaUrl?`<img ${imageDimensions(p.mediaUrl)} alt="รูปภาพประกอบโพสต์" decoding="async" src="${esc(imageUrl(p.mediaUrl))}" class="post-media" data-click="openLightbox" data-a0="${esc(safeHttpUrl(p.mediaUrl))}" data-t0="string" data-img-error="hide" loading="${i===0?'eager':'lazy'}" fetchpriority="${i===0?'high':'auto'}">`:''}
+        ${p.mediaUrl?`<img ${imageDimensions(p.mediaUrl)} alt="${blogText('รูปภาพประกอบโพสต์',"Post image")}" decoding="async" src="${esc(imageUrl(p.mediaUrl))}" class="post-media" data-click="openLightbox" data-a0="${esc(safeHttpUrl(p.mediaUrl))}" data-t0="string" data-img-error="hide" loading="${i===0?'eager':'lazy'}" fetchpriority="${i===0?'high':'auto'}">`:''}
         <div class="post-acts">
-          <button class="act${liked?' liked':''}" data-click="toggleLike" data-a0="${p.rowIdx}" data-t0="number" aria-label="ถูกใจโพสต์"><i aria-hidden="true" class="${liked?'fas':'far'} fa-heart"></i>${likesCount||''}</button>
-          <button class="act" data-click="toggleCmts" data-a0="${p.rowIdx}" data-t0="number" aria-label="ความคิดเห็น"><i aria-hidden="true" class="far fa-comment"></i>${cmts.length||''}</button>
-          <button class="act act-bm${isSaved(p)?' saved':''}" data-click="toggleSave" data-a0="${p.rowIdx}" data-t0="number" data-a1="" data-t1="this" title="บันทึกโพสต์" aria-label="บันทึกโพสต์"><i aria-hidden="true" class="${isSaved(p)?'fas':'far'} fa-bookmark"></i></button>
-          <button class="act" data-click="sharePost" data-a0="${p.rowIdx}" data-t0="number" title="คัดลอกลิงก์โพสต์" aria-label="คัดลอกลิงก์โพสต์"><i aria-hidden="true" class="fas fa-share"></i></button>
-          <span class="act views" title="ผู้เข้าชม"><i aria-hidden="true" class="far fa-eye"></i>${p.views||''}</span>
+          <button class="act${liked?' liked':''}" data-click="toggleLike" data-a0="${p.rowIdx}" data-t0="number" aria-label="${blogText('ถูกใจโพสต์',"Like post")}"><i aria-hidden="true" class="${liked?'fas':'far'} fa-heart"></i>${likesCount||''}</button>
+          <button class="act" data-click="toggleCmts" data-a0="${p.rowIdx}" data-t0="number" aria-label="${blogText('ความคิดเห็น',"Comments")}"><i aria-hidden="true" class="far fa-comment"></i>${cmts.length||''}</button>
+          <button class="act act-bm${isSaved(p)?' saved':''}" data-click="toggleSave" data-a0="${p.rowIdx}" data-t0="number" data-a1="" data-t1="this" title="${blogText('บันทึกโพสต์',"Save post")}" aria-label="${blogText('บันทึกโพสต์',"Save post")}"><i aria-hidden="true" class="${isSaved(p)?'fas':'far'} fa-bookmark"></i></button>
+          <button class="act" data-click="sharePost" data-a0="${p.rowIdx}" data-t0="number" title="${blogText('คัดลอกลิงก์โพสต์',"Copy post link")}" aria-label="${blogText('คัดลอกลิงก์โพสต์',"Copy post link")}"><i aria-hidden="true" class="fas fa-share"></i></button>
+          ${renderPostTranslationAction(p)}
+          <span class="act views" title="${blogText('ผู้เข้าชม',"Views")}"><i aria-hidden="true" class="far fa-eye"></i>${p.views||''}</span>
         </div>
         <div class="cmts" id="cmts-${p.rowIdx}">${chtml}
           <div class="cmt-inp-row">
-            <input class="cmt-inp" id="ci-${p.rowIdx}" placeholder="${S.user?'แสดงความคิดเห็น...':'Sign in เพื่อคอมเมนต์'}" ${!S.user?'disabled':''} aria-label="ci-${p.rowIdx}">
-            <button class="cmt-send" data-click="submitCmt" data-a0="${p.rowIdx}" data-t0="number" aria-label="ส่งความคิดเห็น"><i aria-hidden="true" class="fas fa-paper-plane"></i></button>
+            <input class="cmt-inp" id="ci-${p.rowIdx}" placeholder="${S.user?blogText('แสดงความคิดเห็น...',"Write a comment…"):blogText('เข้าสู่ระบบเพื่อแสดงความคิดเห็น','Sign in to comment')}" ${!S.user?'disabled':''} aria-label="${blogText('ความคิดเห็น','Comment')}">
+            <button class="cmt-send" data-click="submitCmt" data-a0="${p.rowIdx}" data-t0="number" aria-label="${blogText('ส่งความคิดเห็น',"Send comment")}"><i aria-hidden="true" class="fas fa-paper-plane"></i></button>
           </div></div>
       </div></article>`;
   });
@@ -3256,7 +3319,7 @@ async function submitCmt(ri){
   if(!S.user){openModal('login-modal');return;}
   const inp=D('ci-'+ri);if(!inp)return;
   const text=inp.value.trim();if(!text)return;
-  inp.disabled=true;toast('กำลังส่ง...');
+  inp.disabled=true;toast(blogText('กำลังส่ง...',"Sending…"));
   try{
     const d = await postData('addComment', {
       email: S.user.email,
@@ -3269,8 +3332,8 @@ async function submitCmt(ri){
       inp.value='';
       await refreshPosts({force:true,silent:true});
       const cm=D('cmts-'+ri);if(cm)cm.style.display='block';
-    }else toast('เกิดข้อผิดพลาด','e');
-  }catch{toast('เชื่อมต่อล้มเหลว','e');}
+    }else toast(blogText('เกิดข้อผิดพลาด',"Something went wrong"),'e');
+  }catch{toast(blogText('เชื่อมต่อล้มเหลว',"Connection failed"),'e');}
   finally{const i=D('ci-'+ri);if(i)i.disabled=false;}
 }
 
@@ -3327,7 +3390,7 @@ function loadImageFromFile(file){
     const url=URL.createObjectURL(file);
     const img=new Image();
     img.onload=()=>{URL.revokeObjectURL(url);resolve(img);};
-    img.onerror=()=>{URL.revokeObjectURL(url);reject(new Error('โหลดรูปไม่สำเร็จ'));};
+    img.onerror=()=>{URL.revokeObjectURL(url);reject(new Error(blogText('โหลดรูปไม่สำเร็จ',"Unable to load the image")));};
     img.src=url;
   });
 }
@@ -3335,7 +3398,7 @@ function loadImageFromFile(file){
 function canvasToBlob(canvas,type,quality){
   return new Promise((resolve,reject)=>{
     canvas.toBlob(blob=>{
-      if(blob)resolve(blob);else reject(new Error('แปลงรูปไม่สำเร็จ'));
+      if(blob)resolve(blob);else reject(new Error(blogText('แปลงรูปไม่สำเร็จ',"Unable to convert the image")));
     },type,quality);
   });
 }
@@ -3379,7 +3442,7 @@ async function compressImage(file,targetBytes=IMG_TARGET_BYTES){
     if(blob.size<=targetBytes){best={blob,quality:q};break;}
     best={blob,quality:q};
   }
-  if(!best)throw new Error('บีบอัดรูปไม่สำเร็จ');
+  if(!best)throw new Error(blogText('บีบอัดรูปไม่สำเร็จ',"Unable to compress the image"));
   return {blob:best.blob,compressed:true,from:file.size,to:best.blob.size,dim:`${w}x${h}`,type:outType,quality:best.quality};
 }
 
@@ -3393,11 +3456,11 @@ async function handleFilePick(f,isMobile){
   if(!f)return;
   const inputEl=D(isMobile?'file-in-mob':'file-in');
   if(!f.type.startsWith('image/')){
-    toast('ต้องเป็นไฟล์รูปภาพเท่านั้น','e');
+    toast(blogText('ต้องเป็นไฟล์รูปภาพเท่านั้น',"Choose an image file."),'e');
     inputEl.value='';return;
   }
   if(f.size>IMG_WARN_BYTES){
-    if(!confirm(`ไฟล์ขนาด ${fmtBytes(f.size)} อาจใช้เวลาประมวลผลนาน ต้องการดำเนินการต่อหรือไม่?`)){
+    if(!confirm(blogText(`ไฟล์ขนาด ${fmtBytes(f.size)} อาจใช้เวลาประมวลผลนาน ต้องการดำเนินการต่อหรือไม่?`,`This ${fmtBytes(f.size)} file may take a while to process. Continue?`))){
       inputEl.value='';return;
     }
   }
@@ -3406,13 +3469,13 @@ async function handleFilePick(f,isMobile){
   try{
     let finalFile=f;
     if(f.size>IMG_TARGET_BYTES&&f.type!=='image/gif'){
-      toast('กำลังบีบอัดรูปภาพ...','','fas fa-compress fa-spin');
+      toast(blogText('กำลังบีบอัดรูปภาพ...',"Compressing image…"),'','fas fa-compress fa-spin');
       const result=await compressImage(f,IMG_TARGET_BYTES);
       if(result.compressed){
         const ext=result.type==='image/webp'?'webp':(result.type==='image/png'?'png':'jpg');
         finalFile=new File([result.blob],(f.name.replace(/\.[^.]+$/,'')||'image')+'.'+ext,{type:result.type});
         const pct=Math.round((1-result.to/result.from)*100);
-        toast(`บีบอัดสำเร็จ ${fmtBytes(result.from)} → ${fmtBytes(result.to)} (ลด ${pct}%)`,'s','fas fa-check');
+        toast(blogText(`บีบอัดสำเร็จ ${fmtBytes(result.from)} → ${fmtBytes(result.to)} (ลด ${pct}%)`,`Image compressed: ${fmtBytes(result.from)} → ${fmtBytes(result.to)} (${pct}% smaller)`),'s','fas fa-check');
       }
     }
     if(isMobile)S.selFileMob=finalFile;else S.selFile=finalFile;
@@ -3421,7 +3484,7 @@ async function handleFilePick(f,isMobile){
     r.readAsDataURL(finalFile);
   }catch(err){
     console.error(err);
-    toast('เกิดข้อผิดพลาดกับรูปภาพ: '+err.message,'e');
+    toast(blogText('เกิดข้อผิดพลาดกับรูปภาพ: ',"Image error: ")+err.message,'e');
     inputEl.value='';
   }
 }
@@ -3435,7 +3498,7 @@ function removeImg(isMobile=false){
 }
 
 function openCompose(){
-  if(!canPost()){toast('คุณไม่มีสิทธิ์โพสต์','e');return;}
+  if(!canPost()){toast(blogText('คุณไม่มีสิทธิ์โพสต์',"Your account does not have permission to post."),'e');return;}
   D('compose-modal').classList.add('open');
   if(S.user&&D('cr-av-mob'))D('cr-av-mob').src=S.user.pic||'';
   setTimeout(()=>D('post-ta-mob').focus(),200);
@@ -3453,7 +3516,7 @@ function parseHashtags(raw){
 }
 
 async function submitPost(isMobile=false){
-  if(!S.user||!canPost()){toast('คุณไม่มีสิทธิ์โพสต์','e');return;}
+  if(!S.user||!canPost()){toast(blogText('คุณไม่มีสิทธิ์โพสต์',"Your account does not have permission to post."),'e');return;}
   const suffix=isMobile?'-mob':'';
   const ta=D('post-ta'+suffix);
   const linkEl=D('link-in'+suffix);
@@ -3463,24 +3526,24 @@ async function submitPost(isMobile=false){
   const content=ta.value.trim();
   const link=(linkEl.value||'').trim();
   const hashtags=parseHashtags(tagEl.value||'');
-  if(!content&&!file&&!link&&!hashtags.length){toast('กรุณากรอกข้อมูลอย่างน้อย 1 อย่าง','e');return;}
-  if(link&&!/^https?:\/\//i.test(link)){toast('ลิงก์ต้องขึ้นต้นด้วย http:// หรือ https://','e');return;}
-  btn.textContent='กำลังโพสต์...';btn.disabled=true;ta.disabled=true;
+  if(!content&&!file&&!link&&!hashtags.length){toast(blogText('กรุณากรอกข้อมูลอย่างน้อย 1 อย่าง',"Add text, an image, a link, or a tag."),'e');return;}
+  if(link&&!/^https?:\/\//i.test(link)){toast(blogText('ลิงก์ต้องขึ้นต้นด้วย http:// หรือ https://',"Links must start with http:// or https://."),'e');return;}
+  btn.textContent=blogText('กำลังโพสต์...',"Publishing…");btn.disabled=true;ta.disabled=true;
   let mediaUrl='';
   try{
     if(file){
-      btn.textContent='อัปโหลดรูป...';
-      setGlobalProgress(0,'กำลังอ่านรูป');
-      const b64 = await fileToBase64(file, f=>setGlobalProgress(f*15,'กำลังอ่านรูป'));
+      btn.textContent=blogText('อัปโหลดรูป...',"Uploading image…");
+      setGlobalProgress(0,blogText('กำลังอ่านรูป',"Reading image"));
+      const b64 = await fileToBase64(file, f=>setGlobalProgress(f*15,blogText('กำลังอ่านรูป',"Reading image")));
       const id = await postDataProgress('uploadImage', { imageBase64: b64 }, f=>{
         const p=15+f*85;
-        setGlobalProgress(p, f>=1?'กำลังบันทึกรูป':'กำลังอัปโหลดรูป');
-        btn.textContent='อัปโหลดรูป '+Math.round(p)+'%';
+        setGlobalProgress(p, f>=1?blogText('กำลังบันทึกรูป',"Saving image"):blogText('กำลังอัปโหลดรูป',"Uploading image"));
+        btn.textContent=blogText('อัปโหลดรูป ',"Uploading image ")+Math.round(p)+'%';
       });
-      if(id.success)mediaUrl=id.url;else throw new Error('อัปโหลดรูปไม่สำเร็จ');
-      setGlobalProgress(100,'อัปโหลดรูปเสร็จ');
+      if(id.success)mediaUrl=id.url;else throw new Error(blogText('อัปโหลดรูปไม่สำเร็จ',"Unable to upload the image"));
+      setGlobalProgress(100,blogText('อัปโหลดรูปเสร็จ',"Image uploaded"));
     }
-    btn.textContent='กำลังบันทึก...';
+    btn.textContent=blogText('กำลังบันทึก...',"Saving…");
     const d = await postData('addPost', {
       email: S.user.email,
       content: content,
@@ -3498,14 +3561,14 @@ async function submitPost(isMobile=false){
       removeImg(false);removeImg(true);
       clearDraft();
       closeCompose();
-      toast('โพสต์สำเร็จ!','s','fas fa-check-circle');
+      toast(blogText('โพสต์สำเร็จ!',"Post published"),'s','fas fa-check-circle');
       await refreshPosts({force:true,silent:true,announce:true});
-    }else throw new Error(d.error||'บันทึกล้มเหลว');
+    }else throw new Error(d.error||blogText('บันทึกล้มเหลว',"Unable to save changes"));
   }catch(e){
     console.error(e);
-    toast('เกิดข้อผิดพลาด: '+(e.message||''),'e');
+    toast(blogText('เกิดข้อผิดพลาด: ',"Error: ")+(e.message||''),'e');
   }finally{
-    btn.textContent='โพสต์';btn.disabled=false;ta.disabled=false;
+    btn.textContent=blogText('โพสต์',"Post");btn.disabled=false;ta.disabled=false;
     setTimeout(()=>setGlobalProgress(-1),700);
   }
 }
@@ -3555,17 +3618,17 @@ function removeEditImg(){
 
 D('ep-file-in').addEventListener('change',async function(){
   const f=this.files[0];if(!f)return;
-  if(!f.type.startsWith('image/')){toast('ต้องเป็นไฟล์รูปภาพเท่านั้น','e');this.value='';return;}
+  if(!f.type.startsWith('image/')){toast(blogText('ต้องเป็นไฟล์รูปภาพเท่านั้น',"Choose an image file."),'e');this.value='';return;}
   try{
     let finalFile=f;
     if(f.size>IMG_TARGET_BYTES&&f.type!=='image/gif'){
-      toast('กำลังบีบอัดรูปภาพ...','','fas fa-compress fa-spin');
+      toast(blogText('กำลังบีบอัดรูปภาพ...',"Compressing image…"),'','fas fa-compress fa-spin');
       const result=await compressImage(f,IMG_TARGET_BYTES);
       if(result.compressed){
         const ext=result.type==='image/webp'?'webp':(result.type==='image/png'?'png':'jpg');
         finalFile=new File([result.blob],(f.name.replace(/\.[^.]+$/,'')||'image')+'.'+ext,{type:result.type});
         const pct=Math.round((1-result.to/result.from)*100);
-        toast(`บีบอัดสำเร็จ ${fmtBytes(result.from)} → ${fmtBytes(result.to)} (ลด ${pct}%)`,'s','fas fa-check');
+        toast(blogText(`บีบอัดสำเร็จ ${fmtBytes(result.from)} → ${fmtBytes(result.to)} (ลด ${pct}%)`,`Image compressed: ${fmtBytes(result.from)} → ${fmtBytes(result.to)} (${pct}% smaller)`),'s','fas fa-check');
       }
     }
     S.selFileEdit=finalFile;
@@ -3573,32 +3636,32 @@ D('ep-file-in').addEventListener('change',async function(){
     const r=new FileReader();
     r.onload=e=>{D('ep-img-prev').src=e.target.result;D('ep-img-prev-wrap').style.display='block';};
     r.readAsDataURL(finalFile);
-  }catch(err){toast('เกิดข้อผิดพลาด: '+err.message,'e');this.value='';}
+  }catch(err){toast(blogText('เกิดข้อผิดพลาด: ',"Error: ")+err.message,'e');this.value='';}
 });
 
 async function saveEditPost(){
   const content=D('ep-ta').value.trim();
   const link=(D('ep-link-in').value||'').trim();
   const hashtags=parseHashtags(D('ep-hashtag-in').value||'');
-  if(link&&!/^https?:\/\//i.test(link)){toast('ลิงก์ต้องขึ้นต้นด้วย http:// หรือ https://','e');return;}
-  const btn=D('ep-save');btn.disabled=true;btn.textContent='กำลังบันทึก...';
+  if(link&&!/^https?:\/\//i.test(link)){toast(blogText('ลิงก์ต้องขึ้นต้นด้วย http:// หรือ https://',"Links must start with http:// or https://."),'e');return;}
+  const btn=D('ep-save');btn.disabled=true;btn.textContent=blogText('กำลังบันทึก...',"Saving…");
   try{
     let mediaUrl=editTarget.originalMediaUrl||'';
     if(S.selFileEdit){
-      btn.textContent='อัปโหลดรูป...';
-      setGlobalProgress(0,'กำลังอ่านรูป');
-      const b64 = await fileToBase64(S.selFileEdit, f=>setGlobalProgress(f*15,'กำลังอ่านรูป'));
+      btn.textContent=blogText('อัปโหลดรูป...',"Uploading image…");
+      setGlobalProgress(0,blogText('กำลังอ่านรูป',"Reading image"));
+      const b64 = await fileToBase64(S.selFileEdit, f=>setGlobalProgress(f*15,blogText('กำลังอ่านรูป',"Reading image")));
       const id = await postDataProgress('uploadImage', { imageBase64: b64 }, f=>{
         const p=15+f*85;
-        setGlobalProgress(p, f>=1?'กำลังบันทึกรูป':'กำลังอัปโหลดรูป');
-        btn.textContent='อัปโหลดรูป '+Math.round(p)+'%';
+        setGlobalProgress(p, f>=1?blogText('กำลังบันทึกรูป',"Saving image"):blogText('กำลังอัปโหลดรูป',"Uploading image"));
+        btn.textContent=blogText('อัปโหลดรูป ',"Uploading image ")+Math.round(p)+'%';
       });
-      if(id.success)mediaUrl=id.url;else throw new Error('อัปโหลดรูปไม่สำเร็จ');
-      setGlobalProgress(100,'อัปโหลดรูปเสร็จ');
+      if(id.success)mediaUrl=id.url;else throw new Error(blogText('อัปโหลดรูปไม่สำเร็จ',"Unable to upload the image"));
+      setGlobalProgress(100,blogText('อัปโหลดรูปเสร็จ',"Image uploaded"));
     }else if(editTarget.removeMedia){
       mediaUrl='';
     }
-    btn.textContent='กำลังบันทึก...';
+    btn.textContent=blogText('กำลังบันทึก...',"Saving…");
     const d = await postData('editPost', {
       email: S.user.email,
       rowIdx: editTarget.rowIdx,
@@ -3607,25 +3670,25 @@ async function saveEditPost(){
       link: link,
       hashtags: hashtags.join(',')
     });
-    if(!d.success)throw new Error(d.message||'บันทึกล้มเหลว');
+    if(!d.success)throw new Error(d.message||blogText('บันทึกล้มเหลว',"Unable to save changes"));
     closeModal('ep-modal');
-    toast('แก้ไขสำเร็จ','s','fas fa-check');
+    toast(blogText('แก้ไขสำเร็จ',"Changes saved"),'s','fas fa-check');
     await refreshPosts({force:true,silent:true});
   }catch(e){
     console.error(e);
-    toast('เกิดข้อผิดพลาด: '+(e.message||''),'e');
+    toast(blogText('เกิดข้อผิดพลาด: ',"Error: ")+(e.message||''),'e');
   }finally{
     setTimeout(()=>setGlobalProgress(-1),700);
-    btn.disabled=false;btn.textContent='บันทึก';
+    btn.disabled=false;btn.textContent=blogText('บันทึก',"Save");
   }
 }
 async function deletePost(ri){
-  if(!confirm('ลบโพสต์นี้หรือไม่?'))return;
+  if(!confirm(blogText('ลบโพสต์นี้หรือไม่?',"Delete this post?")))return;
   try{
     await postData('deletePost', { email: S.user.email, rowIdx: ri });
-    toast('ลบสำเร็จ','s');
+    toast(blogText('ลบสำเร็จ',"Deleted"),'s');
     await refreshPosts({force:true,silent:true});
-  }catch{toast('เกิดข้อผิดพลาด','e');}
+  }catch{toast(blogText('เกิดข้อผิดพลาด',"Something went wrong"),'e');}
 }
 function openEditCmt(ri,cTime){
   const p=S.posts.find(p=>p.rowIdx===ri);if(!p)return;
@@ -3643,28 +3706,29 @@ async function saveEditCmt(){
       commentTime: editTarget.commentTime,
       text: t
     });
-    closeModal('ec-modal');toast('แก้ไขสำเร็จ','s');
+    closeModal('ec-modal');toast(blogText('แก้ไขสำเร็จ',"Changes saved"),'s');
     await refreshPosts({force:true,silent:true});
     const cm=D('cmts-'+editTarget.rowIdx);if(cm)cm.style.display='block';
-  }catch{toast('เกิดข้อผิดพลาด','e');}
-  finally{btn.disabled=false;btn.textContent='บันทึก';}
+  }catch{toast(blogText('เกิดข้อผิดพลาด',"Something went wrong"),'e');}
+  finally{btn.disabled=false;btn.textContent=blogText('บันทึก',"Save");}
 }
 async function deleteCmt(ri,cTime){
-  if(!confirm('ลบคอมเมนต์นี้?'))return;
+  if(!confirm(blogText('ลบคอมเมนต์นี้?',"Delete this comment?")))return;
   try{
     await postData('deleteComment', {
       email: S.user.email,
       rowIdx: ri,
       commentTime: cTime
     });
-    toast('ลบสำเร็จ','s');
+    toast(blogText('ลบสำเร็จ',"Deleted"),'s');
     await refreshPosts({force:true,silent:true});
     const cm=D('cmts-'+ri);if(cm)cm.style.display='block';
-  }catch{toast('เกิดข้อผิดพลาด','e');}
+  }catch{toast(blogText('เกิดข้อผิดพลาด',"Something went wrong"),'e');}
 }
 
 /* =========== Keyboard shortcuts / responsive =========== */
 document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'&&D('post-translation-modal').classList.contains('open')){closePostTranslation();return;}
   if(e.key==='Escape'&&focusedDialog===D('set-panel')&&D('set-panel').querySelector('.set-sub.open')){closeSub();return;}
   if(e.key==='Escape'){closeLightbox();closeArticleViewer();closeArticlePassword();closeMobSearch();closeSettings();closeCompose();document.querySelectorAll('.overlay.open').forEach(o=>o.classList.remove('open'));const ep=D('emoji-panel');if(ep)ep.classList.remove('open');}
   if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();isMob()?openMobSearch():D('rw-srch').focus();}
@@ -3689,8 +3753,8 @@ function toggleSave(ri,btn){
   const p=S.posts.find(x=>x.rowIdx===ri);if(!p)return;
   const id=postStableId(p);
   const on=!savedSet.has(id);
-  if(on){savedSet.add(id);toast('บันทึกโพสต์แล้ว','s','fas fa-bookmark');}
-  else{savedSet.delete(id);toast('เอาออกจากที่บันทึกแล้ว','','fas fa-bookmark');}
+  if(on){savedSet.add(id);toast(blogText('บันทึกโพสต์แล้ว',"Post saved"),'s','fas fa-bookmark');}
+  else{savedSet.delete(id);toast(blogText('เอาออกจากที่บันทึกแล้ว',"Removed from saved posts"),'','fas fa-bookmark');}
   persistSaved();
   if(btn){btn.classList.toggle('saved',on);const ic=btn.querySelector('i');if(ic)ic.className=(on?'fas':'far')+' fa-bookmark';}
   if(S.savedView)renderFeed();
@@ -3767,7 +3831,7 @@ function restoreDraft(){
     if(d.link){['link-in','link-in-mob'].forEach(id=>{const e=D(id);if(e)e.value=d.link;});toggleField('link',true,false);toggleField('link',true,true);}
     if(d.tags){['hashtag-in','hashtag-in-mob'].forEach(id=>{const e=D(id);if(e)e.value=d.tags;});toggleField('hashtag',true,false);toggleField('hashtag',true,true);}
     updateCharCount(false);updateCharCount(true);
-    if(d.content||d.link||d.tags)toast('กู้ร่างที่เขียนค้างไว้','','fas fa-clock-rotate-left');
+    if(d.content||d.link||d.tags)toast(blogText('กู้ร่างที่เขียนค้างไว้',"Draft restored"),'','fas fa-clock-rotate-left');
   }catch{}
 }
 function clearDraft(){try{localStorage.removeItem(DRAFT_KEY);}catch{}clearTimeout(draftTid);}
@@ -3811,7 +3875,14 @@ document.addEventListener('click',e=>{
 ========================================================= */
 function articleIcon(t){return t==='pdf'?'fas fa-file-pdf':t==='html'?'fas fa-window-maximize':t==='image'?'fas fa-image':t==='office'?'fas fa-file-lines':t==='link'?'fas fa-arrow-up-right-from-square':'fas fa-file';}
 function articleIconColor(t){return t==='pdf'?'#ff5d7a':t==='html'?'#5ea2ff':t==='image'?'#2ad68a':t==='office'?'#f6b21a':'#8b6dff';}
-function articleTypeLabel(t){return t==='pdf'?'PDF':t==='html'?'หน้าเว็บ HTML':t==='image'?'รูปภาพ':t==='office'?'เอกสาร Office':t==='link'?'ลิงก์ภายนอก':'ไฟล์';}
+function articleTypeLabel(t){
+  if(t==='pdf')return 'PDF';
+  if(t==='html')return blogText('หน้าเว็บ HTML','HTML page');
+  if(t==='image')return blogText('รูปภาพ','Image');
+  if(t==='office')return blogText('เอกสาร Office','Office document');
+  if(t==='link')return blogText('ลิงก์ภายนอก','External link');
+  return blogText('ไฟล์','File');
+}
 
 function readParams(extra){var pr=Object.assign({ua:CLIENT_UA},extra||{});if(S.idToken)pr.idToken=S.idToken;return pr;}
 let articleQuery='', artSD,articleLoadId=0;
@@ -3824,7 +3895,7 @@ async function loadArticles(opts={}){
   if(!opts.force&&articleLoadTask?.epoch===epoch)return articleLoadTask.promise;
   const requestId=++articleLoadId;
   const feed=D('feed');if(!feed)return;
-  feed.innerHTML='<div class="art-head"><div class="sec-label" style="padding:0">📚 บทความ & เอกสาร</div></div><div class="status"><div class="loader-a"></div>กำลังโหลด...</div>';
+  feed.innerHTML=`<div class="art-head"><div class="sec-label" style="padding:0">📚 ${blogText('บทความ & เอกสาร','Articles & documents')}</div></div><div class="status"><div class="loader-a"></div>${blogText('กำลังโหลด...','Loading...')}</div>`;
   const promise=(async()=>{
     try{
       const res=await apiRead('listArticles');
@@ -3837,7 +3908,7 @@ async function loadArticles(opts={}){
       openPendingArticle();
     }catch(e){
       if(epoch!==authEpoch||requestId!==articleLoadId||!S.articlesView)return;
-      feed.innerHTML='<div class="art-head"><div class="sec-label" style="padding:0">📚 บทความ</div></div><div class="err-banner"><i aria-hidden="true" class="fas fa-exclamation-circle"></i><span>โหลดบทความไม่สำเร็จ</span><button class="retry-btn" data-click="loadArticles">ลองใหม่</button></div>';
+      feed.innerHTML=`<div class="art-head"><div class="sec-label" style="padding:0">📚 ${blogText('บทความ','Articles')}</div></div><div class="err-banner"><i aria-hidden="true" class="fas fa-exclamation-circle"></i><span>${blogText('โหลดบทความไม่สำเร็จ','Could not load articles')}</span><button class="retry-btn" data-click="loadArticles">${blogText('ลองใหม่','Try again')}</button></div>`;
     }finally{
       if(articleLoadTask?.requestId===requestId)articleLoadTask=null;
     }
@@ -3860,7 +3931,7 @@ function openPendingArticle(){
   if(!a){pendingArticleOpen=0;showBlogNotFound('article');return;}
   if(!pendingArticleWarned){
     pendingArticleWarned=true;
-    toast(a?'บทความนี้ต้องมีสิทธิ์เข้าถึง — ลองล็อกอิน':'ไม่พบบทความที่แชร์มา','e','fas fa-lock');
+    toast(a?blogText('บทความนี้ต้องมีสิทธิ์เข้าถึง — ลองล็อกอิน','Sign in to check whether you have access to this article'):blogText('ไม่พบบทความที่แชร์มา','Shared article not found'),'e','fas fa-lock');
   }
 }
 
@@ -3875,10 +3946,11 @@ function renderArticlesList(){
   if(!S.articlesView)return;
   hideBlogNotFound();
   const feed=D('feed');if(!feed)return;
-  let h='<div class="art-head"><div class="sec-label" style="padding:0">📚 บทความ & เอกสาร</div>';
-  if(isAdmin())h+='<button class="art-upload-btn" data-click="openArticleUpload"><i aria-hidden="true" class="fas fa-plus"></i> อัปโหลด</button>';
+  let h=`<div class="art-head"><div class="sec-label" style="padding:0">📚 ${blogText('บทความ & เอกสาร','Articles & documents')}</div>`;
+  if(isAdmin())h+=`<button class="art-upload-btn" data-click="openArticleUpload"><i aria-hidden="true" class="fas fa-plus"></i> ${blogText('อัปโหลด','Upload')}</button>`;
   h+='</div>';
-  h+='<div class="rw-sbox art-sbox"><i aria-hidden="true" class="fas fa-magnifying-glass"></i><input class="rw-sinput" id="art-srch" placeholder="ค้นหาบทความ ชื่อ หรือ #แท็ก" autocomplete="off" aria-label="ค้นหาบทความ ชื่อ หรือ #แท็ก"></div>';
+  const searchLabel=esc(blogText('ค้นหาบทความ ชื่อ หรือ #แท็ก','Search articles by title or #tag'));
+  h+=`<div class="rw-sbox art-sbox"><i aria-hidden="true" class="fas fa-magnifying-glass"></i><input class="rw-sinput" id="art-srch" placeholder="${searchLabel}" autocomplete="off" aria-label="${searchLabel}"></div>`;
   h+='<div id="art-list"></div>';
   feed.innerHTML=h;
   const si=D('art-srch');
@@ -3894,10 +3966,14 @@ function renderArticleItems(){
   const admin=isAdmin();
   const q=articleQuery.trim().toLowerCase();
   if(!S.articles.length){
-    box.innerHTML='<div class="status"><div class="status-ico">📄</div>ยังไม่มีบทความ'+(admin?'<br><span style="font-size:.8rem;color:var(--txt3)">กด “อัปโหลด” เพื่อเพิ่มบทความแรก</span>':'')+'</div>';return;
+    box.innerHTML=`<div class="status"><div class="status-ico">📄</div>${blogText('ยังไม่มีบทความ','No articles yet')}${admin?`<br><span style="font-size:.8rem;color:var(--txt3)">${blogText('กด “อัปโหลด” เพื่อเพิ่มบทความแรก','Select Upload to add the first article')}</span>`:''}</div>`;return;
   }
   const list=S.articles.filter(a=>articleMatchesQuery(a,q));
-  if(!list.length){box.innerHTML='<div class="status"><div class="status-ico">🔍</div>ไม่พบบทความที่ตรงกับ “'+esc(articleQuery)+'”</div>';return;}
+  if(!list.length){box.innerHTML=`<div class="status"><div class="status-ico">🔍</div>${blogText('ไม่พบบทความที่ตรงกับ','No articles match')} “${esc(articleQuery)}”</div>`;return;}
+  const moveUp=esc(blogText('เลื่อนขึ้น','Move up'));
+  const moveDown=esc(blogText('เลื่อนลง','Move down'));
+  const edit=esc(blogText('แก้ไข','Edit'));
+  const remove=esc(blogText('ลบ','Delete'));
   let h='';
   list.forEach((a,i)=>{
     const locked=a.locked;
@@ -3910,16 +3986,16 @@ function renderArticleItems(){
         ${tagsHtml}
         <div class="art-meta">
           <span class="art-badge">${esc(articleTypeLabel(a.type))}</span>
-          <span title="ผู้เข้าชม"><i aria-hidden="true" class="far fa-eye"></i> ${a.views||0}</span>
+          <span title="${esc(blogText('ผู้เข้าชม','Views'))}"><i aria-hidden="true" class="far fa-eye"></i> ${a.views||0}</span>
           ${a.date?`<span>· ${esc(fmt(a.date))}</span>`:''}
-          ${locked?`<span class="art-lockmsg"><i aria-hidden="true" class="fas fa-lock"></i> ${a.hasPassword?'ใส่รหัสเพื่อเปิด':'เฉพาะสิทธิ์ที่กำหนด'}</span>`:''}
+          ${locked?`<span class="art-lockmsg"><i aria-hidden="true" class="fas fa-lock"></i> ${a.hasPassword?blogText('ใส่รหัสเพื่อเปิด','Password required'):blogText('เฉพาะสิทธิ์ที่กำหนด','Restricted access')}</span>`:''}
         </div>
       </div>
       ${admin?`<div class="art-admin" data-stop="true">
-        <button class="art-mini" data-click="moveArticle" data-a0="${a.rowIdx}" data-t0="number" data-a1="up" data-t1="string" title="เลื่อนขึ้น" aria-label="เลื่อนขึ้น"><i aria-hidden="true" class="fas fa-chevron-up"></i></button>
-        <button class="art-mini" data-click="moveArticle" data-a0="${a.rowIdx}" data-t0="number" data-a1="down" data-t1="string" title="เลื่อนลง" aria-label="เลื่อนลง"><i aria-hidden="true" class="fas fa-chevron-down"></i></button>
-        <button class="art-mini" data-click="openArticleEdit" data-a0="${a.rowIdx}" data-t0="number" title="แก้ไข" aria-label="แก้ไข"><i aria-hidden="true" class="fas fa-pen"></i></button>
-        <button class="art-mini del" data-click="deleteArticle" data-a0="${a.rowIdx}" data-t0="number" title="ลบ" aria-label="ลบ"><i aria-hidden="true" class="fas fa-trash-alt"></i></button>
+        <button class="art-mini" data-click="moveArticle" data-a0="${a.rowIdx}" data-t0="number" data-a1="up" data-t1="string" title="${moveUp}" aria-label="${moveUp}"><i aria-hidden="true" class="fas fa-chevron-up"></i></button>
+        <button class="art-mini" data-click="moveArticle" data-a0="${a.rowIdx}" data-t0="number" data-a1="down" data-t1="string" title="${moveDown}" aria-label="${moveDown}"><i aria-hidden="true" class="fas fa-chevron-down"></i></button>
+        <button class="art-mini" data-click="openArticleEdit" data-a0="${a.rowIdx}" data-t0="number" title="${edit}" aria-label="${edit}"><i aria-hidden="true" class="fas fa-pen"></i></button>
+        <button class="art-mini del" data-click="deleteArticle" data-a0="${a.rowIdx}" data-t0="number" title="${remove}" aria-label="${remove}"><i aria-hidden="true" class="fas fa-trash-alt"></i></button>
       </div>`:''}
     </div>`;
   });
@@ -3931,7 +4007,7 @@ function openArticle(rowIdx){
   rememberArticleRoute(rowIdx);
   if(a.locked){
     if(a.hasPassword){ promptArticlePassword(rowIdx); return; }
-    toast('คุณไม่มีสิทธิ์เข้าถึงบทความนี้','e','fas fa-lock'); return;
+    toast(blogText('คุณไม่มีสิทธิ์เข้าถึงบทความนี้','You do not have access to this article'),'e','fas fa-lock'); return;
   }
   openArticleViewer(a);
 }
@@ -3941,14 +4017,14 @@ async function openArticleViewer(a){
   const epoch=authEpoch,idToken=S.idToken,requestId=++articleViewerRequestId;
   const modal=D('article-viewer'),body=D('av-body');
   const current=()=>isCurrentAuth(epoch,idToken)&&requestId===articleViewerRequestId&&modal.classList.contains('open')&&body.dataset.article===String(a.rowIdx);
-  D('av-title').textContent=a.title||'บทความ';
+  D('av-title').textContent=a.title||blogText('บทความ','Article');
   body.dataset.article=String(a.rowIdx);
   const sh=D('av-share');if(sh)sh.dataset.row=a.rowIdx;
-  body.innerHTML='<div class="status"><div class="loader-a"></div>กำลังเปิด...</div>';
+  body.innerHTML=`<div class="status"><div class="loader-a"></div>${blogText('กำลังเปิด...','Opening...')}</div>`;
   modal.classList.add('open');document.body.style.overflow='hidden';
   trackArticleView(a.rowIdx);
   if(a.type==='link'){
-    body.innerHTML=`<div class="av-link"><i aria-hidden="true" class="fas fa-arrow-up-right-from-square"></i><p>${esc(a.title)}</p><a class="btn-p" href="${esc(safeHttpUrl(a.url))}" target="_blank" rel="noopener">เปิดเว็บไซต์</a></div>`;
+    body.innerHTML=`<div class="av-link"><i aria-hidden="true" class="fas fa-arrow-up-right-from-square"></i><p>${esc(a.title)}</p><a class="btn-p" href="${esc(safeHttpUrl(a.url))}" target="_blank" rel="noopener">${blogText('เปิดเว็บไซต์','Open website')}</a></div>`;
     return;
   }
   if(a.type==='html'){
@@ -3959,19 +4035,19 @@ async function openArticleViewer(a){
         const d=await res.json();
         if(!d.success)throw new Error(d.message||'');
         content=d.content||'';
-      }catch(e){ if(current())body.innerHTML='<div class="status"><div class="status-ico">⚠️</div>เปิดไฟล์ HTML ไม่สำเร็จ</div>'; return; }
+      }catch(e){ if(current())body.innerHTML=`<div class="status"><div class="status-ico">⚠️</div>${blogText('เปิดไฟล์ HTML ไม่สำเร็จ','Could not open the HTML file')}</div>`; return; }
     }
     if(!current())return;
     const ifr=document.createElement('iframe');
-    ifr.className='av-frame';ifr.title=a.title||'บทความ HTML';
+    ifr.className='av-frame';ifr.title=a.title||blogText('บทความ HTML','HTML article');
     ifr.setAttribute('sandbox','allow-scripts allow-popups');ifr.referrerPolicy='no-referrer';
-    ifr.addEventListener('load',()=>ifr.contentWindow.postMessage({type:'blog-article',content:content||'<p>ไฟล์ว่าง</p>'},'*'),{once:true});
+    ifr.addEventListener('load',()=>ifr.contentWindow.postMessage({type:'blog-article',content:content||`<p>${blogText('ไฟล์ว่าง','This file is empty')}</p>`},'*'),{once:true});
     ifr.src=API_URL+'/blog-article-sandbox.html';body.replaceChildren(ifr);
     return;
   }
   // pdf / image / office → Google Drive preview
   const ifr=document.createElement('iframe');
-  ifr.className='av-frame';ifr.src=safeHttpUrl(a.url);ifr.title=a.title||'เอกสาร';ifr.referrerPolicy='no-referrer';
+  ifr.className='av-frame';ifr.src=safeHttpUrl(a.url);ifr.title=a.title||blogText('เอกสาร','Document');ifr.referrerPolicy='no-referrer';
   ifr.setAttribute('sandbox','allow-scripts allow-same-origin allow-downloads');
   body.innerHTML='';body.appendChild(ifr);
 }
@@ -3986,7 +4062,7 @@ function copyText(s){
 function shareArticle(){
   const row=D('av-share').dataset.row;if(!row)return;
   const url=location.origin+'/article?article='+row;
-  const title=(D('av-title')?.textContent||'บทความ').trim();
+  const title=(D('av-title')?.textContent||blogText('บทความ','Article')).trim();
   if(navigator.share){
     navigator.share({title,url})
       .then(()=>{})
@@ -3997,8 +4073,8 @@ function shareArticle(){
 }
 function copyShareUrl(url){
   copyText(url)
-    .then(()=>toast('คัดลอกลิงก์บทความแล้ว','s','fas fa-link'))
-    .catch(()=>prompt('คัดลอกลิงก์นี้',url));
+    .then(()=>toast(blogText('คัดลอกลิงก์บทความแล้ว','Article link copied'),'s','fas fa-link'))
+    .catch(()=>prompt(blogText('คัดลอกลิงก์นี้','Copy this link'),url));
 }
 function trackArticleView(rowIdx){
   try{const k='kms_av_'+rowIdx;if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');}catch(e){}
@@ -4011,26 +4087,26 @@ function trackArticleView(rowIdx){
 let articlePasswordRequestId=0;
 function promptArticlePassword(rowIdx){
   articlePasswordRequestId++;
-  const btn=D('apw-submit');btn.disabled=false;btn.textContent='ปลดล็อก';
+  const btn=D('apw-submit');btn.disabled=false;btn.textContent=blogText('ปลดล็อก','Unlock');
   D('apw-row').value=rowIdx;D('apw-input').value='';
   D('apw-modal').classList.add('open');
   setTimeout(()=>D('apw-input').focus(),100);
 }
-function closeArticlePassword(){articlePasswordRequestId++;D('apw-modal').classList.remove('open');D('apw-input').value='';const btn=D('apw-submit');btn.disabled=false;btn.textContent='ปลดล็อก';}
+function closeArticlePassword(){articlePasswordRequestId++;D('apw-modal').classList.remove('open');D('apw-input').value='';const btn=D('apw-submit');btn.disabled=false;btn.textContent=blogText('ปลดล็อก','Unlock');}
 async function submitArticlePassword(){
   const rowIdx=parseInt(D('apw-row').value,10);
   const pw=D('apw-input').value.trim();
-  if(!pw)return toast('กรุณาใส่รหัสผ่าน','e');
+  if(!pw)return toast(blogText('กรุณาใส่รหัสผ่าน','Enter the password'),'e');
   const epoch=authEpoch,idToken=S.idToken,requestId=++articlePasswordRequestId;
   const current=()=>isCurrentAuth(epoch,idToken)&&requestId===articlePasswordRequestId&&D('apw-modal').classList.contains('open')&&parseInt(D('apw-row').value,10)===rowIdx;
-  const btn=D('apw-submit'),old=btn.textContent;btn.disabled=true;btn.textContent='กำลังตรวจสอบ...';
+  const btn=D('apw-submit'),old=btn.textContent;btn.disabled=true;btn.textContent=blogText('กำลังตรวจสอบ...','Checking...');
   try{
     const fd=new URLSearchParams();
     fd.append('action','unlockArticleByPassword');fd.append('rowIdx',rowIdx);fd.append('password',pw);fd.append('ua',CLIENT_UA);
     const res=await apiFetch(API_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:fd});
     const d=await res.json();
     if(!current())return;
-    if(!res.ok||!d.success)throw new Error(d.message||'รหัสผ่านไม่ถูกต้อง');
+    if(!res.ok||!d.success)throw new Error(d.message||blogText('รหัสผ่านไม่ถูกต้อง','Incorrect password'));
     const merged=Object.assign({},d.article,{locked:false});
     if(d.content!=null)merged.content=d.content;
     const idx=S.articles.findIndex(x=>x.rowIdx===rowIdx);
@@ -4038,7 +4114,7 @@ async function submitArticlePassword(){
     closeArticlePassword();
     renderArticleItems();
     openArticleViewer(merged);
-  }catch(e){if(current())toast(e.message||'ปลดล็อกไม่สำเร็จ','e','fas fa-lock');}
+  }catch(e){if(current())toast(e.message||blogText('ปลดล็อกไม่สำเร็จ','Could not unlock the article'),'e','fas fa-lock');}
   finally{if(requestId===articlePasswordRequestId){btn.disabled=false;btn.textContent=old;}}
 }
 
@@ -4059,12 +4135,12 @@ function selectedRoles(){return splitRoles(D('au-access').value);}
 function renderRoleChips(){
   const box=D('au-roles');if(!box)return;
   const sel=selectedRoles();
-  let h=`<button type="button" class="au-rchip pub${sel.length?'':' on'}" data-click="setRolePublic">${sel.length?'':'<i aria-hidden="true" class="fas fa-check"></i>'}ทุกคน (public)</button>`;
+  let h=`<button type="button" class="au-rchip pub${sel.length?'':' on'}" data-click="setRolePublic">${sel.length?'':'<i aria-hidden="true" class="fas fa-check"></i>'}${blogText('ทุกคน (public)','Everyone (public)')}</button>`;
   knownRoles().forEach(r=>{
     const on=sel.indexOf(r)>-1;
     h+=`<button type="button" class="au-rchip${on?' on':''}" data-click="toggleRole" data-a0="${esc(r)}" data-t0="string">${on?'<i aria-hidden="true" class="fas fa-check"></i>':''}${esc(r)}</button>`;
   });
-  h+='<button type="button" class="au-rchip add" data-click="addCustomRole"><i aria-hidden="true" class="fas fa-plus"></i> เพิ่มเอง</button>';
+  h+=`<button type="button" class="au-rchip add" data-click="addCustomRole"><i aria-hidden="true" class="fas fa-plus"></i> ${blogText('เพิ่มเอง','Add a role')}</button>`;
   box.innerHTML=h;
 }
 function setRolePublic(){D('au-access').value='';renderRoleChips();}
@@ -4075,7 +4151,7 @@ function toggleRole(r){
   renderRoleChips();
 }
 function addCustomRole(){
-  const v=prompt('ชื่อ role ใหม่ (ตัวอย่าง: staff)');
+  const v=prompt(blogText('ชื่อ role ใหม่ (ตัวอย่าง: staff)','New role name (for example, staff)'));
   const r=(v||'').trim().toLowerCase();
   if(!r)return;
   if(r==='public')return setRolePublic();
@@ -4086,7 +4162,7 @@ function resetArticleForm(){
   D('au-title').value='';D('au-desc').value='';D('au-url').value='';D('au-file').value='';
   D('au-tags').value='';D('au-access').value='';D('au-password').value='';
   const cw=D('au-clearpw');if(cw)cw.checked=false;
-  artUploadFile=null;D('au-filename').textContent='เลือกไฟล์ (PDF, HTML, รูป, Word/PPT/Excel)';
+  artUploadFile=null;D('au-filename').textContent=blogText('เลือกไฟล์ (PDF, HTML, รูป, Word/PPT/Excel)','Choose a file (PDF, HTML, image, Word, PowerPoint, or Excel)');
   setUploadProgress(-1);
   renderRoleChips();
 }
@@ -4116,13 +4192,13 @@ function setUploadProgress(pct,label){
   if(label)D('au-prog-label').textContent=label;
 }
 function openArticleUpload(){
-  if(!isAdmin())return toast('เฉพาะ Admin','e');
+  if(!isAdmin())return toast(blogText('เฉพาะ Admin','Admins only'),'e');
   artEditRow=null;resetArticleForm();
-  D('au-modal-title').textContent='อัปโหลดบทความ';
-  D('au-submit').textContent='อัปโหลด';
+  D('au-modal-title').textContent=blogText('อัปโหลดบทความ','Upload article');
+  D('au-submit').textContent=blogText('อัปโหลด','Upload');
   D('au-file-section').style.display='';
   D('au-clearpw-row').style.display='none';
-  D('au-pw-hint').textContent='ตั้งรหัสผ่าน (ถ้าต้องการ)';
+  D('au-pw-hint').textContent=blogText('ตั้งรหัสผ่าน (ถ้าต้องการ)','Set a password (optional)');
   renderRoleChips();
   D('article-upload-modal').classList.add('open');
 }
@@ -4134,11 +4210,11 @@ function openArticleEdit(rowIdx){
   D('au-desc').value=a.desc||'';
   D('au-tags').value=(a.tags||[]).join(' ');
   D('au-access').value=a.group||'';
-  D('au-modal-title').textContent='แก้ไขบทความ';
-  D('au-submit').textContent='บันทึก';
+  D('au-modal-title').textContent=blogText('แก้ไขบทความ','Edit article');
+  D('au-submit').textContent=blogText('บันทึก','Save');
   D('au-file-section').style.display='none';
   D('au-clearpw-row').style.display=a.adminHasPw?'flex':'none';
-  D('au-pw-hint').textContent=a.adminHasPw?'ตั้งรหัสใหม่ (เว้นว่าง = คงรหัสเดิม)':'ตั้งรหัสผ่าน (ถ้าต้องการ)';
+  D('au-pw-hint').textContent=a.adminHasPw?blogText('ตั้งรหัสใหม่ (เว้นว่าง = คงรหัสเดิม)','Set a new password (leave blank to keep the current one)'):blogText('ตั้งรหัสผ่าน (ถ้าต้องการ)','Set a password (optional)');
   renderRoleChips();
   D('article-upload-modal').classList.add('open');
 }
@@ -4152,7 +4228,7 @@ function detectArticleType(file){
 }
 D('au-file').addEventListener('change',function(){
   const f=this.files[0];
-  if(!f){artUploadFile=null;D('au-filename').textContent='เลือกไฟล์ (PDF, HTML, รูป, Word/PPT/Excel)';return;}
+  if(!f){artUploadFile=null;D('au-filename').textContent=blogText('เลือกไฟล์ (PDF, HTML, รูป, Word/PPT/Excel)','Choose a file (PDF, HTML, image, Word, PowerPoint, or Excel)');return;}
   artUploadFile=f;D('au-filename').textContent=f.name+'  ('+fmtBytes(f.size)+')';
   if(!D('au-title').value.trim())D('au-title').value=f.name.replace(/\.[^.]+$/,'');
 });
@@ -4175,7 +4251,7 @@ async function verifyArticleSaved(title,rowIdx){
 }
 
 async function submitArticleUpload(){
-  if(!isAdmin())return toast('เฉพาะ Admin','e');
+  if(!isAdmin())return toast(blogText('เฉพาะ Admin','Admins only'),'e');
   const epoch=authEpoch,idToken=S.idToken;
   const updateProgress=(pct,label)=>{if(isCurrentAuth(epoch,idToken))setUploadProgress(pct,label);};
   const title=D('au-title').value.trim();
@@ -4183,52 +4259,52 @@ async function submitArticleUpload(){
   const tags=D('au-tags').value.trim();
   const group=D('au-access').value.trim();
   const password=D('au-password').value;
-  if(password.trim()&&password.trim().length<12){toast('รหัสผ่านบทความต้องมีอย่างน้อย 12 ตัวอักษร','e','fas fa-lock');D('au-password').focus();return;}
-  if(!title)return toast('กรุณาใส่ชื่อบทความ','e');
+  if(password.trim()&&password.trim().length<12){toast(blogText('รหัสผ่านบทความต้องมีอย่างน้อย 12 ตัวอักษร','The article password must be at least 12 characters'),'e','fas fa-lock');D('au-password').focus();return;}
+  if(!title)return toast(blogText('กรุณาใส่ชื่อบทความ','Enter an article title'),'e');
   const btn=D('au-submit'),old=btn.textContent;btn.disabled=true;
   const editing=artEditRow;
   try{
     if(editing){
-      btn.textContent='กำลังบันทึก...';
-      updateProgress(5,'กำลังบันทึกการแก้ไข...');
+      btn.textContent=blogText('กำลังบันทึก...','Saving...');
+      updateProgress(5,blogText('กำลังบันทึกการแก้ไข...','Saving changes...'));
       const params={rowIdx:editing,title,description:desc,tags,group};
       if(D('au-clearpw')&&D('au-clearpw').checked)params.clearPassword='1';
       else if(password.trim())params.password=password;
       const d=await postDataProgress('updateArticle',params,f=>updateProgress(5+f*90),120000);
       if(!isCurrentAuth(epoch,idToken))return;
       if(!d.success)throw new Error(d.message||'');
-      updateProgress(100,'บันทึกแล้ว');
-      toast('บันทึกบทความแล้ว','s','fas fa-check');
+      updateProgress(100,blogText('บันทึกแล้ว','Saved'));
+      toast(blogText('บันทึกบทความแล้ว','Article saved'),'s','fas fa-check');
     }else{
       const url=D('au-url').value.trim();
       if(url){
-        if(!/^https?:\/\//i.test(url)){toast('ลิงก์ต้องขึ้นต้น http:// หรือ https://','e');return;}
-        btn.textContent='กำลังบันทึก...';
-        updateProgress(5,'กำลังบันทึกลิงก์...');
+        if(!/^https?:\/\//i.test(url)){toast(blogText('ลิงก์ต้องขึ้นต้น http:// หรือ https://','The link must start with http:// or https://'),'e');return;}
+        btn.textContent=blogText('กำลังบันทึก...','Saving...');
+        updateProgress(5,blogText('กำลังบันทึกลิงก์...','Saving the link...'));
         const d=await postDataProgress('uploadArticle',{title,description:desc,type:'link',url,tags,group,password},f=>updateProgress(5+f*90),120000);
         if(!isCurrentAuth(epoch,idToken))return;
         if(!d.success)throw new Error(d.message||'');
       }else{
-        if(!artUploadFile){toast('เลือกไฟล์ หรือใส่ลิงก์','e');return;}
-        if(artUploadFile.size>21*1024*1024){toast('ไฟล์ใหญ่เกิน 21MB','e');return;}
+        if(!artUploadFile){toast(blogText('เลือกไฟล์ หรือใส่ลิงก์','Choose a file or enter a link'),'e');return;}
+        if(artUploadFile.size>21*1024*1024){toast(blogText('ไฟล์ใหญ่เกิน 21MB','The file exceeds 21 MB'),'e');return;}
         const type=detectArticleType(artUploadFile);
-        btn.textContent='กำลังอัปโหลด...';
-        updateProgress(0,'กำลังอ่านไฟล์...');
+        btn.textContent=blogText('กำลังอัปโหลด...','Uploading...');
+        updateProgress(0,blogText('กำลังอ่านไฟล์...','Reading the file...'));
         // ไฟล์บทความเก็บใน Google Drive; ข้อมูล metadata และสิทธิ์เก็บใน D1
         const driveAccessToken=await getDriveAccessToken();
         assertCurrentAuth(epoch,idToken);
-        updateProgress(3,'กำลังเชื่อมต่อ Google Drive...');
-        const b64=await fileToBase64(artUploadFile,f=>updateProgress(f*15,'กำลังอ่านไฟล์...'));
+        updateProgress(3,blogText('กำลังเชื่อมต่อ Google Drive...','Connecting to Google Drive...'));
+        const b64=await fileToBase64(artUploadFile,f=>updateProgress(f*15,blogText('กำลังอ่านไฟล์...','Reading the file...')));
         assertCurrentAuth(epoch,idToken);
-        updateProgress(15,'กำลังอัปโหลด '+fmtBytes(artUploadFile.size)+'...');
+        updateProgress(15,blogText('กำลังอัปโหลด','Uploading')+' '+fmtBytes(artUploadFile.size)+'...');
         const d=await postDataProgress('uploadArticle',
           {title,description:desc,type,mime:artUploadFile.type||'application/octet-stream',filename:artUploadFile.name,fileBase64:b64,driveAccessToken,tags,group,password},
-          f=>updateProgress(15+f*82, f>=1?'กำลังบันทึกไฟล์...':'กำลังอัปโหลด '+fmtBytes(artUploadFile.size)+'...'));
+          f=>updateProgress(15+f*82, f>=1?blogText('กำลังบันทึกไฟล์...','Saving the file...'):blogText('กำลังอัปโหลด','Uploading')+' '+fmtBytes(artUploadFile.size)+'...'));
         if(!isCurrentAuth(epoch,idToken))return;
         if(!d.success)throw new Error(d.message||'');
       }
-      updateProgress(100,'เสร็จสิ้น');
-      toast('อัปโหลดบทความสำเร็จ','s','fas fa-check');
+      updateProgress(100,blogText('เสร็จสิ้น','Done'));
+      toast(blogText('อัปโหลดบทความสำเร็จ','Article uploaded'),'s','fas fa-check');
     }
     closeArticleUpload();
     updateProgress(-1);
@@ -4236,19 +4312,20 @@ async function submitArticleUpload(){
   }catch(e){
     if(!isCurrentAuth(epoch,idToken))return;
     // อาจ "สำเร็จจริง แต่ตอบกลับไม่ถึง" → เช็คกับเซิร์ฟเวอร์ก่อนค่อยฟ้องผู้ใช้
-    updateProgress(99,'กำลังตรวจสอบผลลัพธ์...');
-    btn.textContent='กำลังตรวจสอบ...';
+    updateProgress(99,blogText('กำลังตรวจสอบผลลัพธ์...','Checking the result...'));
+    btn.textContent=blogText('กำลังตรวจสอบ...','Checking...');
     const ok=await verifyArticleSaved(title, editing||0);
     if(!isCurrentAuth(epoch,idToken))return;
     if(ok){
-      updateProgress(100,'เสร็จสิ้น');
-      toast(editing?'บันทึกบทความแล้ว':'อัปโหลดบทความสำเร็จ','s','fas fa-check');
+      updateProgress(100,blogText('เสร็จสิ้น','Done'));
+      toast(editing?blogText('บันทึกบทความแล้ว','Article saved'):blogText('อัปโหลดบทความสำเร็จ','Article uploaded'),'s','fas fa-check');
       closeArticleUpload();
       updateProgress(-1);
       loadArticles({force:true});
     }else{
       updateProgress(-1);
-      toast((editing?'บันทึกไม่สำเร็จ: ':'อัปโหลดไม่สำเร็จ: ')+(e.message||'ลองใหม่'),'e');
+      const failure=editing?blogText('บันทึกไม่สำเร็จ','Could not save the article'):blogText('อัปโหลดไม่สำเร็จ','Could not upload the article');
+      toast(failure+' · '+(e.message||blogText('ลองใหม่','Try again')),'e');
     }
   }finally{if(isCurrentAuth(epoch,idToken)){btn.disabled=false;btn.textContent=old;}}
 }
@@ -4258,26 +4335,27 @@ async function moveArticle(rowIdx,dir){
     const d=await postData('moveArticle',{rowIdx,dir});
     if(!d.success)throw new Error(d.message||'');
     loadArticles({force:true});
-  }catch(e){toast('จัดลำดับไม่สำเร็จ','e');}
+  }catch(e){toast(blogText('จัดลำดับไม่สำเร็จ','Could not reorder the articles'),'e');}
 }
 async function deleteArticle(rowIdx){
   if(!isAdmin())return;
   const epoch=authEpoch,idToken=S.idToken;
-  if(!confirm('ลบบทความนี้? ไฟล์ใน Google Drive จะถูกย้ายไปถังขยะ'))return;
+  if(!confirm(blogText('ลบบทความนี้? ไฟล์ใน Google Drive จะถูกย้ายไปถังขยะ','Delete this article? Its file in Google Drive will be moved to the trash.')))return;
   try{
     const driveAccessToken=await getDriveAccessToken();
     assertCurrentAuth(epoch,idToken);
     const d=await postData('deleteArticle',{rowIdx,driveAccessToken});
     if(!isCurrentAuth(epoch,idToken))return;
     if(!d.success)throw new Error(d.message||'');
-    toast('ลบบทความแล้ว','s');
+    toast(blogText('ลบบทความแล้ว','Article deleted'),'s');
     loadArticles({force:true});
-  }catch(e){if(isCurrentAuth(epoch,idToken))toast('ลบไม่สำเร็จ','e');}
+  }catch(e){if(isCurrentAuth(epoch,idToken))toast(blogText('ลบไม่สำเร็จ','Could not delete the article'),'e');}
 }
 
 
 /* Actions are references; attribute values are decoded as data only. */
-const BLOG_ACTIONS={playYouTube,addCustomRole,clearTagFilter,closeArticlePassword,closeArticleUpload,closeArticleViewer,closeCompose,closeLightbox,closeMobSearch,closeModal,closeSettings,closeSub,dblLike,deleteArticle,deleteCmt,deletePost,doRegister,filterByTag,insertEmoji,loadArticles,moveArticle,navTo,onAuthClick,onSetAccountClick,openArticle,openArticleEdit,openArticleUpload,openCompose,openEditCmt,openEditPost,openLightbox,openMobSearch,openModal,openSettings,openSub,removeEditImg,removeImg,saveAccountName,saveEditCmt,saveEditPost,saveProfile,scrollFeedTop,scrollToPost,searchArticleTag,setRolePublic,setSearchSort,shareArticle,sharePost,shareTagLink,signOut,submitArticlePassword,submitArticleUpload,submitCmt,submitPost,toggleCmts,toggleDark,toggleDrop,toggleEditField,toggleEmoji,toggleField,toggleLike,toggleRole,toggleSave,openExternal:(url)=>{const safe=safeHttpUrl(url);if(safe)window.open(safe,'_blank','noopener,noreferrer');},reloadPage:()=>location.reload()};
+/* BUILD_POST_TRANSLATION */
+const BLOG_ACTIONS={playYouTube,addCustomRole,clearTagFilter,closeArticlePassword,closeArticleUpload,closeArticleViewer,closeCompose,closeLightbox,closeMobSearch,closeModal,closePostTranslation,closeSettings,closeSub,dblLike,deleteArticle,deleteCmt,deletePost,doRegister,filterByTag,insertEmoji,loadArticles,moveArticle,navTo,onAuthClick,onSetAccountClick,openArticle,openArticleEdit,openArticleUpload,openCompose,openEditCmt,openEditPost,openLightbox,openMobSearch,openModal,openPostTranslation,openSettings,openSub,removeEditImg,removeImg,saveAccountName,saveEditCmt,saveEditPost,saveProfile,scrollFeedTop,scrollToPost,searchArticleTag,setRolePublic,setSearchSort,shareArticle,sharePost,shareTagLink,signOut,submitArticlePassword,submitArticleUpload,submitCmt,submitPost,toggleCmts,toggleDark,toggleDrop,toggleEditField,toggleEmoji,toggleField,toggleLike,toggleRole,toggleSave,translatePost,openExternal:(url)=>{const safe=safeHttpUrl(url);if(safe)window.open(safe,'_blank','noopener,noreferrer');},reloadPage:()=>location.reload()};
 function dispatchBlogAction(event,kind){
  const el=event.target.closest('[data-'+kind+'],[data-stop]');if(!el)return;
  if(el.dataset.stop)event.stopPropagation();
@@ -4301,23 +4379,67 @@ document.addEventListener('load',e=>{const img=e.target;if(!img.matches?.('[data
 document.addEventListener('error',e=>{const img=e.target;if(!img.matches?.('[data-img-error]'))return;img.style.display='none';if(img.dataset.imgError==='avatar'&&img.previousElementSibling)img.previousElementSibling.style.display='flex';},true);
 
 
-const dialogIds=['login-modal','reg-modal','ep-modal','ec-modal','apw-modal','article-upload-modal','article-viewer','compose-modal','mob-srch','set-panel','lightbox'];
+const dialogIds=['login-modal','reg-modal','ep-modal','ec-modal','apw-modal','article-upload-modal','article-viewer','compose-modal','mob-srch','set-panel','lightbox','post-translation-modal'];
 let focusedDialog=null,returnFocus=null;
 function dialogFocusables(el){return [...el.querySelectorAll('button:not(:disabled),a[href],input:not(:disabled):not([type="hidden"]),select:not(:disabled),textarea:not(:disabled),iframe,[tabindex="0"]')].filter(n=>!n.closest('[inert]')&&n.getClientRects().length&&getComputedStyle(n).visibility!=='hidden')}
 function syncDialogFocus(){
  const next=dialogIds.map(D).filter(el=>el?.classList.contains('open')).sort((a,b)=>Number(getComputedStyle(b).zIndex)-Number(getComputedStyle(a).zIndex))[0]||null;
  if(next===focusedDialog)return;
- if(next){if(!focusedDialog)returnFocus=document.activeElement;focusedDialog=next;next.setAttribute('role','dialog');next.setAttribute('aria-modal','true');if(!next.hasAttribute('aria-labelledby'))next.setAttribute('aria-label',next.querySelector('.m-title,.av-title,.set-hdr-t')?.textContent||'หน้าต่าง Blog');next.tabIndex=-1;(dialogFocusables(next)[0]||next).focus({preventScroll:true});}
+ if(next){if(!focusedDialog)returnFocus=document.activeElement;focusedDialog=next;next.setAttribute('role','dialog');next.setAttribute('aria-modal','true');updateDialogLabel(next);next.tabIndex=-1;(dialogFocusables(next)[0]||next).focus({preventScroll:true});}
  else{focusedDialog=null;returnFocus?.isConnected&&returnFocus.focus({preventScroll:true});returnFocus=null;}
+}
+function updateDialogLabel(dialog) {
+  if (dialog && !dialog.hasAttribute('aria-labelledby')) {
+    dialog.setAttribute('aria-label',dialog.querySelector('.m-title,.av-title,.set-hdr-t')?.textContent||blogText('หน้าต่าง Blog','Blog dialog'));
+  }
 }
 const dialogObserver=new MutationObserver(syncDialogFocus);dialogIds.forEach(id=>{if(D(id))dialogObserver.observe(D(id),{attributes:true,attributeFilter:['class']})});
 document.addEventListener('keydown',e=>{if(e.key!=='Tab'||!focusedDialog)return;const list=dialogFocusables(focusedDialog),first=list[0],last=list.at(-1);if(!first){e.preventDefault();focusedDialog.focus();return;}if(e.shiftKey&&(document.activeElement===first||!focusedDialog.contains(document.activeElement))){e.preventDefault();last.focus();}else if(!e.shiftKey&&(document.activeElement===last||!focusedDialog.contains(document.activeElement))){e.preventDefault();first.focus();}});
 
 /* BUILD_ROUTING */
 
+function localizeBlogControls() {
+  const signIn=blogText('เข้าสู่ระบบ','Sign in');
+  D('auth-btn').textContent=S.user?blogText('ออกจากระบบ','Sign out'):signIn;
+  if(!S.user){
+    D('set-ln').textContent=signIn;
+    D('set-ld').textContent=blogText('เข้าสู่ระบบเพื่อใช้งาน','Sign in to use your account');
+  }
+  const labels={
+    'post-btn':blogText('โพสต์','Post'),
+    'post-btn-mob':blogText('โพสต์','Post'),
+    'si-save':blogText('บันทึกการเปลี่ยนแปลง','Save changes'),
+    'btn-save-name':blogText('บันทึกชื่อ','Save name'),
+    'ep-save':blogText('บันทึก','Save'),
+    'ec-save':blogText('บันทึก','Save'),
+    'apw-submit':blogText('เปิดบทความ','Open article')
+  };
+  for(const [id,label] of Object.entries(labels)){
+    const button=D(id);
+    if(button&&!button.disabled)button.textContent=label;
+  }
+  updateDialogLabel(focusedDialog);
+}
+
+window.addEventListener('blog-language-change',()=>{
+  localizeBlogControls();
+  updateBlogMetadata();
+  const feed=D('feed');
+  // Preserve an active editor, comment thread or media player when another tab changes language.
+  if(!S.notFound&&!feed.contains(document.activeElement)&&!feed.querySelector('iframe, .cmts[style*="block"]')){
+    if(S.articlesView&&D('art-list'))renderArticlesList();
+    else if(blogPostsReady&&!S.articlesView){
+      renderTagFilterBar();
+      renderFeed();
+    }
+  }
+  if(isAdmin()&&D('set-panel').classList.contains('open'))loadR2Quota();
+});
+
 /* =========== Boot =========== */
 (function(){
   applyBlogTheme();
+  localizeBlogControls();
   restoreBlogCache();
   loadData();
 

@@ -14,11 +14,11 @@
 <link rel="preconnect" href="https://koomean-proxy.meanchannel52.workers.dev" crossorigin>
 <link rel="preload" as="image" fetchpriority="high" href="/assets/media-c34486913565949c.webp">
 <link rel="preload" href="/assets/jakarta-cd8db90cd950.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/blog-da3c0268f0d41962.css">
-<script src="/assets/app-c92b4334c4c19b8e.js" defer></script>
+<link rel="stylesheet" href="/assets/blog-01543caa50272eee.css">
+<script src="/assets/app-71c7dac8ea23a9f2.js" defer></script>
 </head>
 <body>
-<a class="skip-link" href="#feed-main">ข้ามไปยังเนื้อหา</a>
+<a class="skip-link" href="#feed-main" data-l10n="Skip to content">ข้ามไปยังเนื้อหา</a>
 <div id="global-maintenance-overlay" class="km-maintenance" hidden tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="global-maintenance-title" aria-describedby="global-maintenance-note" data-app="Koo Mean Blog" data-note-th="เรากำลังดูแลพื้นที่แบ่งปันเรื่องราว แล้วกลับมาอ่านเรื่องใหม่ด้วยกันอีกครั้ง" data-note-en="We’re looking after our stories and articles. Come back for another good read soon.">
   <div class="maintenance-shell">
     <header class="maintenance-header"><div class="maintenance-brand"><span class="maintenance-brand-symbol"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 .5l3-3a5 5 0 0 0-7-7l-2 2M14 11a5 5 0 0 0-7-.5l-3 3a5 5 0 0 0 7 7l2-2"/></svg></span><div><span class="maintenance-brand-name">Koo Mean</span><span class="maintenance-brand-app">Blog</span></div></div><div class="maintenance-header-actions"><span class="maintenance-state" data-maintenance="state"></span></div></header>
@@ -34,18 +34,18 @@
       <div class="logo-mark">KM</div>
       <div class="logo-text" id="sb-title">Space</div>
     </a>
-    <nav class="sb-nav">
+    <nav class="sb-nav" aria-label="การนำทางหลัก" data-l10n-aria-label="Main navigation">
       <a href="/" class="sb-item active" id="sbn-home" data-click="navTo" data-a0="home" data-t0="string">
-        <i aria-hidden="true" class="fas fa-house"></i><span>หน้าหลัก</span>
+        <i aria-hidden="true" class="fas fa-house"></i><span data-l10n="Home">หน้าหลัก</span>
       </a>
       <a href="/article" class="sb-item" id="sbn-articles" data-click="navTo" data-a0="articles" data-t0="string">
-        <i aria-hidden="true" class="fas fa-book-open"></i><span>บทความ</span>
+        <i aria-hidden="true" class="fas fa-book-open"></i><span data-l10n="Articles">บทความ</span>
       </a>
       <a href="/saved" class="sb-item" id="sbn-saved" data-click="navTo" data-a0="saved" data-t0="string">
-        <i aria-hidden="true" class="fas fa-bookmark"></i><span>บันทึกไว้</span>
+        <i aria-hidden="true" class="fas fa-bookmark"></i><span data-l10n="Saved">บันทึกไว้</span>
       </a>
       <a href="/settings" class="sb-item" id="sbn-settings" data-click="openSettings">
-        <i aria-hidden="true" class="fas fa-gear"></i><span>ตั้งค่า</span>
+        <i aria-hidden="true" class="fas fa-gear"></i><span data-l10n="Settings">ตั้งค่า</span>
       </a>
     </nav>
     <div class="sb-user-card" id="sb-user-card">
@@ -56,7 +56,7 @@
           <div class="sb-uc-email" id="sb-uc-email"></div>
         </div>
       </div>
-      <button class="sb-so-btn" data-click="signOut"><i aria-hidden="true" class="fas fa-right-from-bracket"></i> ออกจากระบบ</button>
+      <button class="sb-so-btn" data-click="signOut"><i aria-hidden="true" class="fas fa-right-from-bracket"></i> <span data-l10n="Sign out">ออกจากระบบ</span></button>
     </div>
   </aside>
   <div class="feed-col">
@@ -67,11 +67,11 @@
       </div>
       <button class="auth-pill" id="auth-btn" data-click="onAuthClick">Sign In</button>
     </div>
-    <div class="feed-main" id="feed-main" tabindex="-1" role="main" aria-label="โพสต์และบทความ">
+    <div class="feed-main" id="feed-main" tabindex="-1" role="main" aria-label="โพสต์และบทความ" data-l10n-aria-label="Posts and articles">
       <section id="page-not-found" class="not-found" hidden tabindex="-1" aria-labelledby="not-found-title">
-        <p class="not-found-code" aria-hidden="true">404</p><h2 id="not-found-title">Page not found</h2>
-        <p id="not-found-description">ไม่พบหน้าที่คุณกำลังหา ลิงก์อาจไม่ถูกต้อง หรือเนื้อหาถูกย้ายแล้ว</p>
-        <nav class="not-found-actions" aria-label="กลับไปยังเนื้อหา"><a class="not-found-primary" href="/" data-click="navTo" data-a0="home" data-t0="string">กลับหน้าหลัก</a><a href="/article" data-click="navTo" data-a0="articles" data-t0="string">ดูบทความทั้งหมด</a></nav>
+        <p class="not-found-code" aria-hidden="true">404</p><h2 id="not-found-title" data-l10n="Page not found">ไม่พบหน้านี้</h2>
+        <p id="not-found-description" data-l10n="The page you’re looking for could not be found. The link may be incorrect or the page may have moved.">ไม่พบหน้าที่คุณกำลังหา ลิงก์อาจไม่ถูกต้อง หรือเนื้อหาถูกย้ายแล้ว</p>
+        <nav class="not-found-actions" aria-label="กลับไปยังเนื้อหา" data-l10n-aria-label="Browse content"><a class="not-found-primary" href="/" data-click="navTo" data-a0="home" data-t0="string" data-l10n="Back to home">กลับหน้าหลัก</a><a href="/article" data-click="navTo" data-a0="articles" data-t0="string" data-l10n="Browse all articles">ดูบทความทั้งหมด</a></nav>
       </section>
       <section id="prof-section" style="border-bottom:1px solid var(--border)">
         <div class="prof-cover" id="prof-cover" style="background-image:linear-gradient(180deg,rgba(6,8,13,.10),rgba(6,8,13,.60)),url('/assets/media-c34486913565949c.webp');background-size:cover;background-position:center"><div class="cover-fade"></div></div>
@@ -93,7 +93,7 @@
               <span class="sk" style="width:60%;height:12px;display:block;margin-top:6px"></span>
             </div>
             <div class="prof-stats" id="prof-stats" style="display:none">
-              <span class="stat-n" id="stat-posts">0</span><span class="stat-l">โพสต์</span>
+              <span class="stat-n" id="stat-posts">0</span><span class="stat-l" data-l10n="Posts">โพสต์</span>
             </div>
           </div>
         </div>
@@ -102,29 +102,29 @@
         <div class="cr-row">
           <div class="cr-av-ring"><img class="cr-av" id="cr-av" alt="" referrerpolicy="no-referrer"></div>
           <div class="cr-body">
-            <textarea id="post-ta" class="cr-ta" placeholder="คุณกำลังคิดอะไรอยู่..." maxlength="500" aria-label="คุณกำลังคิดอะไรอยู่..."></textarea>
+            <textarea id="post-ta" class="cr-ta" placeholder="คุณกำลังคิดอะไรอยู่..." maxlength="500" aria-label="คุณกำลังคิดอะไรอยู่..." data-l10n-aria-label="What are you thinking about?" data-l10n-placeholder="What are you thinking about?"></textarea>
             <div class="cr-extras">
               <div class="cr-extra-field" id="field-link">
                 <i aria-hidden="true" class="fas fa-link"></i>
-                <input type="url" class="cr-extra-input" id="link-in" placeholder="วางลิงก์ (URL) ที่นี่..." aria-label="วางลิงก์ (URL) ที่นี่...">
-                <button class="cr-extra-close" data-click="toggleField" data-a0="link" data-t0="string" data-a1="" data-t1="false" aria-label="เปิดหรือปิดช่องเพิ่มเติม"><i aria-hidden="true" class="fas fa-times"></i></button>
+                <input type="url" class="cr-extra-input" id="link-in" placeholder="วางลิงก์ (URL) ที่นี่..." aria-label="วางลิงก์ (URL) ที่นี่..." data-l10n-aria-label="Paste a URL here…" data-l10n-placeholder="Paste a URL here…">
+                <button class="cr-extra-close" data-click="toggleField" data-a0="link" data-t0="string" data-a1="" data-t1="false" aria-label="ปิดช่องลิงก์" data-l10n-aria-label="Close link field"><i aria-hidden="true" class="fas fa-times"></i></button>
               </div>
               <div class="cr-extra-field" id="field-hashtag">
                 <i aria-hidden="true" class="fas fa-hashtag"></i>
-                <input type="text" class="cr-extra-input" id="hashtag-in" placeholder="แท็ก คั่นด้วยเว้นวรรค เช่น ข่าว เทคโนโลยี" aria-label="แท็ก คั่นด้วยเว้นวรรค เช่น ข่าว เทคโนโลยี">
-                <button class="cr-extra-close" data-click="toggleField" data-a0="hashtag" data-t0="string" data-a1="" data-t1="false" aria-label="เปิดหรือปิดช่องเพิ่มเติม"><i aria-hidden="true" class="fas fa-times"></i></button>
+                <input type="text" class="cr-extra-input" id="hashtag-in" placeholder="แท็ก คั่นด้วยเว้นวรรค เช่น ข่าว เทคโนโลยี" aria-label="แท็ก คั่นด้วยเว้นวรรค เช่น ข่าว เทคโนโลยี" data-l10n-aria-label="Tags separated by spaces, for example news technology" data-l10n-placeholder="Tags separated by spaces, for example news technology">
+                <button class="cr-extra-close" data-click="toggleField" data-a0="hashtag" data-t0="string" data-a1="" data-t1="false" aria-label="ปิดช่องแท็ก" data-l10n-aria-label="Close tag field"><i aria-hidden="true" class="fas fa-times"></i></button>
               </div>
             </div>
             <div class="cr-tools">
-              <input type="file" id="file-in" accept="image/png,image/jpeg,image/gif,image/webp" style="display:none" aria-label="file-in">
-              <label for="file-in" class="tool-btn" title="แนบรูป"><i aria-hidden="true" class="far fa-image"></i><span>รูปภาพ</span></label>
-              <button type="button" class="tool-btn" id="btn-link" data-click="toggleField" data-a0="link" data-t0="string" aria-label="เปิดหรือปิดช่องเพิ่มเติม"><i aria-hidden="true" class="fas fa-link"></i><span>ลิงก์</span></button>
-              <button type="button" class="tool-btn" id="btn-hashtag" data-click="toggleField" data-a0="hashtag" data-t0="string" aria-label="เปิดหรือปิดช่องเพิ่มเติม"><i aria-hidden="true" class="fas fa-hashtag"></i><span>แท็ก</span></button>
-              <button type="button" class="tool-btn" data-click="toggleEmoji" data-a0="" data-t0="event" data-a1="post-ta" data-t1="string" aria-label="เลือกอิโมจิ"><i aria-hidden="true" class="far fa-face-smile"></i><span>อิโมจิ</span></button>
+              <input type="file" id="file-in" accept="image/png,image/jpeg,image/gif,image/webp" style="display:none" aria-label="แนบรูป" data-l10n-aria-label="Attach image">
+              <label for="file-in" class="tool-btn" title="แนบรูป" data-l10n-title="Attach image"><i aria-hidden="true" class="far fa-image"></i><span data-l10n="Image">รูปภาพ</span></label>
+              <button type="button" class="tool-btn" id="btn-link" data-click="toggleField" data-a0="link" data-t0="string" aria-label="เปิดหรือปิดช่องลิงก์" data-l10n-aria-label="Toggle link field"><i aria-hidden="true" class="fas fa-link"></i><span data-l10n="Link">ลิงก์</span></button>
+              <button type="button" class="tool-btn" id="btn-hashtag" data-click="toggleField" data-a0="hashtag" data-t0="string" aria-label="เปิดหรือปิดช่องแท็ก" data-l10n-aria-label="Toggle tag field"><i aria-hidden="true" class="fas fa-hashtag"></i><span data-l10n="Tags">แท็ก</span></button>
+              <button type="button" class="tool-btn" data-click="toggleEmoji" data-a0="" data-t0="event" data-a1="post-ta" data-t1="string" aria-label="เลือกอิโมจิ" data-l10n-aria-label="Choose an emoji"><i aria-hidden="true" class="far fa-face-smile"></i><span data-l10n="Emoji">อิโมจิ</span></button>
             </div>
             <div id="img-prev-wrap" class="img-prev-wrap" style="display:none">
               <img id="img-prev" class="img-prev" alt="">
-              <button class="rm-img" data-click="removeImg" aria-label="นำรูปออก"><i aria-hidden="true" class="fas fa-times"></i></button>
+              <button class="rm-img" data-click="removeImg" aria-label="นำรูปออก" data-l10n-aria-label="Remove image"><i aria-hidden="true" class="fas fa-times"></i></button>
             </div>
             <div class="cr-foot">
               <span class="char-c" id="char-c">0 / 500</span>
@@ -135,7 +135,7 @@
       </section>
       <div id="tag-filter-bar" style="display:none"></div>
       <div id="feed">
-        <div class="sec-label">Timeline</div>
+        <div class="sec-label" data-l10n="Timeline">ไทม์ไลน์</div>
         <div id="sk-posts">
           <div class="sk-post"><div class="sk sk-av"></div><div class="sk-lines"><span class="sk" style="width:35%;height:11px"></span><span class="sk" style="width:100%;height:11px"></span><span class="sk" style="width:70%;height:11px"></span></div></div>
           <div class="sk-post"><div class="sk sk-av"></div><div class="sk-lines"><span class="sk" style="width:50%;height:11px"></span><span class="sk" style="width:88%;height:11px"></span><span class="sk" style="width:55%;height:11px"></span></div></div>
@@ -146,32 +146,32 @@
   </div>
   <aside class="sidebar-right">
     <div class="rw">
-      <div class="rw-title"><i aria-hidden="true" class="fas fa-magnifying-glass" style="color:var(--accent);margin-right:8px"></i>ค้นหาโพสต์</div>
+      <div class="rw-title"><i aria-hidden="true" class="fas fa-magnifying-glass" style="color:var(--accent);margin-right:8px"></i><span data-l10n="Search posts">ค้นหาโพสต์</span></div>
       <div class="rw-srch-pad">
         <div class="rw-sbox">
           <i aria-hidden="true" class="fas fa-magnifying-glass"></i>
-          <input class="rw-sinput" id="rw-srch" placeholder="พิมพ์เพื่อค้นหา... (Ctrl+K)" autocomplete="off" aria-label="พิมพ์เพื่อค้นหา... (Ctrl+K)">
+          <input class="rw-sinput" id="rw-srch" placeholder="พิมพ์เพื่อค้นหา... (Ctrl+K)" autocomplete="off" aria-label="พิมพ์เพื่อค้นหา... (Ctrl+K)" data-l10n-aria-label="Search posts… (Ctrl+K)" data-l10n-placeholder="Search posts… (Ctrl+K)">
         </div>
       </div>
       <div class="rw-results" id="rw-results" style="display:none"></div>
     </div>
     <div class="rw" id="rw-trends" style="display:none">
-      <div class="rw-title"><i aria-hidden="true" class="fas fa-fire" style="color:var(--err);margin-right:8px"></i>เทรนด์ยอดฮิต</div>
+      <div class="rw-title"><i aria-hidden="true" class="fas fa-fire" style="color:var(--err);margin-right:8px"></i><span data-l10n="Trending">เทรนด์ยอดฮิต</span></div>
       <div class="rw-results" id="trend-desktop" style="display:block;padding:4px 0"></div>
     </div>
     <div class="rw" id="rw-auth" style="display:none">
       <div class="rw-auth-pad">
-        <div style="font-weight:700;font-size:.9rem;margin-bottom:5px">เข้าสู่ระบบ</div>
-        <div style="font-size:.8rem;color:var(--txt2);margin-bottom:13px">เพื่อกด Like และคอมเมนต์</div>
-        <button class="rw-auth-btn" data-click="openModal" data-a0="login-modal" data-t0="string"><i aria-hidden="true" class="fab fa-google" style="margin-right:6px"></i>Sign in with Google</button>
+        <div style="font-weight:700;font-size:.9rem;margin-bottom:5px" data-l10n="Sign in">เข้าสู่ระบบ</div>
+        <div style="font-size:.8rem;color:var(--txt2);margin-bottom:13px" data-l10n="To like and comment on posts">เพื่อกด Like และคอมเมนต์</div>
+        <button class="rw-auth-btn" data-click="openModal" data-a0="login-modal" data-t0="string"><i aria-hidden="true" class="fab fa-google" style="margin-right:6px"></i><span data-l10n="Sign in with Google">เข้าสู่ระบบด้วย Google</span></button>
       </div>
     </div>
     <div class="rw">
-      <div class="rw-title">เกี่ยวกับ</div>
+      <div class="rw-title" data-l10n="About">เกี่ยวกับ</div>
       <div class="rw-about-pad">
         <p id="rw-bio"></p>
         <div class="rw-links">
-          <div class="rw-link" data-click="openExternal" data-a0="https://koomean.com/" data-t0="string" data-a1="_blank" data-t1="string" role="button" tabindex="0"><i aria-hidden="true" class="fas fa-globe"></i>เว็บไซต์</div>
+          <div class="rw-link" data-click="openExternal" data-a0="https://koomean.com/" data-t0="string" data-a1="_blank" data-t1="string" role="button" tabindex="0"><i aria-hidden="true" class="fas fa-globe"></i><span data-l10n="Website">เว็บไซต์</span></div>
           <div class="rw-link" data-click="openExternal" data-a0="https://youtube.com/@koomean" data-t0="string" data-a1="_blank" data-t1="string" role="button" tabindex="0"><i aria-hidden="true" class="fab fa-youtube"></i>YouTube</div>
         </div>
         <div style="margin-top:12px;font-size:.71rem;color:var(--txt3)">Koo Mean Blog v4.0.0 · @koomean</div>
@@ -179,53 +179,53 @@
     </div>
   </aside>
 </div>
-<nav class="mob-nav" id="mob-nav">
-  <a href="/" class="mnav-btn active" id="mnav-home" data-click="navTo" data-a0="home" data-t0="string"><i aria-hidden="true" class="fas fa-house"></i><span>หน้าหลัก</span></a>
-  <a href="/search" class="mnav-btn" id="mnav-search" data-click="openMobSearch"><i aria-hidden="true" class="fas fa-magnifying-glass"></i><span>ค้นหา</span></a>
-  <button class="mnav-fab hidden" id="mnav-fab" data-click="openCompose" title="สร้างโพสต์" aria-label="สร้างโพสต์"><i aria-hidden="true" class="fas fa-plus"></i></button>
-  <a href="/article" class="mnav-btn" id="mnav-articles" data-click="navTo" data-a0="articles" data-t0="string"><i aria-hidden="true" class="fas fa-book-open"></i><span>บทความ</span></a>
-  <a href="/saved" class="mnav-btn" id="mnav-saved" data-click="navTo" data-a0="saved" data-t0="string"><i aria-hidden="true" class="fas fa-bookmark"></i><span>บันทึก</span></a>
-  <a href="/settings" class="mnav-btn" id="mnav-settings" data-click="openSettings"><i aria-hidden="true" class="fas fa-gear"></i><span>ตั้งค่า</span></a>
+<nav class="mob-nav" id="mob-nav" aria-label="การนำทางหลัก" data-l10n-aria-label="Main navigation">
+  <a href="/" class="mnav-btn active" id="mnav-home" data-click="navTo" data-a0="home" data-t0="string"><i aria-hidden="true" class="fas fa-house"></i><span data-l10n="Home">หน้าหลัก</span></a>
+  <a href="/search" class="mnav-btn" id="mnav-search" data-click="openMobSearch"><i aria-hidden="true" class="fas fa-magnifying-glass"></i><span data-l10n="Search">ค้นหา</span></a>
+  <button class="mnav-fab hidden" id="mnav-fab" data-click="openCompose" title="สร้างโพสต์" aria-label="สร้างโพสต์" data-l10n-aria-label="Create post" data-l10n-title="Create post"><i aria-hidden="true" class="fas fa-plus"></i></button>
+  <a href="/article" class="mnav-btn" id="mnav-articles" data-click="navTo" data-a0="articles" data-t0="string"><i aria-hidden="true" class="fas fa-book-open"></i><span data-l10n="Articles">บทความ</span></a>
+  <a href="/saved" class="mnav-btn" id="mnav-saved" data-click="navTo" data-a0="saved" data-t0="string"><i aria-hidden="true" class="fas fa-bookmark"></i><span data-l10n="Saved">บันทึก</span></a>
+  <a href="/settings" class="mnav-btn" id="mnav-settings" data-click="openSettings"><i aria-hidden="true" class="fas fa-gear"></i><span data-l10n="Settings">ตั้งค่า</span></a>
 </nav>
 <div class="mob-srch-overlay" id="mob-srch">
   <div class="mob-srch-hdr">
-    <div class="mob-sbox"><i aria-hidden="true" class="fas fa-magnifying-glass"></i><input class="mob-sinput" id="mob-srch-in" placeholder="ค้นหาโพสต์..." autocomplete="off" aria-label="ค้นหาโพสต์..."></div>
-    <button class="mob-srch-cancel" data-click="closeMobSearch">ยกเลิก</button>
+    <div class="mob-sbox"><i aria-hidden="true" class="fas fa-magnifying-glass"></i><input class="mob-sinput" id="mob-srch-in" placeholder="ค้นหาโพสต์..." autocomplete="off" aria-label="ค้นหาโพสต์..." data-l10n-aria-label="Search posts…" data-l10n-placeholder="Search posts…"></div>
+    <button class="mob-srch-cancel" data-click="closeMobSearch" data-l10n="Cancel">ยกเลิก</button>
   </div>
-  <div class="mob-srch-body" id="mob-srch-body"><div class="srch-empty"><i aria-hidden="true" class="fas fa-magnifying-glass-chart"></i><p>พิมพ์เพื่อค้นหาโพสต์</p></div></div>
+  <div class="mob-srch-body" id="mob-srch-body"><div class="srch-empty"><i aria-hidden="true" class="fas fa-magnifying-glass-chart"></i><p data-l10n="Type to search posts">พิมพ์เพื่อค้นหาโพสต์</p></div></div>
 </div>
 <div class="compose-modal" id="compose-modal">
   <div class="compose-hdr">
-    <div class="compose-ttl">สร้างโพสต์ใหม่</div>
-    <button class="compose-cancel" data-click="closeCompose" aria-label="ปิดหน้าต่างสร้างโพสต์"><i aria-hidden="true" class="fas fa-times"></i></button>
+    <div class="compose-ttl" data-l10n="New post">สร้างโพสต์ใหม่</div>
+    <button class="compose-cancel" data-click="closeCompose" aria-label="ปิดหน้าต่างสร้างโพสต์" data-l10n-aria-label="Close post composer"><i aria-hidden="true" class="fas fa-times"></i></button>
   </div>
   <div class="compose-body">
     <div class="cr-row">
       <div class="cr-av-ring"><img class="cr-av" id="cr-av-mob" alt="" referrerpolicy="no-referrer"></div>
       <div class="cr-body">
-        <textarea id="post-ta-mob" class="cr-ta" placeholder="คุณกำลังคิดอะไรอยู่..." maxlength="500" style="min-height:100px" aria-label="คุณกำลังคิดอะไรอยู่..."></textarea>
+        <textarea id="post-ta-mob" class="cr-ta" placeholder="คุณกำลังคิดอะไรอยู่..." maxlength="500" style="min-height:100px" aria-label="คุณกำลังคิดอะไรอยู่..." data-l10n-aria-label="What are you thinking about?" data-l10n-placeholder="What are you thinking about?"></textarea>
         <div class="cr-extras">
           <div class="cr-extra-field" id="field-link-mob">
             <i aria-hidden="true" class="fas fa-link"></i>
-            <input type="url" class="cr-extra-input" id="link-in-mob" placeholder="วางลิงก์ (URL) ที่นี่..." aria-label="วางลิงก์ (URL) ที่นี่...">
-            <button class="cr-extra-close" data-click="toggleField" data-a0="link" data-t0="string" data-a1="" data-t1="false" data-a2="" data-t2="true" aria-label="เปิดหรือปิดช่องเพิ่มเติม"><i aria-hidden="true" class="fas fa-times"></i></button>
+            <input type="url" class="cr-extra-input" id="link-in-mob" placeholder="วางลิงก์ (URL) ที่นี่..." aria-label="วางลิงก์ (URL) ที่นี่..." data-l10n-aria-label="Paste a URL here…" data-l10n-placeholder="Paste a URL here…">
+            <button class="cr-extra-close" data-click="toggleField" data-a0="link" data-t0="string" data-a1="" data-t1="false" data-a2="" data-t2="true" aria-label="ปิดช่องลิงก์" data-l10n-aria-label="Close link field"><i aria-hidden="true" class="fas fa-times"></i></button>
           </div>
           <div class="cr-extra-field" id="field-hashtag-mob">
             <i aria-hidden="true" class="fas fa-hashtag"></i>
-            <input type="text" class="cr-extra-input" id="hashtag-in-mob" placeholder="แท็ก คั่นด้วยเว้นวรรค" aria-label="แท็ก คั่นด้วยเว้นวรรค">
-            <button class="cr-extra-close" data-click="toggleField" data-a0="hashtag" data-t0="string" data-a1="" data-t1="false" data-a2="" data-t2="true" aria-label="เปิดหรือปิดช่องเพิ่มเติม"><i aria-hidden="true" class="fas fa-times"></i></button>
+            <input type="text" class="cr-extra-input" id="hashtag-in-mob" placeholder="แท็ก คั่นด้วยเว้นวรรค" aria-label="แท็ก คั่นด้วยเว้นวรรค" data-l10n-aria-label="Tags separated by spaces" data-l10n-placeholder="Tags separated by spaces">
+            <button class="cr-extra-close" data-click="toggleField" data-a0="hashtag" data-t0="string" data-a1="" data-t1="false" data-a2="" data-t2="true" aria-label="ปิดช่องแท็ก" data-l10n-aria-label="Close tag field"><i aria-hidden="true" class="fas fa-times"></i></button>
           </div>
         </div>
         <div class="cr-tools">
-          <input type="file" id="file-in-mob" accept="image/png,image/jpeg,image/gif,image/webp" style="display:none" aria-label="file-in-mob">
-          <label for="file-in-mob" class="tool-btn"><i aria-hidden="true" class="far fa-image"></i><span>รูปภาพ</span></label>
-          <button type="button" class="tool-btn" id="btn-link-mob" data-click="toggleField" data-a0="link" data-t0="string" data-a1="" data-t1="null" data-a2="" data-t2="true" aria-label="เปิดหรือปิดช่องเพิ่มเติม"><i aria-hidden="true" class="fas fa-link"></i><span>ลิงก์</span></button>
-          <button type="button" class="tool-btn" id="btn-hashtag-mob" data-click="toggleField" data-a0="hashtag" data-t0="string" data-a1="" data-t1="null" data-a2="" data-t2="true" aria-label="เปิดหรือปิดช่องเพิ่มเติม"><i aria-hidden="true" class="fas fa-hashtag"></i><span>แท็ก</span></button>
-          <button type="button" class="tool-btn" data-click="toggleEmoji" data-a0="" data-t0="event" data-a1="post-ta-mob" data-t1="string" aria-label="เลือกอิโมจิ"><i aria-hidden="true" class="far fa-face-smile"></i><span>อิโมจิ</span></button>
+          <input type="file" id="file-in-mob" accept="image/png,image/jpeg,image/gif,image/webp" style="display:none" aria-label="แนบรูป" data-l10n-aria-label="Attach image">
+          <label for="file-in-mob" class="tool-btn"><i aria-hidden="true" class="far fa-image"></i><span data-l10n="Image">รูปภาพ</span></label>
+          <button type="button" class="tool-btn" id="btn-link-mob" data-click="toggleField" data-a0="link" data-t0="string" data-a1="" data-t1="null" data-a2="" data-t2="true" aria-label="เปิดหรือปิดช่องลิงก์" data-l10n-aria-label="Toggle link field"><i aria-hidden="true" class="fas fa-link"></i><span data-l10n="Link">ลิงก์</span></button>
+          <button type="button" class="tool-btn" id="btn-hashtag-mob" data-click="toggleField" data-a0="hashtag" data-t0="string" data-a1="" data-t1="null" data-a2="" data-t2="true" aria-label="เปิดหรือปิดช่องแท็ก" data-l10n-aria-label="Toggle tag field"><i aria-hidden="true" class="fas fa-hashtag"></i><span data-l10n="Tags">แท็ก</span></button>
+          <button type="button" class="tool-btn" data-click="toggleEmoji" data-a0="" data-t0="event" data-a1="post-ta-mob" data-t1="string" aria-label="เลือกอิโมจิ" data-l10n-aria-label="Choose an emoji"><i aria-hidden="true" class="far fa-face-smile"></i><span data-l10n="Emoji">อิโมจิ</span></button>
         </div>
         <div id="img-prev-wrap-mob" class="img-prev-wrap" style="display:none">
           <img id="img-prev-mob" class="img-prev" alt="">
-          <button class="rm-img" data-click="removeImg" data-a0="" data-t0="true" aria-label="นำรูปออก"><i aria-hidden="true" class="fas fa-times"></i></button>
+          <button class="rm-img" data-click="removeImg" data-a0="" data-t0="true" aria-label="นำรูปออก" data-l10n-aria-label="Remove image"><i aria-hidden="true" class="fas fa-times"></i></button>
         </div>
         <div class="cr-foot">
           <span class="char-c" id="char-c-mob">0 / 500</span>
@@ -240,85 +240,93 @@
   <div class="set-drawer">
     <div class="settings-main" id="set-main">
       <header class="set-hdr">
-        <h2 class="set-hdr-t" id="settings-title">ตั้งค่า</h2>
-        <button type="button" class="set-close" data-click="closeSettings" aria-label="ปิดหน้าตั้งค่า"><i aria-hidden="true" class="fas fa-times"></i></button>
+        <h2 class="set-hdr-t" id="settings-title" data-l10n="Settings">ตั้งค่า</h2>
+        <button type="button" class="set-close" data-click="closeSettings" aria-label="ปิดหน้าตั้งค่า" data-l10n-aria-label="Close Settings"><i aria-hidden="true" class="fas fa-times"></i></button>
       </header>
       <div class="set-body">
         <section class="settings-section" aria-labelledby="settings-appearance-title">
-          <h3 class="set-gl" id="settings-appearance-title">การแสดงผลและการอ่าน</h3>
+          <h3 class="set-gl" id="settings-appearance-title" data-l10n="Appearance and reading">การแสดงผลและการอ่าน</h3>
           <div class="settings-appearance">
             <figure class="settings-preview">
-              <figcaption class="settings-preview-caption">ตัวอย่างการอ่าน</figcaption>
+              <figcaption class="settings-preview-caption" data-l10n="Reading preview">ตัวอย่างการอ่าน</figcaption>
               <div class="settings-preview-sample">
-                <h4 class="settings-preview-title">บันทึกระหว่างทาง</h4>
-                <p class="settings-preview-text">เรื่องเล่าจากสิ่งที่ลองทำ บันทึกวิธีคิดและบทเรียนไว้กลับมาอ่าน</p>
-                <span class="settings-preview-tag">#บันทึก</span>
+                <h4 class="settings-preview-title" data-l10n="Notes along the way">บันทึกระหว่างทาง</h4>
+                <p class="settings-preview-text" data-l10n="A record of things I’ve tried, what I learned, and what I want to remember.">เรื่องเล่าจากสิ่งที่ลองทำ บันทึกวิธีคิดและบทเรียนไว้กลับมาอ่าน</p>
+                <span class="settings-preview-tag" data-l10n="#notes">#บันทึก</span>
               </div>
             </figure>
             <div class="settings-controls">
               <div class="settings-fields">
                 <div class="settings-field">
-                  <label for="settings-theme">ธีมการแสดงผล</label>
+                  <label for="settings-language" data-l10n="Language">ภาษา</label>
+                  <select id="settings-language" data-blog-preference="language">
+                    <option value="auto" data-l10n="Device default">ตามภาษาอุปกรณ์</option>
+                    <option value="th" lang="th">ไทย</option>
+                    <option value="en" lang="en">English</option>
+                  </select>
+                </div>
+                <div class="settings-field">
+                  <label for="settings-theme" data-l10n="Theme">ธีมการแสดงผล</label>
                   <select id="settings-theme" class="koo-theme-select" data-koo-theme>
-                    <option value="auto">ตามระบบ</option>
-                    <option value="light">สว่าง</option>
-                    <option value="dark">มืด</option>
+                    <option value="auto" data-l10n="System default">ตามระบบ</option>
+                    <option value="light" data-l10n="Light">สว่าง</option>
+                    <option value="dark" data-l10n="Dark">มืด</option>
                   </select>
                 </div>
                 <div class="settings-field">
-                  <label for="settings-size">ขนาดตัวอักษร</label>
+                  <label for="settings-size" data-l10n="Text size">ขนาดตัวอักษร</label>
                   <select id="settings-size" data-blog-preference="textSize">
-                    <option value="default">ปกติ</option>
-                    <option value="large">ใหญ่</option>
-                    <option value="extra">ใหญ่มาก</option>
+                    <option value="default" data-l10n="Default">ปกติ</option>
+                    <option value="large" data-l10n="Large">ใหญ่</option>
+                    <option value="extra" data-l10n="Extra large">ใหญ่มาก</option>
                   </select>
                 </div>
                 <div class="settings-field">
-                  <label for="settings-density">ระยะห่างของเนื้อหา</label>
+                  <label for="settings-density" data-l10n="Spacing">ระยะห่างของเนื้อหา</label>
                   <select id="settings-density" data-blog-preference="density">
-                    <option value="comfortable">สบายตา</option>
-                    <option value="compact">กระชับ</option>
+                    <option value="comfortable" data-l10n="Comfortable">สบายตา</option>
+                    <option value="compact" data-l10n="Compact">กระชับ</option>
                   </select>
                 </div>
                 <div class="settings-field">
-                  <label for="settings-motion">การเคลื่อนไหว</label>
+                  <label for="settings-motion" data-l10n="Motion">การเคลื่อนไหว</label>
                   <select id="settings-motion" data-blog-preference="motion">
-                    <option value="system">ตามระบบ</option>
-                    <option value="reduce">ลดการเคลื่อนไหว</option>
+                    <option value="system" data-l10n="System default">ตามระบบ</option>
+                    <option value="reduce" data-l10n="Reduce motion">ลดการเคลื่อนไหว</option>
                   </select>
                 </div>
               </div>
               <fieldset class="settings-colors">
-                <legend>สีเน้น</legend>
+                <legend data-l10n="Accent color">สีเน้น</legend>
                 <div class="settings-swatches">
                   <label class="settings-swatch settings-swatch-blue">
-                    <input type="radio" name="blog-accent" data-blog-preference="accent" value="blue" aria-label="น้ำเงิน" checked>
-                    <span>น้ำเงิน</span>
+                    <input type="radio" name="blog-accent" data-blog-preference="accent" value="blue" aria-label="น้ำเงิน" checked data-l10n-aria-label="Blue">
+                    <span data-l10n="Blue">น้ำเงิน</span>
                   </label>
                   <label class="settings-swatch settings-swatch-violet">
-                    <input type="radio" name="blog-accent" data-blog-preference="accent" value="violet" aria-label="ม่วง">
-                    <span>ม่วง</span>
+                    <input type="radio" name="blog-accent" data-blog-preference="accent" value="violet" aria-label="ม่วง" data-l10n-aria-label="Violet">
+                    <span data-l10n="Violet">ม่วง</span>
                   </label>
                   <label class="settings-swatch settings-swatch-teal">
-                    <input type="radio" name="blog-accent" data-blog-preference="accent" value="teal" aria-label="เขียวอมฟ้า">
-                    <span>เขียวอมฟ้า</span>
+                    <input type="radio" name="blog-accent" data-blog-preference="accent" value="teal" aria-label="เขียวอมฟ้า" data-l10n-aria-label="Teal">
+                    <span data-l10n="Teal">เขียวอมฟ้า</span>
                   </label>
                   <label class="settings-swatch settings-swatch-rose">
-                    <input type="radio" name="blog-accent" data-blog-preference="accent" value="rose" aria-label="ชมพู">
-                    <span>ชมพู</span>
+                    <input type="radio" name="blog-accent" data-blog-preference="accent" value="rose" aria-label="ชมพู" data-l10n-aria-label="Rose">
+                    <span data-l10n="Rose">ชมพู</span>
                   </label>
                 </div>
               </fieldset>
               <div class="settings-preference-actions">
-                <p class="settings-note">บันทึกการตั้งค่าในเบราว์เซอร์นี้</p>
-                <button type="button" class="settings-reset" id="settings-reset">คืนค่าเริ่มต้น</button>
+                <p class="settings-note" data-l10n="Preferences are saved in this browser">บันทึกการตั้งค่าในเบราว์เซอร์นี้</p>
+                <button type="button" class="settings-reset" id="settings-reset" data-l10n="Reset defaults">คืนค่าเริ่มต้น</button>
               </div>
               <p class="settings-status" id="settings-status" role="status"></p>
             </div>
           </div>
         </section>
         <section class="settings-section" aria-labelledby="settings-account-heading">
-          <h3 class="set-gl" id="settings-account-heading">บัญชี</h3>
+          <h3 class="set-gl" id="settings-account-heading" data-l10n="Account">บัญชี</h3>
           <button type="button" class="set-row" id="set-acc-row" data-click="onSetAccountClick">
             <span class="set-icon"><i aria-hidden="true" class="fas fa-user"></i></span>
             <span class="set-info"><span class="set-name" id="set-ln">Sign In</span><span class="set-desc" id="set-ld">เข้าสู่ระบบเพื่อใช้งาน</span></span>
@@ -327,42 +335,42 @@
           <div id="so-grp" style="display:none">
             <button type="button" class="set-row del" data-click="signOut">
               <span class="set-icon"><i aria-hidden="true" class="fas fa-right-from-bracket"></i></span>
-              <span class="set-info"><span class="set-name">ออกจากระบบ</span><span class="set-desc" id="so-email"></span></span>
+              <span class="set-info"><span class="set-name" data-l10n="Sign out">ออกจากระบบ</span><span class="set-desc" id="so-email"></span></span>
             </button>
           </div>
         </section>
         <section class="settings-section" id="admin-grp" aria-labelledby="settings-admin-heading" style="display:none">
-          <h3 class="set-gl" id="settings-admin-heading">จัดการ Space</h3>
+          <h3 class="set-gl" id="settings-admin-heading" data-l10n="Manage the site">จัดการ Space</h3>
           <button type="button" class="set-row" data-click="openSub" data-a0="profile-edit" data-t0="string">
             <span class="set-icon"><i aria-hidden="true" class="fas fa-id-card"></i></span>
-            <span class="set-info"><span class="set-name">แก้ไขโปรไฟล์</span><span class="set-desc">ชื่อ คำแนะนำตัว รูปโปรไฟล์ และรูปปก</span></span>
+            <span class="set-info"><span class="set-name" data-l10n="Edit profile">แก้ไขโปรไฟล์</span><span class="set-desc" data-l10n="Name, bio, profile photo and cover image">ชื่อ คำแนะนำตัว รูปโปรไฟล์ และรูปปก</span></span>
             <i aria-hidden="true" class="fas fa-chevron-right set-arr"></i>
           </button>
           <div class="r2-quota" id="r2-quota-card" aria-live="polite">
-            <div class="r2-q-head"><div class="r2-q-title"><i aria-hidden="true" class="fas fa-database" style="color:var(--accent);margin-right:5px"></i>โควตา Cloudflare R2</div><div class="r2-q-state" id="r2-q-state">กำลังโหลด…</div></div>
-            <div class="r2-q-row"><div class="r2-q-label"><span>พื้นที่เก็บไฟล์</span><span id="r2-q-storage-text">—</span></div><div class="r2-q-track"><i aria-hidden="true" class="r2-q-fill" id="r2-q-storage-bar"></i></div></div>
-            <div class="r2-q-row"><div class="r2-q-label"><span>เขียนไฟล์ (Class A)</span><span id="r2-q-a-text">—</span></div><div class="r2-q-track"><i aria-hidden="true" class="r2-q-fill" id="r2-q-a-bar"></i></div></div>
-            <div class="r2-q-row"><div class="r2-q-label"><span>อ่านไฟล์ (Class B)</span><span id="r2-q-b-text">—</span></div><div class="r2-q-track"><i aria-hidden="true" class="r2-q-fill" id="r2-q-b-bar"></i></div></div>
+            <div class="r2-q-head"><div class="r2-q-title"><i aria-hidden="true" class="fas fa-database" style="color:var(--accent);margin-right:5px"></i><span data-l10n="Cloudflare R2 quota">โควตา Cloudflare R2</span></div><div class="r2-q-state" id="r2-q-state">กำลังโหลด…</div></div>
+            <div class="r2-q-row"><div class="r2-q-label"><span data-l10n="File storage">พื้นที่เก็บไฟล์</span><span id="r2-q-storage-text">—</span></div><div class="r2-q-track"><i aria-hidden="true" class="r2-q-fill" id="r2-q-storage-bar"></i></div></div>
+            <div class="r2-q-row"><div class="r2-q-label"><span data-l10n="File writes (Class A)">เขียนไฟล์ (Class A)</span><span id="r2-q-a-text">—</span></div><div class="r2-q-track"><i aria-hidden="true" class="r2-q-fill" id="r2-q-a-bar"></i></div></div>
+            <div class="r2-q-row"><div class="r2-q-label"><span data-l10n="File reads (Class B)">อ่านไฟล์ (Class B)</span><span id="r2-q-b-text">—</span></div><div class="r2-q-track"><i aria-hidden="true" class="r2-q-fill" id="r2-q-b-bar"></i></div></div>
             <div class="r2-q-note" id="r2-q-note">จำกัดการใช้ไว้ที่ 80% ของโควต้าฟรีเพื่อสำรอง 20% · รีเซ็ตรอบบิลวันที่ 11</div>
           </div>
         </section>
         <section class="settings-section" aria-labelledby="settings-about-heading">
-          <h3 class="set-gl" id="settings-about-heading">เกี่ยวกับ</h3>
+          <h3 class="set-gl" id="settings-about-heading" data-l10n="About">เกี่ยวกับ</h3>
           <div class="settings-release">
             <div class="settings-release-header">
               <h4 id="set-app-name">Koo Mean Blog</h4>
-              <span class="settings-version" id="settings-version">เวอร์ชัน 4.0.0</span>
+              <span class="settings-version" id="settings-version" data-l10n="Version 4.0.0">เวอร์ชัน 4.0.0</span>
             </div>
             <ul class="settings-release-changes" id="settings-whats-new">
-              <li>ปรับหน้าตั้งค่าใหม่ พร้อมตัวอย่างการอ่านที่เปลี่ยนตามค่าที่เลือก</li>
-              <li>ปรับธีม สีเน้น ขนาดตัวอักษร ระยะห่าง และการเคลื่อนไหวได้ ค่าที่เลือกจะบันทึกไว้ในเบราว์เซอร์นี้</li>
-              <li>ใช้ Noto Sans Thai สำหรับข้อความภาษาไทยทั่วทั้งบล็อก</li>
+              <li data-l10n="Redesigned Settings with a live reading preview.">ปรับหน้าตั้งค่าใหม่ พร้อมตัวอย่างการอ่านที่เปลี่ยนตามค่าที่เลือก</li>
+              <li data-l10n="Adjust your theme, accent color, text size, spacing, and motion. Preferences are saved in this browser.">ปรับธีม สีเน้น ขนาดตัวอักษร ระยะห่าง และการเคลื่อนไหวได้ ค่าที่เลือกจะบันทึกไว้ในเบราว์เซอร์นี้</li>
+              <li data-l10n="Thai text across the blog uses Noto Sans Thai.">ใช้ Noto Sans Thai สำหรับข้อความภาษาไทยทั่วทั้งบล็อก</li>
             </ul>
           </div>
           <div class="settings-about-links">
             <a class="set-row" href="https://koomean.com/" target="_blank" rel="noopener noreferrer" data-click="openExternal" data-a0="https://koomean.com/" data-t0="string">
               <span class="set-icon"><i aria-hidden="true" class="fas fa-globe"></i></span>
-              <span class="set-info"><span class="set-name">เว็บไซต์</span><span class="set-desc">koomean.com</span></span>
+              <span class="set-info"><span class="set-name" data-l10n="Website">เว็บไซต์</span><span class="set-desc">koomean.com</span></span>
               <i aria-hidden="true" class="fas fa-arrow-up-right-from-square set-arr"></i>
             </a>
             <a class="set-row" href="https://github.com/koomean/koomeanblog" target="_blank" rel="noopener noreferrer">
@@ -376,23 +384,23 @@
     </div>
     <div class="set-sub" id="sub-profile-edit">
       <div class="set-sub-hdr">
-        <button type="button" class="back-btn" data-click="closeSub" aria-label="ย้อนกลับ"><i aria-hidden="true" class="fas fa-chevron-left"></i></button>
-        <h2 class="set-sub-t" id="settings-profile-title">แก้ไขโปรไฟล์ Space</h2>
+        <button type="button" class="back-btn" data-click="closeSub" aria-label="ย้อนกลับ" data-l10n-aria-label="Back"><i aria-hidden="true" class="fas fa-chevron-left"></i></button>
+        <h2 class="set-sub-t" id="settings-profile-title" data-l10n="Edit site profile">แก้ไขโปรไฟล์ Space</h2>
       </div>
       <div class="set-sub-body">
-        <div class="sf"><label class="sl" for="si-title">ชื่อเว็บไซต์</label><input class="si" id="si-title" type="text" placeholder="Koo Mean Space" aria-label="Koo Mean Space"></div>
-        <div class="sf"><label class="sl" for="si-name">ชื่อโปรไฟล์</label><input class="si" id="si-name" type="text" placeholder="Koo Mean" aria-label="Koo Mean"></div>
-        <div class="sf"><label class="sl" for="si-handle">Handle</label><input class="si" id="si-handle" type="text" placeholder="@koomean" aria-label="@koomean"></div>
-        <div class="sf"><label class="sl" for="si-bio">Bio</label><textarea class="si" id="si-bio" placeholder="เขียนบางอย่างเกี่ยวกับตัวเอง..." aria-label="เขียนบางอย่างเกี่ยวกับตัวเอง..."></textarea></div>
-        <div class="sf"><label class="sl" for="si-img">URL รูปโปรไฟล์</label><input class="si" id="si-img" type="url" placeholder="https://..." aria-label="https://..."></div>
-        <div class="sf"><label class="sl" for="si-cover">URL รูปปกหน้า</label><input class="si" id="si-cover" type="url" placeholder="https://..." aria-label="https://..."></div>
+        <div class="sf"><label class="sl" for="si-title" data-l10n="Site name">ชื่อเว็บไซต์</label><input class="si" id="si-title" type="text" placeholder="Koo Mean Space" aria-label="ชื่อเว็บไซต์" data-l10n-aria-label="Site name"></div>
+        <div class="sf"><label class="sl" for="si-name" data-l10n="Profile name">ชื่อโปรไฟล์</label><input class="si" id="si-name" type="text" placeholder="Koo Mean" aria-label="ชื่อโปรไฟล์" data-l10n-aria-label="Profile name"></div>
+        <div class="sf"><label class="sl" for="si-handle" data-l10n="Handle">ชื่อผู้ใช้</label><input class="si" id="si-handle" type="text" placeholder="@koomean" aria-label="ชื่อผู้ใช้" data-l10n-aria-label="Handle"></div>
+        <div class="sf"><label class="sl" for="si-bio" data-l10n="Bio">คำแนะนำตัว</label><textarea class="si" id="si-bio" placeholder="เขียนบางอย่างเกี่ยวกับตัวเอง..." aria-label="คำแนะนำตัว" data-l10n-aria-label="Bio" data-l10n-placeholder="Write a short bio…"></textarea></div>
+        <div class="sf"><label class="sl" for="si-img" data-l10n="Profile photo URL">URL รูปโปรไฟล์</label><input class="si" id="si-img" type="url" placeholder="https://..." aria-label="URL รูปโปรไฟล์" data-l10n-aria-label="Profile photo URL"></div>
+        <div class="sf"><label class="sl" for="si-cover" data-l10n="Cover image URL">URL รูปปกหน้า</label><input class="si" id="si-cover" type="url" placeholder="https://..." aria-label="URL รูปปกหน้า" data-l10n-aria-label="Cover image URL"></div>
         <button class="save-btn" id="si-save" data-click="saveProfile">บันทึกการเปลี่ยนแปลง</button>
       </div>
     </div>
     <div class="set-sub" id="sub-account">
       <div class="set-sub-hdr">
-        <button type="button" class="back-btn" data-click="closeSub" aria-label="ย้อนกลับ"><i aria-hidden="true" class="fas fa-chevron-left"></i></button>
-        <h2 class="set-sub-t" id="settings-account-title">ข้อมูลบัญชี</h2>
+        <button type="button" class="back-btn" data-click="closeSub" aria-label="ย้อนกลับ" data-l10n-aria-label="Back"><i aria-hidden="true" class="fas fa-chevron-left"></i></button>
+        <h2 class="set-sub-t" id="settings-account-title" data-l10n="Account details">ข้อมูลบัญชี</h2>
       </div>
       <div class="set-sub-body">
         <div class="acc-card">
@@ -403,129 +411,153 @@
             <div class="acc-role" id="acc-role">User</div>
           </div>
         </div>
-        <div class="sf"><label class="sl" for="acc-dn">ชื่อที่แสดง</label><input class="si" id="acc-dn" type="text" aria-label="acc-dn"></div>
+        <div class="sf"><label class="sl" for="acc-dn" data-l10n="Display name">ชื่อที่แสดง</label><input class="si" id="acc-dn" type="text" aria-label="ชื่อที่แสดง" data-l10n-aria-label="Display name"></div>
         <button class="save-btn" id="btn-save-name" data-click="saveAccountName" style="margin-bottom:15px;">บันทึกชื่อ</button>
-        <div class="sf"><label class="sl" for="acc-em">อีเมล</label><input class="si" id="acc-em" type="email" readonly aria-label="acc-em"></div>
-        <div class="sf"><label class="sl" for="acc-rl">สิทธิ์ผู้ใช้</label><input class="si" id="acc-rl" type="text" readonly aria-label="acc-rl"></div>
-        <div class="sf"><label class="sl" for="acc-st">สถานะ</label><input class="si" id="acc-st" type="text" readonly value="Active" aria-label="acc-st"></div>
-        <button class="save-btn" style="background:rgba(255,78,106,.12);color:var(--err);box-shadow:none" data-click="signOut"><i aria-hidden="true" class="fas fa-right-from-bracket" style="margin-right:6px"></i>ออกจากระบบ</button>
+        <div class="sf"><label class="sl" for="acc-em" data-l10n="Email">อีเมล</label><input class="si" id="acc-em" type="email" readonly aria-label="อีเมล" data-l10n-aria-label="Email"></div>
+        <div class="sf"><label class="sl" for="acc-rl" data-l10n="User role">สิทธิ์ผู้ใช้</label><input class="si" id="acc-rl" type="text" readonly aria-label="สิทธิ์ผู้ใช้" data-l10n-aria-label="User role"></div>
+        <div class="sf"><label class="sl" for="acc-st" data-l10n="Status">สถานะ</label><input class="si" id="acc-st" type="text" readonly value="Active" aria-label="สถานะ" data-l10n-aria-label="Status"></div>
+        <button class="save-btn" style="background:rgba(255,78,106,.12);color:var(--err);box-shadow:none" data-click="signOut"><i aria-hidden="true" class="fas fa-right-from-bracket" style="margin-right:6px"></i><span data-l10n="Sign out">ออกจากระบบ</span></button>
       </div>
     </div>
   </div>
 </div>
 <div class="overlay" id="login-modal">
   <div class="modal">
-    <div class="m-logo">KM</div><div class="m-title">Sign In</div>
-    <div class="m-sub">เข้าสู่ระบบเพื่อใช้งานเต็มรูปแบบ</div>
+    <div class="m-logo">KM</div><div class="m-title" data-l10n="Sign in">เข้าสู่ระบบ</div>
+    <div class="m-sub" data-l10n="Sign in to use all features">เข้าสู่ระบบเพื่อใช้งานเต็มรูปแบบ</div>
     <div id="g_id_onload" data-client_id="906677442222-kmjgsmta70n24aoaq7osm9c1l7g1fb89.apps.googleusercontent.com" data-callback="handleCredentialResponse" data-auto_prompt="false"></div>
     <div class="g_id_signin" data-type="standard" data-theme="outline" data-size="large"></div>
-    <button class="m-cancel" data-click="closeModal" data-a0="login-modal" data-t0="string" aria-label="ปิดหน้าต่าง">ยกเลิก</button>
+    <button class="m-cancel" data-click="closeModal" data-a0="login-modal" data-t0="string" aria-label="ปิดหน้าต่าง" data-l10n-aria-label="Close dialog" data-l10n="Cancel">ยกเลิก</button>
   </div>
 </div>
 <div class="overlay" id="reg-modal">
   <div class="modal">
     <div class="m-logo" style="background:linear-gradient(135deg,#f59e0b,#d97706)"><i aria-hidden="true" class="fas fa-hand-sparkles"></i></div>
-    <div class="m-title">ยินดีต้อนรับ!</div><div class="m-sub">แนะนำตัวสั้นๆ เพื่อให้ Admin ทราบ</div>
-    <input type="text" id="reg-note" class="m-input" placeholder="เช่น: ผมเป็นเพื่อนคุณมีนครับ" aria-label="เช่น: ผมเป็นเพื่อนคุณมีนครับ">
-    <button class="btn-reg" data-click="doRegister">ลงทะเบียน & เข้าใช้งาน</button>
-    <button class="m-cancel" data-click="closeModal" data-a0="reg-modal" data-t0="string" aria-label="ปิดหน้าต่าง">ยกเลิก</button>
+    <div class="m-title" data-l10n="Welcome!">ยินดีต้อนรับ!</div><div class="m-sub" data-l10n="Introduce yourself to the site administrator.">แนะนำตัวสั้นๆ เพื่อให้ Admin ทราบ</div>
+    <input type="text" id="reg-note" class="m-input" placeholder="เช่น: ผมเป็นเพื่อนคุณมีนครับ" aria-label="เช่น: ผมเป็นเพื่อนคุณมีนครับ" data-l10n-aria-label="Example: I’m a friend of Koo Mean." data-l10n-placeholder="Example: I’m a friend of Koo Mean.">
+    <button class="btn-reg" data-click="doRegister" data-l10n="Register and sign in">ลงทะเบียน &amp; เข้าใช้งาน</button>
+    <button class="m-cancel" data-click="closeModal" data-a0="reg-modal" data-t0="string" aria-label="ปิดหน้าต่าง" data-l10n-aria-label="Close dialog" data-l10n="Cancel">ยกเลิก</button>
   </div>
 </div>
 <div class="overlay" id="ep-modal">
   <div class="modal wide" style="padding:20px">
-    <div class="m-title" style="margin-bottom:14px;font-size:1rem;text-align:left">แก้ไขโพสต์</div>
-    <textarea class="m-ta" id="ep-ta" rows="4" placeholder="ข้อความ..." maxlength="500" style="margin-bottom:10px" aria-label="ข้อความ..."></textarea>
+    <div class="m-title" style="margin-bottom:14px;font-size:1rem;text-align:left" data-l10n="Edit post">แก้ไขโพสต์</div>
+    <textarea class="m-ta" id="ep-ta" rows="4" placeholder="ข้อความ..." maxlength="500" style="margin-bottom:10px" aria-label="ข้อความ..." data-l10n-aria-label="Post text…" data-l10n-placeholder="Post text…"></textarea>
     <div class="cr-extras" style="margin-bottom:10px">
       <div class="cr-extra-field" id="ep-field-link">
         <i aria-hidden="true" class="fas fa-link"></i>
-        <input type="url" class="cr-extra-input" id="ep-link-in" placeholder="วางลิงก์ (URL)..." aria-label="วางลิงก์ (URL)...">
-        <button class="cr-extra-close" data-click="toggleEditField" data-a0="link" data-t0="string" data-a1="" data-t1="false" aria-label="เปิดหรือปิดช่องเพิ่มเติม"><i aria-hidden="true" class="fas fa-times"></i></button>
+        <input type="url" class="cr-extra-input" id="ep-link-in" placeholder="วางลิงก์ (URL)..." aria-label="วางลิงก์ (URL)..." data-l10n-aria-label="Paste a URL…" data-l10n-placeholder="Paste a URL…">
+        <button class="cr-extra-close" data-click="toggleEditField" data-a0="link" data-t0="string" data-a1="" data-t1="false" aria-label="ปิดช่องลิงก์" data-l10n-aria-label="Close link field"><i aria-hidden="true" class="fas fa-times"></i></button>
       </div>
       <div class="cr-extra-field" id="ep-field-hashtag">
         <i aria-hidden="true" class="fas fa-hashtag"></i>
-        <input type="text" class="cr-extra-input" id="ep-hashtag-in" placeholder="แท็ก คั่นด้วยเว้นวรรค" aria-label="แท็ก คั่นด้วยเว้นวรรค">
-        <button class="cr-extra-close" data-click="toggleEditField" data-a0="hashtag" data-t0="string" data-a1="" data-t1="false" aria-label="เปิดหรือปิดช่องเพิ่มเติม"><i aria-hidden="true" class="fas fa-times"></i></button>
+        <input type="text" class="cr-extra-input" id="ep-hashtag-in" placeholder="แท็ก คั่นด้วยเว้นวรรค" aria-label="แท็ก คั่นด้วยเว้นวรรค" data-l10n-aria-label="Tags separated by spaces" data-l10n-placeholder="Tags separated by spaces">
+        <button class="cr-extra-close" data-click="toggleEditField" data-a0="hashtag" data-t0="string" data-a1="" data-t1="false" aria-label="ปิดช่องแท็ก" data-l10n-aria-label="Close tag field"><i aria-hidden="true" class="fas fa-times"></i></button>
       </div>
     </div>
     <div class="cr-tools" style="margin-bottom:8px">
-      <input type="file" id="ep-file-in" accept="image/png,image/jpeg,image/gif,image/webp" style="display:none" aria-label="ep-file-in">
-      <label for="ep-file-in" class="tool-btn"><i aria-hidden="true" class="far fa-image"></i><span>เปลี่ยนรูป</span></label>
-      <button type="button" class="tool-btn" id="ep-btn-link" data-click="toggleEditField" data-a0="link" data-t0="string" aria-label="เปิดหรือปิดช่องเพิ่มเติม"><i aria-hidden="true" class="fas fa-link"></i><span>ลิงก์</span></button>
-      <button type="button" class="tool-btn" id="ep-btn-hashtag" data-click="toggleEditField" data-a0="hashtag" data-t0="string" aria-label="เปิดหรือปิดช่องเพิ่มเติม"><i aria-hidden="true" class="fas fa-hashtag"></i><span>แท็ก</span></button>
+      <input type="file" id="ep-file-in" accept="image/png,image/jpeg,image/gif,image/webp" style="display:none" aria-label="เปลี่ยนรูป" data-l10n-aria-label="Change image">
+      <label for="ep-file-in" class="tool-btn"><i aria-hidden="true" class="far fa-image"></i><span data-l10n="Change image">เปลี่ยนรูป</span></label>
+      <button type="button" class="tool-btn" id="ep-btn-link" data-click="toggleEditField" data-a0="link" data-t0="string" aria-label="เปิดหรือปิดช่องลิงก์" data-l10n-aria-label="Toggle link field"><i aria-hidden="true" class="fas fa-link"></i><span data-l10n="Link">ลิงก์</span></button>
+      <button type="button" class="tool-btn" id="ep-btn-hashtag" data-click="toggleEditField" data-a0="hashtag" data-t0="string" aria-label="เปิดหรือปิดช่องแท็ก" data-l10n-aria-label="Toggle tag field"><i aria-hidden="true" class="fas fa-hashtag"></i><span data-l10n="Tags">แท็ก</span></button>
     </div>
     <div id="ep-img-prev-wrap" class="img-prev-wrap" style="display:none;margin-bottom:10px">
       <img id="ep-img-prev" class="img-prev" alt="">
-      <button class="rm-img" data-click="removeEditImg" title="ลบรูป" aria-label="ลบรูป"><i aria-hidden="true" class="fas fa-times"></i></button>
+      <button class="rm-img" data-click="removeEditImg" title="ลบรูป" aria-label="ลบรูป" data-l10n-aria-label="Remove image" data-l10n-title="Remove image"><i aria-hidden="true" class="fas fa-times"></i></button>
     </div>
     <div class="m-acts" style="margin-top:12px">
-      <button class="btn-g" data-click="closeModal" data-a0="ep-modal" data-t0="string" aria-label="ปิดหน้าต่าง">ยกเลิก</button>
+      <button class="btn-g" data-click="closeModal" data-a0="ep-modal" data-t0="string" aria-label="ปิดหน้าต่าง" data-l10n-aria-label="Close dialog" data-l10n="Cancel">ยกเลิก</button>
       <button class="btn-p" id="ep-save" data-click="saveEditPost">บันทึก</button>
     </div>
   </div>
 </div>
 <div class="overlay" id="ec-modal">
   <div class="modal wide">
-    <div class="m-title" style="margin-bottom:12px;font-size:.95rem">แก้ไขคอมเมนต์</div>
-    <textarea class="m-ta" id="ec-ta" rows="3" aria-label="ec-ta"></textarea>
-    <div class="m-acts"><button class="btn-g" data-click="closeModal" data-a0="ec-modal" data-t0="string" aria-label="ปิดหน้าต่าง">ยกเลิก</button><button class="btn-p" id="ec-save" data-click="saveEditCmt">บันทึก</button></div>
+    <div class="m-title" style="margin-bottom:12px;font-size:.95rem" data-l10n="Edit comment">แก้ไขคอมเมนต์</div>
+    <textarea class="m-ta" id="ec-ta" rows="3" aria-label="ข้อความคอมเมนต์" data-l10n-aria-label="Comment text"></textarea>
+    <div class="m-acts"><button class="btn-g" data-click="closeModal" data-a0="ec-modal" data-t0="string" aria-label="ปิดหน้าต่าง" data-l10n-aria-label="Close dialog" data-l10n="Cancel">ยกเลิก</button><button class="btn-p" id="ec-save" data-click="saveEditCmt">บันทึก</button></div>
   </div>
 </div>
 <div class="article-viewer" id="article-viewer">
   <div class="av-hdr">
     <div class="av-title" id="av-title">บทความ</div>
-    <button class="av-close" id="av-share" data-click="shareArticle" title="แชร์บทความ" aria-label="แชร์"><i aria-hidden="true" class="fas fa-share-nodes"></i></button>
-    <button class="av-close" data-click="closeArticleViewer" aria-label="ปิด"><i aria-hidden="true" class="fas fa-times"></i></button>
+    <button class="av-close" id="av-share" data-click="shareArticle" title="แชร์บทความ" aria-label="แชร์" data-l10n-aria-label="Share" data-l10n-title="Share article"><i aria-hidden="true" class="fas fa-share-nodes"></i></button>
+    <button class="av-close" data-click="closeArticleViewer" aria-label="ปิด" data-l10n-aria-label="Close"><i aria-hidden="true" class="fas fa-times"></i></button>
   </div>
   <div class="av-body" id="av-body"></div>
 </div>
 <div class="overlay" id="apw-modal">
   <div class="modal">
     <div class="m-logo" style="background:linear-gradient(135deg,#f6b21a,#f59e0b)"><i aria-hidden="true" class="fas fa-lock"></i></div>
-    <div class="m-title">บทความนี้มีรหัสผ่าน</div>
-    <div class="m-sub">ใส่รหัสผ่านเพื่อเปิดอ่าน</div>
+    <div class="m-title" data-l10n="This article is password-protected">บทความนี้มีรหัสผ่าน</div>
+    <div class="m-sub" data-l10n="Enter the password to read this article.">ใส่รหัสผ่านเพื่อเปิดอ่าน</div>
     <input type="hidden" id="apw-row">
-    <input type="password" id="apw-input" class="m-input" placeholder="รหัสผ่าน" data-enter="submitArticlePassword" aria-label="รหัสผ่าน">
+    <input type="password" id="apw-input" class="m-input" placeholder="รหัสผ่าน" data-enter="submitArticlePassword" aria-label="รหัสผ่าน" data-l10n-aria-label="Password" data-l10n-placeholder="Password">
     <button class="btn-reg" id="apw-submit" data-click="submitArticlePassword">ปลดล็อก</button>
-    <button class="m-cancel" data-click="closeArticlePassword">ยกเลิก</button>
+    <button class="m-cancel" data-click="closeArticlePassword" data-l10n="Cancel">ยกเลิก</button>
   </div>
 </div>
 <div class="overlay" id="article-upload-modal">
   <div class="modal wide" style="text-align:left;max-width:540px">
-    <div class="m-title" id="au-modal-title" style="margin-bottom:6px">อัปโหลดบทความ</div><div class="sub" style="margin-bottom:12px">ไฟล์บทความจะจัดเก็บใน Google Drive และข้อมูลรายการ/สิทธิ์เก็บใน D1 · อัปโหลดครั้งแรกจะขอสิทธิ์ Drive</div>
-    <div class="m-sub" style="margin-bottom:14px">จัดเก็บไฟล์ผ่าน Cloudflare · เฉพาะ Admin</div>
+    <div class="m-title" id="au-modal-title" style="margin-bottom:6px">อัปโหลดบทความ</div><div class="sub" style="margin-bottom:12px" data-l10n="Article files are stored in Google Drive. Article metadata and permissions are stored in D1. Your first upload requires Google Drive access.">ไฟล์บทความจะจัดเก็บใน Google Drive และข้อมูลรายการ/สิทธิ์เก็บใน D1 · อัปโหลดครั้งแรกจะขอสิทธิ์ Drive</div>
+    <div class="m-sub" style="margin-bottom:14px" data-l10n="File storage via Cloudflare. Administrators only.">จัดเก็บไฟล์ผ่าน Cloudflare · เฉพาะ Admin</div>
     <div class="au-scroll">
-      <div class="sf" style="margin-bottom:10px"><label class="sl" for="au-title">ชื่อบทความ</label><input class="si" id="au-title" placeholder="เช่น คู่มือการใช้งาน" aria-label="เช่น คู่มือการใช้งาน"></div>
-      <div class="sf" style="margin-bottom:10px"><label class="sl" for="au-desc">คำอธิบาย (ไม่บังคับ)</label><textarea class="si" id="au-desc" placeholder="อธิบายสั้นๆ..." aria-label="อธิบายสั้นๆ..."></textarea></div>
-      <div class="sf" style="margin-bottom:10px"><label class="sl" for="au-tags">แท็ก (คั่นด้วยเว้นวรรค)</label><input class="si" id="au-tags" placeholder="เช่น คู่มือ ประกาศ" aria-label="เช่น คู่มือ ประกาศ"></div>
+      <div class="sf" style="margin-bottom:10px"><label class="sl" for="au-title" data-l10n="Article title">ชื่อบทความ</label><input class="si" id="au-title" placeholder="เช่น คู่มือการใช้งาน" aria-label="เช่น คู่มือการใช้งาน" data-l10n-aria-label="Example: Getting started" data-l10n-placeholder="Example: Getting started"></div>
+      <div class="sf" style="margin-bottom:10px"><label class="sl" for="au-desc" data-l10n="Description (optional)">คำอธิบาย (ไม่บังคับ)</label><textarea class="si" id="au-desc" placeholder="อธิบายสั้นๆ..." aria-label="อธิบายสั้นๆ..." data-l10n-aria-label="Write a short description…" data-l10n-placeholder="Write a short description…"></textarea></div>
+      <div class="sf" style="margin-bottom:10px"><label class="sl" for="au-tags" data-l10n="Tags (separated by spaces)">แท็ก (คั่นด้วยเว้นวรรค)</label><input class="si" id="au-tags" placeholder="เช่น คู่มือ ประกาศ" aria-label="เช่น คู่มือ ประกาศ" data-l10n-aria-label="Example: guide announcement" data-l10n-placeholder="Example: guide announcement"></div>
       <div class="au-row">
-        <div class="sf" style="flex:1;min-width:0"><label class="sl">สิทธิ์เข้าถึง (Role) — แตะเพื่อเลือก</label><div class="au-roles" id="au-roles"></div><input type="hidden" id="au-access"></div>
-        <div class="sf" style="flex:1;min-width:0"><label class="sl" id="au-pw-hint">ตั้งรหัสผ่าน (ถ้าต้องการ)</label><input class="si" id="au-password" type="password" autocomplete="new-password" placeholder="อย่างน้อย 12 ตัว · เว้นว่าง = ไม่มีรหัส" aria-label="อย่างน้อย 12 ตัว · เว้นว่าง = ไม่มีรหัส"></div>
+        <div class="sf" style="flex:1;min-width:0"><label class="sl" data-l10n="Select access roles">สิทธิ์เข้าถึง (Role) — แตะเพื่อเลือก</label><div class="au-roles" id="au-roles"></div><input type="hidden" id="au-access"></div>
+        <div class="sf" style="flex:1;min-width:0"><label class="sl" id="au-pw-hint">ตั้งรหัสผ่าน (ถ้าต้องการ)</label><input class="si" id="au-password" type="password" autocomplete="new-password" placeholder="อย่างน้อย 12 ตัว · เว้นว่าง = ไม่มีรหัส" aria-label="อย่างน้อย 12 ตัว · เว้นว่าง = ไม่มีรหัส" data-l10n-aria-label="At least 12 characters. Leave blank for no password." data-l10n-placeholder="At least 12 characters. Leave blank for no password."></div>
       </div>
-      <label class="au-clearpw" id="au-clearpw-row" style="display:none"><input type="checkbox" id="au-clearpw" aria-label="au-clearpw"> ลบรหัสผ่านเดิม (เปิดโดยไม่ต้องใช้รหัส)</label>
-      <div class="au-note">เว้นทั้งสองช่อง = สาธารณะ · ใส่ Role = เฉพาะสิทธิ์นั้น · ใส่รหัส = ปลดล็อกด้วยรหัส · ใส่ทั้งคู่ = เข้าได้ทั้งสองทาง</div>
+      <label class="au-clearpw" id="au-clearpw-row" style="display:none"><input type="checkbox" id="au-clearpw" aria-label="ลบรหัสผ่านเดิม" data-l10n-aria-label="Remove the current password"> <span data-l10n="Remove the current password">ลบรหัสผ่านเดิม (เปิดโดยไม่ต้องใช้รหัส)</span></label>
+      <div class="au-note" data-l10n="Leave both fields blank for public access. Set roles, a password, or both. When both are set, readers can use either method.">เว้นทั้งสองช่อง = สาธารณะ · ใส่ Role = เฉพาะสิทธิ์นั้น · ใส่รหัส = ปลดล็อกด้วยรหัส · ใส่ทั้งคู่ = เข้าได้ทั้งสองทาง</div>
       <div id="au-file-section">
-        <div class="au-or" style="margin-top:14px">ไฟล์ที่จะอัปโหลด</div>
+        <div class="au-or" style="margin-top:14px" data-l10n="File to upload">ไฟล์ที่จะอัปโหลด</div>
         <label for="au-file" class="au-drop"><i aria-hidden="true" class="fas fa-cloud-arrow-up"></i><span id="au-filename">เลือกไฟล์ (PDF, HTML, รูป, Word/PPT/Excel)</span></label>
-        <input type="file" id="au-file" accept=".pdf,.html,.htm,image/*,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.csv" style="display:none" aria-label="au-file">
-        <div class="au-or">— หรือ —</div>
-        <div class="sf"><label class="sl" for="au-url">ลิงก์เว็บภายนอก (URL)</label><input class="si" id="au-url" placeholder="https://..." aria-label="https://..."></div>
+        <input type="file" id="au-file" accept=".pdf,.html,.htm,image/*,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.csv" style="display:none" aria-label="ไฟล์บทความ" data-l10n-aria-label="Article file">
+        <div class="au-or" data-l10n="or">— หรือ —</div>
+        <div class="sf"><label class="sl" for="au-url" data-l10n="External link (URL)">ลิงก์เว็บภายนอก (URL)</label><input class="si" id="au-url" placeholder="https://..." aria-label="ลิงก์เว็บภายนอก" data-l10n-aria-label="External link"></div>
       </div>
       <div class="au-prog" id="au-prog">
         <div class="au-prog-bar"><span class="au-prog-fill" id="au-prog-fill"></span></div>
         <div class="au-prog-txt"><span id="au-prog-label">กำลังเตรียมไฟล์...</span><span class="au-prog-pct" id="au-prog-pct">0%</span></div>
       </div>
     </div>
-    <div class="m-acts" style="margin-top:14px"><button class="btn-g" data-click="closeArticleUpload">ยกเลิก</button><button class="btn-p" id="au-submit" data-click="submitArticleUpload">อัปโหลด</button></div>
+    <div class="m-acts" style="margin-top:14px"><button class="btn-g" data-click="closeArticleUpload" data-l10n="Cancel">ยกเลิก</button><button class="btn-p" id="au-submit" data-click="submitArticleUpload">อัปโหลด</button></div>
   </div>
 </div>
 <div class="lightbox" id="lightbox" data-click="closeLightbox" role="button" tabindex="0">
-  <button class="lb-close" data-stop="true" data-click="closeLightbox"><i aria-hidden="true" class="fas fa-times"></i></button>
+  <button class="lb-close" data-stop="true" data-click="closeLightbox" aria-label="ปิดรูปภาพ" data-l10n-aria-label="Close image"><i aria-hidden="true" class="fas fa-times"></i></button>
   <img class="lb-img" id="lb-img" alt="" draggable="false">
 </div>
-<button class="scroll-top-btn" id="scroll-top-btn" data-click="scrollFeedTop" title="ขึ้นบนสุด" aria-label="ขึ้นบนสุด"><i aria-hidden="true" class="fas fa-arrow-up"></i></button>
+<button class="scroll-top-btn" id="scroll-top-btn" data-click="scrollFeedTop" title="ขึ้นบนสุด" aria-label="ขึ้นบนสุด" data-l10n-aria-label="Back to top" data-l10n-title="Back to top"><i aria-hidden="true" class="fas fa-arrow-up"></i></button>
 <div class="emoji-panel" id="emoji-panel"></div>
 <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
 <div class="up-bar" id="up-bar" aria-hidden="true"><i id="up-bar-fill"></i></div>
 <div class="up-pill" id="up-pill" role="status" aria-live="polite"><i aria-hidden="true" class="fas fa-cloud-arrow-up"></i><span id="up-pill-txt">กำลังอัปโหลด</span><b id="up-pill-pct">0%</b></div>
+<div class="overlay" id="post-translation-modal" role="dialog" aria-modal="true" aria-labelledby="post-translation-title" aria-describedby="post-translation-note">
+  <div class="modal post-translation-dialog">
+    <h2 class="m-title" id="post-translation-title" data-l10n="Translate post">แปลโพสต์</h2>
+    <p class="m-sub" id="post-translation-note" data-l10n="Opening Google Translate sends the post text to Google in a new tab. You can change the language there.">เมื่อกดเปิด ข้อความของโพสต์จะถูกส่งไปยัง Google Translate ในแท็บใหม่ คุณสามารถเปลี่ยนภาษาได้ที่นั่น</p>
+    <label class="post-translation-label" for="post-translation-language" data-l10n="Translate into">แปลเป็น</label>
+    <select class="koo-theme-select" id="post-translation-language">
+      <option value="en" data-l10n="English">อังกฤษ</option>
+      <option value="th" data-l10n="Thai">ไทย</option>
+      <option value="zh-CN" data-l10n="Chinese (Simplified)">จีน (ตัวย่อ)</option>
+      <option value="zh-TW" data-l10n="Chinese (Traditional)">จีน (ตัวเต็ม)</option>
+      <option value="ja" data-l10n="Japanese">ญี่ปุ่น</option>
+      <option value="ko" data-l10n="Korean">เกาหลี</option>
+      <option value="vi" data-l10n="Vietnamese">เวียดนาม</option>
+      <option value="id" data-l10n="Indonesian">อินโดนีเซีย</option>
+      <option value="es" data-l10n="Spanish">สเปน</option>
+      <option value="fr" data-l10n="French">ฝรั่งเศส</option>
+      <option value="de" data-l10n="German">เยอรมัน</option>
+    </select>
+    <div class="m-acts">
+      <button type="button" class="btn-g" data-click="closePostTranslation" data-l10n="Cancel">ยกเลิก</button>
+      <button type="button" class="btn-p" data-click="translatePost"><span data-l10n="Open Google Translate">เปิด Google Translate</span> <i aria-hidden="true" class="fas fa-arrow-up-right-from-square"></i></button>
+    </div>
+  </div>
+</div>
 </body>
 </html>

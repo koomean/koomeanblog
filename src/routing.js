@@ -20,9 +20,11 @@ function parseBlogRoute(value=location.href){
  return result;
 }
 function updateBlogMetadata(){
- const route=parseBlogRoute(),missing=S.notFound||route.view==='not-found',labels={articles:'บทความ',saved:'บันทึกไว้',settings:'ตั้งค่า',search:'ค้นหา'};
- D('feed-hdr-title').textContent=missing?'Page not found':labels[route.view]||S.profile.webTitle||'Koo Mean Blog';
- document.title=(missing?'404 · Page not found':labels[route.view]||'')+(missing||labels[route.view]?' · ':'')+(S.profile.webTitle||'Koo Mean Blog');
+ const route=parseBlogRoute(),missing=S.notFound||route.view==='not-found';
+ const labels={articles:blogText('บทความ','Articles'),saved:blogText('บันทึกไว้','Saved'),settings:blogText('ตั้งค่า','Settings'),search:blogText('ค้นหา','Search')};
+ const missingLabel=blogText('ไม่พบหน้า','Page not found');
+ D('feed-hdr-title').textContent=missing?missingLabel:labels[route.view]||S.profile.webTitle||'Koo Mean Blog';
+ document.title=(missing?'404 · '+missingLabel:labels[route.view]||'')+(missing||labels[route.view]?' · ':'')+(S.profile.webTitle||'Koo Mean Blog');
  const canonical=document.querySelector('link[rel="canonical"]');
  if(canonical)canonical.href=location.origin+(BLOG_PATHS[route.view]||location.pathname);
  const robots=document.querySelector('meta[name="robots"]');
@@ -39,8 +41,12 @@ function hideBlogNotFound(){
 function showBlogNotFound(kind='page'){
  S.notFound=true;D('feed').hidden=true;D('prof-section').hidden=true;D('creator').style.display='none';D('tag-filter-bar').style.display='none';
  D('page-not-found').hidden=false;
- D('not-found-description').textContent=kind==='article'?'ไม่พบบทความนี้ ลิงก์อาจไม่ถูกต้อง หรือบทความถูกนำออกแล้ว':kind==='post'?'ไม่พบโพสต์นี้ ลิงก์อาจไม่ถูกต้อง หรือโพสต์ถูกนำออกแล้ว':'ไม่พบหน้าที่คุณกำลังหา ลิงก์อาจไม่ถูกต้อง หรือเนื้อหาถูกย้ายแล้ว';
- D('feed-hdr-title').textContent='Page not found';updateBlogMetadata();
+ D('not-found-description').textContent={
+  article:blogText('ไม่พบบทความนี้ ลิงก์อาจไม่ถูกต้อง หรือบทความถูกนำออกแล้ว','This article may have been removed or the link may be incorrect.'),
+  post:blogText('ไม่พบโพสต์นี้ ลิงก์อาจไม่ถูกต้อง หรือโพสต์ถูกนำออกแล้ว','This post may have been removed or the link may be incorrect.'),
+  page:blogText('ไม่พบหน้าที่คุณกำลังหา ลิงก์อาจไม่ถูกต้อง หรือเนื้อหาถูกย้ายแล้ว','This page may have moved or the link may be incorrect.')
+ }[kind];
+ updateBlogMetadata();
  D('page-not-found').focus({preventScroll:true});
 }
 function navigateBlog(target,{replace=false,overlay=false}={}){
@@ -70,7 +76,7 @@ function applyBlogRoute(){
  if(blogRouting)return;
  const route=parseBlogRoute();blogRouting=true;
  try{
-  closeArticleViewer();closeArticlePassword();closeMobSearch();closeSettings();closeCompose();pendingArticleOpen=0;pendingArticleWarned=false;
+  closeArticleViewer();closeArticlePassword();closeMobSearch();closeSettings();closeCompose();closePostTranslation();pendingArticleOpen=0;pendingArticleWarned=false;
   hideBlogNotFound();
   if(route.view==='not-found'){S.articlesView=false;S.savedView=false;showBlogNotFound();return;}
   const canonical=BLOG_PATHS[route.view],url=new URL(location.href);

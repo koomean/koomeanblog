@@ -3,7 +3,7 @@ const watchdog=setTimeout(()=>{console.error('Browser regression exceeded 90 sec
 const output=process.env.BLOG_TEST_OUTPUT||'/tmp/koomean-blog-tests';fs.mkdirSync(output,{recursive:true});
 const engine=process.env.BLOG_BROWSER==='webkit'?'webkit':'chromium';
 const browser=await (engine==='webkit'?webkit:chromium).launch({headless:true,...(engine==='chromium'&&process.env.BLOG_CHROME_PATH?{executablePath:process.env.BLOG_CHROME_PATH}:{})});
-const page=await browser.newPage({viewport:{width:1440,height:960},colorScheme:'dark'}),errors=[],violations=[],calls=[],requests=[];let count=0;
+const page=await browser.newPage({viewport:{width:1440,height:960},colorScheme:'dark',locale:'th-TH'}),errors=[],violations=[],calls=[],requests=[];let count=0;
 page.setDefaultTimeout(15000);
 const check=(v,msg)=>{assert.ok(v,msg);console.log('PASS '+msg);count++};
 const malicious="x');window.__xss=1;//";
@@ -22,6 +22,11 @@ await page.route('https://blog.koomean.com/**',route=>{
 await page.route('https://media.example.invalid/**',r=>r.fulfill({contentType:'image/svg+xml',body:'<svg xmlns="http://www.w3.org/2000/svg" width="900" height="500"><rect width="900" height="500" fill="#192d4d"/><circle cx="580" cy="170" r="130" fill="#5ea2ff"/><path d="M0 500L350 160 700 500" fill="#47508c"/></svg>'}));
 await page.route('https://ui-avatars.com/**',r=>r.fulfill({status:404,body:''}));
 await page.route('https://accounts.google.com/**',r=>r.fulfill({contentType:'application/javascript',body:''}));
+const translationRequests=[];
+await page.context().route('https://translate.google.com/**',route=>{
+ translationRequests.push(route.request().headers());
+ return route.fulfill({contentType:'text/html',body:'<title>Mock translation</title>'});
+});
 await page.route('https://koomean-proxy.meanchannel52.workers.dev/**',async r=>{
  if(new URL(r.request().url()).pathname==='/blog-article-sandbox.html')return r.fulfill({contentType:'text/html',headers:{'Content-Security-Policy':'frame-ancestors https://blog.koomean.com; sandbox allow-scripts allow-popups'},body:fs.readFileSync('article-sandbox.html')});
  const request=r.request(),p=new URLSearchParams(request.postData()||'');let a=p.get('action');if(request.headers()['content-type']?.includes('json'))a=JSON.parse(request.postData()).action;
@@ -101,6 +106,16 @@ try{
  const textSize=settings.locator('select[data-blog-preference="textSize"]');
  const density=settings.locator('select[data-blog-preference="density"]');
  const motion=settings.locator('select[data-blog-preference="motion"]');
+ const language=settings.locator('#settings-language');
+ check(await page.locator('html').getAttribute('lang')==='th'&&await language.inputValue()==='auto','device language defaults to Thai for a Thai browser');
+ await language.selectOption('en');
+ check(await page.locator('html').getAttribute('lang')==='en'&&await settings.locator('#settings-title').innerText()==='Settings'&&await page.locator('#sbn-articles span').innerText()==='Articles','switching to English updates settings and navigation in place');
+ check((await page.locator('#post-2 .post-txt').innerText()).includes('แบ่งปันเรื่องราว'),'switching interface language preserves original post text');
+ await page.reload();
+ await settings.waitFor();
+ check(await language.inputValue()==='en'&&await page.locator('html').getAttribute('lang')==='en','explicit interface language is restored on reload');
+ await language.selectOption('auto');
+ check(await page.locator('html').getAttribute('lang')==='th'&&await settings.locator('#settings-title').innerText()==='ตั้งค่า','switching back to device language restores Thai');
  check((await settings.locator('#settings-version').textContent())?.includes('4.0.0')&&
    (await settings.locator('#settings-whats-new').textContent())?.includes('Noto Sans Thai'),'About shows version 4.0.0 and its release notes');
  check(await accents.count()===4,'settings offer four accent colors without signing in');
@@ -159,6 +174,38 @@ try{
  await page.locator('#mnav-saved').click();
  await page.waitForURL('**/saved');
  check(await page.locator('#post-2').count()===1,'reset preserves saved posts');
+ const translateButton=page.locator('#post-2 [data-click="openPostTranslation"]');
+ const translationDialog=page.locator('#post-translation-modal.open');
+ const translationLanguage=translationDialog.locator('#post-translation-language');
+ const originalPostText=await page.evaluate(()=>S.posts[0].content);
+ const displayTranslationText=text=>page.evaluate(value=>{S.posts[0].content=value;renderFeed();},text);
+ await displayTranslationText(' \n\t ');
+ check(await translateButton.count()===0,'translation action is hidden for whitespace-only posts');
+ const samplePost='ทดสอบแปล 😊\nSpaces, quotes " & + ? % #';
+ await displayTranslationText(samplePost);
+ const untranslated=await page.locator('#post-2 .post-txt').textContent();
+ await translateButton.press('Enter');
+ await translationDialog.waitFor();
+ check(await translationLanguage.evaluate(field=>field===document.activeElement),'mobile saved post translation opens with focus on the language selector');
+ await page.keyboard.press('Escape');
+ await translationDialog.waitFor({state:'hidden'});
+ await page.waitForFunction(()=>document.activeElement?.dataset.click==='openPostTranslation');
+ check(translationRequests.length===0,'loading and dismissing translation makes no requests to Google Translate');
+ await translateButton.click();
+ await translationLanguage.selectOption('ja');
+ const [translationTab]=await Promise.all([
+   page.context().waitForEvent('page'),
+   translationDialog.locator('[data-click="translatePost"]').click()
+ ]);
+ await translationTab.waitForURL('https://translate.google.com/**');
+ const translationUrl=new URL(translationTab.url());
+ assert.deepEqual([...translationUrl.searchParams],[['sl','auto'],['tl','ja'],['text',samplePost],['op','translate']]);
+ check(translationUrl.origin==='https://translate.google.com'&&translationUrl.pathname==='/'&&
+   translationRequests.length===1&&!translationRequests[0].referer&&await translationTab.evaluate(()=>window.opener===null),
+ 'confirming sends only the chosen language and post text to a new Google Translate tab without an opener or referrer');
+ check(await page.locator('#post-2 .post-txt').textContent()===untranslated,'translating keeps the original post in the saved feed');
+ await translationTab.close();
+ await displayTranslationText(originalPostText);
  check(await page.locator('input:not([type="hidden"]),textarea,select').evaluateAll(fields=>fields.every(field=>field.getAttribute('aria-label')?.trim()||field.getAttribute('aria-labelledby')?.trim()||[...field.labels].some(label=>label.textContent.trim()))),'all current form fields have accessible names');
  await page.evaluate(()=>{const result=processContent('https://youtu.be/dQw4w9WgXcQ',99);const el=document.createElement('div');el.id='test-video';el.innerHTML=result.media;D('feed').appendChild(el)});
  check(await page.locator('#test-video iframe').count()===0,'YouTube player is not loaded before playback');

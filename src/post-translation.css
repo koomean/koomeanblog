@@ -1,0 +1,60 @@
+.post-acts:has(.post-translate-action) {
+  flex-wrap: wrap;
+}
+
+html[data-theme] .post-translate-action {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.post-translate-action:hover {
+  background: var(--glow);
+}
+
+.post-translation-dialog {
+  max-width: 440px;
+  max-height: 100%;
+  overflow-y: auto;
+  text-align: start;
+}
+
+.post-translation-dialog .m-title {
+  font-size: 1.35rem;
+}
+
+.post-translation-dialog .m-sub {
+  margin: 8px 0 18px;
+}
+
+.post-translation-label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--txt);
+  font-size: .9rem;
+  font-weight: 700;
+}
+
+.post-translation-dialog .koo-theme-select {
+  width: 100%;
+  max-width: none;
+  min-height: 44px;
+  font-size: 1rem;
+}
+
+.post-translation-dialog .m-acts {
+  flex-wrap: wrap;
+}
+
+.post-translation-dialog .m-acts button {
+  min-height: 44px;
+}
+
+@media (max-width: 360px) {
+  .post-acts:has(.post-translate-action) .act {
+    min-width: 34px;
+  }
+
+  .post-translate-label {
+    display: none;
+  }
+}

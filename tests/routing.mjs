@@ -21,8 +21,8 @@ const htmlArticle='<h1 id="routing-article-heading">Routing article fixture</h1>
 const svg='<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40"><rect width="40" height="40" fill="#192d4d"/></svg>';
 const typeFor=file=>file.endsWith('.js')?'application/javascript':file.endsWith('.css')?'text/css':file.endsWith('.woff2')?'font/woff2':file.endsWith('.webp')?'image/webp':file.endsWith('.jpg')?'image/jpeg':'text/html';
 
-async function setup(){
- const context=await browser.newContext({viewport:{width:1440,height:960},colorScheme:'dark',reducedMotion:'reduce'}),page=await context.newPage();
+async function setup(locale){
+ const context=await browser.newContext({viewport:{width:1440,height:960},colorScheme:'dark',reducedMotion:'reduce',locale}),page=await context.newPage();
  page.setDefaultTimeout(10000);
  const state={calls:[],requests:[],errors:[],failArticles:false,failHome:false,releaseArticle:null};
  page.on('pageerror',error=>state.errors.push(error.message));
@@ -74,12 +74,20 @@ async function setup(){
  });
  return {page,state,context};
 }
-async function test(name,fn){const ctx=await setup();try{await fn(ctx);assert.deepEqual(ctx.state.errors,[],'No JavaScript errors');cases.push(name);console.log('ROUTING PASS '+name)}catch(error){console.error('ROUTING STATE',name,await ctx.page.evaluate(()=>({path:location.pathname,query:location.search,tag:S?.activeTag,heading:document.querySelector('#feed-hdr-title')?.textContent,saved:S?.savedView,articles:S?.articlesView,notFound:S?.notFound})).catch(()=>null));throw error}finally{await ctx.context.close()}}
+async function test(name,fn,locale='th-TH'){const ctx=await setup(locale);try{await fn(ctx);assert.deepEqual(ctx.state.errors,[],'No JavaScript errors');cases.push(name);console.log('ROUTING PASS '+name)}catch(error){console.error('ROUTING STATE',name,await ctx.page.evaluate(()=>({path:location.pathname,query:location.search,tag:typeof S==='undefined'?null:S.activeTag,heading:document.querySelector('#feed-hdr-title')?.textContent})).catch(()=>null));throw error}finally{await ctx.context.close()}}
 const routeAt=(page,pathname,query='')=>page.waitForURL(url=>url.pathname===pathname&&(!query||url.searchParams.has(query)));
 const notFoundVisible=page=>page.locator('#page-not-found').waitFor({state:'visible'});
 async function articleReady(page){await page.frameLocator('#av-body iframe').locator('#routing-article-heading').waitFor()}
 
 try{
+ await test('an English device sees English settings and the English 404 by default',async({page})=>{
+  await page.goto(origin+'/settings');await page.locator('#set-panel.open').waitFor();
+  assert.equal(await page.locator('#settings-language').inputValue(),'auto');
+  assert.equal(await page.locator('html').getAttribute('lang'),'en');
+  assert.equal(await page.locator('#settings-title').innerText(),'Settings');
+  await page.goto(origin+'/missing-for-english-reader');await notFoundVisible(page);
+  assert.equal(await page.locator('#not-found-title').innerText(),'Page not found');
+ },'en-US');
  await test('menu clicks update clean paths and browser Back/Forward restores views',async({page})=>{
   await page.goto(origin+'/');await page.locator('#post-2').waitFor();
   await page.locator('#sbn-articles').click();await routeAt(page,'/article');await page.locator('.art-card').first().waitFor();
@@ -140,7 +148,7 @@ try{
  });
  await test('unknown and nested paths return the custom 404 with working root assets',async({page,state})=>{
   for(const pathname of ['/missing-routing-page','/nested/missing/page']){
-   const start=state.requests.length,response=await page.goto(origin+pathname);assert.equal(response.status(),404);await notFoundVisible(page);assert.match(await page.locator('#page-not-found').innerText(),/404/);assert.match(await page.locator('#page-not-found').innerText(),/page not found/i);assert.equal(new URL(page.url()).pathname,pathname);
+   const start=state.requests.length,response=await page.goto(origin+pathname);assert.equal(response.status(),404);await notFoundVisible(page);assert.match(await page.locator('#page-not-found').innerText(),/404/);assert.match(await page.locator('#page-not-found').innerText(),/ไม่พบหน้า/);assert.equal(new URL(page.url()).pathname,pathname);
    const assets=state.requests.slice(start).filter(value=>new URL(value).origin===origin&&/\.(?:css|js|woff2)(?:\?|$)/.test(value));assert.ok(assets.every(value=>new URL(value).pathname.startsWith('/assets/')),'404 assets must be root-absolute');
   }
   await page.screenshot({path:path.join(output,'404-desktop.png'),fullPage:false});

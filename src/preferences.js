@@ -1,6 +1,6 @@
 (() => {
-  const key = 'kms_blog_preferences';
   const options = {
+    language: ['auto', 'th', 'en'],
     accent: ['blue', 'violet', 'teal', 'rose'],
     textSize: ['default', 'large', 'extra'],
     density: ['comfortable', 'compact'],
@@ -13,8 +13,7 @@
   const defaults = Object.fromEntries(Object.entries(options).map(([name, values]) => [name, values[0]]));
 
   function read() {
-    let saved;
-    try { saved = JSON.parse(localStorage.getItem(key)); } catch { return { ...defaults }; }
+    const saved = readBlogPreferences();
     return Object.fromEntries(Object.entries(options).map(([name, values]) => [
       name, values.includes(saved?.[name]) ? saved[name] : defaults[name]
     ]));
@@ -28,17 +27,18 @@
       if (control.type === 'radio') control.checked = control.value === value;
       else control.value = value;
     }
+    applyBlogLanguage(preferences.language);
   }
 
   function save() {
     try {
-      localStorage.setItem(key, JSON.stringify(preferences));
+      localStorage.setItem(BLOG_PREFERENCES_KEY, JSON.stringify(preferences));
       return true;
     } catch { return false; }
   }
 
   function report(message, saved) {
-    status.textContent = saved ? message : 'ใช้การตั้งค่าสำหรับครั้งนี้ เบราว์เซอร์ไม่อนุญาตให้บันทึก';
+    status.textContent = saved ? message : blogText('ใช้การตั้งค่าสำหรับครั้งนี้ เบราว์เซอร์ไม่อนุญาตให้บันทึก', 'These settings apply for this visit. Your browser did not allow saving.');
   }
 
   panel.addEventListener('change', event => {
@@ -51,17 +51,17 @@
     if (!Object.hasOwn(options, name) || !options[name].includes(control.value)) return;
     preferences[name] = control.value;
     apply();
-    report('บันทึกการตั้งค่าแล้ว', save());
+    report(blogText('บันทึกการตั้งค่าแล้ว', 'Settings saved'), save());
   });
   document.getElementById('settings-reset').addEventListener('click', () => {
     preferences = { ...defaults };
     apply();
     const saved = save();
     const themeSaved = window.KooTheme.set('auto');
-    report('คืนค่าเริ่มต้นแล้ว', saved && themeSaved);
+    report(blogText('คืนค่าเริ่มต้นแล้ว', 'Defaults restored'), saved && themeSaved);
   });
   window.addEventListener('storage', event => {
-    if (event.storageArea !== localStorage || (event.key !== key && event.key !== null)) return;
+    if (event.storageArea !== localStorage || (event.key !== BLOG_PREFERENCES_KEY && event.key !== null)) return;
     preferences = read();
     apply();
     status.textContent = '';

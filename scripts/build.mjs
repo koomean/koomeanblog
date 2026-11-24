@@ -7,6 +7,8 @@ try{released=JSON.parse(execFileSync('git',['show','HEAD:build-manifest.json'],{
 const hash=s=>createHash('sha256').update(s).digest('hex').slice(0,16);
 let html=fs.readFileSync('src/index.html','utf8').replace('/* BUILD_THEME */',fs.readFileSync('src/theme.js','utf8')).replace('/* BUILD_MAINTENANCE */',fs.readFileSync('src/maintenance.js','utf8')).replace('/* BUILD_ROUTING */',fs.readFileSync('src/routing.js','utf8'));
 html=html.replace('/* BUILD_PREFERENCES */',fs.readFileSync('src/preferences.js','utf8'));
+const localization=fs.readFileSync('src/localization.js','utf8');
+html=html.replace('/* BUILD_LOCALIZATION */',localization).replace('/* BUILD_POST_TRANSLATION */',fs.readFileSync('src/post-translation.js','utf8'));
 html=html.replace('/* BUILD_MEDIA_MAP */{}',fs.readFileSync('src/media-map.json','utf8').trim());
 const scripts=[],styles=[fs.readFileSync('src/vendor.css','utf8'),fs.readFileSync('src/maintenance.css','utf8'),fs.readFileSync('src/not-found.css','utf8')];
 const cover=JSON.parse(fs.readFileSync('media-optimization.json','utf8')).find(item=>item.kind==='cover');
@@ -17,7 +19,7 @@ if(cover){
 }
 
 html=html.replace(/<style>([\s\S]*?)<\/style>/g,(_,css)=>{styles.push(css);return ''});
-for(const file of ['site-design.css','preferences.css','settings.css'])styles.push(fs.readFileSync('src/'+file,'utf8'));
+for(const file of ['site-design.css','preferences.css','settings.css','post-translation.css'])styles.push(fs.readFileSync('src/'+file,'utf8'));
 html=html.replace(/<script>([\s\S]*?)<\/script>/g,(_,js)=>{scripts.push(js);return ''});
 html=html.replace(/<link[^>]+href="https:\/\/(?:fonts.googleapis.com|cdnjs.cloudflare.com)[^"]+"[^>]*>/g,'');
 html=html.replace(/<link rel="(?:preconnect|dns-prefetch)" href="https:\/\/(?:fonts.googleapis.com|fonts.gstatic.com|cdnjs.cloudflare.com|accounts.google.com)"[^>]*>/g,'');
@@ -37,7 +39,14 @@ for(const [route,title] of Object.entries(routes)){
  const page=html.replace('<title id="web-title">Koo Mean Blog</title>',`<title id="web-title">${title} · Koo Mean Blog</title>`).replace('rel="canonical" href="https://blog.koomean.com/"',`rel="canonical" href="https://blog.koomean.com/${route}"`).replace('name="robots" content="index,follow"',`name="robots" content="${route==='article'?'index':'noindex'},follow"`);
  fs.writeFileSync(route+'.html',page);
 }
-const theme=(await transform(fs.readFileSync('src/theme.js','utf8'),{loader:'js',minify:true,target:'es2022'})).code;
+const notFoundScript=[fs.readFileSync('src/theme.js','utf8'),localization,`function updateNotFoundLanguage() {
+  applyBlogLanguage(readBlogPreferences().language);
+}
+updateNotFoundLanguage();
+window.addEventListener('storage', event => {
+  if (event.key === BLOG_PREFERENCES_KEY || event.key === null) updateNotFoundLanguage();
+});`].join('\n;\n');
+const theme=(await transform(notFoundScript,{loader:'js',minify:true,target:'es2022'})).code;
 const themeName='theme-'+hash(theme)+'.js';
 fs.writeFileSync('assets/'+themeName,theme);
 const errorHtml=fs.readFileSync('src/404.html','utf8').replace('<!-- BUILD_404_ASSETS -->',`<meta http-equiv="Content-Security-Policy" content="${policy}"><link rel="stylesheet" href="/assets/${cssName}"><script src="/assets/${themeName}" defer></script>`);

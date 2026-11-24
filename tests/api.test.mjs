@@ -2,19 +2,20 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
+const blogText=thai=>thai;
 const source=fs.readFileSync((process.env.BLOG_SOURCE_ROOT||'.')+'/src/index.html','utf8');
 function section(start,end){return source.slice(source.indexOf(start),source.indexOf(end,source.indexOf(start)));}
 for(const [name,url,expected] of [['Blog API','https://koomean-proxy.meanchannel52.workers.dev',1],['Blog API query','https://koomean-proxy.meanchannel52.workers.dev?action=all',1],['Microlink preview','https://api.microlink.io/?url=https://example.org',0],['Dub preview','https://api.dub.co/metatags?url=https://example.org',0]]){
  test(name+' rate limits affect only that service',async()=>{
   let cooldown=0;
-  const ctx=vm.createContext({API_URL:'https://koomean-proxy.meanchannel52.workers.dev',TIMEOUT:1000,URL,AbortController,setTimeout,clearTimeout,noteRateLimited:()=>cooldown++,fetch:async()=>({status:429,headers:{get:()=> '60'}})});
+  const ctx=vm.createContext({blogText,API_URL:'https://koomean-proxy.meanchannel52.workers.dev',TIMEOUT:1000,URL,AbortController,setTimeout,clearTimeout,noteRateLimited:()=>cooldown++,fetch:async()=>({status:429,headers:{get:()=> '60'}})});
   vm.runInContext(section('async function apiFetch(','function apiUrl('),ctx);
   await ctx.apiFetch(url);assert.equal(cooldown,expected);
  });
 }
 function harness(){
  let requestCount=0,renderCount=0;const pending=[];
- const ctx=vm.createContext({D:()=>({innerHTML:''}),apiRead:()=>{requestCount++;return new Promise((resolve,reject)=>pending.push({resolve,reject}))},renderArticlesList:()=>renderCount++,openPendingArticle(){},noteRateLimited(){},Error});
+ const ctx=vm.createContext({blogText,D:()=>({innerHTML:''}),apiRead:()=>{requestCount++;return new Promise((resolve,reject)=>pending.push({resolve,reject}))},renderArticlesList:()=>renderCount++,openPendingArticle(){},noteRateLimited(){},Error});
  vm.runInContext('let authEpoch=0,articleLoadId=0;const S={articlesView:true,articles:[]};'+section('let articleLoadTask=null;','// เปิดบทความจากลิงก์แชร์'),ctx);
  return{ctx,pending,count:()=>requestCount,renders:()=>renderCount,start:()=>vm.runInContext('loadArticles()',ctx),switchAuth:()=>vm.runInContext('authEpoch++',ctx),respond:i=>pending[i].resolve({ok:true,json:async()=>({articles:[{rowIdx:i+1}]})})};
 }
