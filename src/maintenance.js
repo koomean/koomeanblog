@@ -6,13 +6,13 @@
   const englishCopy = {
     title: 'We’ll be back soon', state: 'Maintenance in progress', label: 'Back online in',
     foot: 'This page will return automatically when the service is available again.',
-    refresh: 'Check again', waiting: 'Checking whether the service is ready…',
+    refresh: 'Check again', status: 'View service status', waiting: 'Checking whether the service is ready…',
     offline: 'Unable to connect right now. We’ll try again automatically.', thanks: 'Thank you for your patience', days: 'days'
   };
   const thaiCopy = {
     title: 'เราจะกลับมาเร็ว ๆ นี้', state: 'กำลังดูแลระบบ', label: 'เปิดให้บริการอีกครั้งใน',
     foot: 'หน้านี้จะกลับมาใช้งานได้โดยอัตโนมัติเมื่อระบบพร้อม',
-    refresh: 'ตรวจสอบอีกครั้ง', waiting: 'กำลังตรวจสอบการเปิดระบบ…',
+    refresh: 'ตรวจสอบอีกครั้ง', status: 'ดูสถานะบริการ', waiting: 'กำลังตรวจสอบการเปิดระบบ…',
     offline: 'ยังเชื่อมต่อไม่ได้ ระบบจะลองตรวจสอบอีกครั้งอัตโนมัติ', thanks: 'ขอบคุณที่รอพบกันอีกครั้ง', days: 'วัน'
   };
   const node = key => overlay.querySelector('[data-maintenance="'+key+'"]');
@@ -22,7 +22,7 @@
     english = document.documentElement.lang === 'en';
     copy = english ? englishCopy : thaiCopy;
     overlay.setAttribute('lang', english ? 'en' : 'th');
-    for (const key of ['title','state','label','foot','refresh','thanks']) node(key).textContent = copy[key];
+    for (const key of ['title','state','label','foot','refresh','status','thanks']) node(key).textContent = copy[key];
     node('note').textContent = serviceNote || (english ? overlay.dataset.noteEn : overlay.dataset.noteTh) || app;
     node('deadline').textContent = deadline ? new Intl.DateTimeFormat(english?'en-GB':'th-TH',{dateStyle:'long',timeStyle:'short'}).format(deadline) : '';
     if (active) tick();

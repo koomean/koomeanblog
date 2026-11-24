@@ -23,10 +23,12 @@
 .km-maintenance .maintenance-countdown{display:block;margin:9px 0 0;color:var(--km-blue);font:400 clamp(36px,8vw,54px)/1.35 'Noto Sans Thai','Koo Maintenance',Tahoma,sans-serif;letter-spacing:1px;font-variant-numeric:tabular-nums;white-space:nowrap}
 .km-maintenance .maintenance-deadline{margin:12px 0 0;color:var(--km-muted);font-size:12px;overflow-wrap:anywhere}
 .km-maintenance .maintenance-foot{margin:24px auto 0;max-width:380px;color:var(--km-muted);font-size:11px;line-height:1.8}
-.km-maintenance .maintenance-refresh{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:42px;margin-top:18px;padding:9px 16px;border:1px solid var(--km-line);border-radius:9px;background:var(--km-control);color:var(--km-ink);font:400 12px/1.5 'Noto Sans Thai','Koo Maintenance',Tahoma,sans-serif;cursor:pointer;transition:background .15s,border-color .15s}
+.km-maintenance .maintenance-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:18px}
+.km-maintenance .maintenance-refresh,.km-maintenance .maintenance-status{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:42px;padding:9px 16px;border:1px solid var(--km-line);border-radius:9px;background:var(--km-control);color:var(--km-ink);font:400 12px/1.5 'Noto Sans Thai','Koo Maintenance',Tahoma,sans-serif;cursor:pointer;text-decoration:none;transition:background .15s,border-color .15s}
+.km-maintenance .maintenance-status{border-color:var(--km-soft-line);background:var(--km-soft);color:var(--km-blue);font-weight:600}
 .km-maintenance .maintenance-refresh svg{width:15px;height:15px}
-.km-maintenance .maintenance-refresh:hover{background:var(--km-hover);border-color:var(--km-hover-line)}
-.km-maintenance .maintenance-refresh:focus-visible{outline:3px solid var(--km-blue);outline-offset:4px}
+.km-maintenance :is(.maintenance-refresh,.maintenance-status):hover{background:var(--km-hover);border-color:var(--km-hover-line)}
+.km-maintenance :is(.maintenance-refresh,.maintenance-status):focus-visible{outline:3px solid var(--km-blue);outline-offset:4px}
 .km-maintenance .maintenance-refresh:disabled{opacity:.6;cursor:wait}
 .km-maintenance .maintenance-footer{display:flex;justify-content:space-between;gap:16px;color:var(--km-muted);font-size:10px;padding-top:18px;flex-shrink:0}
 @media(max-width:480px){.km-maintenance .maintenance-shell{padding-top:23px;padding-bottom:max(20px,env(safe-area-inset-bottom))}.km-maintenance .maintenance-brand-name{font-size:16px}.km-maintenance .maintenance-state{font-size:10px;padding:4px 8px}.km-maintenance .maintenance-content{padding:48px 0 40px}.km-maintenance .maintenance-symbol{width:68px;height:68px;margin-bottom:23px;border-radius:21px}.km-maintenance .maintenance-note{font-size:13px}.km-maintenance .maintenance-footer{font-size:9px}.km-maintenance .maintenance-countdown{letter-spacing:0}}

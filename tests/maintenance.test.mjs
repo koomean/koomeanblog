@@ -5,7 +5,7 @@ import vm from 'node:vm';
 const source=fs.readFileSync(new URL('../src/maintenance.js',import.meta.url),'utf8');
 async function setup(initial={active:false}) {
   const nodes=new Map();
-  for(const key of ['title','state','label','foot','refresh','thanks','days','countdown','note','deadline','button'])nodes.set(key,{textContent:'',hidden:false,listeners:{},addEventListener(name,fn){this.listeners[name]=fn;}});
+  for(const key of ['title','state','label','foot','refresh','status','thanks','days','countdown','note','deadline','button'])nodes.set(key,{textContent:'',hidden:false,listeners:{},addEventListener(name,fn){this.listeners[name]=fn;}});
   const overlay={hidden:true,dataset:{app:'Koo Mean SITE',noteTh:'ข้อความเริ่มต้น'},querySelector(selector){return nodes.get(selector.match(/"(.*?)"/)[1]);},setAttribute(){},focus(){this.focused=true;},contains(target){return target===this||[...nodes.values()].includes(target)}};
   const content={tagName:'MAIN',inert:false};
   let time=1000000,state=initial,fail=false,calls=0,reloads=0,status=200;
@@ -47,4 +47,13 @@ test('countdown inherits the website theme without a theme selector',()=>{
  const header=html.match(/<header class="maintenance-header">[\s\S]*?<\/header>/)[0];
  assert.doesNotMatch(header,/<select|data-koo-theme/);
  assert.match(html,/data-koo-theme/);
+});
+
+test('maintenance offers a localized link to the status page', async()=>{
+  const html=fs.readFileSync('index.html','utf8');
+  assert.match(html,/<a class="maintenance-status" href="https:\/\/status\.koomean\.com\/" data-maintenance="status">/);
+  const x=await setup({active:true,reopenAt:1060000});
+  assert.equal(x.nodes.get('status').textContent,'ดูสถานะบริการ');
+  x.document.documentElement.lang='en';x.events['blog-language-change']();
+  assert.equal(x.nodes.get('status').textContent,'View service status');
 });

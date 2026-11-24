@@ -1,19 +1,18 @@
 {
-  "htmlBytes": 58816,
+  "htmlBytes": 59021,
   "css": {
-    "file": "blog-01543caa50272eee.css",
-    "bytes": 104652
+    "file": "blog-d35a355970bf2706.css",
+    "bytes": 104987
   },
   "js": {
-    "file": "app-71c7dac8ea23a9f2.js",
-    "bytes": 136069
+    "file": "app-a9d8d61d127ba737.js",
+    "bytes": 136195
   },
   "notFound": {
     "themeFile": "theme-6d8a13671b877d97.js"
   },
   "previousAssets": [
-    "blog-da3c0268f0d41962.css",
-    "app-c92b4334c4c19b8e.js",
-    "theme-92b22c6ddcd6ef71.js"
+    "blog-01543caa50272eee.css",
+    "app-71c7dac8ea23a9f2.js"
   ]
 }
