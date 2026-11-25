@@ -22,6 +22,7 @@ await page.route('https://blog.koomean.com/**',route=>{
 await page.route('https://media.example.invalid/**',r=>r.fulfill({contentType:'image/svg+xml',body:'<svg xmlns="http://www.w3.org/2000/svg" width="900" height="500"><rect width="900" height="500" fill="#192d4d"/><circle cx="580" cy="170" r="130" fill="#5ea2ff"/><path d="M0 500L350 160 700 500" fill="#47508c"/></svg>'}));
 await page.route('https://ui-avatars.com/**',r=>r.fulfill({status:404,body:''}));
 await page.route('https://accounts.google.com/**',r=>r.fulfill({contentType:'application/javascript',body:''}));
+await page.route('https://koomean-status.meanchannel52.workers.dev/api/presence',r=>r.fulfill({status:204,headers:{'access-control-allow-origin':'https://blog.koomean.com','access-control-allow-methods':'POST','access-control-allow-headers':'Content-Type'}}));
 const translationRequests=[];
 await page.context().route('https://translate.google.com/**',route=>{
  translationRequests.push(route.request().headers());

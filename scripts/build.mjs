@@ -10,7 +10,9 @@ html=html.replace('/* BUILD_PREFERENCES */',fs.readFileSync('src/preferences.js'
 const localization=fs.readFileSync('src/localization.js','utf8');
 html=html.replace('/* BUILD_LOCALIZATION */',localization).replace('/* BUILD_POST_TRANSLATION */',fs.readFileSync('src/post-translation.js','utf8'));
 html=html.replace('/* BUILD_MEDIA_MAP */{}',fs.readFileSync('src/media-map.json','utf8').trim());
-const scripts=[],styles=[fs.readFileSync('src/vendor.css','utf8'),fs.readFileSync('src/maintenance.css','utf8'),fs.readFileSync('src/not-found.css','utf8')];
+// Keep the vendored tracker in sync with Koo Mean Status public/presence.js.
+const presence=fs.readFileSync('src/presence.js','utf8');
+const scripts=[presence],styles=[fs.readFileSync('src/vendor.css','utf8'),fs.readFileSync('src/maintenance.css','utf8'),fs.readFileSync('src/not-found.css','utf8')];
 const cover=JSON.parse(fs.readFileSync('media-optimization.json','utf8')).find(item=>item.kind==='cover');
 if(cover){
  const coverPath='/assets/'+cover.file;
@@ -28,7 +30,7 @@ fs.mkdirSync('assets',{recursive:true});
 const css=(await transform(styles.join('\n'),{loader:'css',minify:true,target:'es2022'})).code;
 const js=(await transform(scripts.join('\n;\n'),{loader:'js',minify:true,target:'es2022',legalComments:'none'})).code;
 const cssName='blog-'+hash(css)+'.css',jsName='app-'+hash(js)+'.js';fs.writeFileSync('assets/'+cssName,css);fs.writeFileSync('assets/'+jsName,js);
-const policy="default-src 'self'; base-uri 'none'; object-src 'none'; script-src 'self' https://accounts.google.com/gsi/; script-src-attr 'none'; style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style; font-src 'self'; img-src 'self' https: data: blob:; media-src 'self' https: blob:; connect-src 'self' https://koomean-proxy.meanchannel52.workers.dev https://accounts.google.com/gsi/ https://api.microlink.io https://api.dub.co; frame-src 'self' https://accounts.google.com/gsi/ https://www.youtube-nocookie.com https://koomean-proxy.meanchannel52.workers.dev https://drive.google.com; form-action 'none'; upgrade-insecure-requests";
+const policy="default-src 'self'; base-uri 'none'; object-src 'none'; script-src 'self' https://accounts.google.com/gsi/; script-src-attr 'none'; style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style; font-src 'self'; img-src 'self' https: data: blob:; media-src 'self' https: blob:; connect-src 'self' https://koomean-proxy.meanchannel52.workers.dev https://koomean-status.meanchannel52.workers.dev/api/presence https://accounts.google.com/gsi/ https://api.microlink.io https://api.dub.co; frame-src 'self' https://accounts.google.com/gsi/ https://www.youtube-nocookie.com https://koomean-proxy.meanchannel52.workers.dev https://drive.google.com; form-action 'none'; upgrade-insecure-requests";
 html=html.replace('<meta charset="UTF-8">','<meta charset="UTF-8">\n<meta http-equiv="Content-Security-Policy" content="'+policy+'">');
 const font=fs.readdirSync('assets').find(n=>/^jakarta-/.test(n));
 html=html.replace('</head>',`<link rel="preload" href="/assets/${font}" as="font" type="font/woff2" crossorigin>\n<link rel="stylesheet" href="/assets/${cssName}">\n<script src="/assets/${jsName}" defer></script>\n</head>`);
@@ -39,7 +41,7 @@ for(const [route,title] of Object.entries(routes)){
  const page=html.replace('<title id="web-title">Koo Mean Blog</title>',`<title id="web-title">${title} · Koo Mean Blog</title>`).replace('rel="canonical" href="https://blog.koomean.com/"',`rel="canonical" href="https://blog.koomean.com/${route}"`).replace('name="robots" content="index,follow"',`name="robots" content="${route==='article'?'index':'noindex'},follow"`);
  fs.writeFileSync(route+'.html',page);
 }
-const notFoundScript=[fs.readFileSync('src/theme.js','utf8'),localization,`function updateNotFoundLanguage() {
+const notFoundScript=[presence,fs.readFileSync('src/theme.js','utf8'),localization,`function updateNotFoundLanguage() {
   applyBlogLanguage(readBlogPreferences().language);
 }
 updateNotFoundLanguage();

@@ -30,6 +30,7 @@ async function harness(root) {
     const type=file.endsWith('.js')?'application/javascript':file.endsWith('.css')?'text/css':file.endsWith('.woff2')?'font/woff2':file.endsWith('.webp')?'image/webp':'text/html';
     return r.fulfill({body:fs.readFileSync(file),contentType:type,...(type==='text/html'?{headers:{'Content-Security-Policy':"frame-ancestors 'none'",'X-Frame-Options':'DENY'}}:{})});
   });
+  await page.route('https://koomean-status.meanchannel52.workers.dev/api/presence',r=>r.fulfill({status:204,headers:{'access-control-allow-origin':origin,'access-control-allow-methods':'POST','access-control-allow-headers':'Content-Type'}}));
   await page.route(api+'/**',async r=>{
     if(new URL(r.request().url()).pathname==='/blog-article-sandbox.html')return r.fulfill({contentType:'text/html',headers:{'Content-Security-Policy':'frame-ancestors https://blog.koomean.com; sandbox allow-scripts allow-popups'},body:fs.readFileSync(path.join(root,'article-sandbox.html'))});
     const action=new URLSearchParams(r.request().postData()||'').get('action');actions.push(action);
